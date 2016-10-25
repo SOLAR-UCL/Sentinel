@@ -1,7 +1,8 @@
-package br.ufpr.inf.gres.sentinel.grammaticalevolution.representation;
+package br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.representation;
 
 import com.google.common.base.Joiner;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import org.apache.commons.collections4.list.SetUniqueList;
@@ -50,6 +51,10 @@ public class Rule {
 
     public Option getOption(int index) {
         return options.get(index % options.size());
+    }
+
+    public Option getOption(Iterator<Integer> cyclicIterator) {
+        return getOptions().size() > 1 ? getOption(cyclicIterator.next()) : getOption(0);
     }
 
     public boolean isTerminal() {

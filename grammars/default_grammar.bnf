@@ -1,0 +1,61 @@
+<strategy> ::= "All Operators" <defaultOperation>
+
+<defaultOperation> ::= <operatorOperation> <defaultOperation> | <mutantOperation> <defaultOperation> | "New Branch" <defaultOperation> <defaultOperation> | "Store Mutants"
+
+<tipoSelecao> ::= "Sequencial" | "Aleatoria" | "LastToFirst"
+
+<direcaoOrdenacao> ::= "Crescente" | "Decrescente"
+
+<quantidade> ::= "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" | "10"
+
+<porcentagem> ::= "0.1" | "0.2" | "0.3" | "0.4" | "0.5" | "0.6" | "0.7" | "0.8" | "0.9" | "1.0"
+
+## Operações de Operadores
+
+<operacaoOperadores> ::= <selecionarOperadores> | <descartarOperadores> | <executarOperadores> | <agruparOperadores>
+
+<selecionarOperadores> ::= <tipoSelecaoOperadores> <quantidade> | <tipoSelecaoOperadores> <porcentagem>
+
+<tipoSelecaoOperadores> ::= <tipoSelecao> <ordenacaoOperadores> | <selecionarGruposOperadores> <tipoSelecao> <ordenacaoOperadores>
+
+<ordenacaoOperadores> ::= "Quantidade Mutantes" <direcaoOrdenacao> | ""
+
+<selecionarGruposOperadores> ::= <tipoSelecaoGruposOperadores> <quantidade> | <tipoSelecaoGruposOperadores> <porcentagem>
+
+<tipoSelecaoGruposOperadores> ::= <tipoSelecao> <ordenacaoGruposOperadores>
+
+<ordenacaoGruposOperadores> ::= "Quantidade Mutantes no Grupo" <direcaoOrdenacao> | "Quantidade Operadores no Grupo" <direcaoOrdenacao> | ""
+
+<descartarOperadores> ::= <selecionarOperadores> "Descartar Operadores"
+
+<executarOperadores> ::= <selecionarOperadores> "Executar Operadores" <tipoExecucaoOperadores>
+
+<tipoExecucaoOperadores> ::= "Execução Convencional"
+
+<agruparOperadores> ::= "Tipo Operadores"
+
+## Operações de Mutantes
+
+<operacaoMutantes> ::= <selecionarMutantes> | <descartarMutantes> | <combinarMutantes> | <agruparMutantes>
+
+<selecionarMutantes> ::= <tipoSelecaoMutantes> <quantidade> | <tipoSelecaoMutantes> <porcentagem>
+
+<tipoSelecaoMutantes> ::= <tipoSelecao> <ordenacaoMutantes> | <selecionarGruposMutantes> <tipoSelecao> <ordenacaoMutantes>
+
+<ordenacaoMutantes> ::= "Ordem" <direcaoOrdenacao> | ""
+
+<selecionarGruposMutantes> ::= <tipoSelecaoGruposMutantes> <quantidade> | <tipoSelecaoGruposMutantes> <porcentagem>
+
+<tipoSelecaoGruposMutantes> ::= <tipoSelecao> <ordenacaoGruposMutantes>
+
+<ordenacaoGruposMutantes> ::= "Quantidade Mutantes no Grupo" <direcaoOrdenacao> | ""
+
+<descartarMutantes> ::= <selecionarMutantes> "Descartar Mutantes"
+
+<combinarMutantes> ::= <selecionarMutantes> <gerarHOM>
+
+<gerarHOM> ::= "Um HOM" | "Todas as Combinações de HOMs" <ordem> | "Geração Convencional" <ordem>
+
+<ordem> ::= "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" | "10"
+
+<agruparMutantes> ::= "Tipo Operador" | "Operador" | "FOM e HOM" | "Ordem"

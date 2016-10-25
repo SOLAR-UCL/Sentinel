@@ -1,0 +1,7 @@
+#! extends default_grammar.bnf
+
+<typeOfOperatorsExecution> ::= SUPER | "By Line Code" <quantity>
+
+<mutantOrdering> ::= SUPER | "By Line Code" <orderingDirection>
+
+<groupMutants> ::= SUPER | "By Line Code"

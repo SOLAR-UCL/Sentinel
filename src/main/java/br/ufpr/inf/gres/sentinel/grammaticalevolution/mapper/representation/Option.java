@@ -1,4 +1,4 @@
-package br.ufpr.inf.gres.sentinel.grammaticalevolution.representation;
+package br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.representation;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.Iterables;

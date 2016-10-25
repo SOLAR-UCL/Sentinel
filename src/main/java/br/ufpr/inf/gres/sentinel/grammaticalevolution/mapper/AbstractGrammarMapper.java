@@ -1,7 +1,7 @@
 package br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper;
 
-import br.ufpr.inf.gres.sentinel.grammaticalevolution.representation.Option;
-import br.ufpr.inf.gres.sentinel.grammaticalevolution.representation.Rule;
+import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.representation.Option;
+import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.representation.Rule;
 import com.google.common.base.CharMatcher;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Splitter;
@@ -19,8 +19,9 @@ import java.util.regex.Pattern;
 /**
  * Class for interpreting a grammar file into a structure of nodes for later parsing a vector of integers into a type T.
  *
- * @author Giovani Guizzo
  * @param <T> Type of result from parsing a vector
+ *
+ * @author Giovani Guizzo
  */
 public abstract class AbstractGrammarMapper<T> {
 
@@ -32,32 +33,68 @@ public abstract class AbstractGrammarMapper<T> {
     /**
      * List of all non-terminal nodes found.
      */
-    protected HashMap<String, Rule> nonTerminalNodes;
+    private HashMap<String, Rule> nonTerminalNodes;
 
     /**
      * List of all terminal nodes found.
      */
-    protected HashMap<String, Rule> terminalNodes;
+    private HashMap<String, Rule> terminalNodes;
+
+    /**
+     * @param grammarFilePath The path of the grammar file.
+     *
+     * @throws IOException If any problem occurs during the grammar reading.
+     */
+    public AbstractGrammarMapper(String grammarFilePath) throws IOException {
+        loadGrammar(grammarFilePath);
+    }
+
+    /**
+     * @param grammarFile The grammar file.
+     *
+     * @throws IOException If any problem occurs during the grammar reading.
+     */
+    public AbstractGrammarMapper(File grammarFile) throws IOException {
+        loadGrammar(grammarFile);
+    }
 
     public AbstractGrammarMapper() {
-        rootNode = null;
-        nonTerminalNodes = new HashMap<>();
-        terminalNodes = new HashMap<>();
+        initialize();
     }
 
     public Rule getRootNode() {
         return rootNode;
     }
 
-    public void setRootNode(Rule rootNode) {
-        this.rootNode = rootNode;
+    /**
+     * Get or create a new rule object.
+     *
+     * @param ruleName The rule's name.
+     *
+     * @return The rule object.
+     */
+    private Rule getNonTerminalRule(String ruleName) {
+        return nonTerminalNodes.computeIfAbsent(ruleName, Rule::new);
+    }
+
+    /**
+     * Get or create a new rule object.
+     *
+     * @param ruleName The rule's name.
+     *
+     * @return The rule object.
+     */
+    private Rule getTerminalRule(String ruleName) {
+        return terminalNodes.computeIfAbsent(ruleName, Rule::new);
     }
 
     /**
      * Loads a grammar in memory, interpreting it into an Rule-Options structure.
      *
      * @param grammarFilePath The grammar file's path.
+     *
      * @return If the grammar was successfully loaded.
+     *
      * @throws IOException If the file is not found, corrupted, or contains an erroneous grammar syntax.
      */
     public boolean loadGrammar(String grammarFilePath) throws IOException {
@@ -68,15 +105,16 @@ public abstract class AbstractGrammarMapper<T> {
      * Loads a grammar in memory, interpreting it into an Rule-Options structure.
      *
      * @param grammarFile The grammar file.
+     *
      * @return If the grammar was successfully loaded.
+     *
      * @throws IOException If the file is not found, corrupted, or contains an erroneous grammar syntax.
      */
     public boolean loadGrammar(File grammarFile) throws IOException {
 
         try {
             // Initialize nodes
-            this.nonTerminalNodes = new HashMap<>();
-            this.rootNode = null;
+            initialize();
             // Read grammar file
             List<String> lines = Files.readLines(grammarFile, Charset.defaultCharset());
             // Start interpreting the file
@@ -85,14 +123,9 @@ public abstract class AbstractGrammarMapper<T> {
                 // If it is a grammar line
                 if (!line.startsWith("#") && line.contains("::=")) {
                     // Ignore any comment after the rule and expression
-                    line = Splitter.on("#")
-                            .trimResults()
-                            .splitToList(line)
-                            .get(0);
+                    line = Splitter.on("#").trimResults().splitToList(line).get(0);
                     // Split into rule and expressions
-                    List<String> lineSplit = Splitter.on("::=")
-                            .trimResults()
-                            .splitToList(line);
+                    List<String> lineSplit = Splitter.on("::=").trimResults().splitToList(line);
                     // Get rule name
                     String ruleName = lineSplit.get(0);
                     ruleName = CharMatcher.anyOf("<>").removeFrom(ruleName);
@@ -104,10 +137,7 @@ public abstract class AbstractGrammarMapper<T> {
                         // Get the whole expression containing all options
                         String fullExpression = lineSplit.get(1);
                         // Split into expression options
-                        List<String> options = Splitter.on("|")
-                                .trimResults()
-                                .omitEmptyStrings()
-                                .splitToList(fullExpression);
+                        List<String> options = Splitter.on("|").trimResults().omitEmptyStrings().splitToList(fullExpression);
                         // Iterate over all options building an option object for each
                         for (int optionIndex = 0; optionIndex < options.size(); optionIndex++) {
                             String optionString = options.get(optionIndex);
@@ -129,6 +159,15 @@ public abstract class AbstractGrammarMapper<T> {
     }
 
     /**
+     * Initializes the class, erasing all nodes.
+     */
+    private void initialize() {
+        this.nonTerminalNodes = new HashMap<>();
+        this.terminalNodes = new HashMap<>();
+        this.rootNode = null;
+    }
+
+    /**
      * A regex to match BNF options. Group 1 is non-terminal, Group 2 is terminal.
      */
     private static final Pattern BNF_OPTION_PATTERN = Pattern.compile("((?<=<).+?(?=>))|((?<=\")(?:[\\S]+?.*?|)(?=\")|\\(|\\))");
@@ -140,7 +179,9 @@ public abstract class AbstractGrammarMapper<T> {
      *
      * @param optionString The option string, e.g., 'op expr op'.
      * @param index The option index for a rule.
+     *
      * @return An option object.
+     *
      * @throws IOException If there is any syntax error in the grammar file.
      */
     private Option buildOption(String optionString, int index) throws IOException {
@@ -174,29 +215,10 @@ public abstract class AbstractGrammarMapper<T> {
     }
 
     /**
-     * Get or create a new rule object.
-     *
-     * @param ruleName The rule's name.
-     * @return The rule object.
-     */
-    private Rule getNonTerminalRule(String ruleName) {
-        return nonTerminalNodes.computeIfAbsent(ruleName, key -> new Rule(key));
-    }
-
-    /**
-     * Get or create a new rule object.
-     *
-     * @param ruleName The rule's name.
-     * @return The rule object.
-     */
-    private Rule getTerminalRule(String ruleName) {
-        return terminalNodes.computeIfAbsent(ruleName, key -> new Rule(key));
-    }
-
-    /**
      * Interprets an integer vector using the loaded grammar.
      *
      * @param integerIterable The integer vector.
+     *
      * @return The built object.
      */
     public T interpret(Iterable<Integer> integerIterable) {
@@ -204,9 +226,11 @@ public abstract class AbstractGrammarMapper<T> {
     }
 
     /**
-     * When interpreting an integer vector, this is what the method {@link AbstractGrammarMapper#interpret(java.lang.Iterable) interpret} will call.
+     * When interpreting an integer vector, this is what the method {@link AbstractGrammarMapper#interpret(java.lang.Iterable)
+     * interpret} will call.
      *
      * @param cyclicIterator The unmodifiable integer vector in form of a cyclic iterator object.
+     *
      * @return The built object.
      */
     protected abstract T hookInterpret(Iterator<Integer> cyclicIterator);
