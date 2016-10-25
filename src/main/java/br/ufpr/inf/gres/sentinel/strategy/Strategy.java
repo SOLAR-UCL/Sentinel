@@ -3,7 +3,10 @@ package br.ufpr.inf.gres.sentinel.strategy;
 import br.ufpr.inf.gres.sentinel.base.mutation.Mutant;
 import br.ufpr.inf.gres.sentinel.base.solution.Solution;
 import br.ufpr.inf.gres.sentinel.strategy.operation.Operation;
+import com.google.common.base.Joiner;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import org.apache.commons.collections4.list.SetUniqueList;
 
 /**
@@ -33,5 +36,16 @@ public class Strategy {
             return firstOperation.doOperation(new Solution());
         }
         return SetUniqueList.setUniqueList(Collections.emptyList());
+    }
+
+    @Override
+    public String toString() {
+        List<String> ops = new ArrayList<>();
+        Operation temp = firstOperation;
+        while (temp != null) {
+            ops.add(temp.getName());
+            temp = temp.getSuccessor();
+        }
+        return Joiner.on(" - ").join(ops);
     }
 }

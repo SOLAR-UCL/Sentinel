@@ -13,13 +13,6 @@ public abstract class Operation {
     protected String name;
     protected boolean specific = false;
 
-    public Operation() {
-    }
-
-    public Operation(String name) {
-        this.name = name;
-    }
-
     public Operation(String name, boolean specific) {
         this.name = name;
         this.specific = specific;
@@ -56,6 +49,11 @@ public abstract class Operation {
 
     public void setSpecific(boolean specific) {
         this.specific = specific;
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
 
 }

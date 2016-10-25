@@ -2,6 +2,7 @@ package br.ufpr.inf.gres.sentinel.strategy.operation.impl;
 
 import br.ufpr.inf.gres.sentinel.base.mutation.Mutant;
 import br.ufpr.inf.gres.sentinel.base.solution.Solution;
+import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.TerminalRuleType;
 import br.ufpr.inf.gres.sentinel.strategy.operation.Operation;
 import java.util.ArrayList;
 import org.apache.commons.collections4.list.SetUniqueList;
@@ -14,6 +15,10 @@ import org.apache.commons.lang3.ObjectUtils;
 public class NewBranchOperation extends Operation {
 
     private Operation secondSuccessor;
+
+    public NewBranchOperation() {
+        super(TerminalRuleType.NEW_BRANCH, false);
+    }
 
     public Operation getSecondSuccessor() {
         return secondSuccessor;

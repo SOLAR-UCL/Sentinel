@@ -21,10 +21,10 @@ public class NonTerminalOperationFactory implements Factory<Rule> {
     }
 
     public static NonTerminalOperationFactory getInstance() {
-        return DefaultOperationFactoryHolder.INSTANCE;
+        return SingletonHolder.INSTANCE;
     }
 
-    private static class DefaultOperationFactoryHolder {
+    private static class SingletonHolder {
 
         private static final NonTerminalOperationFactory INSTANCE = new NonTerminalOperationFactory();
     }

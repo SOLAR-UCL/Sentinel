@@ -4,6 +4,7 @@ import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.representation.Opti
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.representation.Rule;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.Factory;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.FactoryFlyweight;
+import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.TerminalRuleType;
 import br.ufpr.inf.gres.sentinel.strategy.operation.Operation;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.AddAllOperatorsOperation;
 import java.util.Iterator;
@@ -12,8 +13,6 @@ import java.util.Iterator;
  * Created by Giovani Guizzo on 24/10/2016.
  */
 public class StrategyOperationFactory implements Factory<Option> {
-
-    private static final String ALL_OPERATORS = "All Operators";
 
     private StrategyOperationFactory() {
     }
@@ -25,19 +24,16 @@ public class StrategyOperationFactory implements Factory<Option> {
             Rule firstRule = rules.next();
             Operation mainOperation;
             switch (firstRule.getName()) {
-                case ALL_OPERATORS:
+                case TerminalRuleType.ALL_OPERATORS:
                     mainOperation = new AddAllOperatorsOperation();
                     if (rules.hasNext()) {
                         Rule nextRule = rules.next();
-                        if (!nextRule.isTerminal()) {
-                            mainOperation.setSuccessor(FactoryFlyweight.getNonTerminalFactory().createOperation(nextRule, cyclicIterator));
-                        } else {
-                            throw new RuntimeException("Malformed grammar option: " + option.toString());
-                        }
+                        mainOperation.setSuccessor(FactoryFlyweight.getNonTerminalFactory().createOperation(nextRule, cyclicIterator));
                     }
                     break;
                 default:
                     mainOperation = FactoryFlyweight.getNonTerminalFactory().createOperation(firstRule, cyclicIterator);
+                    break;
             }
             return mainOperation;
         }
@@ -45,10 +41,10 @@ public class StrategyOperationFactory implements Factory<Option> {
     }
 
     public static StrategyOperationFactory getInstance() {
-        return StrategyOperationFactoryHolder.INSTANCE;
+        return SingletonHolder.INSTANCE;
     }
 
-    private static class StrategyOperationFactoryHolder {
+    private static class SingletonHolder {
 
         private static final StrategyOperationFactory INSTANCE = new StrategyOperationFactory();
     }

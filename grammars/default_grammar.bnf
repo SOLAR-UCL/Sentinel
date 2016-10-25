@@ -2,53 +2,53 @@
 
 <defaultOperation> ::= <operatorOperation> <defaultOperation> | <mutantOperation> <defaultOperation> | "New Branch" <defaultOperation> <defaultOperation> | "Store Mutants"
 
-<tipoSelecao> ::= "Sequencial" | "Aleatoria" | "LastToFirst"
+<selectionType> ::= "Sequential" | "Random" | "LastToFirst"
 
-<direcaoOrdenacao> ::= "Crescente" | "Decrescente"
+<sortingDirection> ::= "Ascending" | "Descending"
 
-<quantidade> ::= "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" | "10"
+<quantity> ::= "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" | "10"
 
-<porcentagem> ::= "0.1" | "0.2" | "0.3" | "0.4" | "0.5" | "0.6" | "0.7" | "0.8" | "0.9" | "1.0"
+<percentage> ::= "0.1" | "0.2" | "0.3" | "0.4" | "0.5" | "0.6" | "0.7" | "0.8" | "0.9" | "1.0"
 
 ## Operações de Operadores
 
-<operacaoOperadores> ::= <selecionarOperadores> | <descartarOperadores> | <executarOperadores> | <agruparOperadores>
+<operatorOperation> ::= <selectOperators> | <discardOperators> | <executeOperators> | <groupOperators>
 
-<selecionarOperadores> ::= <tipoSelecaoOperadores> <quantidade> | <tipoSelecaoOperadores> <porcentagem>
+<selectOperators> ::= <operatorSelectionType> <quantity> | <operatorSelectionType> <percentage>
 
-<tipoSelecaoOperadores> ::= <tipoSelecao> <ordenacaoOperadores> | <selecionarGruposOperadores> <tipoSelecao> <ordenacaoOperadores>
+<operatorSelectionType> ::= <selectionType> <operatorsSorting> | <selectOperatorGroups> <selectionType> <operatorsSorting>
 
-<ordenacaoOperadores> ::= "Quantidade Mutantes" <direcaoOrdenacao> | ""
+<operatorsSorting> ::= "Mutant Quantity" <sortingDirection> | ""
 
-<selecionarGruposOperadores> ::= <tipoSelecaoGruposOperadores> <quantidade> | <tipoSelecaoGruposOperadores> <porcentagem>
+<selectOperatorGroups> ::= <typeOfOperatorGroupSelection> <quantity> | <typeOfOperatorGroupSelection> <percentage>
 
-<tipoSelecaoGruposOperadores> ::= <tipoSelecao> <ordenacaoGruposOperadores>
+<typeOfOperatorGroupSelection> ::= <selectionType> <operatorGroupSorting>
 
-<ordenacaoGruposOperadores> ::= "Quantidade Mutantes no Grupo" <direcaoOrdenacao> | "Quantidade Operadores no Grupo" <direcaoOrdenacao> | ""
+<operatorGroupSorting> ::= "Quantidade Mutantes no Grupo" <sortingDirection> | "Quantidade Operadores no Grupo" <sortingDirection> | ""
 
-<descartarOperadores> ::= <selecionarOperadores> "Descartar Operadores"
+<discardOperators> ::= "Discard Operators" <selectOperators>
 
-<executarOperadores> ::= <selecionarOperadores> "Executar Operadores" <tipoExecucaoOperadores>
+<executeOperators> ::= "Execute Operators" <selectOperators> <typeOfOperatorExecution>
 
-<tipoExecucaoOperadores> ::= "Execução Convencional"
+<typeOfOperatorExecution> ::= "Conventional Execution"
 
-<agruparOperadores> ::= "Tipo Operadores"
+<groupOperators> ::= "Operator Type"
 
 ## Operações de Mutantes
 
-<operacaoMutantes> ::= <selecionarMutantes> | <descartarMutantes> | <combinarMutantes> | <agruparMutantes>
+<mutantOperation> ::= <selectMutants> | <discardMutants> | <combineMutants> | <groupMutants>
 
-<selecionarMutantes> ::= <tipoSelecaoMutantes> <quantidade> | <tipoSelecaoMutantes> <porcentagem>
+<selectMutants> ::= <tipoSelecaoMutantes> <quantity> | <tipoSelecaoMutantes> <percentage>
 
-<tipoSelecaoMutantes> ::= <tipoSelecao> <ordenacaoMutantes> | <selecionarGruposMutantes> <tipoSelecao> <ordenacaoMutantes>
+<tipoSelecaoMutantes> ::= <selectionType> <ordenacaoMutantes> | <selecionarGruposMutantes> <selectionType> <ordenacaoMutantes>
 
-<ordenacaoMutantes> ::= "Ordem" <direcaoOrdenacao> | ""
+<ordenacaoMutantes> ::= "Ordem" <sortingDirection> | ""
 
-<selecionarGruposMutantes> ::= <tipoSelecaoGruposMutantes> <quantidade> | <tipoSelecaoGruposMutantes> <porcentagem>
+<selecionarGruposMutantes> ::= <tipoSelecaoGruposMutantes> <quantity> | <tipoSelecaoGruposMutantes> <percentage>
 
-<tipoSelecaoGruposMutantes> ::= <tipoSelecao> <ordenacaoGruposMutantes>
+<tipoSelecaoGruposMutantes> ::= <selectionType> <ordenacaoGruposMutantes>
 
-<ordenacaoGruposMutantes> ::= "Quantidade Mutantes no Grupo" <direcaoOrdenacao> | ""
+<ordenacaoGruposMutantes> ::= "Quantidade Mutantes no Grupo" <sortingDirection> | ""
 
 <descartarMutantes> ::= <selecionarMutantes> "Descartar Mutantes"
 

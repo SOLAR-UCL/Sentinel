@@ -30,7 +30,7 @@ public class StrategyMapper extends AbstractGrammarMapper<Strategy> {
     protected Strategy hookInterpret(Iterator<Integer> cyclicIterator) {
         Strategy strategy = new Strategy();
         if (rootNode != null) {
-            strategy.setFirstOperation(FactoryFlyweight.getFactory(FactoryFlyweight.NON_TERMINAL).createOperation(rootNode, cyclicIterator));
+            strategy.setFirstOperation(FactoryFlyweight.getNonTerminalFactory().createOperation(rootNode, cyclicIterator));
         }
         return strategy;
     }
