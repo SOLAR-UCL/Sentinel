@@ -12,6 +12,15 @@ public class Program {
     protected String name;
     protected File sourceFile;
 
+    public Program(String name, File sourceFile) {
+        this.name = name;
+        this.sourceFile = sourceFile;
+    }
+
+    public Program(Program program) {
+        this(program.name, program.sourceFile);
+    }
+
     @Override
     public int hashCode() {
         int hash = 7;
@@ -31,6 +40,22 @@ public class Program {
         }
         final Program other = (Program) obj;
         return Objects.equals(this.name, other.name);
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public File getSourceFile() {
+        return sourceFile;
+    }
+
+    public void setSourceFile(File sourceFile) {
+        this.sourceFile = sourceFile;
     }
 
 }

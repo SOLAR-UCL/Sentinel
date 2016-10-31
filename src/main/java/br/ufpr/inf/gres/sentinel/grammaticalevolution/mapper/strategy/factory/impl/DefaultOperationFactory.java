@@ -6,8 +6,9 @@ import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.Fa
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.FactoryFlyweight;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.TerminalRuleType;
 import br.ufpr.inf.gres.sentinel.strategy.operation.Operation;
-import br.ufpr.inf.gres.sentinel.strategy.operation.impl.NewBranchOperation;
-import br.ufpr.inf.gres.sentinel.strategy.operation.impl.StoreMutantsOperation;
+import br.ufpr.inf.gres.sentinel.strategy.operation.impl.defaults.NewBranchOperation;
+import br.ufpr.inf.gres.sentinel.strategy.operation.impl.defaults.StoreMutantsOperation;
+import com.google.common.base.Preconditions;
 import java.util.Iterator;
 
 /**
@@ -31,19 +32,21 @@ public class DefaultOperationFactory implements Factory<Option> {
             Operation mainOperation;
             switch (firstRule.getName()) {
                 case TerminalRuleType.STORE_MUTANTS:
-                    return new StoreMutantsOperation();
-                case TerminalRuleType.NEW_BRANCH:
+                    mainOperation = new StoreMutantsOperation();
+                    break;
+                case TerminalRuleType.NEW_BRANCH: {
                     NewBranchOperation branchOperation = new NewBranchOperation();
                     mainOperation = branchOperation;
-                    if (rules.hasNext()) {
-                        Rule nextRule = rules.next();
-                        mainOperation.setSuccessor(FactoryFlyweight.getNonTerminalFactory().createOperation(nextRule, cyclicIterator));
-                        if (rules.hasNext()) {
-                            nextRule = rules.next();
-                            branchOperation.setSecondSuccessor(FactoryFlyweight.getNonTerminalFactory().createOperation(nextRule, cyclicIterator));
-                        }
-                    }
+
+                    Preconditions.checkArgument(rules.hasNext(), "Malformed grammar option: " + option.toString());
+                    Rule nextRule = rules.next();
+                    mainOperation.setSuccessor(FactoryFlyweight.getNonTerminalFactory().createOperation(nextRule, cyclicIterator));
+
+                    Preconditions.checkArgument(rules.hasNext(), "Malformed grammar option: " + option.toString());
+                    nextRule = rules.next();
+                    branchOperation.setSecondSuccessor(FactoryFlyweight.getNonTerminalFactory().createOperation(nextRule, cyclicIterator));
                     break;
+                }
                 default:
                     mainOperation = FactoryFlyweight.getNonTerminalFactory().createOperation(firstRule, cyclicIterator);
                     if (rules.hasNext()) {
@@ -54,7 +57,7 @@ public class DefaultOperationFactory implements Factory<Option> {
             }
             return mainOperation;
         }
-        throw new RuntimeException("Malformed grammar option: " + option.toString());
+        throw new IllegalArgumentException("Malformed grammar option: " + option.toString());
     }
 
     private static class SingletonHolder {

@@ -1,15 +1,11 @@
 package br.ufpr.inf.gres.sentinel.strategy.operation;
 
-import br.ufpr.inf.gres.sentinel.base.mutation.Mutant;
-import br.ufpr.inf.gres.sentinel.base.solution.Solution;
-import org.apache.commons.collections4.list.SetUniqueList;
-
 /**
  * @author Giovani Guizzo
  */
-public abstract class Operation {
+public abstract class Operation<I, O> {
 
-    protected Operation successor;
+    protected Operation<I, O> successor;
     protected String name;
     protected boolean specific = false;
 
@@ -18,11 +14,11 @@ public abstract class Operation {
         this.specific = specific;
     }
 
-    public abstract SetUniqueList<Mutant> doOperation(Solution solution);
+    public abstract O doOperation(I input);
 
-    public SetUniqueList<Mutant> next(Solution solution) {
+    public O next(I input) {
         if (successor != null) {
-            return successor.doOperation(solution);
+            return successor.doOperation(input);
         }
         return null;
     }

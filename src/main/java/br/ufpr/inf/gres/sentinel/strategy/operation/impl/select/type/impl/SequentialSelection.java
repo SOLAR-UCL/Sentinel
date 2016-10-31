@@ -1,6 +1,6 @@
-package br.ufpr.inf.gres.sentinel.strategy.operation.impl.selectiontype.impl;
+package br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.type.impl;
 
-import br.ufpr.inf.gres.sentinel.strategy.operation.impl.selectiontype.SelectionType;
+import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.type.SelectionType;
 import com.google.common.collect.Iterators;
 import java.util.ArrayList;
 import java.util.Iterator;

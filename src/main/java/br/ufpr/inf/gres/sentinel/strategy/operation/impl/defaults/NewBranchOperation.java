@@ -1,10 +1,11 @@
-package br.ufpr.inf.gres.sentinel.strategy.operation.impl;
+package br.ufpr.inf.gres.sentinel.strategy.operation.impl.defaults;
 
 import br.ufpr.inf.gres.sentinel.base.mutation.Mutant;
 import br.ufpr.inf.gres.sentinel.base.solution.Solution;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.TerminalRuleType;
 import br.ufpr.inf.gres.sentinel.strategy.operation.Operation;
 import java.util.ArrayList;
+import java.util.List;
 import org.apache.commons.collections4.list.SetUniqueList;
 import org.apache.commons.lang3.ObjectUtils;
 
@@ -12,27 +13,27 @@ import org.apache.commons.lang3.ObjectUtils;
  *
  * @author Giovani Guizzo
  */
-public class NewBranchOperation extends Operation {
+public class NewBranchOperation extends Operation<Solution, List<Mutant>> {
 
-    private Operation secondSuccessor;
+    private Operation<Solution, List<Mutant>> secondSuccessor;
 
     public NewBranchOperation() {
         super(TerminalRuleType.NEW_BRANCH, false);
     }
 
-    public Operation getSecondSuccessor() {
+    public Operation<Solution, List<Mutant>> getSecondSuccessor() {
         return secondSuccessor;
     }
 
-    public void setSecondSuccessor(Operation secondSuccessor) {
+    public void setSecondSuccessor(Operation<Solution, List<Mutant>> secondSuccessor) {
         this.secondSuccessor = secondSuccessor;
     }
 
     @Override
-    public SetUniqueList<Mutant> doOperation(Solution solution) {
+    public List<Mutant> doOperation(Solution solution) {
         Solution clonedSolution = ObjectUtils.clone(solution);
 
-        SetUniqueList<Mutant> result = next(solution);
+        List<Mutant> result = next(solution);
         SetUniqueList<Mutant> newList = SetUniqueList.setUniqueList(new ArrayList<>(result));
 
         if (secondSuccessor != null) {

@@ -14,24 +14,24 @@ import org.apache.commons.collections4.list.SetUniqueList;
  */
 public class Strategy {
 
-    private Operation firstOperation;
+    private Operation<Solution, List<Mutant>> firstOperation;
 
-    public Operation getFirstOperation() {
+    public Operation<Solution, List<Mutant>> getFirstOperation() {
         return firstOperation;
     }
 
-    public void setFirstOperation(Operation firstOperation) {
+    public void setFirstOperation(Operation<Solution, List<Mutant>> firstOperation) {
         this.firstOperation = firstOperation;
     }
 
     public Strategy() {
     }
 
-    public Strategy(Operation firstOperation) {
+    public Strategy(Operation<Solution, List<Mutant>> firstOperation) {
         this.firstOperation = firstOperation;
     }
 
-    public SetUniqueList<Mutant> run() {
+    public List<Mutant> run() {
         if (firstOperation != null) {
             return firstOperation.doOperation(new Solution());
         }
@@ -41,7 +41,7 @@ public class Strategy {
     @Override
     public String toString() {
         List<String> ops = new ArrayList<>();
-        Operation temp = firstOperation;
+        Operation<Solution, List<Mutant>> temp = firstOperation;
         while (temp != null) {
             ops.add(temp.getName());
             temp = temp.getSuccessor();

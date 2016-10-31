@@ -1,4 +1,4 @@
-package br.ufpr.inf.gres.sentinel.strategy.operation.impl.selectiontype;
+package br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.type;
 
 import java.util.List;
 

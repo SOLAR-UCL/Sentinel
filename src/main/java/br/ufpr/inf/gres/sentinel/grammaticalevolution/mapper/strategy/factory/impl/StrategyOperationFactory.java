@@ -6,7 +6,8 @@ import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.Fa
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.FactoryFlyweight;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.TerminalRuleType;
 import br.ufpr.inf.gres.sentinel.strategy.operation.Operation;
-import br.ufpr.inf.gres.sentinel.strategy.operation.impl.AddAllOperatorsOperation;
+import br.ufpr.inf.gres.sentinel.strategy.operation.impl.defaults.AddAllOperatorsOperation;
+import com.google.common.base.Preconditions;
 import java.util.Iterator;
 
 /**
@@ -26,10 +27,10 @@ public class StrategyOperationFactory implements Factory<Option> {
             switch (firstRule.getName()) {
                 case TerminalRuleType.ALL_OPERATORS:
                     mainOperation = new AddAllOperatorsOperation();
-                    if (rules.hasNext()) {
-                        Rule nextRule = rules.next();
-                        mainOperation.setSuccessor(FactoryFlyweight.getNonTerminalFactory().createOperation(nextRule, cyclicIterator));
-                    }
+
+                    Preconditions.checkArgument(rules.hasNext(), "Malformed grammar option: " + option.toString());
+                    Rule nextRule = rules.next();
+                    mainOperation.setSuccessor(FactoryFlyweight.getNonTerminalFactory().createOperation(nextRule, cyclicIterator));
                     break;
                 default:
                     mainOperation = FactoryFlyweight.getNonTerminalFactory().createOperation(firstRule, cyclicIterator);
@@ -37,7 +38,7 @@ public class StrategyOperationFactory implements Factory<Option> {
             }
             return mainOperation;
         }
-        throw new RuntimeException("Malformed grammar option: " + option.toString());
+        throw new IllegalArgumentException("Malformed grammar option: " + option.toString());
     }
 
     public static StrategyOperationFactory getInstance() {

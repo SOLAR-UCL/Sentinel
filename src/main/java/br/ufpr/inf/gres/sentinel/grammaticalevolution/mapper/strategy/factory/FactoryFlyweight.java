@@ -2,8 +2,7 @@ package br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory;
 
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.impl.DefaultOperationFactory;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.impl.NonTerminalOperationFactory;
-import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.impl.SelectOperationFactory;
-import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.impl.SingleNonTerminalOperationFactory;
+import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.impl.OperatorOperationFactory;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.impl.StrategyOperationFactory;
 import java.util.HashMap;
 
@@ -32,14 +31,13 @@ public class FactoryFlyweight {
                 return StrategyOperationFactory.getInstance();
             case NonTerminalRuleType.DEFAULT_OPERATION:
                 return DefaultOperationFactory.getInstance();
-            case NonTerminalRuleType.SELECT_OPERATORS:
-            case NonTerminalRuleType.SELECT_MUTANTS:
-                return SelectOperationFactory.getInstance();
             case NonTerminalRuleType.OPERATOR_OPERATION:
-            case NonTerminalRuleType.MUTANT_OPERATION:
-                return SingleNonTerminalOperationFactory.getInstance();
+                return OperatorOperationFactory.getInstance();
+//            case NonTerminalRuleType.SELECT_OPERATORS:
+//            case NonTerminalRuleType.SELECT_MUTANTS:
+//                return SelectOperationFactory.getInstance();
             default:
-                throw new RuntimeException("Unidentified grammar rule: " + name);
+                throw new IllegalArgumentException("Unidentified grammar rule: " + name);
         }
     }
 
