@@ -1,6 +1,5 @@
 package br.ufpr.inf.gres.sentinel.strategy.operation.impl.select;
 
-import br.ufpr.inf.gres.sentinel.strategy.operation.impl.SelectionOperation;
 import br.ufpr.inf.gres.sentinel.base.mutation.Mutant;
 import br.ufpr.inf.gres.sentinel.base.mutation.Operator;
 import br.ufpr.inf.gres.sentinel.base.solution.Solution;
@@ -31,7 +30,11 @@ public class SelectOperatorsOperation extends Operation<Solution, List<Mutant>> 
 
     public void setSelection(SelectionOperation<Operator> selection) {
         this.selection = selection;
-        this.specific = selection.isSpecific();
+    }
+
+    @Override
+    public boolean isSpecific() {
+        return selection != null ? selection.isSpecific() : specific;
     }
 
     @Override

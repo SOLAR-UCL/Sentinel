@@ -12,23 +12,25 @@
 
 ## Operações de Operadores
 
-<operatorOperation> ::= "Select Operators" <selectOperators> | "Discard Operators" <selectOperators> | "Execute Operators" <selectOperators> <typeOfOperatorExecution> | "Group Operators" <operatorAttribute>
+<operatorOperation> ::= "Select Operators" <selectOperators> | "Discard Operators" <selectOperators> | "Execute Operators" <selectOperators> <typeOfOperatorExecution>
 
 <selectOperators> ::= <operatorSelectionType> <quantity> | <operatorSelectionType> <percentage>
 
-<operatorSelectionType> ::= "Select Operators" <selectionType> <operatorsSorting> | "Select Operators by Groups" <selectOperatorGroups> <selectionType> <operatorsSorting>
+<operatorSelectionType> ::= "Select Operators" <selectionType> <operatorsSorting> | "Select Operators by Groups" <selectOperatorGroups> <operatorSelectionType>
 
 <operatorsSorting> ::=  <operatorAttribute> <sortingDirection> | ""
 
-<selectOperatorGroups> ::= <typeOfOperatorGroupSelection> <quantity> | <typeOfOperatorGroupSelection> <percentage>
+<selectOperatorGroups> ::= <operatorGroupSelectionType> <quantity> | <operatorGroupSelectionType> <percentage>
 
-<typeOfOperatorGroupSelection> ::= <selectionType> <operatorGroupSorting>
+<operatorGroupSelectionType> ::= <operatorAttribute> <selectionType> <operatorGroupSorting>
 
-<operatorGroupSorting> ::= "Quantidade Mutantes no Grupo" <sortingDirection> | "Quantidade Operadores no Grupo" <sortingDirection> | ""
-
-<typeOfOperatorExecution> ::= "Conventional Execution"
+<operatorGroupSorting> ::=  <operatorGroupAttribute> <sortingDirection> | ""
 
 <operatorAttribute> ::= "Type" | "Mutant Quantity"
+
+<operatorGroupAttribute> ::= "Quantidade Mutantes no Grupo" | "Quantidade Operadores no Grupo"
+
+<typeOfOperatorExecution> ::= "Conventional Execution"
 
 ## Operações de Mutantes
 

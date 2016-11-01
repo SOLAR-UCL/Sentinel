@@ -9,11 +9,10 @@ import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.Fa
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.FactoryFlyweight;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.TerminalRuleType;
 import br.ufpr.inf.gres.sentinel.strategy.operation.Operation;
-import br.ufpr.inf.gres.sentinel.strategy.operation.impl.SelectionOperation;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.discard.DiscardOperatorsOperation;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.execute.ExecuteOperatorsOperation;
-import br.ufpr.inf.gres.sentinel.strategy.operation.impl.group.GroupOperators;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.SelectOperatorsOperation;
+import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.SelectionOperation;
 import com.google.common.base.Preconditions;
 import java.util.Iterator;
 import java.util.List;
@@ -57,13 +56,6 @@ public class OperatorOperationFactory implements Factory<Option> {
                     Rule nextRule = rules.next();
                     SelectionOperation<Operator> selectOperatorOperation = (SelectionOperation<Operator>) FactoryFlyweight.getNonTerminalFactory().createOperation(nextRule, cyclicIterator);
                     mainOperation = new ExecuteOperatorsOperation(selectOperatorOperation);
-                    break;
-                }
-                case TerminalRuleType.GROUP_OPERATORS: {
-                    //TODO solve this design problem
-                    mainOperation = new GroupOperators("", false);
-                    Preconditions.checkArgument(rules.hasNext(), "Malformed grammar option: " + node.toString());
-                    Rule nextRule = rules.next();
                     break;
                 }
                 default:

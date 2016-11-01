@@ -5,7 +5,7 @@ import br.ufpr.inf.gres.sentinel.base.mutation.Operator;
 import br.ufpr.inf.gres.sentinel.base.solution.Solution;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.TerminalRuleType;
 import br.ufpr.inf.gres.sentinel.strategy.operation.Operation;
-import br.ufpr.inf.gres.sentinel.strategy.operation.impl.SelectionOperation;
+import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.SelectionOperation;
 import java.util.List;
 
 /**

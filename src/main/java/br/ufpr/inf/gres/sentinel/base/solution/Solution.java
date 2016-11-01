@@ -14,28 +14,9 @@ public class Solution implements Cloneable {
     protected SetUniqueList<Mutant> mutants;
     protected SetUniqueList<Operator> operators;
 
-    protected String mutantGrouping;
-    protected String operatorsGrouping;
-
     public Solution() {
         mutants = SetUniqueList.setUniqueList(new ArrayList<>());
         operators = SetUniqueList.setUniqueList(new ArrayList<>());
-    }
-
-    public String getMutantGrouping() {
-        return mutantGrouping;
-    }
-
-    public void setMutantGrouping(String mutantGrouping) {
-        this.mutantGrouping = mutantGrouping;
-    }
-
-    public String getOperatorsGrouping() {
-        return operatorsGrouping;
-    }
-
-    public void setOperatorsGrouping(String operatorsGrouping) {
-        this.operatorsGrouping = operatorsGrouping;
     }
 
     public SetUniqueList<Mutant> getMutants() {
@@ -59,8 +40,6 @@ public class Solution implements Cloneable {
         Solution newSolution = new Solution();
         newSolution.getMutants().addAll(mutants);
         newSolution.getOperators().addAll(operators);
-        newSolution.setMutantGrouping(mutantGrouping);
-        newSolution.setOperatorsGrouping(operatorsGrouping);
         return newSolution;
     }
 
