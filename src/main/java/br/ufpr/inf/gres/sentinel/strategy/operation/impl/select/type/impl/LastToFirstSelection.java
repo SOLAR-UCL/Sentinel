@@ -1,17 +1,26 @@
 package br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.type.impl;
 
+import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.TerminalRuleType;
+import br.ufpr.inf.gres.sentinel.strategy.operation.Operation;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.type.SelectionType;
 import com.google.common.collect.Lists;
 import com.google.common.math.IntMath;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  *
  * @author Giovani Guizzo
  */
-public class LastToFirst<T> implements SelectionType<T> {
+public class LastToFirstSelection<T> extends Operation<List<T>, List<T>> implements SelectionType<T> {
+
+    private static final Random RANDOM = new Random();
+
+    public LastToFirstSelection() {
+        super(TerminalRuleType.LAST_TO_FIRST, false);
+    }
 
     @Override
     public List<T> selectItems(List<T> items, int numberOfItemsToSelect) {
@@ -24,6 +33,11 @@ public class LastToFirst<T> implements SelectionType<T> {
             newList.add(sourceList.get(indexToGet % sourceList.size()));
         }
         return newList;
+    }
+
+    @Override
+    public List<T> doOperation(List<T> input) {
+        return selectItems(input, RANDOM.nextInt(input.size()));
     }
 
 }

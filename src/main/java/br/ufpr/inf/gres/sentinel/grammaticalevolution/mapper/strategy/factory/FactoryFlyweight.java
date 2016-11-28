@@ -1,9 +1,13 @@
 package br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory;
 
-import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.impl.DefaultOperationFactory;
-import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.impl.NonTerminalOperationFactory;
-import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.impl.OperatorOperationFactory;
-import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.impl.StrategyOperationFactory;
+import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.impl.DefaultFactory;
+import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.impl.NonTerminalFactory;
+import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.impl.OperatorFactory;
+import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.impl.OperatorSelectionTypeFactory;
+import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.impl.OperatorsSortingFactory;
+import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.impl.SelectOperatorsFactory;
+import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.impl.SelectionTypeFactory;
+import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.impl.StrategyFactory;
 import java.util.HashMap;
 
 /**
@@ -19,23 +23,28 @@ public class FactoryFlyweight {
         return FactoryFlyweightHolder.FLYWEIGHT.computeIfAbsent(name, FactoryFlyweight::createNew);
     }
 
-    public static NonTerminalOperationFactory getNonTerminalFactory() {
-        return (NonTerminalOperationFactory) getFactory(NonTerminalRuleType.UNKNOWN_NON_TERMINAL);
+    public static NonTerminalFactory getNonTerminalFactory() {
+        return (NonTerminalFactory) getFactory(NonTerminalRuleType.UNKNOWN_NON_TERMINAL);
     }
 
     private static Factory createNew(String name) throws RuntimeException {
         switch (name) {
             case NonTerminalRuleType.UNKNOWN_NON_TERMINAL:
-                return NonTerminalOperationFactory.getInstance();
+                return NonTerminalFactory.getInstance();
             case NonTerminalRuleType.STRATEGY:
-                return StrategyOperationFactory.getInstance();
+                return StrategyFactory.getInstance();
             case NonTerminalRuleType.DEFAULT_OPERATION:
-                return DefaultOperationFactory.getInstance();
+                return DefaultFactory.getInstance();
             case NonTerminalRuleType.OPERATOR_OPERATION:
-                return OperatorOperationFactory.getInstance();
-//            case NonTerminalRuleType.SELECT_OPERATORS:
-//            case NonTerminalRuleType.SELECT_MUTANTS:
-//                return SelectOperationFactory.getInstance();
+                return OperatorFactory.getInstance();
+            case NonTerminalRuleType.SELECT_OPERATORS:
+                return SelectOperatorsFactory.getInstance();
+            case NonTerminalRuleType.OPERATOR_SELECTION_TYPE:
+                return OperatorSelectionTypeFactory.getInstance();
+            case NonTerminalRuleType.SELECTION_TYPE:
+                return SelectionTypeFactory.getInstance();
+            case NonTerminalRuleType.OPERATORS_SORTING:
+                return OperatorsSortingFactory.getInstance();
             default:
                 throw new IllegalArgumentException("Unidentified grammar rule: " + name);
         }

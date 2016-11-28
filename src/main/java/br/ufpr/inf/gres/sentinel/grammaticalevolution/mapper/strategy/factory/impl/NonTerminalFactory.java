@@ -9,9 +9,9 @@ import java.util.Iterator;
 /**
  * Created by Giovani Guizzo on 24/10/2016.
  */
-public class NonTerminalOperationFactory implements Factory<Rule> {
+public class NonTerminalFactory implements Factory<Rule> {
 
-    private NonTerminalOperationFactory() {
+    private NonTerminalFactory() {
     }
 
     @Override
@@ -20,13 +20,13 @@ public class NonTerminalOperationFactory implements Factory<Rule> {
         return factory.createOperation(rule.getOption(cyclicIterator), cyclicIterator);
     }
 
-    public static NonTerminalOperationFactory getInstance() {
+    public static NonTerminalFactory getInstance() {
         return SingletonHolder.INSTANCE;
     }
 
     private static class SingletonHolder {
 
-        private static final NonTerminalOperationFactory INSTANCE = new NonTerminalOperationFactory();
+        private static final NonTerminalFactory INSTANCE = new NonTerminalFactory();
     }
 
 }

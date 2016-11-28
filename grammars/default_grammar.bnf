@@ -22,7 +22,7 @@
 
 <selectOperatorGroups> ::= <operatorGroupSelectionType> <quantity> | <operatorGroupSelectionType> <percentage>
 
-<operatorGroupSelectionType> ::= <operatorAttribute> <selectionType> <operatorGroupSorting>
+<operatorGroupSelectionType> ::= <selectionType> <operatorGroupSorting>
 
 <operatorGroupSorting> ::=  <operatorGroupAttribute> <sortingDirection> | ""
 

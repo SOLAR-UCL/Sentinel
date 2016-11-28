@@ -19,4 +19,25 @@ public abstract class AbstractSorterOperation<T> extends Operation<List<T>, Inte
         return compare(input.get(0), input.get(1));
     }
 
+    @Override
+    public AbstractSorterOperation<T> reversed() {
+        return new ReversedAbstractSorterOperation(this);
+    }
+
+    private static class ReversedAbstractSorterOperation<T> extends AbstractSorterOperation<T> {
+
+        private AbstractSorterOperation sorter;
+
+        public ReversedAbstractSorterOperation(AbstractSorterOperation<T> sorter) {
+            super(sorter.getName(), sorter.isSpecific());
+            this.sorter = sorter;
+        }
+
+        @Override
+        public int compare(Object o1, Object o2) {
+            return sorter.compare(o2, o1);
+        }
+
+    }
+
 }
