@@ -1,13 +1,18 @@
 package br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.type;
 
+import br.ufpr.inf.gres.sentinel.strategy.operation.Operation;
 import java.util.List;
 
 /**
  *
  * @author Giovani Guizzo
  */
-public interface SelectionType<T> {
+public abstract class SelectionType<T> extends Operation<List<T>, List<T>> {
 
-    public List<T> selectItems(List<T> items, int numberOfItemsToSelect);
+    public SelectionType(String name, boolean specific) {
+        super(name, specific);
+    }
+
+    public abstract List<T> selectItems(List<T> items, int numberOfItemsToSelect);
 
 }

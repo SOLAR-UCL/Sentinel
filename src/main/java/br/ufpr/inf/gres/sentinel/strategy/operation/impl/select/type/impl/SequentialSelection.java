@@ -1,7 +1,6 @@
 package br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.type.impl;
 
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.TerminalRuleType;
-import br.ufpr.inf.gres.sentinel.strategy.operation.Operation;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.type.SelectionType;
 import com.google.common.collect.Iterators;
 import java.util.ArrayList;
@@ -13,7 +12,7 @@ import java.util.Random;
  *
  * @author Giovani Guizzo
  */
-public class SequentialSelection<T> extends Operation<List<T>, List<T>> implements SelectionType<T> {
+public class SequentialSelection<T> extends SelectionType<T> {
 
     private static final Random RANDOM = new Random();
 

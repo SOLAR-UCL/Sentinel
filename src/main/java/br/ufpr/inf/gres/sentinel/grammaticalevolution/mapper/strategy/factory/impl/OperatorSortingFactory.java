@@ -15,9 +15,9 @@ import java.util.Iterator;
  *
  * @author Giovani Guizzo
  */
-public class OperatorsSortingFactory implements Factory<Option> {
+public class OperatorSortingFactory implements Factory<Option> {
 
-    public static OperatorsSortingFactory getInstance() {
+    public static OperatorSortingFactory getInstance() {
         return SingletonHolder.INSTANCE;
     }
 
@@ -54,7 +54,7 @@ public class OperatorsSortingFactory implements Factory<Option> {
 
     private static class SingletonHolder {
 
-        private static final OperatorsSortingFactory INSTANCE = new OperatorsSortingFactory();
+        private static final OperatorSortingFactory INSTANCE = new OperatorSortingFactory();
     }
 
 }

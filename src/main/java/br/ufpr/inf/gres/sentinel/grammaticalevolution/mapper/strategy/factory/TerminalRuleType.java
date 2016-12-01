@@ -38,6 +38,11 @@ public class TerminalRuleType {
     public static final String TYPE = "Type";
     public static final String MUTANT_QUANTITY = "Mutant Quantity";
 
+    public static final String MUTANT_QUANTITY_IN_GROUP = "Mutant Quantity in Group";
+    public static final String OPERATOR_QUANTITY_IN_GROUP = "Operator Quantity in Group";
+
+    public static final String CONVENTIONAL_EXECUTION = "Conventional Execution";
+
     private TerminalRuleType() {
     }
 

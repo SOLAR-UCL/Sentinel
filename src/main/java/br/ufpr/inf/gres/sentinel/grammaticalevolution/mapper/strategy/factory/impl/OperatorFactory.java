@@ -10,8 +10,9 @@ import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.Te
 import br.ufpr.inf.gres.sentinel.strategy.operation.Operation;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.discard.DiscardOperatorsOperation;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.execute.ExecuteOperatorsOperation;
+import br.ufpr.inf.gres.sentinel.strategy.operation.impl.execute.type.OperatorExecutionType;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.SelectOperatorsOperation;
-import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.SelectionOperation;
+import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.impl.SelectionOperation;
 import com.google.common.base.Preconditions;
 import java.util.Iterator;
 import java.util.List;
@@ -54,7 +55,12 @@ public class OperatorFactory implements Factory<Option> {
                 Preconditions.checkArgument(rules.hasNext(), "Malformed grammar option: " + node.toString());
                 Rule nextRule = rules.next();
                 SelectionOperation<Operator> selectOperatorOperation = (SelectionOperation<Operator>) FactoryFlyweight.getNonTerminalFactory().createOperation(nextRule, cyclicIterator);
-                mainOperation = new ExecuteOperatorsOperation(selectOperatorOperation);
+
+                Preconditions.checkArgument(rules.hasNext(), "Malformed grammar option: " + node.toString());
+                nextRule = rules.next();
+                OperatorExecutionType executionType = (OperatorExecutionType) FactoryFlyweight.getNonTerminalFactory().createOperation(nextRule, cyclicIterator);
+                mainOperation = new ExecuteOperatorsOperation(selectOperatorOperation, executionType);
+
                 break;
             }
             default:

@@ -16,7 +16,6 @@ public abstract class AbstractSelectionOperation<T> extends Operation<List<T>, L
     protected Double percentage = 0D;
 
     protected AbstractSorterOperation sorter;
-    protected boolean descendingOrder = false;
 
     public AbstractSelectionOperation(String name, boolean specific) {
         super(name, specific);
@@ -44,14 +43,6 @@ public abstract class AbstractSelectionOperation<T> extends Operation<List<T>, L
 
     public void setSelectionType(SelectionType selectionType) {
         this.selectionType = selectionType;
-    }
-
-    public boolean isDescendingOrder() {
-        return descendingOrder;
-    }
-
-    public void setDescendingOrder(boolean descendingOrder) {
-        this.descendingOrder = descendingOrder;
     }
 
     public AbstractSorterOperation getSorter() {
