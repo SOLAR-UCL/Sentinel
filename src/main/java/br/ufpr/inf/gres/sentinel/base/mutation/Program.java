@@ -21,9 +21,26 @@ public class Program {
         this(program.name, program.sourceFile);
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public File getSourceFile() {
+        return sourceFile;
+    }
+
+    public void setSourceFile(File sourceFile) {
+        this.sourceFile = sourceFile;
+    }
+
     @Override
     public int hashCode() {
-        int hash = 7;
+        int hash = 5;
+        hash = 31 * hash + Objects.hashCode(this.name);
         return hash;
     }
 
@@ -42,20 +59,9 @@ public class Program {
         return Objects.equals(this.name, other.name);
     }
 
-    public String getName() {
+    @Override
+    public String toString() {
         return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public File getSourceFile() {
-        return sourceFile;
-    }
-
-    public void setSourceFile(File sourceFile) {
-        this.sourceFile = sourceFile;
     }
 
 }

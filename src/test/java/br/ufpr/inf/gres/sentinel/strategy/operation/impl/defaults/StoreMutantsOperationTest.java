@@ -1,0 +1,38 @@
+package br.ufpr.inf.gres.sentinel.strategy.operation.impl.defaults;
+
+import br.ufpr.inf.gres.sentinel.base.mutation.Mutant;
+import br.ufpr.inf.gres.sentinel.base.solution.Solution;
+import br.ufpr.inf.gres.sentinel.integration.IntegrationFacade;
+import br.ufpr.inf.gres.sentinel.integration.IntegrationFacadeStub;
+import java.util.List;
+import static org.junit.Assert.assertEquals;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+/**
+ *
+ * @author Giovani Guizzo
+ */
+public class StoreMutantsOperationTest {
+
+    public StoreMutantsOperationTest() {
+    }
+
+    @BeforeClass
+    public static void setUpClass() {
+        IntegrationFacade.setIntegrationFacade(new IntegrationFacadeStub());
+    }
+
+    @Test
+    public void testDoOperation() {
+        Solution solution = new Solution();
+        solution.getMutants().add(new Mutant("Mutant1", null, null));
+        solution.getMutants().add(new Mutant("Mutant2", null, null));
+
+        StoreMutantsOperation storeMutantsOperation = new StoreMutantsOperation();
+        List<Mutant> result = storeMutantsOperation.doOperation(solution);
+
+        assertEquals(2, result.size());
+    }
+
+}

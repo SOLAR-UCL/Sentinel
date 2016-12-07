@@ -7,7 +7,6 @@ import br.ufpr.inf.gres.sentinel.strategy.operation.Operation;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.collections4.list.SetUniqueList;
-import org.apache.commons.lang3.ObjectUtils;
 
 /**
  *
@@ -31,7 +30,7 @@ public class NewBranchOperation extends Operation<Solution, List<Mutant>> {
 
     @Override
     public List<Mutant> doOperation(Solution solution) {
-        Solution clonedSolution = ObjectUtils.clone(solution);
+        Solution clonedSolution = new Solution(solution);
 
         List<Mutant> result = next(solution);
         SetUniqueList<Mutant> newList = SetUniqueList.setUniqueList(new ArrayList<>(result));

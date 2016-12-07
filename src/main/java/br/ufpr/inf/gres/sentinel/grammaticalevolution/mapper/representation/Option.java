@@ -8,29 +8,14 @@ import java.util.Objects;
 
 public class Option {
 
-    protected int index;
     protected List<Rule> rules;
 
     public Option() {
         this.rules = new ArrayList<>();
     }
 
-    public Option(int index) {
-        this();
-        this.index = index;
-    }
-
-    public Option(int index, List<Rule> rules) {
-        this.index = index;
+    public Option(List<Rule> rules) {
         this.rules = rules;
-    }
-
-    public int getIndex() {
-        return index;
-    }
-
-    public void setIndex(int index) {
-        this.index = index;
     }
 
     public List<Rule> getRules() {

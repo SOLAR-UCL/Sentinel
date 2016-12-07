@@ -53,8 +53,8 @@ public class Rule {
         return options.get(index % options.size());
     }
 
-    public Option getOption(Iterator<Integer> cyclicIterator) {
-        return getOptions().size() > 1 ? getOption(cyclicIterator.next()) : getOption(0);
+    public Option getOption(Iterator<Integer> iterator) {
+        return getOptions().size() > 1 ? getOption(iterator.next()) : getOption(0);
     }
 
     public boolean isTerminal() {

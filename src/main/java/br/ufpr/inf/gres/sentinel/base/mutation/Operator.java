@@ -1,6 +1,7 @@
 package br.ufpr.inf.gres.sentinel.base.mutation;
 
 import java.util.ArrayList;
+import java.util.Objects;
 import org.apache.commons.collections4.list.SetUniqueList;
 
 /**
@@ -48,9 +49,31 @@ public class Operator {
         this.generatedMutants = generatedMutants;
     }
 
-    public void execute() {
-        //TODO implement it
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 37 * hash + Objects.hashCode(this.name);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Operator other = (Operator) obj;
+        return Objects.equals(this.name, other.name);
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
 
 }

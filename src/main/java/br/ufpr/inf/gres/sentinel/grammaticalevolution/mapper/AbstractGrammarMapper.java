@@ -46,6 +46,7 @@ public abstract class AbstractGrammarMapper<T> {
      * @throws IOException If any problem occurs during the grammar reading.
      */
     public AbstractGrammarMapper(String grammarFilePath) throws IOException {
+        this();
         loadGrammar(grammarFilePath);
     }
 
@@ -55,11 +56,21 @@ public abstract class AbstractGrammarMapper<T> {
      * @throws IOException If any problem occurs during the grammar reading.
      */
     public AbstractGrammarMapper(File grammarFile) throws IOException {
+        this();
         loadGrammar(grammarFile);
     }
 
     public AbstractGrammarMapper() {
         initialize();
+    }
+
+    /**
+     * Initializes the class, erasing all nodes.
+     */
+    private void initialize() {
+        this.nonTerminalNodes = new HashMap<>();
+        this.terminalNodes = new HashMap<>();
+        this.rootNode = null;
     }
 
     public Rule getRootNode() {
@@ -141,7 +152,7 @@ public abstract class AbstractGrammarMapper<T> {
                         // Iterate over all options building an option object for each
                         for (int optionIndex = 0; optionIndex < options.size(); optionIndex++) {
                             String optionString = options.get(optionIndex);
-                            Option option = buildOption(optionString, optionIndex);
+                            Option option = buildOption(optionString);
                             rule.addOption(option);
                         }
                     }
@@ -159,15 +170,6 @@ public abstract class AbstractGrammarMapper<T> {
     }
 
     /**
-     * Initializes the class, erasing all nodes.
-     */
-    private void initialize() {
-        this.nonTerminalNodes = new HashMap<>();
-        this.terminalNodes = new HashMap<>();
-        this.rootNode = null;
-    }
-
-    /**
      * A regex to match BNF options. Group 1 is non-terminal, Group 2 is terminal.
      */
     private static final Pattern BNF_OPTION_PATTERN = Pattern.compile("((?<=<).+?(?=>))|((?<=\")(?:[\\S]+?.*?|)(?=\")|\\(|\\))");
@@ -178,15 +180,14 @@ public abstract class AbstractGrammarMapper<T> {
      * A method to build an option based on an option string.
      *
      * @param optionString The option string, e.g., 'op expr op'.
-     * @param index The option index for a rule.
      *
      * @return An option object.
      *
      * @throws IOException If there is any syntax error in the grammar file.
      */
-    private Option buildOption(String optionString, int index) throws IOException {
+    private Option buildOption(String optionString) throws IOException {
         // Create a new option
-        Option option = new Option(index);
+        Option option = new Option();
         Matcher matcher = BNF_OPTION_PATTERN.matcher(optionString);
         // Match a rule in an onption.
         while (matcher.find()) {
@@ -222,6 +223,7 @@ public abstract class AbstractGrammarMapper<T> {
      * @return The built object.
      */
     public T interpret(Iterable<Integer> integerIterable) {
+        //TODO set maximum wraps
         return hookInterpret(Iterables.unmodifiableIterable(Iterables.cycle(integerIterable)).iterator());
     }
 

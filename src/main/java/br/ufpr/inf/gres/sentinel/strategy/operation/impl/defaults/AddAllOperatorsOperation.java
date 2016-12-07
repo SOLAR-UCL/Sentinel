@@ -3,7 +3,7 @@ package br.ufpr.inf.gres.sentinel.strategy.operation.impl.defaults;
 import br.ufpr.inf.gres.sentinel.base.mutation.Mutant;
 import br.ufpr.inf.gres.sentinel.base.solution.Solution;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.TerminalRuleType;
-import br.ufpr.inf.gres.sentinel.integration.Facade;
+import br.ufpr.inf.gres.sentinel.integration.IntegrationFacade;
 import br.ufpr.inf.gres.sentinel.strategy.operation.Operation;
 import java.util.List;
 
@@ -19,7 +19,7 @@ public class AddAllOperatorsOperation extends Operation<Solution, List<Mutant>> 
 
     @Override
     public List<Mutant> doOperation(Solution solution) {
-        solution.getOperators().addAll(Facade.getFacade().getAllOperators());
+        solution.getOperators().addAll(IntegrationFacade.getFacade().getAllOperators());
         return next(solution);
     }
 

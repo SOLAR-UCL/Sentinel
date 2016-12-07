@@ -41,7 +41,8 @@ public class TestCase {
 
     @Override
     public int hashCode() {
-        int hash = 5;
+        int hash = 3;
+        hash = 29 * hash + Objects.hashCode(this.name);
         return hash;
     }
 
@@ -58,6 +59,11 @@ public class TestCase {
         }
         final TestCase other = (TestCase) obj;
         return Objects.equals(this.name, other.name);
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
 
 }

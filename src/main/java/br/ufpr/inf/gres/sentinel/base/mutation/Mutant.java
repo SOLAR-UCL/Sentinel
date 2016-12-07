@@ -2,6 +2,7 @@ package br.ufpr.inf.gres.sentinel.base.mutation;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Objects;
 import org.apache.commons.collections4.list.SetUniqueList;
 
 /**
@@ -11,8 +12,8 @@ import org.apache.commons.collections4.list.SetUniqueList;
 public class Mutant extends Program {
 
     protected Program originalProgram;
-    protected SetUniqueList<Operator> operators;
     protected boolean equivalent = false;
+    protected SetUniqueList<Operator> operators;
     protected SetUniqueList<Mutant> constituentMutants;
     protected SetUniqueList<TestCase> killingTestCases;
 
@@ -70,6 +71,46 @@ public class Mutant extends Program {
 
     public void setKillingTestCases(SetUniqueList<TestCase> killingTestCases) {
         this.killingTestCases = killingTestCases;
+    }
+
+    public int getOrder() {
+        int order = getConstituentMutants().size();
+        return order == 0 ? 1 : order;
+    }
+
+    public boolean isHigherOrder() {
+        return getOrder() > 1;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 11 * hash + Objects.hashCode(this.originalProgram);
+        hash = 11 * hash + Objects.hashCode(this.name);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Mutant other = (Mutant) obj;
+        if (!Objects.equals(this.originalProgram, other.originalProgram)) {
+            return false;
+        }
+        return Objects.equals(this.name, other.name);
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
 
 }
