@@ -38,7 +38,7 @@ public class OperationTest {
     @Test
     public void testToStringCompleteSingleOperation() {
         System.out.println("toStringComplete");
-        Operation instance = new OperationStub("TestOperation", false);
+        Operation instance = new OperationStub("TestOperation");
         String expResult = "1.TestOperation";
         String result = instance.toStringComplete();
         assertEquals(expResult, result);
@@ -58,32 +58,32 @@ public class OperationTest {
     }
 
     public static Operation getDualOperationChain() {
-        Operation instance = new OperationStub("TestOperation", false);
-        instance.setSuccessor(new OperationStub("TestOperation2", false));
+        Operation instance = new OperationStub("TestOperation");
+        instance.setSuccessor(new OperationStub("TestOperation2"));
         return instance;
     }
 
     public static Operation getComplexTestOperationChain() {
-        Operation instance = new OperationStub("TestOperation", false);
-        Operation instance2 = new OperationStub("TestOperation2", false);
+        Operation instance = new OperationStub("TestOperation");
+        Operation instance2 = new OperationStub("TestOperation2");
         instance.setSuccessor(instance2);
         NewBranchOperation newBranch = new NewBranchOperation();
         instance2.setSuccessor(newBranch);
-        newBranch.setSuccessor(new OperationStub("TestOperation3", false));
+        newBranch.setSuccessor(new OperationStub("TestOperation3"));
         NewBranchOperation newBranch2 = new NewBranchOperation();
         newBranch.setSecondSuccessor(newBranch2);
         NewBranchOperation newBranch3 = new NewBranchOperation();
         newBranch2.setSuccessor(newBranch3);
-        newBranch2.setSecondSuccessor(new OperationStub("TestOperation4", false));
-        newBranch3.setSuccessor(new OperationStub("TestOperation5", false));
-        newBranch3.setSecondSuccessor(new OperationStub("TestOperation6", false));
+        newBranch2.setSecondSuccessor(new OperationStub("TestOperation4"));
+        newBranch3.setSuccessor(new OperationStub("TestOperation5"));
+        newBranch3.setSecondSuccessor(new OperationStub("TestOperation6"));
         return instance;
     }
 
     public static class OperationStub extends Operation<Solution, List<Mutant>> {
 
-        public OperationStub(String name, boolean specific) {
-            super(name, specific);
+        public OperationStub(String name) {
+            super(name);
         }
 
         @Override
@@ -91,6 +91,11 @@ public class OperationTest {
             input.getMutants().add(new Mutant(name + " executed!", null, null));
             List<Mutant> result = next(input);
             return result == null ? input.getMutants() : result;
+        }
+
+        @Override
+        public boolean isSpecific() {
+            return false;
         }
     }
 

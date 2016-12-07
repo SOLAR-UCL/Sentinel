@@ -10,8 +10,8 @@ import java.util.List;
  */
 public abstract class OperatorExecutionType extends Operation<List<Operator>, List<Operator>> {
 
-    public OperatorExecutionType(String name, boolean specific) {
-        super(name, specific);
+    public OperatorExecutionType(String name) {
+        super(name);
     }
 
 }

@@ -1,5 +1,11 @@
 package br.ufpr.inf.gres.sentinel.strategy.operation.impl.sort.impl;
 
+import br.ufpr.inf.gres.sentinel.base.mutation.Mutant;
+import br.ufpr.inf.gres.sentinel.base.mutation.Operator;
+import java.util.ArrayList;
+import java.util.List;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 /**
@@ -13,7 +19,136 @@ public class MutantQuantityInGroupComparatorTest {
 
     @Test
     public void testCompare() {
-        //TODO implement it
+        MutantQuantityInGroupComparator comparator = new MutantQuantityInGroupComparator();
+
+        Operator operator1 = new Operator("Operator1", "Type1");
+        operator1.getGeneratedMutants().add(new Mutant("Mutant1", null, null));
+        operator1.getGeneratedMutants().add(new Mutant("Mutant2", null, null));
+
+        Operator operator2 = new Operator("Operator2", "Type1");
+        operator2.getGeneratedMutants().add(new Mutant("Mutant3", null, null));
+
+        Operator operator3 = new Operator("Operator3", "Type1");
+        operator3.getGeneratedMutants().add(new Mutant("Mutant4", null, null));
+
+        Operator operator4 = new Operator("Operator4", "Type1");
+        operator4.getGeneratedMutants().add(new Mutant("Mutant5", null, null));
+        operator4.getGeneratedMutants().add(new Mutant("Mutant6", null, null));
+
+        List<Operator> group1 = new ArrayList<>();
+        group1.add(operator1);
+        group1.add(operator2);
+        List<Operator> group2 = new ArrayList<>();
+        group2.add(operator3);
+        group2.add(operator4);
+
+        int result = comparator.compare(group1, group2);
+        assertEquals(0, result);
+    }
+
+    @Test
+    public void testCompare2() {
+        MutantQuantityInGroupComparator comparator = new MutantQuantityInGroupComparator();
+
+        Operator operator1 = new Operator("Operator1", "Type1");
+        operator1.getGeneratedMutants().add(new Mutant("Mutant1", null, null));
+        operator1.getGeneratedMutants().add(new Mutant("Mutant2", null, null));
+
+        Operator operator2 = new Operator("Operator2", "Type1");
+        operator2.getGeneratedMutants().add(new Mutant("Mutant3", null, null));
+
+        Operator operator3 = new Operator("Operator3", "Type1");
+        operator3.getGeneratedMutants().add(new Mutant("Mutant4", null, null));
+
+        Operator operator4 = new Operator("Operator4", "Type1");
+        operator4.getGeneratedMutants().add(new Mutant("Mutant5", null, null));
+
+        List<Operator> group1 = new ArrayList<>();
+        group1.add(operator1);
+        group1.add(operator2);
+        List<Operator> group2 = new ArrayList<>();
+        group2.add(operator3);
+        group2.add(operator4);
+
+        int result = comparator.compare(group1, group2);
+        assertTrue(result > 0);
+    }
+
+    @Test
+    public void testCompare3() {
+        MutantQuantityInGroupComparator comparator = new MutantQuantityInGroupComparator();
+
+        Operator operator1 = new Operator("Operator1", "Type1");
+        operator1.getGeneratedMutants().add(new Mutant("Mutant1", null, null));
+
+        Operator operator2 = new Operator("Operator2", "Type1");
+        operator2.getGeneratedMutants().add(new Mutant("Mutant3", null, null));
+
+        Operator operator3 = new Operator("Operator3", "Type1");
+        operator3.getGeneratedMutants().add(new Mutant("Mutant4", null, null));
+
+        Operator operator4 = new Operator("Operator4", "Type1");
+        operator4.getGeneratedMutants().add(new Mutant("Mutant5", null, null));
+        operator4.getGeneratedMutants().add(new Mutant("Mutant6", null, null));
+
+        List<Operator> group1 = new ArrayList<>();
+        group1.add(operator1);
+        group1.add(operator2);
+        List<Operator> group2 = new ArrayList<>();
+        group2.add(operator3);
+        group2.add(operator4);
+
+        int result = comparator.compare(group1, group2);
+        assertTrue(result < 0);
+    }
+
+    @Test
+    public void testCompare4() {
+        MutantQuantityInGroupComparator comparator = new MutantQuantityInGroupComparator();
+
+        Operator operator1 = new Operator("Operator1", "Type1");
+
+        Operator operator2 = new Operator("Operator2", "Type1");
+
+        Operator operator3 = new Operator("Operator3", "Type1");
+        operator3.getGeneratedMutants().add(new Mutant("Mutant4", null, null));
+
+        Operator operator4 = new Operator("Operator4", "Type1");
+        operator4.getGeneratedMutants().add(new Mutant("Mutant5", null, null));
+        operator4.getGeneratedMutants().add(new Mutant("Mutant6", null, null));
+
+        List<Operator> group1 = new ArrayList<>();
+        group1.add(operator1);
+        group1.add(operator2);
+        List<Operator> group2 = new ArrayList<>();
+        group2.add(operator3);
+        group2.add(operator4);
+
+        int result = comparator.compare(group1, group2);
+        assertTrue(result < 0);
+    }
+
+    @Test
+    public void testCompare5() {
+        MutantQuantityInGroupComparator comparator = new MutantQuantityInGroupComparator();
+
+        Operator operator1 = new Operator("Operator1", "Type1");
+
+        Operator operator2 = new Operator("Operator2", "Type1");
+
+        Operator operator3 = new Operator("Operator3", "Type1");
+
+        Operator operator4 = new Operator("Operator4", "Type1");
+
+        List<Operator> group1 = new ArrayList<>();
+        group1.add(operator1);
+        group1.add(operator2);
+        List<Operator> group2 = new ArrayList<>();
+        group2.add(operator3);
+        group2.add(operator4);
+
+        int result = comparator.compare(group1, group2);
+        assertEquals(0, result);
     }
 
 }

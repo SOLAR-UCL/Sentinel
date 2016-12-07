@@ -9,8 +9,8 @@ import java.util.List;
  */
 public abstract class SelectionType<T> extends Operation<List<T>, List<T>> {
 
-    public SelectionType(String name, boolean specific) {
-        super(name, specific);
+    public SelectionType(String name) {
+        super(name);
     }
 
     public abstract List<T> selectItems(List<T> items, int numberOfItemsToSelect);

@@ -21,7 +21,11 @@ public class GroupSelectionOperation<T> extends AbstractSelectionOperation<T> {
     private AbstractSelectionOperation<T> selectionOperation;
 
     public GroupSelectionOperation() {
-        super("Group Selection", false);
+        super("Group Selection");
+    }
+
+    public GroupSelectionOperation(String name) {
+        super(name);
     }
 
     public GroupingFunction<T> getGroupingFunction() {
@@ -42,22 +46,22 @@ public class GroupSelectionOperation<T> extends AbstractSelectionOperation<T> {
 
     @Override
     public List<T> doOperation(List<T> input) {
-        checkArgument(percentage != 0D || quantity != 0, "No quantity or percentage defined for group selection!");
         checkNotNull(selectionType, "No group selection type defined for group selection!");
         checkNotNull(groupingFunction, "No grouping function defined for group selection!");
         checkNotNull(selectionOperation, "No operator selection type defined for group selection!");
 
         List<List<T>> groups = groupingFunction.doOperation(input);
 
-        if (sorter != null) {
-            Collections.sort(groups, sorter);
-        }
-
         int numberToSelect;
         if (percentage != 0D) {
             numberToSelect = DoubleMath.roundToInt(groups.size() * percentage, RoundingMode.DOWN);
         } else {
             numberToSelect = quantity;
+        }
+        checkArgument(numberToSelect != 0, "No quantity or percentage defined for group selection!");
+
+        if (sorter != null) {
+            Collections.sort(groups, sorter);
         }
 
         groups = selectionType.selectItems(groups, numberToSelect);

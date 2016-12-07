@@ -11,7 +11,7 @@ import br.ufpr.inf.gres.sentinel.strategy.operation.impl.sort.AbstractSorterOper
 public class OperatorTypeComparator extends AbstractSorterOperation<Operator> {
 
     public OperatorTypeComparator() {
-        super(TerminalRuleType.TYPE, false);
+        super(TerminalRuleType.TYPE);
     }
 
     @Override
@@ -19,4 +19,8 @@ public class OperatorTypeComparator extends AbstractSorterOperation<Operator> {
         return o1.getType().compareToIgnoreCase(o2.getType());
     }
 
+    @Override
+    public boolean isSpecific() {
+        return false;
+    }
 }

@@ -15,12 +15,17 @@ import org.apache.commons.collections4.list.SetUniqueList;
 public class StoreMutantsOperation extends Operation<Solution, List<Mutant>> {
 
     public StoreMutantsOperation() {
-        super(TerminalRuleType.STORE_MUTANTS, false);
+        super(TerminalRuleType.STORE_MUTANTS);
     }
 
     @Override
     public List<Mutant> doOperation(Solution solution) {
         return SetUniqueList.setUniqueList(new ArrayList<>(solution.getMutants()));
+    }
+
+    @Override
+    public boolean isSpecific() {
+        return false;
     }
 
 }

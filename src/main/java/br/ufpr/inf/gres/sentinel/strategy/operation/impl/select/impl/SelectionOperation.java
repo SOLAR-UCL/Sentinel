@@ -16,28 +16,28 @@ import java.util.List;
 public class SelectionOperation<T> extends AbstractSelectionOperation<T> {
 
     public SelectionOperation() {
-        super("Selection", false);
+        super("Selection");
     }
 
-    public SelectionOperation(String name, boolean specific) {
-        super(name, specific);
+    public SelectionOperation(String name) {
+        super(name);
     }
 
     @Override
     public List<T> doOperation(List<T> input) {
-        checkArgument(percentage != 0D || quantity != 0, "No quantity or percentage defined for selection!");
-        checkNotNull(selectionType, "No selection type defined for selection!");
-
-        if (sorter != null) {
-            Collections.sort(input, sorter);
-        }
-
         int numberToSelect;
         if (percentage != 0D) {
             numberToSelect = DoubleMath.roundToInt(input.size() * percentage, RoundingMode.DOWN);
         } else {
             numberToSelect = quantity;
         }
+        checkArgument(numberToSelect != 0, "No quantity or percentage defined for selection!");
+        checkNotNull(selectionType, "No selection type defined for selection!");
+
+        if (sorter != null) {
+            Collections.sort(input, sorter);
+        }
+
         return selectionType.selectItems(input, numberToSelect);
     }
 

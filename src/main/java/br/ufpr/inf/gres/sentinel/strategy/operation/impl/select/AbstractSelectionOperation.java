@@ -17,8 +17,8 @@ public abstract class AbstractSelectionOperation<T> extends Operation<List<T>, L
 
     protected AbstractSorterOperation sorter;
 
-    public AbstractSelectionOperation(String name, boolean specific) {
-        super(name, specific);
+    public AbstractSelectionOperation(String name) {
+        super(name);
     }
 
     public Integer getQuantity() {
@@ -55,7 +55,14 @@ public abstract class AbstractSelectionOperation<T> extends Operation<List<T>, L
 
     @Override
     public boolean isSpecific() {
-        return sorter != null ? sorter.isSpecific() : specific;
+        boolean isSpecific = false;
+        if (sorter != null) {
+            isSpecific = isSpecific || sorter.isSpecific();
+        }
+        if (selectionType != null) {
+            isSpecific = isSpecific || selectionType.isSpecific();
+        }
+        return isSpecific;
     }
 
 }

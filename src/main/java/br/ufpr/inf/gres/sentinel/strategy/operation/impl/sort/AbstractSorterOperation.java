@@ -10,8 +10,8 @@ import java.util.List;
  */
 public abstract class AbstractSorterOperation<T> extends Operation<List<T>, Integer> implements Comparator<T> {
 
-    public AbstractSorterOperation(String name, boolean specific) {
-        super(name, specific);
+    public AbstractSorterOperation(String name) {
+        super(name);
     }
 
     @Override
@@ -29,13 +29,18 @@ public abstract class AbstractSorterOperation<T> extends Operation<List<T>, Inte
         private AbstractSorterOperation sorter;
 
         public ReversedAbstractSorterOperation(AbstractSorterOperation<T> sorter) {
-            super(sorter.getName(), sorter.isSpecific());
+            super(sorter.getName());
             this.sorter = sorter;
         }
 
         @Override
         public int compare(Object o1, Object o2) {
             return sorter.compare(o2, o1);
+        }
+
+        @Override
+        public boolean isSpecific() {
+            return sorter.isSpecific();
         }
 
     }

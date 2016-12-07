@@ -18,7 +18,7 @@ public class LastToFirstSelection<T> extends SelectionType<T> {
     private static final Random RANDOM = new Random();
 
     public LastToFirstSelection() {
-        super(TerminalRuleType.LAST_TO_FIRST, false);
+        super(TerminalRuleType.LAST_TO_FIRST);
     }
 
     @Override
@@ -37,6 +37,11 @@ public class LastToFirstSelection<T> extends SelectionType<T> {
     @Override
     public List<T> doOperation(List<T> input) {
         return selectItems(input, RANDOM.nextInt(input.size()));
+    }
+
+    @Override
+    public boolean isSpecific() {
+        return false;
     }
 
 }

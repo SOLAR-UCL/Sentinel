@@ -9,14 +9,14 @@ public abstract class Operation<I, O> {
 
     protected Operation<I, O> successor;
     protected String name;
-    protected boolean specific = false;
 
-    public Operation(String name, boolean specific) {
+    public Operation(String name) {
         this.name = name;
-        this.specific = specific;
     }
 
     public abstract O doOperation(I input);
+
+    public abstract boolean isSpecific();
 
     public O next(I input) {
         if (successor != null) {
@@ -39,14 +39,6 @@ public abstract class Operation<I, O> {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public boolean isSpecific() {
-        return specific;
-    }
-
-    public void setSpecific(boolean specific) {
-        this.specific = specific;
     }
 
     @Override

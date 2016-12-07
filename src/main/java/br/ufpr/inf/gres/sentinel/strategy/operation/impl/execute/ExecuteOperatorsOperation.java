@@ -18,7 +18,7 @@ public class ExecuteOperatorsOperation extends Operation<Solution, List<Operator
     private final OperatorExecutionType executionType;
 
     public ExecuteOperatorsOperation(SelectionOperation<Operator> selection, OperatorExecutionType executionType) {
-        super(TerminalRuleType.DISCARD_OPERATORS, false);
+        super(TerminalRuleType.DISCARD_OPERATORS);
         this.selection = selection;
         this.executionType = executionType;
     }
@@ -29,6 +29,18 @@ public class ExecuteOperatorsOperation extends Operation<Solution, List<Operator
         executionType.doOperation(selectedOperators);
         selectedOperators.forEach((operator) -> solution.getMutants().addAll(operator.getGeneratedMutants()));
         return next(solution);
+    }
+
+    @Override
+    public boolean isSpecific() {
+        boolean isSpecific = false;
+        if (selection != null) {
+            isSpecific = isSpecific || selection.isSpecific();
+        }
+        if (executionType != null) {
+            isSpecific = isSpecific || executionType.isSpecific();
+        }
+        return isSpecific;
     }
 
 }

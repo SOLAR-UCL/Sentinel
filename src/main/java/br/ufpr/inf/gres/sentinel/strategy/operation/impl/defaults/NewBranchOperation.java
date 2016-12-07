@@ -17,7 +17,7 @@ public class NewBranchOperation extends Operation<Solution, List<Mutant>> {
     private Operation<Solution, List<Mutant>> secondSuccessor;
 
     public NewBranchOperation() {
-        super(TerminalRuleType.NEW_BRANCH, false);
+        super(TerminalRuleType.NEW_BRANCH);
     }
 
     public Operation<Solution, List<Mutant>> getSecondSuccessor() {
@@ -39,6 +39,11 @@ public class NewBranchOperation extends Operation<Solution, List<Mutant>> {
             newList.addAll(secondSuccessor.doOperation(clonedSolution));
         }
         return newList;
+    }
+
+    @Override
+    public boolean isSpecific() {
+        return false;
     }
 
 }

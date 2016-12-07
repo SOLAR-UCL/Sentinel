@@ -13,11 +13,28 @@ import java.util.List;
  */
 public class DiscardOperatorsOperation extends Operation<Solution, List<Operator>> {
 
-    private final SelectionOperation<Operator> selection;
+    private SelectionOperation<Operator> selection;
 
     public DiscardOperatorsOperation(SelectionOperation<Operator> selection) {
-        super(TerminalRuleType.DISCARD_OPERATORS, false);
+        super(TerminalRuleType.DISCARD_OPERATORS);
         this.selection = selection;
+    }
+
+    public DiscardOperatorsOperation() {
+        super(TerminalRuleType.DISCARD_OPERATORS);
+    }
+
+    public SelectionOperation<Operator> getSelection() {
+        return selection;
+    }
+
+    public void setSelection(SelectionOperation<Operator> selection) {
+        this.selection = selection;
+    }
+
+    @Override
+    public boolean isSpecific() {
+        return selection != null ? selection.isSpecific() : false;
     }
 
     @Override

@@ -14,13 +14,18 @@ import java.util.List;
 public class AddAllOperatorsOperation extends Operation<Solution, List<Mutant>> {
 
     public AddAllOperatorsOperation() {
-        super(TerminalRuleType.ALL_OPERATORS, false);
+        super(TerminalRuleType.ALL_OPERATORS);
     }
 
     @Override
     public List<Mutant> doOperation(Solution solution) {
         solution.getOperators().addAll(IntegrationFacade.getFacade().getAllOperators());
         return next(solution);
+    }
+
+    @Override
+    public boolean isSpecific() {
+        return false;
     }
 
 }

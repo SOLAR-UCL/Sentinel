@@ -14,7 +14,7 @@ import java.util.List;
 public class ConventionalExecution extends OperatorExecutionType {
 
     public ConventionalExecution() {
-        super(TerminalRuleType.CONVENTIONAL_EXECUTION, false);
+        super(TerminalRuleType.CONVENTIONAL_EXECUTION);
     }
 
     @Override
@@ -24,6 +24,11 @@ public class ConventionalExecution extends OperatorExecutionType {
             operator.getGeneratedMutants().addAll(result);
         }
         return input;
+    }
+
+    @Override
+    public boolean isSpecific() {
+        return false;
     }
 
 }
