@@ -14,12 +14,32 @@ import java.util.List;
  */
 public class ExecuteOperatorsOperation extends Operation<Solution, List<Operator>> {
 
-    private final SelectionOperation<Operator> selection;
-    private final OperatorExecutionType executionType;
+    private SelectionOperation<Operator> selection;
+    private OperatorExecutionType executionType;
+
+    public ExecuteOperatorsOperation() {
+        super(TerminalRuleType.DISCARD_OPERATORS);
+    }
 
     public ExecuteOperatorsOperation(SelectionOperation<Operator> selection, OperatorExecutionType executionType) {
         super(TerminalRuleType.DISCARD_OPERATORS);
         this.selection = selection;
+        this.executionType = executionType;
+    }
+
+    public SelectionOperation<Operator> getSelection() {
+        return selection;
+    }
+
+    public void setSelection(SelectionOperation<Operator> selection) {
+        this.selection = selection;
+    }
+
+    public OperatorExecutionType getExecutionType() {
+        return executionType;
+    }
+
+    public void setExecutionType(OperatorExecutionType executionType) {
         this.executionType = executionType;
     }
 

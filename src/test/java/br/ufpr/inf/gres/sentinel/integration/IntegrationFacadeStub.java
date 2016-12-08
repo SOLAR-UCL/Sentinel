@@ -16,6 +16,7 @@ public class IntegrationFacadeStub extends IntegrationFacade {
     public IntegrationFacadeStub() {
     }
 
+    @Override
     public List<Operator> getAllOperators() {
         return Lists.newArrayList(
                 new Operator("Operator1", "Type1"),
@@ -25,12 +26,13 @@ public class IntegrationFacadeStub extends IntegrationFacade {
         );
     }
 
+    @Override
     public List<Mutant> executeOperator(Operator operator, Program programToBeMutated) {
         return Lists.newArrayList(
-                new Mutant(operator + "1", new File(operator + "1"), programToBeMutated),
-                new Mutant(operator + "2", new File(operator + "2"), programToBeMutated),
-                new Mutant(operator + "3", new File(operator + "3"), programToBeMutated),
-                new Mutant(operator + "4", new File(operator + "4"), programToBeMutated)
+                new Mutant(operator + "_1", new File(operator + "_1"), programToBeMutated),
+                new Mutant(operator + "_2", new File(operator + "_2"), programToBeMutated),
+                new Mutant(operator + "_3", new File(operator + "_3"), programToBeMutated),
+                new Mutant(operator + "_4", new File(operator + "_4"), programToBeMutated)
         );
     }
 

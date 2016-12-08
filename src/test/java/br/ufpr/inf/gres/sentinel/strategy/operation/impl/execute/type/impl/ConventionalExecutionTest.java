@@ -1,5 +1,13 @@
 package br.ufpr.inf.gres.sentinel.strategy.operation.impl.execute.type.impl;
 
+import br.ufpr.inf.gres.sentinel.base.mutation.Operator;
+import br.ufpr.inf.gres.sentinel.integration.IntegrationFacade;
+import br.ufpr.inf.gres.sentinel.integration.IntegrationFacadeStub;
+import com.google.common.collect.Lists;
+import java.util.ArrayList;
+import java.util.List;
+import static org.junit.Assert.assertEquals;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
@@ -11,9 +19,35 @@ public class ConventionalExecutionTest {
     public ConventionalExecutionTest() {
     }
 
+    @BeforeClass
+    public static void setUpClass() {
+        IntegrationFacade.setIntegrationFacade(new IntegrationFacadeStub());
+    }
+
     @Test
     public void testDoOperation() {
-        //TODO implement it
+        ConventionalExecution operation = new ConventionalExecution();
+
+        Operator operator1 = new Operator("Operator1", "Type1");
+        Operator operator2 = new Operator("Operator2", "Type1");
+        Operator operator3 = new Operator("Operator3", "Type2");
+        Operator operator4 = new Operator("Operator4", "Type3");
+        List<Operator> operators = Lists.newArrayList(operator1, operator2, operator3, operator4);
+
+        operation.doOperation(operators);
+
+        operators.forEach((operator) -> {
+            assertEquals(4, operator.getGeneratedMutants().size());
+        });
+    }
+
+    @Test
+    public void testDoOperation2() {
+        ConventionalExecution operation = new ConventionalExecution();
+
+        List<Operator> operators = new ArrayList<>();
+
+        operation.doOperation(operators);
     }
 
 }

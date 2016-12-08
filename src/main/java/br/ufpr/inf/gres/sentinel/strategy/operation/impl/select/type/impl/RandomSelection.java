@@ -21,9 +21,11 @@ public class RandomSelection<T> extends SelectionType<T> {
     @Override
     public List<T> selectItems(List<T> items, int numberOfItemsToSelect) {
         List<T> newList = new ArrayList<>();
-        int size = items.size();
-        for (int i = 0; i < numberOfItemsToSelect; i++) {
-            newList.add(items.get(RANDOM.nextInt(size)));
+        if (!items.isEmpty()) {
+            int size = items.size();
+            for (int i = 0; i < numberOfItemsToSelect; i++) {
+                newList.add(items.get(RANDOM.nextInt(size)));
+            }
         }
         return newList;
     }

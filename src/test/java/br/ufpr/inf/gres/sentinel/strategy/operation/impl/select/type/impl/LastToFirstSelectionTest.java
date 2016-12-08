@@ -1,6 +1,7 @@
 package br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.type.impl;
 
 import com.google.common.collect.Lists;
+import java.util.ArrayList;
 import java.util.List;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
@@ -99,6 +100,25 @@ public class LastToFirstSelectionTest {
         assertEquals((int) 4, (int) result.get(7));
         assertEquals((int) 2, (int) result.get(8));
         assertEquals((int) 5, (int) result.get(9));
+    }
+
+    @Test
+    public void testSelectItems8() {
+        List<Integer> input = Lists.newArrayList(1);
+        LastToFirstSelection<Integer> lastToFirst = new LastToFirstSelection();
+        List<Integer> result = lastToFirst.selectItems(input, 3);
+        assertEquals(3, result.size());
+        assertEquals((int) 1, (int) result.get(0));
+        assertEquals((int) 1, (int) result.get(1));
+        assertEquals((int) 1, (int) result.get(2));
+    }
+
+    @Test
+    public void testSelectItems9() {
+        List<Integer> input = new ArrayList<>();
+        LastToFirstSelection<Integer> lastToFirst = new LastToFirstSelection();
+        List<Integer> result = lastToFirst.selectItems(input, 3);
+        assertEquals(0, result.size());
     }
 
 }
