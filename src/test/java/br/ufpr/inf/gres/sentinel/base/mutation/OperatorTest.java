@@ -16,7 +16,6 @@ public class OperatorTest {
 
     @Test
     public void testHashCode() {
-        System.out.println("hashCode");
         Operator instance = new Operator("Operator1", "Type1");
         Operator instance2 = new Operator("Operator1", "Type1");
         int result = instance.hashCode();
@@ -26,7 +25,6 @@ public class OperatorTest {
 
     @Test
     public void testHashCode2() {
-        System.out.println("hashCode2");
         Operator instance = new Operator("Operator1", "Type1");
         Operator instance2 = new Operator("Operator2", "Type1");
         int result = instance.hashCode();
@@ -36,7 +34,6 @@ public class OperatorTest {
 
     @Test
     public void testHashCode3() {
-        System.out.println("hashCode3");
         Operator instance = new Operator("Operator1", "Type1");
         Operator instance2 = instance;
         int result = instance.hashCode();
@@ -46,7 +43,6 @@ public class OperatorTest {
 
     @Test
     public void testHashCode4() {
-        System.out.println("hashCode4");
         Operator instance = new Operator("Operator1", "Type1");
         Operator instance2 = new Operator("Operator1", "Type2");
         int result = instance.hashCode();
@@ -56,7 +52,6 @@ public class OperatorTest {
 
     @Test
     public void testEquals() {
-        System.out.println("equals");
         Operator instance = new Operator("Operator1", "Type1");
         Operator instance2 = new Operator("Operator1", "Type1");
         assertEquals(instance, instance2);
@@ -64,7 +59,6 @@ public class OperatorTest {
 
     @Test
     public void testEquals2() {
-        System.out.println("equals2");
         Operator instance = new Operator("Operator1", "Type1");
         Operator instance2 = new Operator("Operator2", "Type1");
         assertNotEquals(instance, instance2);
@@ -72,7 +66,6 @@ public class OperatorTest {
 
     @Test
     public void testEquals3() {
-        System.out.println("equals3");
         Operator instance = new Operator("Operator1", "Type1");
         Operator instance2 = new Operator("Operator1", "Type2");
         assertEquals(instance, instance2);
@@ -80,7 +73,6 @@ public class OperatorTest {
 
     @Test
     public void testEquals4() {
-        System.out.println("equals4");
         Operator instance = new Operator("Operator1", "Type1");
         Operator instance2 = instance;
         assertEquals(instance, instance2);
@@ -88,7 +80,6 @@ public class OperatorTest {
 
     @Test
     public void testCloneConstructor() {
-        System.out.println("cloneConstructor");
         Operator instance = new Operator("Operator1", "Type1");
         instance.getGeneratedMutants().add(new Mutant("Mutant1", null, new Program("Program1", null)));
         instance.getGeneratedMutants().add(new Mutant("Mutant2", null, new Program("Program1", null)));

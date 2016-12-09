@@ -15,7 +15,6 @@ public class OptionTest {
 
     @Test
     public void testHashCode() {
-        System.out.println("hashCode");
         Option option = new Option();
         option.addRule(new Rule("regra1"));
         option.addRule(new Rule("regra2"));
@@ -29,7 +28,6 @@ public class OptionTest {
 
     @Test
     public void testHashCode2() {
-        System.out.println("hashCode2");
         Option option = new Option();
         option.addRule(new Rule("regra1"));
         option.addRule(new Rule("regra2"));
@@ -42,7 +40,6 @@ public class OptionTest {
 
     @Test
     public void testHashCode3() {
-        System.out.println("hashCode3");
         Option option = new Option();
         option.addRule(new Rule("regra1"));
         option.addRule(new Rule("regra2"));
@@ -52,7 +49,6 @@ public class OptionTest {
 
     @Test
     public void testEquals() {
-        System.out.println("equals");
         Option option = new Option();
         option.addRule(new Rule("regra1"));
         option.addRule(new Rule("regra2"));
@@ -66,7 +62,6 @@ public class OptionTest {
 
     @Test
     public void testEquals2() {
-        System.out.println("equals2");
         Option option = new Option();
         option.addRule(new Rule("regra1"));
         option.addRule(new Rule("regra2"));
@@ -80,7 +75,6 @@ public class OptionTest {
 
     @Test
     public void testEquals3() {
-        System.out.println("equals3");
         Option option = new Option();
         option.addRule(new Rule("regra1"));
         option.addRule(new Rule("regra2"));
@@ -90,7 +84,6 @@ public class OptionTest {
 
     @Test
     public void testToString() {
-        System.out.println("toString");
         Option option = new Option();
         option.addRule(new Rule("regra1"));
         option.addRule(new Rule("regra2"));

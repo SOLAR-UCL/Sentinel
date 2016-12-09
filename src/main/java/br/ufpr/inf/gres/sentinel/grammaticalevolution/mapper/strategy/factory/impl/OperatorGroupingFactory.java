@@ -1,12 +1,13 @@
 package br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.impl;
 
-import br.ufpr.inf.gres.sentinel.base.mutation.Operator;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.representation.Option;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.representation.Rule;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.Factory;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.TerminalRuleType;
 import br.ufpr.inf.gres.sentinel.strategy.operation.Operation;
-import br.ufpr.inf.gres.sentinel.strategy.operation.impl.group.GroupingFunction;
+import br.ufpr.inf.gres.sentinel.strategy.operation.impl.group.AbstractGroupingFunction;
+import br.ufpr.inf.gres.sentinel.strategy.operation.impl.group.impl.GroupOperatorsByMutantQuantity;
+import br.ufpr.inf.gres.sentinel.strategy.operation.impl.group.impl.GroupOperatorsByType;
 import com.google.common.base.Preconditions;
 import java.util.Iterator;
 
@@ -28,13 +29,13 @@ public class OperatorGroupingFactory implements Factory<Option> {
         Rule rule = rules.next();
         rule = rule.getOption(cyclicIterator).getRules().get(0);
 
-        GroupingFunction mainOperation;
+        AbstractGroupingFunction mainOperation;
         switch (rule.getName()) {
             case TerminalRuleType.TYPE:
-                mainOperation = new GroupingFunction<>("Group by Type", false, Operator::getType);
+                mainOperation = new GroupOperatorsByType();
                 break;
             case TerminalRuleType.MUTANT_QUANTITY:
-                mainOperation = new GroupingFunction<>("Group by Mutant Quantity", false, (Operator operator) -> operator.getGeneratedMutants().size());
+                mainOperation = new GroupOperatorsByMutantQuantity();
                 break;
             default:
                 throw new AssertionError();

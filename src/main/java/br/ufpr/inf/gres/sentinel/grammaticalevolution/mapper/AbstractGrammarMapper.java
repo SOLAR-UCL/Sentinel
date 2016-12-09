@@ -33,12 +33,12 @@ public abstract class AbstractGrammarMapper<T> {
     /**
      * List of all non-terminal nodes found.
      */
-    private HashMap<String, Rule> nonTerminalNodes;
+    protected HashMap<String, Rule> nonTerminalNodes;
 
     /**
      * List of all terminal nodes found.
      */
-    private HashMap<String, Rule> terminalNodes;
+    protected HashMap<String, Rule> terminalNodes;
 
     /**
      * @param grammarFilePath The path of the grammar file.
@@ -84,7 +84,7 @@ public abstract class AbstractGrammarMapper<T> {
      *
      * @return The rule object.
      */
-    private Rule getNonTerminalRule(String ruleName) {
+    public Rule getNonTerminalRule(String ruleName) {
         return nonTerminalNodes.computeIfAbsent(ruleName, Rule::new);
     }
 
@@ -95,7 +95,7 @@ public abstract class AbstractGrammarMapper<T> {
      *
      * @return The rule object.
      */
-    private Rule getTerminalRule(String ruleName) {
+    public Rule getTerminalRule(String ruleName) {
         return terminalNodes.computeIfAbsent(ruleName, Rule::new);
     }
 

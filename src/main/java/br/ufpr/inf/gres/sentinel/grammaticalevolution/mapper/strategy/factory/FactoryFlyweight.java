@@ -24,7 +24,11 @@ public class FactoryFlyweight {
     }
 
     public static Factory getFactory(String name) {
-        return FactoryFlyweightHolder.FLYWEIGHT.computeIfAbsent(name, FactoryFlyweight::createNew);
+        if (name != null) {
+            return FactoryFlyweightHolder.FLYWEIGHT.computeIfAbsent(name, FactoryFlyweight::createNew);
+        } else {
+            throw new IllegalArgumentException("Unidentified grammar rule: " + name);
+        }
     }
 
     public static NonTerminalFactory getNonTerminalFactory() {

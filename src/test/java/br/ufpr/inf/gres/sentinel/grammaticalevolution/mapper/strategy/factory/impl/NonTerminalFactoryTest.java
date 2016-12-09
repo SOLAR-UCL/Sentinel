@@ -1,5 +1,6 @@
 package br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.impl;
 
+import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.representation.Rule;
 import org.junit.Test;
 
 /**
@@ -11,9 +12,10 @@ public class NonTerminalFactoryTest {
     public NonTerminalFactoryTest() {
     }
 
-    @Test
-    public void testGetInstance() {
-        //TODO implement it
+    @Test(expected = IllegalArgumentException.class)
+    public void testCreateOperation() {
+        NonTerminalFactory instance = NonTerminalFactory.getInstance();
+        instance.createOperation(new Rule("invalid"), null);
     }
 
 }

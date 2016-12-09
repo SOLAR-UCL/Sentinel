@@ -12,7 +12,7 @@
 
 ## Operações de Operadores
 
-<operatorOperation> ::= "Select Operators" <selectOperators> | "Discard Operators" <selectOperators> | "Execute Operators" <selectOperators> <operatorExecutionType>
+<operatorOperation> ::= "Select Operators" <selectOperators> | "Discard Operators" <selectOperators> | "Execute Operators" <operatorExecutionType> <selectOperators>
 
 <selectOperators> ::= <operatorSelectionType> <quantity> | <operatorSelectionType> <percentage>
 
@@ -36,26 +36,26 @@
 
 ## Operações de Mutantes
 
-<mutantOperation> ::= <selectMutants> | <discardMutants> | <combineMutants> | <groupMutants>
+<mutantOperation> ::= "Select Mutants" <selectMutants> | "Discard Mutants" <selectMutants> | "Combine Mutants" <HOMGeneration> <selectMutants>
 
-<selectMutants> ::= <tipoSelecaoMutantes> <quantity> | <tipoSelecaoMutantes> <percentage>
+<selectMutants> ::= <mutantSelectionType> <quantity> | <mutantSelectionType> <percentage>
 
-<tipoSelecaoMutantes> ::= <selectionType> <ordenacaoMutantes> | <selecionarGruposMutantes> <selectionType> <ordenacaoMutantes>
+<mutantSelectionType> ::= "Select Mutants" <selectionType> <mutantSorting> | "Select Mutants by Groups" <selectMutantGroups> <mutantSelectionType>
 
-<ordenacaoMutantes> ::= "Ordem" <sortingDirection> | ""
+<mutantSorting> ::= <mutantAttribute> <sortingDirection> | ""
 
-<selecionarGruposMutantes> ::= <tipoSelecaoGruposMutantes> <quantity> | <tipoSelecaoGruposMutantes> <percentage>
+<selectMutantGroups> ::= <mutantGroupSelectionType> <quantity> | <mutantGroupSelectionType> <percentage>
 
-<tipoSelecaoGruposMutantes> ::= <selectionType> <ordenacaoGruposMutantes>
+<mutantGroupSelectionType> ::= <mutantGrouping> <selectionType> <mutantGroupSorting>
 
-<ordenacaoGruposMutantes> ::= "Quantidade Mutantes no Grupo" <sortingDirection> | ""
+<mutantGrouping> ::= <mutantAttribute>
 
-<descartarMutantes> ::= <selecionarMutantes> "Descartar Mutantes"
+<mutantGroupSorting> ::= <mutantGroupAttribute> <sortingDirection> | ""
 
-<combinarMutantes> ::= <selecionarMutantes> <gerarHOM>
+<HOMGeneration> ::= "Single HOM" | "Conventional Generation" <order> | "All HOM Combinations" <order>
 
-<gerarHOM> ::= "Um HOM" | "Todas as Combinações de HOMs" <ordem> | "Geração Convencional" <ordem>
+<order> ::= "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" | "10"
 
-<ordem> ::= "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" | "10"
+<mutantAttribute> ::= "Operator Type" | "Operator" | "FOM or HOM" | "Order"
 
-<agruparMutantes> ::= "Tipo Operador" | "Operador" | "FOM e HOM" | "Ordem"
+<mutantGroupAttribute> ::= "Mutant Quantity in Group"

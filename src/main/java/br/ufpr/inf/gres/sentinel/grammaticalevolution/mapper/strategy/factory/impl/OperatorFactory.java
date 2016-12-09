@@ -54,13 +54,13 @@ public class OperatorFactory implements Factory<Option> {
             case TerminalRuleType.EXECUTE_OPERATORS: {
                 Preconditions.checkArgument(rules.hasNext(), "Malformed grammar option: " + node.toString());
                 Rule nextRule = rules.next();
-                SelectionOperation<Operator> selectOperatorOperation = (SelectionOperation<Operator>) FactoryFlyweight.getNonTerminalFactory().createOperation(nextRule, cyclicIterator);
+                OperatorExecutionType executionType = (OperatorExecutionType) FactoryFlyweight.getNonTerminalFactory().createOperation(nextRule, cyclicIterator);
 
                 Preconditions.checkArgument(rules.hasNext(), "Malformed grammar option: " + node.toString());
                 nextRule = rules.next();
-                OperatorExecutionType executionType = (OperatorExecutionType) FactoryFlyweight.getNonTerminalFactory().createOperation(nextRule, cyclicIterator);
-                mainOperation = new ExecuteOperatorsOperation(selectOperatorOperation, executionType);
+                SelectionOperation<Operator> selectOperatorOperation = (SelectionOperation<Operator>) FactoryFlyweight.getNonTerminalFactory().createOperation(nextRule, cyclicIterator);
 
+                mainOperation = new ExecuteOperatorsOperation(selectOperatorOperation, executionType);
                 break;
             }
             default:

@@ -6,7 +6,7 @@ import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.representation.Rule
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.Factory;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.FactoryFlyweight;
 import br.ufpr.inf.gres.sentinel.strategy.operation.Operation;
-import br.ufpr.inf.gres.sentinel.strategy.operation.impl.group.GroupingFunction;
+import br.ufpr.inf.gres.sentinel.strategy.operation.impl.group.AbstractGroupingFunction;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.impl.GroupSelectionOperation;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.type.SelectionType;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.sort.AbstractSorterOperation;
@@ -30,7 +30,7 @@ public class OperatorGroupSelectionTypeFactory implements Factory<Option> {
         Preconditions.checkArgument(rules.hasNext(), "Malformed grammar option: " + node.toString());
         Rule rule = rules.next();
         GroupSelectionOperation<Operator> mainOperation = new GroupSelectionOperation();
-        mainOperation.setGroupingFunction((GroupingFunction) FactoryFlyweight.getNonTerminalFactory().createOperation(rule, cyclicIterator));
+        mainOperation.setGroupingFunction((AbstractGroupingFunction) FactoryFlyweight.getNonTerminalFactory().createOperation(rule, cyclicIterator));
 
         Preconditions.checkArgument(rules.hasNext(), "Malformed grammar option: " + node.toString());
         rule = rules.next();

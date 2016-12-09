@@ -5,6 +5,7 @@ import br.ufpr.inf.gres.sentinel.base.solution.Solution;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.TerminalRuleType;
 import br.ufpr.inf.gres.sentinel.strategy.operation.Operation;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.impl.SelectionOperation;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -39,7 +40,7 @@ public class DiscardOperatorsOperation extends Operation<Solution, List<Operator
 
     @Override
     public List<Operator> doOperation(Solution solution) {
-        solution.getOperators().removeAll(selection.doOperation(solution.getOperators()));
+        solution.getOperators().removeAll(selection.doOperation(new ArrayList<>(solution.getOperators())));
         return next(solution);
     }
 

@@ -11,7 +11,7 @@ import br.ufpr.inf.gres.sentinel.strategy.operation.impl.sort.AbstractSorterOper
 public class OperatorTypeComparator extends AbstractSorterOperation<Operator> {
 
     public OperatorTypeComparator() {
-        super(TerminalRuleType.TYPE);
+        super("Sort Operators by " + TerminalRuleType.TYPE);
     }
 
     @Override

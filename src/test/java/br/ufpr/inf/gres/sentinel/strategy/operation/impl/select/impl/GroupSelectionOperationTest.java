@@ -2,7 +2,8 @@ package br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.impl;
 
 import br.ufpr.inf.gres.sentinel.base.mutation.Mutant;
 import br.ufpr.inf.gres.sentinel.base.mutation.Operator;
-import br.ufpr.inf.gres.sentinel.strategy.operation.impl.group.GroupingFunction;
+import br.ufpr.inf.gres.sentinel.strategy.operation.impl.group.impl.GroupOperatorsByMutantQuantity;
+import br.ufpr.inf.gres.sentinel.strategy.operation.impl.group.impl.GroupOperatorsByType;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.type.impl.SequentialSelection;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.sort.impl.OperatorQuantityInGroupComparator;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.sort.impl.OperatorTypeComparator;
@@ -29,7 +30,7 @@ public class GroupSelectionOperationTest {
 
         GroupSelectionOperation<Operator> groupOp = new GroupSelectionOperation<>();
         groupOp.setSelectionOperation(selectionOp);
-        groupOp.setGroupingFunction(new GroupingFunction<>("Nothing", false, Operator::getType));
+        groupOp.setGroupingFunction(new GroupOperatorsByType());
         groupOp.setSelectionType(new SequentialSelection());
         groupOp.setSorter(new OperatorQuantityInGroupComparator());
         groupOp.setQuantity(1);
@@ -53,7 +54,7 @@ public class GroupSelectionOperationTest {
 
         GroupSelectionOperation<Operator> groupOp = new GroupSelectionOperation<>();
         groupOp.setSelectionOperation(selectionOp);
-        groupOp.setGroupingFunction(new GroupingFunction<>("Nothing", false, Operator::getType));
+        groupOp.setGroupingFunction(new GroupOperatorsByType());
         groupOp.setSelectionType(new SequentialSelection());
         groupOp.setSorter(new OperatorQuantityInGroupComparator());
         groupOp.setQuantity(2);
@@ -78,7 +79,7 @@ public class GroupSelectionOperationTest {
 
         GroupSelectionOperation<Operator> groupOp = new GroupSelectionOperation<>();
         groupOp.setSelectionOperation(selectionOp);
-        groupOp.setGroupingFunction(new GroupingFunction<>("Nothing", false, Operator::getType));
+        groupOp.setGroupingFunction(new GroupOperatorsByType());
         groupOp.setSelectionType(new SequentialSelection());
         groupOp.setSorter(new OperatorQuantityInGroupComparator());
         groupOp.setQuantity(3);
@@ -104,7 +105,7 @@ public class GroupSelectionOperationTest {
 
         GroupSelectionOperation<Operator> groupOp = new GroupSelectionOperation<>();
         groupOp.setSelectionOperation(selectionOp);
-        groupOp.setGroupingFunction(new GroupingFunction<>("Nothing", false, Operator::getType));
+        groupOp.setGroupingFunction(new GroupOperatorsByType());
         groupOp.setSelectionType(new SequentialSelection());
         groupOp.setSorter(new OperatorQuantityInGroupComparator());
         groupOp.setQuantity(3);
@@ -133,7 +134,7 @@ public class GroupSelectionOperationTest {
 
         GroupSelectionOperation<Operator> groupOp = new GroupSelectionOperation<>();
         groupOp.setSelectionOperation(selectionOp);
-        groupOp.setGroupingFunction(new GroupingFunction<>("Nothing", false, Operator::getType));
+        groupOp.setGroupingFunction(new GroupOperatorsByType());
         groupOp.setSelectionType(new SequentialSelection());
         groupOp.setSorter(new OperatorQuantityInGroupComparator().reversed());
         groupOp.setQuantity(2);
@@ -160,13 +161,13 @@ public class GroupSelectionOperationTest {
 
         GroupSelectionOperation<Operator> groupOp2 = new GroupSelectionOperation<>();
         groupOp2.setSelectionOperation(selectionOp);
-        groupOp2.setGroupingFunction(new GroupingFunction<>("Nothing", false, Operator::getType));
+        groupOp2.setGroupingFunction(new GroupOperatorsByType());
         groupOp2.setSelectionType(new SequentialSelection());
         groupOp2.setQuantity(1);
 
         GroupSelectionOperation<Operator> groupOp = new GroupSelectionOperation<>();
         groupOp.setSelectionOperation(groupOp2);
-        groupOp.setGroupingFunction(new GroupingFunction<>("Group by Mutant Quantity", false, (Operator operator) -> operator.getGeneratedMutants().size()));
+        groupOp.setGroupingFunction(new GroupOperatorsByMutantQuantity());
         groupOp.setSelectionType(new SequentialSelection());
         groupOp.setQuantity(3);
 

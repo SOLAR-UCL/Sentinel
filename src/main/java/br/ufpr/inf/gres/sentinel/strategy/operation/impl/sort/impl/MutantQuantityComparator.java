@@ -11,7 +11,7 @@ import br.ufpr.inf.gres.sentinel.strategy.operation.impl.sort.AbstractSorterOper
 public class MutantQuantityComparator extends AbstractSorterOperation<Operator> {
 
     public MutantQuantityComparator() {
-        super(TerminalRuleType.MUTANT_QUANTITY);
+        super("Sort Operators by " + TerminalRuleType.MUTANT_QUANTITY);
     }
 
     @Override

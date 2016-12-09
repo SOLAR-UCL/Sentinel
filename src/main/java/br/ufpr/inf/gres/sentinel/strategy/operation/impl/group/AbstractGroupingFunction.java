@@ -11,28 +11,20 @@ import java.util.stream.Collectors;
  *
  * @author Giovani Guizzo
  */
-public class GroupingFunction<T> extends Operation<List<T>, List<List<T>>> {
+public abstract class AbstractGroupingFunction<T> extends Operation<List<T>, List<List<T>>> {
 
-    private final Function<T, ?> grouperFunction;
-    private final boolean specific;
-
-    public GroupingFunction(String name, boolean specific, Function<T, ?> grouperFunction) {
+    public AbstractGroupingFunction(String name) {
         super(name);
-        this.specific = specific;
-        this.grouperFunction = grouperFunction;
     }
 
     @Override
     public List<List<T>> doOperation(List<T> input) {
         Map<?, List<T>> collect = input
                 .stream()
-                .collect(Collectors.groupingBy(grouperFunction));
+                .collect(Collectors.groupingBy(createGrouperFunction()));
         return new ArrayList<>(collect.values());
     }
 
-    @Override
-    public boolean isSpecific() {
-        return specific;
-    }
+    protected abstract Function<T, ?> createGrouperFunction();
 
 }

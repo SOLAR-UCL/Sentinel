@@ -19,7 +19,6 @@ public class RuleTest {
 
     @Test
     public void testGetOption_int() {
-        System.out.println("getOption_int");
         Rule rule = new Rule("rule1");
         Rule rule2 = new Rule("rule2");
         Rule rule3 = new Rule("rule3");
@@ -36,7 +35,6 @@ public class RuleTest {
 
     @Test
     public void testGetOption_int2() {
-        System.out.println("getOption_int2");
         Rule rule = new Rule("rule1");
         Rule rule2 = new Rule("rule2");
         Rule rule3 = new Rule("rule3");
@@ -48,7 +46,6 @@ public class RuleTest {
 
     @Test
     public void testGetOption_Iterator() {
-        System.out.println("getOption_Iterator");
         Rule rule = new Rule("rule1");
         Rule rule2 = new Rule("rule2");
         Rule rule3 = new Rule("rule3");
@@ -68,7 +65,6 @@ public class RuleTest {
 
     @Test
     public void testGetOption_Iterator2() {
-        System.out.println("getOption_Iterator2");
         Rule rule = new Rule("rule1");
         Rule rule2 = new Rule("rule2");
         Option option1 = new Option(Lists.newArrayList(rule2, rule2));
@@ -82,7 +78,6 @@ public class RuleTest {
 
     @Test
     public void testGetOption_Iterator3() {
-        System.out.println("getOption_Iterator3");
         Rule rule = new Rule("rule1");
         Rule rule2 = new Rule("rule2");
         Rule rule3 = new Rule("rule3");
@@ -98,7 +93,6 @@ public class RuleTest {
 
     @Test
     public void testHashCode() {
-        System.out.println("hashCode");
         Rule rule = new Rule("rule1");
         Rule rule2 = new Rule("rule2");
         Option option1 = new Option(Lists.newArrayList(rule2, rule2));
@@ -109,7 +103,6 @@ public class RuleTest {
 
     @Test
     public void testHashCode2() {
-        System.out.println("hashCode2");
         Rule rule = new Rule("rule1");
         Rule rule2 = new Rule("rule1");
         Option option1 = new Option(Lists.newArrayList(rule2, rule2));
@@ -120,7 +113,6 @@ public class RuleTest {
 
     @Test
     public void testHashCode3() {
-        System.out.println("hashCode2");
         Rule rule = new Rule("rule1");
         Rule rule2 = new Rule("rule2");
 
@@ -129,7 +121,6 @@ public class RuleTest {
 
     @Test
     public void testEquals() {
-        System.out.println("equals");
         Rule rule = new Rule("rule1");
         Rule rule2 = new Rule("rule2");
         Option option1 = new Option(Lists.newArrayList(rule2, rule2));
@@ -140,7 +131,6 @@ public class RuleTest {
 
     @Test
     public void testEquals2() {
-        System.out.println("equals2");
         Rule rule = new Rule("rule1");
         Rule rule2 = new Rule("rule1");
         Option option1 = new Option(Lists.newArrayList(rule2, rule2));
@@ -151,7 +141,6 @@ public class RuleTest {
 
     @Test
     public void testEquals3() {
-        System.out.println("equals3");
         Rule rule = new Rule("rule1");
         Rule rule2 = new Rule("rule2");
         Option option1 = new Option(Lists.newArrayList(rule2, rule2));
@@ -162,7 +151,6 @@ public class RuleTest {
 
     @Test
     public void testToString() {
-        System.out.println("toString");
         Rule rule = new Rule("rule1");
         Rule rule2 = new Rule("rule2");
         Option option1 = new Option(Lists.newArrayList(rule2, rule2));
@@ -174,7 +162,6 @@ public class RuleTest {
 
     @Test
     public void testToCompleteString() {
-        System.out.println("toCompleteString");
         Rule rule = new Rule("rule1");
         Rule rule2 = new Rule("rule2");
         Option option1 = new Option(Lists.newArrayList(rule, rule2));

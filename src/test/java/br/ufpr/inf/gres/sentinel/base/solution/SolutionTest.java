@@ -21,7 +21,6 @@ public class SolutionTest {
 
     @Test
     public void testCloneConstructot() {
-        System.out.println("cloneConstructor");
         Solution solution = new Solution();
 
         Mutant mutant = new Mutant("Mutant1", new File("File1"), new Program("Program1", null));

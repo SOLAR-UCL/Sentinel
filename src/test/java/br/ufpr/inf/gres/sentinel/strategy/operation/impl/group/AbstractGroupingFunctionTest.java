@@ -3,6 +3,7 @@ package br.ufpr.inf.gres.sentinel.strategy.operation.impl.group;
 import com.google.common.collect.Lists;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Function;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
@@ -10,14 +11,14 @@ import org.junit.Test;
  *
  * @author Giovani Guizzo
  */
-public class GroupingFunctionTest {
+public class AbstractGroupingFunctionTest {
 
-    public GroupingFunctionTest() {
+    public AbstractGroupingFunctionTest() {
     }
 
     @Test
     public void testDoOperation() {
-        GroupingFunction<String> function = new GroupingFunction<>("Stub", false, String::length);
+        AbstractGroupingFunction<String> function = new StubGroupingFunction();
         List<List<String>> result = function.doOperation(Collections.emptyList());
 
         assertEquals(0, result.size());
@@ -25,7 +26,7 @@ public class GroupingFunctionTest {
 
     @Test
     public void testDoOperation2() {
-        GroupingFunction<String> function = new GroupingFunction<>("Stub", false, String::length);
+        AbstractGroupingFunction<String> function = new StubGroupingFunction();
         List<List<String>> result = function.doOperation(Lists.newArrayList("1", "12", "12", ""));
 
         assertEquals(3, result.size());
@@ -36,6 +37,23 @@ public class GroupingFunctionTest {
         assertEquals(2, result.get(2).size());
         assertEquals("12", result.get(2).get(0));
         assertEquals("12", result.get(2).get(1));
+    }
+
+    private static class StubGroupingFunction extends AbstractGroupingFunction<String> {
+
+        public StubGroupingFunction() {
+            super("Stub Grouping");
+        }
+
+        @Override
+        protected Function<String, ?> createGrouperFunction() {
+            return String::length;
+        }
+
+        @Override
+        public boolean isSpecific() {
+            return false;
+        }
     }
 
 }

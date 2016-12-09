@@ -12,7 +12,7 @@ import java.util.List;
 public class OperatorQuantityInGroupComparator extends AbstractSorterOperation<List<Operator>> {
 
     public OperatorQuantityInGroupComparator() {
-        super(TerminalRuleType.MUTANT_QUANTITY);
+        super("Sort Operator Groups by " + TerminalRuleType.MUTANT_QUANTITY);
     }
 
     @Override
