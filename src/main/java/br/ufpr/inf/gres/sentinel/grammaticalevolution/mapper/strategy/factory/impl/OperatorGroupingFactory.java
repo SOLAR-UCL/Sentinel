@@ -38,7 +38,7 @@ public class OperatorGroupingFactory implements Factory<Option> {
                 mainOperation = new GroupOperatorsByMutantQuantity();
                 break;
             default:
-                throw new AssertionError();
+                throw new IllegalArgumentException("Malformed grammar option: " + node.toString());
         }
 
         return mainOperation;

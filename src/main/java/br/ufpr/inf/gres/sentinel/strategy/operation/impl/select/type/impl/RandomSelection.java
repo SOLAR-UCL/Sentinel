@@ -31,11 +31,6 @@ public class RandomSelection<T> extends SelectionType<T> {
     }
 
     @Override
-    public List<T> doOperation(List<T> input) {
-        return selectItems(input, RANDOM.nextInt(input.size()));
-    }
-
-    @Override
     public boolean isSpecific() {
         return false;
     }

@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import java.util.ArrayList;
 import java.util.List;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import org.junit.Test;
 
 /**
@@ -119,6 +120,12 @@ public class LastToFirstSelectionTest {
         LastToFirstSelection<Integer> lastToFirst = new LastToFirstSelection();
         List<Integer> result = lastToFirst.selectItems(input, 3);
         assertEquals(0, result.size());
+    }
+
+    @Test
+    public void testIsSpecific() {
+        LastToFirstSelection<Integer> lastToFirst = new LastToFirstSelection();
+        assertFalse(lastToFirst.isSpecific());
     }
 
 }

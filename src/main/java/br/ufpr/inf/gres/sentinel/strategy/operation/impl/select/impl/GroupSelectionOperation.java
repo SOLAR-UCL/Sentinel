@@ -1,7 +1,6 @@
 package br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.impl;
 
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.group.AbstractGroupingFunction;
-import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.AbstractSelectionOperation;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.math.DoubleMath;
@@ -15,17 +14,13 @@ import java.util.List;
  * @author Giovani Guizzo
  * @param <T>
  */
-public class GroupSelectionOperation<T> extends AbstractSelectionOperation<T> {
+public class GroupSelectionOperation<T> extends SelectionOperation<T> {
 
     private AbstractGroupingFunction<T> groupingFunction;
-    private AbstractSelectionOperation<T> selectionOperation;
+    private SelectionOperation<T> selectionOperation;
 
     public GroupSelectionOperation() {
         super("Group Selection");
-    }
-
-    public GroupSelectionOperation(String name) {
-        super(name);
     }
 
     public AbstractGroupingFunction<T> getGroupingFunction() {
@@ -36,11 +31,11 @@ public class GroupSelectionOperation<T> extends AbstractSelectionOperation<T> {
         this.groupingFunction = groupingFunction;
     }
 
-    public AbstractSelectionOperation getSelectionOperation() {
+    public SelectionOperation getSelectionOperation() {
         return selectionOperation;
     }
 
-    public void setSelectionOperation(AbstractSelectionOperation selectionOperation) {
+    public void setSelectionOperation(SelectionOperation selectionOperation) {
         this.selectionOperation = selectionOperation;
     }
 

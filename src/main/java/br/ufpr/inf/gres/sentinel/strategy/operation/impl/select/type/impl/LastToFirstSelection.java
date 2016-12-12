@@ -8,15 +8,12 @@ import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 
 /**
  *
  * @author Giovani Guizzo
  */
 public class LastToFirstSelection<T> extends SelectionType<T> {
-
-    private static final Random RANDOM = new Random();
 
     public LastToFirstSelection() {
         super(TerminalRuleType.LAST_TO_FIRST);
@@ -39,11 +36,6 @@ public class LastToFirstSelection<T> extends SelectionType<T> {
             }
         }
         return newList;
-    }
-
-    @Override
-    public List<T> doOperation(List<T> input) {
-        return selectItems(input, RANDOM.nextInt(input.size()));
     }
 
     @Override

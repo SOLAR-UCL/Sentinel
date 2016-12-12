@@ -2,13 +2,16 @@ package br.ufpr.inf.gres.sentinel.strategy;
 
 import br.ufpr.inf.gres.sentinel.base.mutation.Mutant;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.TerminalRuleType;
+import br.ufpr.inf.gres.sentinel.integration.IntegrationFacade;
 import br.ufpr.inf.gres.sentinel.strategy.operation.OperationTest;
 import br.ufpr.inf.gres.sentinel.strategy.operation.OperationTest.OperationStub;
+import br.ufpr.inf.gres.sentinel.strategy.operation.impl.defaults.AddAllOperatorsOperation;
 import com.google.common.collect.Lists;
 import java.util.List;
 import org.junit.Assert;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 /**
@@ -24,12 +27,12 @@ public class StrategyTest {
     public void testRun() {
         Strategy instance = new Strategy(OperationTest.getComplexTestOperationChain());
         List<Mutant> expResult = Lists.newArrayList(
-                new Mutant("TestOperation executed!", null, null),
-                new Mutant("TestOperation2 executed!", null, null),
-                new Mutant("TestOperation3 executed!", null, null),
-                new Mutant("TestOperation5 executed!", null, null),
-                new Mutant("TestOperation6 executed!", null, null),
-                new Mutant("TestOperation4 executed!", null, null)
+                new Mutant("TestOperation executed!", null, IntegrationFacade.getProgramUnderTest()),
+                new Mutant("TestOperation2 executed!", null, IntegrationFacade.getProgramUnderTest()),
+                new Mutant("TestOperation3 executed!", null, IntegrationFacade.getProgramUnderTest()),
+                new Mutant("TestOperation5 executed!", null, IntegrationFacade.getProgramUnderTest()),
+                new Mutant("TestOperation6 executed!", null, IntegrationFacade.getProgramUnderTest()),
+                new Mutant("TestOperation4 executed!", null, IntegrationFacade.getProgramUnderTest())
         );
         List<Mutant> result = instance.run();
         Assert.assertArrayEquals(expResult.toArray(), result.toArray());
@@ -64,7 +67,21 @@ public class StrategyTest {
         Strategy instance = new Strategy();
         instance.setFirstOperation(new OperationStub("Test"));
         List<Mutant> result = instance.run();
-        assertEquals(new Mutant("Test executed!", null, null), result.get(0));
+        assertEquals(new Mutant("Test executed!", null, IntegrationFacade.getProgramUnderTest()), result.get(0));
+    }
+
+    @Test
+    public void testGetAndSetFirstOperation() {
+        Strategy strategy = new Strategy();
+        strategy.setFirstOperation(new AddAllOperatorsOperation());
+        assertEquals(new AddAllOperatorsOperation(), strategy.getFirstOperation());
+    }
+
+    @Test
+    public void testRun4() {
+        Strategy strategy = new Strategy();
+        List<Mutant> result = strategy.run();
+        assertTrue(result.isEmpty());
     }
 
 }

@@ -7,7 +7,6 @@ import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.Fa
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.FactoryFlyweight;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.TerminalRuleType;
 import br.ufpr.inf.gres.sentinel.strategy.operation.Operation;
-import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.AbstractSelectionOperation;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.impl.GroupSelectionOperation;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.impl.SelectionOperation;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.type.SelectionType;
@@ -30,7 +29,7 @@ public class OperatorSelectionTypeFactory implements Factory<Option> {
         Iterator<Rule> rules = node.getRules().iterator();
         Preconditions.checkArgument(rules.hasNext(), "Malformed grammar option: " + node.toString());
         Rule rule = rules.next();
-        AbstractSelectionOperation<Operator> mainOperation;
+        SelectionOperation<Operator> mainOperation;
         switch (rule.getName()) {
             case TerminalRuleType.SELECT_OPERATORS:
                 mainOperation = new SelectionOperation();
@@ -50,12 +49,12 @@ public class OperatorSelectionTypeFactory implements Factory<Option> {
 
                 Preconditions.checkArgument(rules.hasNext(), "Malformed grammar option: " + node.toString());
                 rule = rules.next();
-                groupOperation.setSelectionOperation((AbstractSelectionOperation) FactoryFlyweight.getNonTerminalFactory().createOperation(rule, cyclicIterator));
+                groupOperation.setSelectionOperation((SelectionOperation) FactoryFlyweight.getNonTerminalFactory().createOperation(rule, cyclicIterator));
 
                 mainOperation = groupOperation;
                 break;
             default:
-                throw new AssertionError();
+                throw new IllegalArgumentException("Malformed grammar option: " + node.toString());
         }
         return mainOperation;
     }

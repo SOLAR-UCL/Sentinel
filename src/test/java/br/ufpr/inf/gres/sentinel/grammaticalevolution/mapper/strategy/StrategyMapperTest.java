@@ -3,6 +3,7 @@ package br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.AbstractGrammarMapperTest;
 import br.ufpr.inf.gres.sentinel.strategy.Strategy;
 import com.google.common.collect.Lists;
+import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -34,6 +35,13 @@ public class StrategyMapperTest {
     public void testHookInterpret() {
         StrategyMapper strategyMapper = new StrategyMapper();
         Strategy strategy = strategyMapper.interpret(Lists.newArrayList(1, 2, 3, 4, 5, 6));
+        assertNotNull(strategy);
+    }
+
+    @Test
+    public void testCreate() throws IOException {
+        StrategyMapper strategyMapper = new StrategyMapper(new File(GrammarFiles.getDefaultGrammarPath()));
+        Strategy strategy = strategyMapper.interpret(Lists.newArrayList(3));
         assertNotNull(strategy);
     }
 

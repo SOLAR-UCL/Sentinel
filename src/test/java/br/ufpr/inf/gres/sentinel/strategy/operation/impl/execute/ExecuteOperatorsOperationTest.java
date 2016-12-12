@@ -4,11 +4,12 @@ import br.ufpr.inf.gres.sentinel.base.mutation.Mutant;
 import br.ufpr.inf.gres.sentinel.base.mutation.Operator;
 import br.ufpr.inf.gres.sentinel.base.solution.Solution;
 import br.ufpr.inf.gres.sentinel.integration.IntegrationFacade;
-import br.ufpr.inf.gres.sentinel.integration.IntegrationFacadeStub;
+import br.ufpr.inf.gres.sentinel.integration.IntegrationFacadeTest.IntegrationFacadeStub;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.execute.type.impl.ConventionalExecution;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.impl.SelectionOperation;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.type.impl.SequentialSelection;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -39,7 +40,7 @@ public class ExecuteOperatorsOperationTest {
 
         Operator operator1 = new Operator("Operator1", "Type1");
         Operator operator2 = new Operator("Operator2", "Type1");
-        operator2.getGeneratedMutants().add(new Mutant("Operator1_1", null, null));
+        operator2.getGeneratedMutants().add(new Mutant("Operator1_1", null, IntegrationFacade.getProgramUnderTest()));
         Operator operator3 = new Operator("Operator3", "Type2");
         Operator operator4 = new Operator("Operator4", "Type3");
 
@@ -71,6 +72,19 @@ public class ExecuteOperatorsOperationTest {
         operation.doOperation(solution);
 
         assertEquals(0, solution.getMutants().size());
+    }
+
+    @Test
+    public void testIsSpecific() {
+        ExecuteOperatorsOperation operation = new ExecuteOperatorsOperation();
+        operation.setExecutionType(new ConventionalExecution());
+
+        SelectionOperation<Operator> selectionOperation = new SelectionOperation<>();
+        selectionOperation.setQuantity(4);
+        selectionOperation.setSelectionType(new SequentialSelection());
+        operation.setSelection(selectionOperation);
+
+        assertFalse(operation.isSpecific());
     }
 
 }

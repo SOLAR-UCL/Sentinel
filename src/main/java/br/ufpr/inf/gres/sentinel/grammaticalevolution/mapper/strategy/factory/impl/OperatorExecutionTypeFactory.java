@@ -26,16 +26,14 @@ public class OperatorExecutionTypeFactory implements Factory<Option> {
 
         Preconditions.checkArgument(rules.hasNext(), "Malformed grammar option: " + node.toString());
         Rule rule = rules.next();
-        rule = rule.getOption(cyclicIterator).getRules().get(0);
         OperatorExecutionType mainOperation;
         switch (rule.getName()) {
             case TerminalRuleType.CONVENTIONAL_EXECUTION:
                 mainOperation = new ConventionalExecution();
                 break;
             default:
-                throw new AssertionError();
+                throw new IllegalArgumentException("Malformed grammar option: " + node.toString());
         }
-
         return mainOperation;
     }
 

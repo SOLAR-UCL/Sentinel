@@ -7,7 +7,7 @@ import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.Fa
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.FactoryFlyweight;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.NonTerminalRuleType;
 import br.ufpr.inf.gres.sentinel.strategy.operation.Operation;
-import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.AbstractSelectionOperation;
+import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.impl.SelectionOperation;
 import com.google.common.base.Preconditions;
 import java.util.Iterator;
 
@@ -26,8 +26,8 @@ public class SelectOperatorsFactory implements Factory<Option> {
         Iterator<Rule> rules = node.getRules().iterator();
         Preconditions.checkArgument(rules.hasNext(), "Malformed grammar option: " + node.toString());
         Rule rule = rules.next();
-        AbstractSelectionOperation<Operator> mainOperation;
-        mainOperation = (AbstractSelectionOperation<Operator>) FactoryFlyweight.getNonTerminalFactory().createOperation(rule, cyclicIterator);
+        SelectionOperation<Operator> mainOperation;
+        mainOperation = (SelectionOperation<Operator>) FactoryFlyweight.getNonTerminalFactory().createOperation(rule, cyclicIterator);
         Preconditions.checkArgument(rules.hasNext(), "Malformed grammar option: " + node.toString());
         rule = rules.next();
         switch (rule.getName()) {
@@ -39,6 +39,8 @@ public class SelectOperatorsFactory implements Factory<Option> {
                 String percentage = rule.getOption(cyclicIterator).getRules().get(0).getName();
                 mainOperation.setPercentage(Double.parseDouble(percentage));
                 break;
+            default:
+                throw new IllegalArgumentException("Malformed grammar option: " + node.toString());
         }
         return mainOperation;
     }

@@ -108,7 +108,7 @@ public abstract class AbstractGrammarMapper<T> {
      *
      * @throws IOException If the file is not found, corrupted, or contains an erroneous grammar syntax.
      */
-    public boolean loadGrammar(String grammarFilePath) throws IOException {
+    public final boolean loadGrammar(String grammarFilePath) throws IOException {
         return loadGrammar(new File(grammarFilePath));
     }
 
@@ -121,7 +121,7 @@ public abstract class AbstractGrammarMapper<T> {
      *
      * @throws IOException If the file is not found, corrupted, or contains an erroneous grammar syntax.
      */
-    public boolean loadGrammar(File grammarFile) throws IOException {
+    public final boolean loadGrammar(File grammarFile) throws IOException {
 
         try {
             // Initialize nodes

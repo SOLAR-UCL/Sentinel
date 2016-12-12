@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import org.junit.Test;
 
 /**
@@ -80,6 +81,12 @@ public class SequentialSelectionTest {
         SequentialSelection<Integer> operation = new SequentialSelection<>();
         List<Integer> result = operation.selectItems(input, 3);
         assertEquals(0, result.size());
+    }
+
+    @Test
+    public void testIsSpecific() {
+        SequentialSelection<Integer> operation = new SequentialSelection<>();
+        assertFalse(operation.isSpecific());
     }
 
 }

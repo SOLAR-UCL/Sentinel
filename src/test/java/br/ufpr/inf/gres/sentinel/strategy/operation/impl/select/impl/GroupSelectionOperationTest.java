@@ -2,6 +2,7 @@ package br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.impl;
 
 import br.ufpr.inf.gres.sentinel.base.mutation.Mutant;
 import br.ufpr.inf.gres.sentinel.base.mutation.Operator;
+import br.ufpr.inf.gres.sentinel.integration.IntegrationFacade;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.group.impl.GroupOperatorsByMutantQuantity;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.group.impl.GroupOperatorsByType;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.type.impl.SequentialSelection;
@@ -10,6 +11,7 @@ import br.ufpr.inf.gres.sentinel.strategy.operation.impl.sort.impl.OperatorTypeC
 import com.google.common.collect.Lists;
 import java.util.List;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import org.junit.Test;
 
 /**
@@ -172,11 +174,11 @@ public class GroupSelectionOperationTest {
         groupOp.setQuantity(3);
 
         Operator operator1 = new Operator("Operator1", "Type1");
-        operator1.getGeneratedMutants().add(new Mutant("Mutant1", null, null));
-        operator1.getGeneratedMutants().add(new Mutant("Mutant2", null, null));
+        operator1.getGeneratedMutants().add(new Mutant("Mutant1", null, IntegrationFacade.getProgramUnderTest()));
+        operator1.getGeneratedMutants().add(new Mutant("Mutant2", null, IntegrationFacade.getProgramUnderTest()));
         Operator operator2 = new Operator("Operator2", "Type2");
-        operator2.getGeneratedMutants().add(new Mutant("Mutant1", null, null));
-        operator2.getGeneratedMutants().add(new Mutant("Mutant2", null, null));
+        operator2.getGeneratedMutants().add(new Mutant("Mutant1", null, IntegrationFacade.getProgramUnderTest()));
+        operator2.getGeneratedMutants().add(new Mutant("Mutant2", null, IntegrationFacade.getProgramUnderTest()));
 
         Operator operator3 = new Operator("Operator3", "Type1");
         Operator operator4 = new Operator("Operator4", "Type1");
@@ -186,6 +188,49 @@ public class GroupSelectionOperationTest {
         assertEquals(operator3, result.get(0));
         assertEquals(operator2, result.get(1));
         assertEquals(operator3, result.get(2));
+    }
+
+    @Test
+    public void testPercentage() {
+        SelectionOperation<Operator> selectionOp = new SelectionOperation<>();
+        selectionOp.setSelectionType(new SequentialSelection());
+        selectionOp.setSorter(null);
+        selectionOp.setQuantity(1);
+
+        GroupSelectionOperation<Operator> groupOp = new GroupSelectionOperation<>();
+        groupOp.setSelectionOperation(selectionOp);
+        groupOp.setGroupingFunction(new GroupOperatorsByType());
+        groupOp.setSelectionType(new SequentialSelection());
+        groupOp.setSorter(new OperatorQuantityInGroupComparator());
+        groupOp.setPercentage(1.0);
+
+        Operator operator1 = new Operator("Operator1", "Type1");
+        Operator operator2 = new Operator("Operator2", "Type1");
+        Operator operator3 = new Operator("Operator3", "Type2");
+        Operator operator4 = new Operator("Operator4", "Type3");
+
+        List<Operator> result = groupOp.doOperation(Lists.newArrayList(operator1, operator2, operator3, operator4));
+        assertEquals(3, result.size());
+        assertEquals(operator3, result.get(0));
+        assertEquals(operator4, result.get(1));
+        assertEquals(operator1, result.get(2));
+    }
+
+    @Test
+    public void testIsSpecific() {
+        SelectionOperation<Operator> selectionOp = new SelectionOperation<>();
+        selectionOp.setSelectionType(new SequentialSelection());
+        selectionOp.setSorter(null);
+        selectionOp.setQuantity(1);
+
+        GroupSelectionOperation<Operator> groupOp = new GroupSelectionOperation<>();
+        groupOp.setSelectionOperation(selectionOp);
+        groupOp.setGroupingFunction(new GroupOperatorsByType());
+        groupOp.setSelectionType(new SequentialSelection());
+        groupOp.setSorter(new OperatorQuantityInGroupComparator());
+        groupOp.setPercentage(1.0);
+
+        assertFalse(groupOp.isSpecific());
     }
 
 }

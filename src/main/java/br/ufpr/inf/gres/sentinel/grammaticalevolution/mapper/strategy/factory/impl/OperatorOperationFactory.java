@@ -21,12 +21,12 @@ import java.util.List;
  *
  * @author Giovani Guizzo
  */
-public class OperatorFactory implements Factory<Option> {
+public class OperatorOperationFactory implements Factory<Option> {
 
-    private OperatorFactory() {
+    private OperatorOperationFactory() {
     }
 
-    public static OperatorFactory getInstance() {
+    public static OperatorOperationFactory getInstance() {
         return SingletonHolder.INSTANCE;
     }
 
@@ -40,15 +40,15 @@ public class OperatorFactory implements Factory<Option> {
             case TerminalRuleType.SELECT_OPERATORS: {
                 Preconditions.checkArgument(rules.hasNext(), "Malformed grammar option: " + node.toString());
                 Rule nextRule = rules.next();
-                SelectionOperation<Operator> selectOperatorOperation = (SelectionOperation<Operator>) FactoryFlyweight.getNonTerminalFactory().createOperation(nextRule, cyclicIterator);
-                mainOperation = new SelectOperatorsOperation(selectOperatorOperation);
+                SelectionOperation<Operator> selectionOperation = (SelectionOperation<Operator>) FactoryFlyweight.getNonTerminalFactory().createOperation(nextRule, cyclicIterator);
+                mainOperation = new SelectOperatorsOperation(selectionOperation);
                 break;
             }
             case TerminalRuleType.DISCARD_OPERATORS: {
                 Preconditions.checkArgument(rules.hasNext(), "Malformed grammar option: " + node.toString());
                 Rule nextRule = rules.next();
-                SelectionOperation<Operator> selectOperatorOperation = (SelectionOperation<Operator>) FactoryFlyweight.getNonTerminalFactory().createOperation(nextRule, cyclicIterator);
-                mainOperation = new DiscardOperatorsOperation(selectOperatorOperation);
+                SelectionOperation<Operator> selectionOperation = (SelectionOperation<Operator>) FactoryFlyweight.getNonTerminalFactory().createOperation(nextRule, cyclicIterator);
+                mainOperation = new DiscardOperatorsOperation(selectionOperation);
                 break;
             }
             case TerminalRuleType.EXECUTE_OPERATORS: {
@@ -58,21 +58,20 @@ public class OperatorFactory implements Factory<Option> {
 
                 Preconditions.checkArgument(rules.hasNext(), "Malformed grammar option: " + node.toString());
                 nextRule = rules.next();
-                SelectionOperation<Operator> selectOperatorOperation = (SelectionOperation<Operator>) FactoryFlyweight.getNonTerminalFactory().createOperation(nextRule, cyclicIterator);
+                SelectionOperation<Operator> selectionOperation = (SelectionOperation<Operator>) FactoryFlyweight.getNonTerminalFactory().createOperation(nextRule, cyclicIterator);
 
-                mainOperation = new ExecuteOperatorsOperation(selectOperatorOperation, executionType);
+                mainOperation = new ExecuteOperatorsOperation(selectionOperation, executionType);
                 break;
             }
             default:
-                mainOperation = FactoryFlyweight.getNonTerminalFactory().createOperation(firstRule, cyclicIterator);
-                break;
+                throw new IllegalArgumentException("Malformed grammar option: " + node.toString());
         }
         return mainOperation;
     }
 
     private static class SingletonHolder {
 
-        private static final OperatorFactory INSTANCE = new OperatorFactory();
+        private static final OperatorOperationFactory INSTANCE = new OperatorOperationFactory();
     }
 
 }

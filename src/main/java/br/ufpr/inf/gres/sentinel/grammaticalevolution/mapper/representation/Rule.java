@@ -5,18 +5,17 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
-import org.apache.commons.collections4.list.SetUniqueList;
 
 public class Rule {
 
     protected String name;
-    protected SetUniqueList<Option> options;
+    protected List<Option> options;
 
     public Rule(String name) {
-        this(name, SetUniqueList.setUniqueList(new ArrayList<>()));
+        this(name, new ArrayList<>());
     }
 
-    public Rule(String name, SetUniqueList<Option> options) {
+    public Rule(String name, List<Option> options) {
         this.name = name;
         this.options = options;
     }
@@ -33,7 +32,7 @@ public class Rule {
         return options;
     }
 
-    public void setOptions(SetUniqueList<Option> options) {
+    public void setOptions(List<Option> options) {
         this.options = options;
     }
 

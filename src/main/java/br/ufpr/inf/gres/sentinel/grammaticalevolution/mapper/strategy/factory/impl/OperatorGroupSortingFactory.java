@@ -40,7 +40,7 @@ public class OperatorGroupSortingFactory implements Factory<Option> {
                 mainOperation = new OperatorQuantityInGroupComparator();
                 break;
             default:
-                throw new AssertionError();
+                throw new IllegalArgumentException("Malformed grammar option: " + node.toString());
         }
 
         Preconditions.checkArgument(rules.hasNext(), "Malformed grammar option: " + node.toString());

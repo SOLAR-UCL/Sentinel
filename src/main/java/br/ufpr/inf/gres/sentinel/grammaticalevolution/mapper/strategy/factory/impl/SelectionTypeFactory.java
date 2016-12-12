@@ -39,7 +39,7 @@ public class SelectionTypeFactory implements Factory<Option> {
                 mainOperation = new SequentialSelection<>();
                 break;
             default:
-                Preconditions.checkArgument(false, "Malformed grammar option: " + node.toString());
+                throw new IllegalArgumentException("Malformed grammar option: " + node.toString());
         }
         return mainOperation;
     }

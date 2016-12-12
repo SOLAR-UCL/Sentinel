@@ -2,8 +2,8 @@ package br.ufpr.inf.gres.sentinel.base.solution;
 
 import br.ufpr.inf.gres.sentinel.base.mutation.Mutant;
 import br.ufpr.inf.gres.sentinel.base.mutation.Operator;
-import br.ufpr.inf.gres.sentinel.base.mutation.Program;
 import br.ufpr.inf.gres.sentinel.base.mutation.TestCase;
+import br.ufpr.inf.gres.sentinel.integration.IntegrationFacade;
 import java.io.File;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
@@ -23,9 +23,9 @@ public class SolutionTest {
     public void testCloneConstructot() {
         Solution solution = new Solution();
 
-        Mutant mutant = new Mutant("Mutant1", new File("File1"), new Program("Program1", null));
-        Mutant mutant2 = new Mutant("Mutant2", new File("File2"), new Program("Program1", null));
-        Mutant mutant3 = new Mutant("Mutant3", new File("File2"), new Program("Program1", null));
+        Mutant mutant = new Mutant("Mutant1", new File("File1"), IntegrationFacade.getProgramUnderTest());
+        Mutant mutant2 = new Mutant("Mutant2", new File("File2"), IntegrationFacade.getProgramUnderTest());
+        Mutant mutant3 = new Mutant("Mutant3", new File("File2"), IntegrationFacade.getProgramUnderTest());
         Operator operator = new Operator("Operator1", "Type1");
         TestCase testCase = new TestCase("Test1");
 

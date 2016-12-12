@@ -23,7 +23,7 @@ import org.junit.Test;
  */
 public class StrategyFactoryTest {
 
-    private static StrategyMapper STRATEGY_MAPPER;
+    private static Rule testingRule;
 
     public StrategyFactoryTest() {
     }
@@ -31,7 +31,8 @@ public class StrategyFactoryTest {
     @BeforeClass
     public static void setUpClass() {
         try {
-            STRATEGY_MAPPER = new StrategyMapper(GrammarFiles.getDefaultGrammarPath());
+            StrategyMapper strategyMapper = new StrategyMapper(GrammarFiles.getDefaultGrammarPath());
+            testingRule = strategyMapper.getNonTerminalRule(NonTerminalRuleType.STRATEGY);
         } catch (IOException ex) {
             Logger.getLogger(StrategyFactoryTest.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -42,9 +43,8 @@ public class StrategyFactoryTest {
      */
     @Test
     public void testCreateOperation() {
-        Rule rule = STRATEGY_MAPPER.getNonTerminalRule(NonTerminalRuleType.STRATEGY);
         Iterator<Integer> iterator = Lists.newArrayList(3).iterator();
-        Operation operation = FactoryFlyweight.getNonTerminalFactory().createOperation(rule, iterator);
+        Operation operation = FactoryFlyweight.getNonTerminalFactory().createOperation(testingRule, iterator);
         assertNotNull(operation);
         assertTrue(operation instanceof AddAllOperatorsOperation);
     }

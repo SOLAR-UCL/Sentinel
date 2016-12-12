@@ -1,8 +1,6 @@
 package br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy;
 
 import java.net.URISyntaxException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -16,7 +14,6 @@ public class GrammarFiles {
         try {
             DEFAULT_GRAMMAR = ClassLoader.getSystemResource("default_grammar.bnf").toURI().getPath();
         } catch (URISyntaxException ex) {
-            Logger.getLogger(GrammarFiles.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

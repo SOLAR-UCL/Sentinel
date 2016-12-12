@@ -34,8 +34,7 @@ public class StrategyFactory implements Factory<Option> {
                 mainOperation.setSuccessor(FactoryFlyweight.getNonTerminalFactory().createOperation(nextRule, cyclicIterator));
                 break;
             default:
-                mainOperation = FactoryFlyweight.getNonTerminalFactory().createOperation(firstRule, cyclicIterator);
-                break;
+                throw new IllegalArgumentException("Malformed grammar option: " + option.toString());
         }
         return mainOperation;
     }

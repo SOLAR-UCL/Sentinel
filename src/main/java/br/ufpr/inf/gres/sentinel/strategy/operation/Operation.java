@@ -1,6 +1,7 @@
 package br.ufpr.inf.gres.sentinel.strategy.operation;
 
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.defaults.NewBranchOperation;
+import java.util.Objects;
 
 /**
  * @author Giovani Guizzo
@@ -51,9 +52,7 @@ public abstract class Operation<I, O> {
     }
 
     private String getOperationChainName(Operation operation, String tabbing, int index) {
-        if (operation == null) {
-            return "Empty Operation";
-        } else if (operation.getSuccessor() == null) {
+        if (operation.getSuccessor() == null) {
             return tabbing + index + "." + operation.getName();
         } else if (operation instanceof NewBranchOperation) {
             NewBranchOperation newBranch = (NewBranchOperation) operation;
@@ -61,6 +60,28 @@ public abstract class Operation<I, O> {
         } else {
             return tabbing + index + "." + operation.getName() + " - " + getOperationChainName(operation.getSuccessor(), tabbing, index + 1);
         }
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 29 * hash + Objects.hashCode(this.name);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Operation<I, O> other = (Operation<I, O>) obj;
+        return Objects.equals(this.name, other.name);
     }
 
 }

@@ -3,9 +3,11 @@ package br.ufpr.inf.gres.sentinel.strategy.operation;
 import br.ufpr.inf.gres.sentinel.base.mutation.Mutant;
 import br.ufpr.inf.gres.sentinel.base.solution.Solution;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.TerminalRuleType;
+import br.ufpr.inf.gres.sentinel.integration.IntegrationFacade;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.defaults.NewBranchOperation;
 import java.util.List;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import org.junit.Test;
 
 /**
@@ -80,6 +82,74 @@ public class OperationTest {
         return instance;
     }
 
+    @Test
+    public void testHashCode() {
+        Operation instance = new OperationStub("TestOperation");
+        Operation instance2 = new OperationStub("TestOperation");
+        int result = instance.hashCode();
+        int result2 = instance2.hashCode();
+        assertEquals(result, result2);
+    }
+
+    @Test
+    public void testHashCode2() {
+        Operation instance = new OperationStub("TestOperation");
+        Operation instance2 = new OperationStub("TestOperation2");
+        int result = instance.hashCode();
+        int result2 = instance2.hashCode();
+        assertNotEquals(result, result2);
+    }
+
+    @Test
+    public void testHashCode3() {
+        Operation instance = new OperationStub("TestOperation");
+        Operation instance2 = instance;
+        int result = instance.hashCode();
+        int result2 = instance2.hashCode();
+        assertEquals(result, result2);
+    }
+
+    @Test
+    public void testEquals() {
+        Operation instance = new OperationStub("TestOperation");
+        Operation instance2 = new OperationStub("TestOperation");
+        assertEquals(instance, instance2);
+    }
+
+    @Test
+    public void testEquals2() {
+        Operation instance = new OperationStub("TestOperation");
+        assertEquals(instance, instance);
+    }
+
+    @Test
+    public void testEquals3() {
+        Operation instance = new OperationStub("TestOperation");
+        Operation instance2 = new OperationStub("TestOperation2");
+        assertNotEquals(instance, instance2);
+    }
+
+    @Test
+    public void testEquals4() {
+        Operation instance = new OperationStub("TestOperation");
+        Operation instance2 = null;
+        assertNotEquals(instance, instance2);
+    }
+
+    @Test
+    public void testEquals5() {
+        Operation instance = new OperationStub("TestOperation");
+        Object instance2 = new Object();
+        assertNotEquals(instance, instance2);
+    }
+
+    @Test
+    public void testGetAndSetName() {
+        Operation instance = new OperationStub("TestOperation");
+        instance.setName("TestOperationAgain");
+        assertEquals("TestOperationAgain", instance.getName());
+    }
+
     public static class OperationStub extends Operation<Solution, List<Mutant>> {
 
         public OperationStub(String name) {
@@ -88,7 +158,7 @@ public class OperationTest {
 
         @Override
         public List<Mutant> doOperation(Solution input) {
-            input.getMutants().add(new Mutant(name + " executed!", null, null));
+            input.getMutants().add(new Mutant(name + " executed!", null, IntegrationFacade.getProgramUnderTest()));
             List<Mutant> result = next(input);
             return result == null ? input.getMutants() : result;
         }

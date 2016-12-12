@@ -1,5 +1,8 @@
 package br.ufpr.inf.gres.sentinel.base.mutation;
 
+import br.ufpr.inf.gres.sentinel.integration.IntegrationFacade;
+import java.util.ArrayList;
+import org.apache.commons.collections4.list.SetUniqueList;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
@@ -79,14 +82,59 @@ public class OperatorTest {
     }
 
     @Test
+    public void testEquals5() {
+        Operator instance = new Operator("Operator1", "Type1");
+        Operator instance2 = null;
+        assertNotEquals(instance, instance2);
+    }
+
+    @Test
+    public void testEquals6() {
+        Operator instance = new Operator("Operator1", "Type1");
+        Object instance2 = new Object();
+        assertNotEquals(instance, instance2);
+    }
+
+    @Test
     public void testCloneConstructor() {
         Operator instance = new Operator("Operator1", "Type1");
-        instance.getGeneratedMutants().add(new Mutant("Mutant1", null, new Program("Program1", null)));
-        instance.getGeneratedMutants().add(new Mutant("Mutant2", null, new Program("Program1", null)));
+        instance.getGeneratedMutants().add(new Mutant("Mutant1", null, IntegrationFacade.getProgramUnderTest()));
+        instance.getGeneratedMutants().add(new Mutant("Mutant2", null, IntegrationFacade.getProgramUnderTest()));
         Operator instance2 = new Operator(instance);
         assertEquals(instance, instance2);
         assertEquals(instance.getType(), instance2.getType());
         assertArrayEquals(instance.getGeneratedMutants().toArray(), instance2.getGeneratedMutants().toArray());
+    }
+
+    @Test
+    public void testToString() {
+        Operator instance = new Operator("Operator1", "Type1");
+        assertEquals("Operator1", instance.toString());
+    }
+
+    @Test
+    public void testGetAndSetName() {
+        Operator instance = new Operator("Operator1", "Type1");
+        instance.setName("OperatorTest");
+        String result = instance.getName();
+        assertEquals("OperatorTest", result);
+    }
+
+    @Test
+    public void testGetAndSetType() {
+        Operator instance = new Operator("Operator1", "Type1");
+        instance.setType("TypeTest");
+        String result = instance.getType();
+        assertEquals("TypeTest", result);
+    }
+
+    @Test
+    public void testGetAndSetGeneratedMutants() {
+        Operator instance = new Operator("Operator1", "Type1");
+        SetUniqueList<Mutant> setUniqueList = SetUniqueList.setUniqueList(new ArrayList<>());
+        instance.setGeneratedMutants(setUniqueList);
+        SetUniqueList result = instance.getGeneratedMutants();
+        assertEquals(setUniqueList, result);
     }
 
 }

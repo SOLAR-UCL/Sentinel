@@ -3,7 +3,7 @@ package br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.impl.DefaultFactory;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.impl.NonTerminalFactory;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.impl.OperatorExecutionTypeFactory;
-import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.impl.OperatorFactory;
+import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.impl.OperatorOperationFactory;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.impl.OperatorGroupSelectionTypeFactory;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.impl.OperatorGroupSortingFactory;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.impl.OperatorGroupingFactory;
@@ -46,7 +46,7 @@ public class FactoryFlyweight {
             case NonTerminalRuleType.SELECTION_TYPE:
                 return SelectionTypeFactory.getInstance();
             case NonTerminalRuleType.OPERATOR_OPERATION:
-                return OperatorFactory.getInstance();
+                return OperatorOperationFactory.getInstance();
             case NonTerminalRuleType.SELECT_OPERATORS:
             case NonTerminalRuleType.SELECT_OPERATOR_GROUPS:
                 return SelectOperatorsFactory.getInstance();

@@ -25,7 +25,7 @@ import org.junit.Test;
  */
 public class DefaultFactoryTest {
 
-    private static StrategyMapper STRATEGY_MAPPER;
+    private static Rule testingRule;
 
     public DefaultFactoryTest() {
     }
@@ -33,7 +33,8 @@ public class DefaultFactoryTest {
     @BeforeClass
     public static void setUpClass() {
         try {
-            STRATEGY_MAPPER = new StrategyMapper(GrammarFiles.getDefaultGrammarPath());
+            StrategyMapper strategyMapper = new StrategyMapper(GrammarFiles.getDefaultGrammarPath());
+            testingRule = strategyMapper.getNonTerminalRule(NonTerminalRuleType.DEFAULT_OPERATION);
         } catch (IOException ex) {
             Logger.getLogger(DefaultFactoryTest.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -44,9 +45,8 @@ public class DefaultFactoryTest {
      */
     @Test
     public void testCreateOperation() {
-        Rule rule = STRATEGY_MAPPER.getNonTerminalRule(NonTerminalRuleType.DEFAULT_OPERATION);
         Iterator<Integer> iterator = Lists.newArrayList(3).iterator();
-        Operation operation = FactoryFlyweight.getNonTerminalFactory().createOperation(rule, iterator);
+        Operation operation = FactoryFlyweight.getNonTerminalFactory().createOperation(testingRule, iterator);
         assertNotNull(operation);
         assertTrue(operation instanceof StoreMutantsOperation);
     }
@@ -56,9 +56,8 @@ public class DefaultFactoryTest {
      */
     @Test
     public void testCreateOperation2() {
-        Rule rule = STRATEGY_MAPPER.getNonTerminalRule(NonTerminalRuleType.DEFAULT_OPERATION);
         Iterator<Integer> iterator = Lists.newArrayList(2, 2, 3, 3, 3).iterator();
-        Operation operation = FactoryFlyweight.getNonTerminalFactory().createOperation(rule, iterator);
+        Operation operation = FactoryFlyweight.getNonTerminalFactory().createOperation(testingRule, iterator);
         assertNotNull(operation);
 
         assertTrue(operation instanceof NewBranchOperation);
@@ -78,9 +77,8 @@ public class DefaultFactoryTest {
      */
     @Test
     public void testCreateOperation3() {
-        Rule rule = STRATEGY_MAPPER.getNonTerminalRule(NonTerminalRuleType.DEFAULT_OPERATION);
         Iterator<Integer> iterator = Lists.newArrayList(0, 0, 0, 0, 0, 1, 0, 3).iterator();
-        Operation operation = FactoryFlyweight.getNonTerminalFactory().createOperation(rule, iterator);
+        Operation operation = FactoryFlyweight.getNonTerminalFactory().createOperation(testingRule, iterator);
         assertNotNull(operation);
         assertTrue(operation instanceof SelectOperatorsOperation);
     }

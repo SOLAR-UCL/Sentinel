@@ -2,7 +2,7 @@ package br.ufpr.inf.gres.sentinel.strategy.operation.impl.execute.type.impl;
 
 import br.ufpr.inf.gres.sentinel.base.mutation.Operator;
 import br.ufpr.inf.gres.sentinel.integration.IntegrationFacade;
-import br.ufpr.inf.gres.sentinel.integration.IntegrationFacadeStub;
+import br.ufpr.inf.gres.sentinel.integration.IntegrationFacadeTest.IntegrationFacadeStub;
 import com.google.common.collect.Lists;
 import java.util.ArrayList;
 import java.util.List;

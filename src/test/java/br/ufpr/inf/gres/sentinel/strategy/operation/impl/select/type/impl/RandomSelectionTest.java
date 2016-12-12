@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import java.util.ArrayList;
 import java.util.List;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import org.junit.Test;
 
 /**
@@ -72,6 +73,12 @@ public class RandomSelectionTest {
         RandomSelection<Integer> operation = new RandomSelection<>();
         List<Integer> result = operation.selectItems(input, 3);
         assertEquals(0, result.size());
+    }
+
+    @Test
+    public void testIsSpecific() {
+        RandomSelection<Integer> operation = new RandomSelection<>();
+        assertFalse(operation.isSpecific());
     }
 
 }

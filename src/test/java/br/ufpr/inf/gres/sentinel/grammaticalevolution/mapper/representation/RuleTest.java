@@ -2,6 +2,7 @@ package br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.representation;
 
 import com.google.common.collect.Lists;
 import java.util.Iterator;
+import org.apache.commons.collections4.list.SetUniqueList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
@@ -150,6 +151,24 @@ public class RuleTest {
     }
 
     @Test
+    public void testEquals4() {
+        Rule rule = new Rule("rule1");
+
+        Rule rule2 = null;
+
+        assertNotEquals(rule, rule2);
+    }
+
+    @Test
+    public void testEquals5() {
+        Rule rule = new Rule("rule1");
+
+        Object rule2 = new Object();
+
+        assertNotEquals(rule, rule2);
+    }
+
+    @Test
     public void testToString() {
         Rule rule = new Rule("rule1");
         Rule rule2 = new Rule("rule2");
@@ -169,6 +188,39 @@ public class RuleTest {
 
         assertEquals("<rule1> ::= <rule1> \"rule2\"", rule.toCompleteString());
         assertEquals("\"rule2\"", rule2.toCompleteString());
+    }
+
+    @Test
+    public void testGetAndSetName() {
+        Rule rule = new Rule("rule1");
+        rule.setName("RuleTest");
+        assertEquals("RuleTest", rule.getName());
+    }
+
+    @Test
+    public void testGetAndSetOptions() {
+        Rule rule = new Rule("rule1");
+        SetUniqueList<Option> options = SetUniqueList.setUniqueList(Lists.newArrayList(new Option()));
+        rule.setOptions(options);
+        assertEquals(options, rule.getOptions());
+    }
+
+    @Test
+    public void testRemoveOption() {
+        Rule rule = new Rule("rule1");
+        SetUniqueList<Option> options = SetUniqueList.setUniqueList(Lists.newArrayList(new Option()));
+        rule.setOptions(options);
+        rule.removeOption(new Option());
+        assertEquals(0, rule.getOptions().size());
+    }
+
+    @Test
+    public void testClearOptions() {
+        Rule rule = new Rule("rule1");
+        SetUniqueList<Option> options = SetUniqueList.setUniqueList(Lists.newArrayList(new Option()));
+        rule.setOptions(options);
+        rule.clearOptions();
+        assertEquals(0, rule.getOptions().size());
     }
 
 }
