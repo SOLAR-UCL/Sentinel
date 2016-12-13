@@ -1,14 +1,17 @@
 package br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.impl;
 
+import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.representation.Option;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.representation.Rule;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.GrammarFiles;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.StrategyMapper;
+import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.Factory;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.FactoryFlyweight;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.NonTerminalRuleType;
 import br.ufpr.inf.gres.sentinel.strategy.operation.Operation;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.impl.SelectionOperation;
 import com.google.common.collect.Lists;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -56,6 +59,16 @@ public class SelectOperatorsFactoryTest {
         assertTrue(operation instanceof SelectionOperation);
         assertTrue(((SelectionOperation) operation).getQuantity() == 0);
         assertTrue(((SelectionOperation) operation).getPercentage() > 0D);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testCreateInvalidOperation() {
+        Factory factory = SelectOperatorsFactory.getInstance();
+        Iterator<Integer> iterator = Lists.newArrayList(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0).iterator();
+        Option option = new Option(new ArrayList<>(testingRule.getOption(0).getRules()));
+        option.removeRule(option.getRules().get(1));
+        option.addRule(new Rule("Unknown"));
+        factory.createOperation(option, iterator);
     }
 
 }

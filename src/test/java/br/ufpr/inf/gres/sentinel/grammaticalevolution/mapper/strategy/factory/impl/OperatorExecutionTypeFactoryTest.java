@@ -53,7 +53,7 @@ public class OperatorExecutionTypeFactoryTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testCreateInvalidOperation() {
-        Factory factory = new OperatorExecutionTypeFactory();
+        Factory factory = OperatorExecutionTypeFactory.getInstance();
         Iterator<Integer> iterator = Lists.newArrayList(0).iterator();
         factory.createOperation(new Option(Lists.newArrayList(new Rule("Unknown"))), iterator);
     }

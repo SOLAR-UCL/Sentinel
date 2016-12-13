@@ -161,10 +161,10 @@ public abstract class AbstractGrammarMapper<T> {
         } catch (IOException ex) {
             throw new IOException("File is not a file or does not exist.", ex);
         } catch (ArrayIndexOutOfBoundsException ex) {
-            throw new IOException("The grammar file contains a syntax error.", ex);
+            throw new IllegalArgumentException("The grammar file contains a syntax error.", ex);
         }
         if (rootNode == null) {
-            throw new IOException("I could not find any grammar in the file.");
+            throw new IllegalArgumentException("I could not find any grammar in the file.");
         }
         return true;
     }
@@ -198,7 +198,7 @@ public abstract class AbstractGrammarMapper<T> {
                 foundRule = matcher.group(++ruleGroup);
             } while (foundRule == null);
             // Get rule based on its type.
-            Rule rule;
+            Rule rule = null;
             switch (ruleGroup) {
                 case NON_TERMINAL_RULE_GROUP:
                     rule = getNonTerminalRule(foundRule);
@@ -206,11 +206,13 @@ public abstract class AbstractGrammarMapper<T> {
                 case TERMINAL_RULE_GROUP:
                     rule = getTerminalRule(foundRule);
                     break;
-                default:
-                    throw new IOException("The grammar file contains a syntax error. The rule " + foundRule + " is worng.");
             }
             // Add rule to the option.
             option.addRule(rule);
+        }
+        // Invalid option with no rules.
+        if (option.getRules().isEmpty()) {
+            throw new ArrayIndexOutOfBoundsException("No rules for option.");
         }
         return option;
     }

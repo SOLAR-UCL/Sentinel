@@ -6,6 +6,7 @@ import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.impl.SelectionOp
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.type.impl.SequentialSelection;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.sort.impl.OperatorTypeComparator;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import org.junit.Test;
 
 /**
@@ -72,6 +73,19 @@ public class SelectOperatorsOperationTest {
         assertEquals(operator2, solution.getOperators().get(1));
         assertEquals(operator3, solution.getOperators().get(2));
         assertEquals(operator4, solution.getOperators().get(3));
+    }
+
+    @Test
+    public void testIsSpecific() {
+        SelectionOperation<Operator> selectionOp = new SelectionOperation<>();
+        selectionOp.setSelectionType(new SequentialSelection());
+        selectionOp.setSorter(new OperatorTypeComparator());
+        selectionOp.setQuantity(1);
+
+        SelectOperatorsOperation operation = new SelectOperatorsOperation();
+        operation.setSelection(selectionOp);
+
+        assertFalse(operation.isSpecific());
     }
 
 }

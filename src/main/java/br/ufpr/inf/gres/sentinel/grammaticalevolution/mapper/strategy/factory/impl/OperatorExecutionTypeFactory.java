@@ -16,6 +16,9 @@ import java.util.Iterator;
  */
 public class OperatorExecutionTypeFactory implements Factory<Option> {
 
+    private OperatorExecutionTypeFactory() {
+    }
+
     public static OperatorExecutionTypeFactory getInstance() {
         return SingletonHolder.INSTANCE;
     }

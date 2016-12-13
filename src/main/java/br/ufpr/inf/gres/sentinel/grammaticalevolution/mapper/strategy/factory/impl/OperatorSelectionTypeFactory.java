@@ -20,6 +20,9 @@ import java.util.Iterator;
  */
 public class OperatorSelectionTypeFactory implements Factory<Option> {
 
+    private OperatorSelectionTypeFactory() {
+    }
+
     public static OperatorSelectionTypeFactory getInstance() {
         return SingletonHolder.INSTANCE;
     }

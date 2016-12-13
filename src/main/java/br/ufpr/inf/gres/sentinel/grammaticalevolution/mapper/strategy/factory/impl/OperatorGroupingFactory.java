@@ -21,6 +21,9 @@ public class OperatorGroupingFactory implements Factory<Option> {
         return SingletonHolder.INSTANCE;
     }
 
+    private OperatorGroupingFactory() {
+    }
+
     @Override
     public Operation createOperation(Option node, Iterator<Integer> cyclicIterator) {
         Iterator<Rule> rules = node.getRules().iterator();

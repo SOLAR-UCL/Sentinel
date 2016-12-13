@@ -1,8 +1,10 @@
 package br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.impl;
 
+import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.representation.Option;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.representation.Rule;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.GrammarFiles;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.StrategyMapper;
+import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.Factory;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.FactoryFlyweight;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.NonTerminalRuleType;
 import br.ufpr.inf.gres.sentinel.strategy.operation.Operation;
@@ -59,6 +61,13 @@ public class OperatorSelectionTypeFactoryTest {
         assertNotNull(((GroupSelectionOperation) operation).getSorter());
         assertNotNull(((GroupSelectionOperation) operation).getGroupingFunction());
         assertNotNull(((GroupSelectionOperation) operation).getSelectionOperation());
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testCreateInvalidOperation() {
+        Factory factory = OperatorSelectionTypeFactory.getInstance();
+        Iterator<Integer> iterator = Lists.newArrayList(0).iterator();
+        factory.createOperation(new Option(Lists.newArrayList(new Rule("Unknown"))), iterator);
     }
 
 }

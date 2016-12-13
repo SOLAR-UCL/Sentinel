@@ -2,6 +2,7 @@ package br.ufpr.inf.gres.sentinel.strategy.operation.impl.sort;
 
 import com.google.common.collect.Lists;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
@@ -54,6 +55,12 @@ public class AbstractSorterOperationTest {
         AbstractSorterOperation<Integer> stub = new AbstractSorterOperationStub().reversed();
         int result = stub.doOperation(Lists.newArrayList(2, 1));
         assertTrue(result < 0);
+    }
+
+    @Test
+    public void testReversedIsSpecific() {
+        AbstractSorterOperation<Integer> stub = new AbstractSorterOperationStub().reversed();
+        assertFalse(stub.isSpecific());
     }
 
     public class AbstractSorterOperationStub extends AbstractSorterOperation<Integer> {

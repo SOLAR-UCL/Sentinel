@@ -22,6 +22,8 @@ import org.junit.Test;
 public class AbstractGrammarMapperTest {
 
     private static String DEFAULT_GRAMMAR;
+    private static String TEST_GRAMMAR;
+    private static String TEST_GRAMMAR_2;
     private static StubMapper DEFAULT_MAPPER;
 
     public AbstractGrammarMapperTest() {
@@ -31,6 +33,8 @@ public class AbstractGrammarMapperTest {
     public static void setUpClass() {
         try {
             DEFAULT_GRAMMAR = ClassLoader.getSystemResource("default_grammar.bnf").toURI().getPath();
+            TEST_GRAMMAR = ClassLoader.getSystemResource("testgrammar.bnf").toURI().getPath();
+            TEST_GRAMMAR_2 = ClassLoader.getSystemResource("testgrammar2.bnf").toURI().getPath();
         } catch (URISyntaxException ex) {
             Logger.getLogger(AbstractGrammarMapperTest.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -266,6 +270,22 @@ public class AbstractGrammarMapperTest {
         Rule node = nodes.get(NonTerminalRuleType.OPERATOR_EXECUTION_TYPE);
         assertEquals(1, node.getOptions().size());
         assertEquals(1, node.getOption(0).getRules().size());
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void loadGrammarTest20() throws IOException {
+        StubMapper stubMapper = new StubMapper(TEST_GRAMMAR);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void loadGrammarTest21() throws IOException {
+        StubMapper stubMapper = new StubMapper(TEST_GRAMMAR_2);
+    }
+
+    @Test
+    public void testGetRootNode() {
+        assertNotNull(DEFAULT_MAPPER.getRootNode());
+        assertEquals("<strategy>", DEFAULT_MAPPER.getRootNode().toString());
     }
 
     //TODO test mutant rules

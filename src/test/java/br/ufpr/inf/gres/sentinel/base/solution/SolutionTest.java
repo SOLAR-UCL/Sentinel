@@ -5,6 +5,8 @@ import br.ufpr.inf.gres.sentinel.base.mutation.Operator;
 import br.ufpr.inf.gres.sentinel.base.mutation.TestCase;
 import br.ufpr.inf.gres.sentinel.integration.IntegrationFacade;
 import java.io.File;
+import java.util.ArrayList;
+import org.apache.commons.collections4.list.SetUniqueList;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotSame;
@@ -72,6 +74,22 @@ public class SolutionTest {
             assertNotSame(temp1, temp2);
             assertNotSame(temp1.getGeneratedMutants().get(0), temp2.getGeneratedMutants().get(0));
         }
+    }
+
+    @Test
+    public void testGetAndSetMutants() {
+        SetUniqueList<Mutant> mutants = SetUniqueList.setUniqueList(new ArrayList<>());
+        Solution solution = new Solution();
+        solution.setMutants(mutants);
+        assertEquals(mutants, solution.getMutants());
+    }
+
+    @Test
+    public void testGetAndSetOperators() {
+        SetUniqueList<Operator> operators = SetUniqueList.setUniqueList(new ArrayList<>());
+        Solution solution = new Solution();
+        solution.setOperators(operators);
+        assertEquals(operators, solution.getOperators());
     }
 
 }

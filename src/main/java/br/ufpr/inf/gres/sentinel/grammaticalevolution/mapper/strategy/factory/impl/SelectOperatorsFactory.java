@@ -17,6 +17,9 @@ import java.util.Iterator;
  */
 public class SelectOperatorsFactory implements Factory<Option> {
 
+    private SelectOperatorsFactory() {
+    }
+
     public static SelectOperatorsFactory getInstance() {
         return SingletonHolder.INSTANCE;
     }

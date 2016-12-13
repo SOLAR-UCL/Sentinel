@@ -19,6 +19,9 @@ import java.util.Iterator;
  */
 public class OperatorGroupSelectionTypeFactory implements Factory<Option> {
 
+    private OperatorGroupSelectionTypeFactory() {
+    }
+
     public static OperatorGroupSelectionTypeFactory getInstance() {
         return SingletonHolder.INSTANCE;
     }

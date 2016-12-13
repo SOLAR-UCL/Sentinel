@@ -65,7 +65,7 @@ public class OperatorGroupingFactoryTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testCreateInvalidOperation() {
-        Factory factory = new OperatorGroupingFactory();
+        Factory factory = OperatorGroupingFactory.getInstance();
         Iterator<Integer> iterator = Lists.newArrayList(0).iterator();
         Option option = new Option(Lists.newArrayList(new Rule("Unknown")));
         factory.createOperation(new Option(Lists.newArrayList(new Rule("Unknown", Lists.newArrayList(option)))), iterator);
