@@ -1,4 +1,4 @@
-package br.ufpr.inf.gres.sentinel.strategy.operation.impl.sort.impl;
+package br.ufpr.inf.gres.sentinel.strategy.operation.impl.sort.impl.operator;
 
 import br.ufpr.inf.gres.sentinel.base.mutation.Operator;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.TerminalRuleType;
@@ -12,7 +12,7 @@ import java.util.List;
 public class MutantQuantityInGroupComparator extends AbstractSorterOperation<List<Operator>> {
 
     public MutantQuantityInGroupComparator() {
-        super("Sort Operator Groups by " + TerminalRuleType.MUTANT_QUANTITY);
+        super("Sort Operator Groups by " + TerminalRuleType.MUTANT_QUANTITY_IN_GROUP);
     }
 
     @Override

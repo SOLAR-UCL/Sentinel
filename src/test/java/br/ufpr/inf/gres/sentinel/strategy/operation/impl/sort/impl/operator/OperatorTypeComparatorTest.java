@@ -1,5 +1,6 @@
-package br.ufpr.inf.gres.sentinel.strategy.operation.impl.sort.impl;
+package br.ufpr.inf.gres.sentinel.strategy.operation.impl.sort.impl.operator;
 
+import br.ufpr.inf.gres.sentinel.strategy.operation.impl.sort.impl.operator.OperatorTypeComparator;
 import br.ufpr.inf.gres.sentinel.base.mutation.Operator;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;

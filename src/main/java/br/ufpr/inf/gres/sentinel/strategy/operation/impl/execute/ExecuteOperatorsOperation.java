@@ -5,7 +5,7 @@ import br.ufpr.inf.gres.sentinel.base.solution.Solution;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.TerminalRuleType;
 import br.ufpr.inf.gres.sentinel.strategy.operation.Operation;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.execute.type.OperatorExecutionType;
-import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.impl.SelectionOperation;
+import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.selection.SelectionOperation;
 import java.util.List;
 
 /**
@@ -18,11 +18,11 @@ public class ExecuteOperatorsOperation extends Operation<Solution, List<Operator
     private OperatorExecutionType executionType;
 
     public ExecuteOperatorsOperation() {
-        super(TerminalRuleType.DISCARD_OPERATORS);
+        super(TerminalRuleType.EXECUTE_OPERATORS);
     }
 
     public ExecuteOperatorsOperation(SelectionOperation<Operator> selection, OperatorExecutionType executionType) {
-        super(TerminalRuleType.DISCARD_OPERATORS);
+        super(TerminalRuleType.EXECUTE_OPERATORS);
         this.selection = selection;
         this.executionType = executionType;
     }

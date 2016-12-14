@@ -8,11 +8,11 @@ import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.Fa
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.FactoryFlyweight;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.TerminalRuleType;
 import br.ufpr.inf.gres.sentinel.strategy.operation.Operation;
-import br.ufpr.inf.gres.sentinel.strategy.operation.impl.discard.DiscardOperatorsOperation;
+import br.ufpr.inf.gres.sentinel.strategy.operation.impl.discard.impl.DiscardOperatorsOperation;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.execute.ExecuteOperatorsOperation;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.execute.type.OperatorExecutionType;
-import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.SelectOperatorsOperation;
-import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.impl.SelectionOperation;
+import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.operation.impl.SelectOperatorsOperation;
+import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.selection.SelectionOperation;
 import com.google.common.base.Preconditions;
 import java.util.Iterator;
 import java.util.List;

@@ -1,5 +1,6 @@
-package br.ufpr.inf.gres.sentinel.strategy.operation.impl.sort.impl;
+package br.ufpr.inf.gres.sentinel.strategy.operation.impl.sort.impl.operator;
 
+import br.ufpr.inf.gres.sentinel.strategy.operation.impl.sort.impl.operator.OperatorQuantityInGroupComparator;
 import br.ufpr.inf.gres.sentinel.base.mutation.Operator;
 import java.util.ArrayList;
 import java.util.List;

@@ -1,4 +1,4 @@
-package br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.impl;
+package br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.selection;
 
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.group.AbstractGroupingFunction;
 import static com.google.common.base.Preconditions.checkArgument;

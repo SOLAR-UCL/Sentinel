@@ -1,9 +1,9 @@
-package br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.impl;
+package br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.selection;
 
 import br.ufpr.inf.gres.sentinel.base.mutation.Operator;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.type.impl.LastToFirstSelection;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.type.impl.SequentialSelection;
-import br.ufpr.inf.gres.sentinel.strategy.operation.impl.sort.impl.OperatorTypeComparator;
+import br.ufpr.inf.gres.sentinel.strategy.operation.impl.sort.impl.operator.OperatorTypeComparator;
 import java.util.ArrayList;
 import java.util.List;
 import static org.junit.Assert.assertEquals;

@@ -9,8 +9,8 @@ import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.Fa
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.NonTerminalRuleType;
 import br.ufpr.inf.gres.sentinel.strategy.operation.Operation;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.sort.AbstractSorterOperation;
-import br.ufpr.inf.gres.sentinel.strategy.operation.impl.sort.impl.MutantQuantityInGroupComparator;
-import br.ufpr.inf.gres.sentinel.strategy.operation.impl.sort.impl.OperatorQuantityInGroupComparator;
+import br.ufpr.inf.gres.sentinel.strategy.operation.impl.sort.impl.operator.MutantQuantityInGroupComparator;
+import br.ufpr.inf.gres.sentinel.strategy.operation.impl.sort.impl.operator.OperatorQuantityInGroupComparator;
 import com.google.common.collect.Lists;
 import java.io.IOException;
 import java.util.Iterator;

@@ -1,4 +1,4 @@
-package br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.impl;
+package br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.selection;
 
 import br.ufpr.inf.gres.sentinel.strategy.operation.Operation;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.type.SelectionType;

@@ -6,7 +6,7 @@ import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.StrategyMa
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.FactoryFlyweight;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.NonTerminalRuleType;
 import br.ufpr.inf.gres.sentinel.strategy.operation.Operation;
-import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.impl.GroupSelectionOperation;
+import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.selection.GroupSelectionOperation;
 import com.google.common.collect.Lists;
 import java.io.IOException;
 import java.util.Iterator;

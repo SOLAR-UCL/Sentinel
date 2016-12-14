@@ -8,9 +8,9 @@ import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.Fa
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.FactoryFlyweight;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.NonTerminalRuleType;
 import br.ufpr.inf.gres.sentinel.strategy.operation.Operation;
-import br.ufpr.inf.gres.sentinel.strategy.operation.impl.discard.DiscardOperatorsOperation;
+import br.ufpr.inf.gres.sentinel.strategy.operation.impl.discard.AbstractDiscardOperation;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.execute.ExecuteOperatorsOperation;
-import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.SelectOperatorsOperation;
+import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.operation.AbstractSelectOperation;
 import com.google.common.collect.Lists;
 import java.io.IOException;
 import java.util.Iterator;
@@ -47,8 +47,8 @@ public class OperatorOperationFactoryTest {
         Iterator<Integer> iterator = Lists.newArrayList(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0).iterator();
         Operation operation = FactoryFlyweight.getNonTerminalFactory().createOperation(testingRule, iterator);
         assertNotNull(operation);
-        assertTrue(operation instanceof SelectOperatorsOperation);
-        assertNotNull(((SelectOperatorsOperation) operation).getSelection());
+        assertTrue(operation instanceof AbstractSelectOperation);
+        assertNotNull(((AbstractSelectOperation) operation).getSelection());
     }
 
     @Test
@@ -56,8 +56,8 @@ public class OperatorOperationFactoryTest {
         Iterator<Integer> iterator = Lists.newArrayList(1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0).iterator();
         Operation operation = FactoryFlyweight.getNonTerminalFactory().createOperation(testingRule, iterator);
         assertNotNull(operation);
-        assertTrue(operation instanceof DiscardOperatorsOperation);
-        assertNotNull(((DiscardOperatorsOperation) operation).getSelection());
+        assertTrue(operation instanceof AbstractDiscardOperation);
+        assertNotNull(((AbstractDiscardOperation) operation).getSelection());
     }
 
     @Test

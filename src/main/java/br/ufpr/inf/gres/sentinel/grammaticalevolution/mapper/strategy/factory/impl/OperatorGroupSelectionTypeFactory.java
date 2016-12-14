@@ -7,7 +7,7 @@ import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.Fa
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.FactoryFlyweight;
 import br.ufpr.inf.gres.sentinel.strategy.operation.Operation;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.group.AbstractGroupingFunction;
-import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.impl.GroupSelectionOperation;
+import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.selection.GroupSelectionOperation;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.type.SelectionType;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.sort.AbstractSorterOperation;
 import com.google.common.base.Preconditions;
