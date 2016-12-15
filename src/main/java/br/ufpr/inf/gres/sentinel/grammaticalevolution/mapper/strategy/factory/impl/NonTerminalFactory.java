@@ -7,9 +7,6 @@ import br.ufpr.inf.gres.sentinel.strategy.operation.Operation;
 
 import java.util.Iterator;
 
-/**
- * Created by Giovani Guizzo on 24/10/2016.
- */
 public class NonTerminalFactory implements Factory<Rule> {
 
 	private NonTerminalFactory() {

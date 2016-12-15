@@ -55,7 +55,7 @@ public class ExecuteOperatorsOperation extends Operation<Solution, List<Operator
 	public boolean isSpecific() {
 		boolean isSpecific = false;
 		if (selection != null) {
-			isSpecific = isSpecific || selection.isSpecific();
+			isSpecific = selection.isSpecific();
 		}
 		if (executionType != null) {
 			isSpecific = isSpecific || executionType.isSpecific();

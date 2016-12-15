@@ -100,6 +100,7 @@ public class AbstractGrammarMapperTest {
 		assertNotNull(nodes.get(NonTerminalRuleType.HOM_GENERATION));
 		assertNotNull(nodes.get(NonTerminalRuleType.ORDER));
 		assertNotNull(nodes.get(NonTerminalRuleType.MUTANT_ATTRIBUTE));
+		assertNotNull(nodes.get(NonTerminalRuleType.MUTANT_GROUP_ATTRIBUTE));
 	}
 
 	@Test

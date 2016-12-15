@@ -8,9 +8,6 @@ import org.apache.commons.collections4.list.SetUniqueList;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Giovani Guizzo on 24/10/2016.
- */
 public class Strategy {
 
 	private Operation<Solution, List<Mutant>> firstOperation;

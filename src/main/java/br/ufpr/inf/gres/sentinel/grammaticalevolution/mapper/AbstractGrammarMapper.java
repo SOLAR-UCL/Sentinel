@@ -182,8 +182,6 @@ public abstract class AbstractGrammarMapper<T> {
 	 * @param optionString The option string, e.g., 'op expr op'.
 	 *
 	 * @return An option object.
-	 *
-	 * @throws IOException If there is any syntax error in the grammar file.
 	 */
 	private Option buildOption(String optionString) {
 		// Create a new option
