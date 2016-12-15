@@ -11,18 +11,18 @@ import java.util.stream.Collectors;
 /**
  * @author Giovani Guizzo
  */
-public abstract class AbstractGroupingFunction<T> extends Operation<List<T>, List<List<T>>> {
+public abstract class AbstractGroupingOperation<T> extends Operation<List<T>, List<List<T>>> {
 
-	public AbstractGroupingFunction(String name) {
+	public AbstractGroupingOperation(String name) {
 		super(name);
 	}
 
 	@Override
 	public List<List<T>> doOperation(List<T> input) {
-		Map<?, List<T>> collect = input.stream().collect(Collectors.groupingBy(createGrouperFunction()));
+		Map<?, List<T>> collect = input.stream().collect(Collectors.groupingBy(createGroupingFunction()));
 		return new ArrayList<>(collect.values());
 	}
 
-	protected abstract Function<T, ?> createGrouperFunction();
+	protected abstract Function<T, ?> createGroupingFunction();
 
 }

@@ -4,6 +4,8 @@ import br.ufpr.inf.gres.sentinel.base.mutation.Operator;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.TerminalRuleType;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.sort.AbstractSorterOperation;
 
+import java.util.function.Function;
+
 /**
  * @author Giovani Guizzo
  */
@@ -14,13 +16,12 @@ public class MutantQuantityComparator extends AbstractSorterOperation<Operator> 
 	}
 
 	@Override
-	public int compare(Operator o1, Operator o2) {
-		return Integer.compare(o1.getGeneratedMutants().size(), o2.getGeneratedMutants().size());
-	}
-
-	@Override
 	public boolean isSpecific() {
 		return false;
 	}
 
+	@Override
+	protected Function<Operator, Integer> createSortingFunction() {
+		return operator -> operator.getGeneratedMutants().size();
+	}
 }

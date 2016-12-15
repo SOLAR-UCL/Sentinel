@@ -18,7 +18,6 @@ import java.util.Iterator;
 /**
  * @author Giovani Guizzo
  */
-@SuppressWarnings("ALL")
 public class OperatorSelectionTypeFactory implements Factory<Option> {
 
 	private OperatorSelectionTypeFactory() {

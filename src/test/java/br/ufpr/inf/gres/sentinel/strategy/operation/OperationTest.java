@@ -44,7 +44,6 @@ public class OperationTest {
 
 	@Test
 	public void testToString() {
-		System.out.println("toString");
 		Operation instance = getDualOperationChain();
 		String expResult = "TestOperation";
 		String result = instance.toString();
@@ -53,7 +52,6 @@ public class OperationTest {
 
 	@Test
 	public void testToStringComplete() {
-		System.out.println("toStringComplete");
 		Operation instance = getDualOperationChain();
 		String expResult = "1.TestOperation - 2.TestOperation2";
 		String result = instance.toStringComplete();
@@ -62,7 +60,6 @@ public class OperationTest {
 
 	@Test
 	public void testToStringCompleteSingleOperation() {
-		System.out.println("toStringComplete");
 		Operation instance = new OperationStub("TestOperation");
 		String expResult = "1.TestOperation";
 		String result = instance.toStringComplete();
@@ -71,7 +68,6 @@ public class OperationTest {
 
 	@Test
 	public void testToStringCompleteWithNewBranch() {
-		System.out.println("toStringCompleteNewBranch");
 		Operation instance = getComplexTestOperationChain();
 
 		String expResult = "1.TestOperation - 2.TestOperation2 - 3." + TerminalRuleType.NEW_BRANCH + " - 4.TestOperation3\n" + "\t3.1." + TerminalRuleType.NEW_BRANCH + " - 3.2." + TerminalRuleType.NEW_BRANCH + " - 3.3.TestOperation5\n" + "\t3.2.1.TestOperation6\n" + "\t3.1.1.TestOperation4";

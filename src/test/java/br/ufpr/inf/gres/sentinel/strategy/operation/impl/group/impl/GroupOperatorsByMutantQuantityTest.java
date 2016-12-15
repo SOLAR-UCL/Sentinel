@@ -28,7 +28,7 @@ public class GroupOperatorsByMutantQuantityTest {
 		operator2.getGeneratedMutants().add(new Mutant("Mutant2", null, IntegrationFacade.getProgramUnderTest()));
 		Operator operator3 = new Operator("Operator3", "Type1");
 
-		Function<Operator, Integer> grouperFunction = operation.createGrouperFunction();
+		Function<Operator, Integer> grouperFunction = operation.createGroupingFunction();
 		assertEquals((int) 1, (int) grouperFunction.apply(operator1));
 		assertEquals((int) 2, (int) grouperFunction.apply(operator2));
 		assertEquals((int) 0, (int) grouperFunction.apply(operator3));

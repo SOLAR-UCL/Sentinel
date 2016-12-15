@@ -6,7 +6,7 @@ import br.ufpr.inf.gres.sentinel.integration.IntegrationFacade;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.group.impl.GroupOperatorsByMutantQuantity;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.group.impl.GroupOperatorsByType;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.type.impl.SequentialSelection;
-import br.ufpr.inf.gres.sentinel.strategy.operation.impl.sort.impl.operator.OperatorQuantityInGroupComparator;
+import br.ufpr.inf.gres.sentinel.strategy.operation.impl.sort.impl.QuantityInGroupComparator;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.sort.impl.operator.OperatorTypeComparator;
 import com.google.common.collect.Lists;
 import org.junit.Test;
@@ -34,7 +34,7 @@ public class GroupSelectionOperationTest {
 		groupOp.setSelectionOperation(selectionOp);
 		groupOp.setGroupingFunction(new GroupOperatorsByType());
 		groupOp.setSelectionType(new SequentialSelection());
-		groupOp.setSorter(new OperatorQuantityInGroupComparator());
+		groupOp.setSorter(new QuantityInGroupComparator());
 		groupOp.setQuantity(1);
 
 		Operator operator1 = new Operator("Operator1", "Type1");
@@ -58,7 +58,7 @@ public class GroupSelectionOperationTest {
 		groupOp.setSelectionOperation(selectionOp);
 		groupOp.setGroupingFunction(new GroupOperatorsByType());
 		groupOp.setSelectionType(new SequentialSelection());
-		groupOp.setSorter(new OperatorQuantityInGroupComparator());
+		groupOp.setSorter(new QuantityInGroupComparator());
 		groupOp.setQuantity(2);
 
 		Operator operator1 = new Operator("Operator1", "Type1");
@@ -83,7 +83,7 @@ public class GroupSelectionOperationTest {
 		groupOp.setSelectionOperation(selectionOp);
 		groupOp.setGroupingFunction(new GroupOperatorsByType());
 		groupOp.setSelectionType(new SequentialSelection());
-		groupOp.setSorter(new OperatorQuantityInGroupComparator());
+		groupOp.setSorter(new QuantityInGroupComparator());
 		groupOp.setQuantity(3);
 
 		Operator operator1 = new Operator("Operator1", "Type1");
@@ -109,7 +109,7 @@ public class GroupSelectionOperationTest {
 		groupOp.setSelectionOperation(selectionOp);
 		groupOp.setGroupingFunction(new GroupOperatorsByType());
 		groupOp.setSelectionType(new SequentialSelection());
-		groupOp.setSorter(new OperatorQuantityInGroupComparator());
+		groupOp.setSorter(new QuantityInGroupComparator());
 		groupOp.setQuantity(3);
 
 		Operator operator1 = new Operator("Operator1", "Type1");
@@ -138,7 +138,9 @@ public class GroupSelectionOperationTest {
 		groupOp.setSelectionOperation(selectionOp);
 		groupOp.setGroupingFunction(new GroupOperatorsByType());
 		groupOp.setSelectionType(new SequentialSelection());
-		groupOp.setSorter(new OperatorQuantityInGroupComparator().reversed());
+		QuantityInGroupComparator sorter = new QuantityInGroupComparator();
+		sorter.setReversed(true);
+		groupOp.setSorter(sorter);
 		groupOp.setQuantity(2);
 
 		Operator operator1 = new Operator("Operator1", "Type1");
@@ -201,7 +203,7 @@ public class GroupSelectionOperationTest {
 		groupOp.setSelectionOperation(selectionOp);
 		groupOp.setGroupingFunction(new GroupOperatorsByType());
 		groupOp.setSelectionType(new SequentialSelection());
-		groupOp.setSorter(new OperatorQuantityInGroupComparator());
+		groupOp.setSorter(new QuantityInGroupComparator());
 		groupOp.setPercentage(1.0);
 
 		Operator operator1 = new Operator("Operator1", "Type1");
@@ -227,7 +229,7 @@ public class GroupSelectionOperationTest {
 		groupOp.setSelectionOperation(selectionOp);
 		groupOp.setGroupingFunction(new GroupOperatorsByType());
 		groupOp.setSelectionType(new SequentialSelection());
-		groupOp.setSorter(new OperatorQuantityInGroupComparator());
+		groupOp.setSorter(new QuantityInGroupComparator());
 		groupOp.setPercentage(1.0);
 
 		assertFalse(groupOp.isSpecific());

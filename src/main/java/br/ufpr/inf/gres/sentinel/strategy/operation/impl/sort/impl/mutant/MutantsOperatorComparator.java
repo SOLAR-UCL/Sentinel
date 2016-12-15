@@ -13,10 +13,10 @@ import java.util.function.Function;
 /**
  * @author Giovani Guizzo
  */
-public class MutantsOperatorTypeComparator extends AbstractSorterOperation<Mutant> {
+public class MutantsOperatorComparator extends AbstractSorterOperation<Mutant> {
 
-	public MutantsOperatorTypeComparator() {
-		super("Sort Mutants by " + TerminalRuleType.OPERATOR_TYPE);
+	public MutantsOperatorComparator() {
+		super("Sort Mutants by " + TerminalRuleType.OPERATOR);
 	}
 
 	@Override
@@ -28,10 +28,12 @@ public class MutantsOperatorTypeComparator extends AbstractSorterOperation<Mutan
 	protected Function<Mutant, String> createSortingFunction() {
 		return mutant -> {
 			ArrayList<Operator> operators = new ArrayList<>(mutant.getOperators());
-			Comparator<Operator> comparator = Comparator.comparing(Operator::getType);
+			Function<Operator, String> getName = Operator::getName;
+			Comparator<Operator> comparator = Comparator.comparing(getName);
 			operators.sort(comparator);
 			Operator operator = Iterables.getFirst(operators, new Operator("Unknown", "Unknown"));
-			return operator.getType();
+			return operator.getName();
 		};
 	}
+
 }

@@ -10,7 +10,6 @@ import java.util.Iterator;
 /**
  * Created by Giovani Guizzo on 24/10/2016.
  */
-@SuppressWarnings("ALL")
 public class NonTerminalFactory implements Factory<Rule> {
 
 	private NonTerminalFactory() {

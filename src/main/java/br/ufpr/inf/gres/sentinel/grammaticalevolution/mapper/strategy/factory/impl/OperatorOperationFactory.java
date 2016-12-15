@@ -21,7 +21,6 @@ import java.util.List;
 /**
  * @author Giovani Guizzo
  */
-@SuppressWarnings("ALL")
 public class OperatorOperationFactory implements Factory<Option> {
 
 	private OperatorOperationFactory() {

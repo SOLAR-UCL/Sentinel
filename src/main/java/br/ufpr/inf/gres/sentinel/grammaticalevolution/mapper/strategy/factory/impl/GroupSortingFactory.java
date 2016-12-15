@@ -6,8 +6,8 @@ import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.Fa
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.TerminalRuleType;
 import br.ufpr.inf.gres.sentinel.strategy.operation.Operation;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.sort.AbstractSorterOperation;
-import br.ufpr.inf.gres.sentinel.strategy.operation.impl.sort.impl.operator.MutantQuantityComparator;
-import br.ufpr.inf.gres.sentinel.strategy.operation.impl.sort.impl.operator.OperatorTypeComparator;
+import br.ufpr.inf.gres.sentinel.strategy.operation.impl.sort.impl.QuantityInGroupComparator;
+import br.ufpr.inf.gres.sentinel.strategy.operation.impl.sort.impl.operator.MutantQuantityInGroupComparator;
 import com.google.common.base.Preconditions;
 
 import java.util.Iterator;
@@ -15,12 +15,12 @@ import java.util.Iterator;
 /**
  * @author Giovani Guizzo
  */
-public class OperatorSortingFactory implements Factory<Option> {
+public class GroupSortingFactory implements Factory<Option> {
 
-	private OperatorSortingFactory() {
+	private GroupSortingFactory() {
 	}
 
-	public static OperatorSortingFactory getInstance() {
+	public static GroupSortingFactory getInstance() {
 		return SingletonHolder.INSTANCE;
 	}
 
@@ -36,11 +36,11 @@ public class OperatorSortingFactory implements Factory<Option> {
 		rule = rule.getOption(cyclicIterator).getRules().get(0);
 		AbstractSorterOperation mainOperation;
 		switch (rule.getName()) {
-			case TerminalRuleType.TYPE:
-				mainOperation = new OperatorTypeComparator();
+			case TerminalRuleType.MUTANT_QUANTITY_IN_GROUP:
+				mainOperation = new MutantQuantityInGroupComparator();
 				break;
-			case TerminalRuleType.MUTANT_QUANTITY:
-				mainOperation = new MutantQuantityComparator();
+			case TerminalRuleType.QUANTITY_IN_GROUP:
+				mainOperation = new QuantityInGroupComparator();
 				break;
 			default:
 				throw new IllegalArgumentException("Malformed grammar option: " + node.toString());
@@ -49,7 +49,7 @@ public class OperatorSortingFactory implements Factory<Option> {
 		Preconditions.checkArgument(rules.hasNext(), "Malformed grammar option: " + node.toString());
 		rule = rules.next().getOption(cyclicIterator).getRules().get(0);
 		if (rule.getName().equals(TerminalRuleType.DESCENDING)) {
-			mainOperation = mainOperation.reversed();
+			mainOperation.setReversed(true);
 		}
 
 		return mainOperation;
@@ -57,7 +57,7 @@ public class OperatorSortingFactory implements Factory<Option> {
 
 	private static class SingletonHolder {
 
-		private static final OperatorSortingFactory INSTANCE = new OperatorSortingFactory();
+		private static final GroupSortingFactory INSTANCE = new GroupSortingFactory();
 	}
 
 }

@@ -24,7 +24,7 @@ public class GroupOperatorsByTypeTest {
 		Operator operator3 = new Operator("Operator3", "Type2");
 		Operator operator4 = new Operator("Operator4", "Type3");
 
-		Function<Operator, String> grouperFunction = operation.createGrouperFunction();
+		Function<Operator, String> grouperFunction = operation.createGroupingFunction();
 		assertEquals("Type1", grouperFunction.apply(operator1));
 		assertEquals("Type1", grouperFunction.apply(operator2));
 		assertEquals("Type2", grouperFunction.apply(operator3));

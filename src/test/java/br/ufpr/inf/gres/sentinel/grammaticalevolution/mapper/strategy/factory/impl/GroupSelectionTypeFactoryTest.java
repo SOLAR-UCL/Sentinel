@@ -21,11 +21,11 @@ import static org.junit.Assert.*;
 /**
  * @author Giovani Guizzo
  */
-public class OperatorGroupSelectionTypeFactoryTest {
+public class GroupSelectionTypeFactoryTest {
 
 	private static Rule testingRule;
 
-	public OperatorGroupSelectionTypeFactoryTest() {
+	public GroupSelectionTypeFactoryTest() {
 	}
 
 	@BeforeClass
@@ -34,7 +34,7 @@ public class OperatorGroupSelectionTypeFactoryTest {
 			StrategyMapper strategyMapper = new StrategyMapper(GrammarFiles.getDefaultGrammarPath());
 			testingRule = strategyMapper.getNonTerminalRule(NonTerminalRuleType.OPERATOR_GROUP_SELECTION_TYPE);
 		} catch (IOException ex) {
-			Logger.getLogger(OperatorGroupSelectionTypeFactoryTest.class.getName()).log(Level.SEVERE, null, ex);
+			Logger.getLogger(GroupSelectionTypeFactoryTest.class.getName()).log(Level.SEVERE, null, ex);
 		}
 	}
 

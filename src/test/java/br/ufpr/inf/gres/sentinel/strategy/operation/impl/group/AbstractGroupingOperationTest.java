@@ -12,14 +12,14 @@ import static org.junit.Assert.*;
 /**
  * @author Giovani Guizzo
  */
-public class AbstractGroupingFunctionTest {
+public class AbstractGroupingOperationTest {
 
-	public AbstractGroupingFunctionTest() {
+	public AbstractGroupingOperationTest() {
 	}
 
 	@Test
 	public void testDoOperation() {
-		AbstractGroupingFunction<String> function = new StubGroupingFunction();
+		AbstractGroupingOperation<String> function = new StubGroupingOperation();
 		List<List<String>> result = function.doOperation(Collections.emptyList());
 
 		assertEquals(0, result.size());
@@ -27,7 +27,7 @@ public class AbstractGroupingFunctionTest {
 
 	@Test
 	public void testDoOperation2() {
-		AbstractGroupingFunction<String> function = new StubGroupingFunction();
+		AbstractGroupingOperation<String> function = new StubGroupingOperation();
 		List<List<String>> result = function.doOperation(Lists.newArrayList("1", "12", "12", ""));
 
 		assertEquals(3, result.size());
@@ -40,14 +40,14 @@ public class AbstractGroupingFunctionTest {
 		assertEquals("12", result.get(2).get(1));
 	}
 
-	private static class StubGroupingFunction extends AbstractGroupingFunction<String> {
+	private static class StubGroupingOperation extends AbstractGroupingOperation<String> {
 
-		public StubGroupingFunction() {
+		public StubGroupingOperation() {
 			super("Stub Grouping");
 		}
 
 		@Override
-		protected Function<String, ?> createGrouperFunction() {
+		protected Function<String, ?> createGroupingFunction() {
 			return String::length;
 		}
 

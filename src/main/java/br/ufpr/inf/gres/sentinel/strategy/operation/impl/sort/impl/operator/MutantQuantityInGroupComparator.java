@@ -5,6 +5,7 @@ import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.Te
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.sort.AbstractSorterOperation;
 
 import java.util.List;
+import java.util.function.Function;
 
 /**
  * @author Giovani Guizzo
@@ -16,15 +17,12 @@ public class MutantQuantityInGroupComparator extends AbstractSorterOperation<Lis
 	}
 
 	@Override
-	public int compare(List<Operator> o1, List<Operator> o2) {
-		int quantityO1 = o1.stream().mapToInt(operator -> operator.getGeneratedMutants().size()).sum();
-		int quantityO2 = o2.stream().mapToInt(operator -> operator.getGeneratedMutants().size()).sum();
-		return Integer.compare(quantityO1, quantityO2);
-	}
-
-	@Override
 	public boolean isSpecific() {
 		return false;
 	}
 
+	@Override
+	protected Function<List<Operator>, Integer> createSortingFunction() {
+		return operators -> operators.stream().mapToInt(operator -> operator.getGeneratedMutants().size()).sum();
+	}
 }

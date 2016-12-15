@@ -8,13 +8,13 @@ import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.Fa
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.FactoryFlyweight;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.NonTerminalRuleType;
 import br.ufpr.inf.gres.sentinel.strategy.operation.Operation;
-import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.selection.SelectionOperation;
+import br.ufpr.inf.gres.sentinel.strategy.operation.impl.group.impl.GroupOperatorsByMutantQuantity;
+import br.ufpr.inf.gres.sentinel.strategy.operation.impl.group.impl.GroupOperatorsByType;
 import com.google.common.collect.Lists;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -24,51 +24,51 @@ import static org.junit.Assert.*;
 /**
  * @author Giovani Guizzo
  */
-public class SelectOperatorsFactoryTest {
+public class GroupingFactoryTest {
 
 	private static Rule testingRule;
 
-	public SelectOperatorsFactoryTest() {
+	public GroupingFactoryTest() {
 	}
 
 	@BeforeClass
 	public static void setUpClass() {
 		try {
 			StrategyMapper strategyMapper = new StrategyMapper(GrammarFiles.getDefaultGrammarPath());
-			testingRule = strategyMapper.getNonTerminalRule(NonTerminalRuleType.SELECT_OPERATORS);
+			testingRule = strategyMapper.getNonTerminalRule(NonTerminalRuleType.OPERATOR_GROUPING);
 		} catch (IOException ex) {
-			Logger.getLogger(SelectOperatorsFactoryTest.class.getName()).log(Level.SEVERE, null, ex);
+			Logger.getLogger(GroupingFactoryTest.class.getName()).log(Level.SEVERE, null, ex);
 		}
 	}
 
+	/**
+	 * Testing Type Grouping
+	 */
 	@Test
 	public void testCreateOperation() {
-		Iterator<Integer> iterator = Lists.newArrayList(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0).iterator();
+		Iterator<Integer> iterator = Lists.newArrayList(0).iterator();
 		Operation operation = FactoryFlyweight.getNonTerminalFactory().createOperation(testingRule, iterator);
 		assertNotNull(operation);
-		assertTrue(operation instanceof SelectionOperation);
-		assertTrue(((SelectionOperation) operation).getQuantity() > 0);
-		assertTrue(((SelectionOperation) operation).getPercentage() == 0D);
+		assertTrue(operation instanceof GroupOperatorsByType);
 	}
 
+	/**
+	 * Testing Mutant Quantity Grouping
+	 */
 	@Test
 	public void testCreateOperation2() {
-		Iterator<Integer> iterator = Lists.newArrayList(1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0).iterator();
+		Iterator<Integer> iterator = Lists.newArrayList(1).iterator();
 		Operation operation = FactoryFlyweight.getNonTerminalFactory().createOperation(testingRule, iterator);
 		assertNotNull(operation);
-		assertTrue(operation instanceof SelectionOperation);
-		assertTrue(((SelectionOperation) operation).getQuantity() == 0);
-		assertTrue(((SelectionOperation) operation).getPercentage() > 0D);
+		assertTrue(operation instanceof GroupOperatorsByMutantQuantity);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testCreateInvalidOperation() {
-		Factory factory = SelectOperatorsFactory.getInstance();
-		Iterator<Integer> iterator = Lists.newArrayList(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0).iterator();
-		Option option = new Option(new ArrayList<>(testingRule.getOption(0).getRules()));
-		option.removeRule(option.getRules().get(1));
-		option.addRule(new Rule("Unknown"));
-		factory.createOperation(option, iterator);
+		Factory factory = GroupingFactory.getInstance();
+		Iterator<Integer> iterator = Lists.newArrayList(0).iterator();
+		Option option = new Option(Lists.newArrayList(new Rule("Unknown")));
+		factory.createOperation(new Option(Lists.newArrayList(new Rule("Unknown", Lists.newArrayList(option)))), iterator);
 	}
 
 }

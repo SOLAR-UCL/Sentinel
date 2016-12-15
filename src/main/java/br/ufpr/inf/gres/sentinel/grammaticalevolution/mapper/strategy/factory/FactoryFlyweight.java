@@ -38,17 +38,23 @@ public class FactoryFlyweight {
 				return OperatorOperationFactory.getInstance();
 			case NonTerminalRuleType.SELECT_OPERATORS:
 			case NonTerminalRuleType.SELECT_OPERATOR_GROUPS:
-				return SelectOperatorsFactory.getInstance();
+			case NonTerminalRuleType.SELECT_MUTANTS:
+			case NonTerminalRuleType.SELECT_MUTANT_GROUPS:
+				return SelectFactory.getInstance();
 			case NonTerminalRuleType.OPERATOR_SELECTION_TYPE:
 				return OperatorSelectionTypeFactory.getInstance();
 			case NonTerminalRuleType.OPERATOR_GROUP_SELECTION_TYPE:
-				return OperatorGroupSelectionTypeFactory.getInstance();
+			case NonTerminalRuleType.MUTANT_GROUP_SELECTION_TYPE:
+				return GroupSelectionTypeFactory.getInstance();
 			case NonTerminalRuleType.OPERATOR_SORTING:
-				return OperatorSortingFactory.getInstance();
+			case NonTerminalRuleType.MUTANT_SORTING:
+				return SortingFactory.getInstance();
 			case NonTerminalRuleType.OPERATOR_GROUPING:
-				return OperatorGroupingFactory.getInstance();
+			case NonTerminalRuleType.MUTANT_GROUPING:
+				return GroupingFactory.getInstance();
 			case NonTerminalRuleType.OPERATOR_GROUP_SORTING:
-				return OperatorGroupSortingFactory.getInstance();
+			case NonTerminalRuleType.MUTANT_GROUP_SORTING:
+				return GroupSortingFactory.getInstance();
 			case NonTerminalRuleType.OPERATOR_EXECUTION_TYPE:
 				return OperatorExecutionTypeFactory.getInstance();
 			default:

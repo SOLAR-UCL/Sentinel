@@ -9,8 +9,7 @@ import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.Fa
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.NonTerminalRuleType;
 import br.ufpr.inf.gres.sentinel.strategy.operation.Operation;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.sort.AbstractSorterOperation;
-import br.ufpr.inf.gres.sentinel.strategy.operation.impl.sort.impl.operator.MutantQuantityComparator;
-import br.ufpr.inf.gres.sentinel.strategy.operation.impl.sort.impl.operator.OperatorTypeComparator;
+import br.ufpr.inf.gres.sentinel.strategy.operation.impl.sort.impl.operator.MutantQuantityInGroupComparator;
 import com.google.common.collect.Lists;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -25,61 +24,49 @@ import static org.junit.Assert.*;
 /**
  * @author Giovani Guizzo
  */
-public class OperatorSortingFactoryTest {
+public class GroupSortingFactoryTest {
 
 	private static Rule testingRule;
 
-	public OperatorSortingFactoryTest() {
+	public GroupSortingFactoryTest() {
 	}
 
 	@BeforeClass
 	public static void setUpClass() {
 		try {
 			StrategyMapper strategyMapper = new StrategyMapper(GrammarFiles.getDefaultGrammarPath());
-			testingRule = strategyMapper.getNonTerminalRule(NonTerminalRuleType.OPERATOR_SORTING);
+			testingRule = strategyMapper.getNonTerminalRule(NonTerminalRuleType.OPERATOR_GROUP_SORTING);
 		} catch (IOException ex) {
-			Logger.getLogger(OperatorSortingFactoryTest.class.getName()).log(Level.SEVERE, null, ex);
+			Logger.getLogger(GroupSortingFactoryTest.class.getName()).log(Level.SEVERE, null, ex);
 		}
 	}
 
-	/**
-	 * Testing Sort by Type
-	 */
 	@Test
 	public void testCreateOperation() {
-		Iterator<Integer> iterator = Lists.newArrayList(0, 0, 0).iterator();
-		Operation operation = FactoryFlyweight.getNonTerminalFactory().createOperation(testingRule, iterator);
-		assertNotNull(operation);
-		assertTrue(operation instanceof OperatorTypeComparator);
-	}
-
-	/**
-	 * Testing Sort by Mutant Quantity
-	 */
-	@Test
-	public void testCreateOperation2() {
 		Iterator<Integer> iterator = Lists.newArrayList(0, 1, 0).iterator();
 		Operation operation = FactoryFlyweight.getNonTerminalFactory().createOperation(testingRule, iterator);
 		assertNotNull(operation);
-		assertTrue(operation instanceof MutantQuantityComparator);
+		assertTrue(operation instanceof MutantQuantityInGroupComparator);
 	}
 
-	/**
-	 * Testing Reversed
-	 */
+	@Test
+	public void testCreateOperation2() {
+		Iterator<Integer> iterator = Lists.newArrayList(0, 0, 0).iterator();
+		AbstractSorterOperation operation = (AbstractSorterOperation) FactoryFlyweight.getNonTerminalFactory()
+																					  .createOperation(testingRule, iterator);
+		assertNotNull(operation);
+	}
+
 	@Test
 	public void testCreateOperation3() {
-		Iterator<Integer> iterator = Lists.newArrayList(0, 1, 1).iterator();
-		Operation operation = FactoryFlyweight.getNonTerminalFactory().createOperation(testingRule, iterator);
+		Iterator<Integer> iterator = Lists.newArrayList(0, 0, 1).iterator();
+		AbstractSorterOperation operation = (AbstractSorterOperation) FactoryFlyweight.getNonTerminalFactory()
+																					  .createOperation(testingRule, iterator);
 		assertNotNull(operation);
 		assertTrue(operation instanceof AbstractSorterOperation);
-		assertFalse(operation instanceof MutantQuantityComparator);
-		assertFalse(operation instanceof OperatorTypeComparator);
+		assertTrue(operation.isReversed());
 	}
 
-	/**
-	 * Testing Reversed
-	 */
 	@Test
 	public void testCreateOperation4() {
 		Iterator<Integer> iterator = Lists.newArrayList(1).iterator();
@@ -89,7 +76,7 @@ public class OperatorSortingFactoryTest {
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testCreateInvalidOperation() {
-		Factory factory = OperatorSortingFactory.getInstance();
+		Factory factory = GroupSortingFactory.getInstance();
 		Iterator<Integer> iterator = Lists.newArrayList(0, 0, 0).iterator();
 		factory.createOperation(new Option(Lists.newArrayList(new Rule("Unknown", Lists.newArrayList(new Option(Lists.newArrayList(new Rule("Unknown"))))))), iterator);
 	}

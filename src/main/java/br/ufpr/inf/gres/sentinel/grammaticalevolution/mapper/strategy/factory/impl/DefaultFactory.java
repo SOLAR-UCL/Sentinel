@@ -15,7 +15,6 @@ import java.util.Iterator;
 /**
  * @author Giovani Guizzo
  */
-@SuppressWarnings("ALL")
 public class DefaultFactory implements Factory<Option> {
 
 	private DefaultFactory() {

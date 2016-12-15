@@ -57,11 +57,11 @@ public class SelectionOperation<T> extends Operation<List<T>, List<T>> {
 		this.selectionType = selectionType;
 	}
 
-	public AbstractSorterOperation<T> getSorter() {
+	public AbstractSorterOperation getSorter() {
 		return sorter;
 	}
 
-	public void setSorter(AbstractSorterOperation<T> sorter) {
+	public void setSorter(AbstractSorterOperation sorter) {
 		this.sorter = sorter;
 	}
 

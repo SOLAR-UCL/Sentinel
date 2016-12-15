@@ -4,15 +4,25 @@ import br.ufpr.inf.gres.sentinel.strategy.operation.Operation;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.function.Function;
 
 /**
  * @author Giovani Guizzo
  */
-@SuppressWarnings("ALL")
 public abstract class AbstractSorterOperation<T> extends Operation<List<T>, Integer> implements Comparator<T> {
+
+	private boolean reversed = false;
 
 	public AbstractSorterOperation(String name) {
 		super(name);
+	}
+
+	public boolean isReversed() {
+		return reversed;
+	}
+
+	public void setReversed(boolean reversed) {
+		this.reversed = reversed;
 	}
 
 	@Override
@@ -21,29 +31,14 @@ public abstract class AbstractSorterOperation<T> extends Operation<List<T>, Inte
 	}
 
 	@Override
-	public AbstractSorterOperation<T> reversed() {
-		return new ReversedAbstractSorterOperation(this);
+	public int compare(T o1, T o2) {
+		Comparator<T> comparator = Comparator.comparing(createSortingFunction());
+		if (reversed) {
+			comparator = comparator.reversed();
+		}
+		return comparator.compare(o1, o2);
 	}
 
-	private static class ReversedAbstractSorterOperation<T> extends AbstractSorterOperation<T> {
-
-		private AbstractSorterOperation sorter;
-
-		public ReversedAbstractSorterOperation(AbstractSorterOperation<T> sorter) {
-			super(sorter.getName());
-			this.sorter = sorter;
-		}
-
-		@Override
-		public int compare(Object o1, Object o2) {
-			return sorter.compare(o2, o1);
-		}
-
-		@Override
-		public boolean isSpecific() {
-			return sorter.isSpecific();
-		}
-
-	}
+	protected abstract Function<T, ? extends Comparable> createSortingFunction();
 
 }

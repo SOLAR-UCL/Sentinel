@@ -1,6 +1,6 @@
 package br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.selection;
 
-import br.ufpr.inf.gres.sentinel.strategy.operation.impl.group.AbstractGroupingFunction;
+import br.ufpr.inf.gres.sentinel.strategy.operation.impl.group.AbstractGroupingOperation;
 import com.google.common.math.DoubleMath;
 
 import java.math.RoundingMode;
@@ -18,18 +18,18 @@ import static com.google.common.base.Preconditions.checkNotNull;
 @SuppressWarnings("ALL")
 public class GroupSelectionOperation<T> extends SelectionOperation<T> {
 
-	private AbstractGroupingFunction<T> groupingFunction;
+	private AbstractGroupingOperation<T> groupingFunction;
 	private SelectionOperation<T> selectionOperation;
 
 	public GroupSelectionOperation() {
 		super("Group Selection");
 	}
 
-	public AbstractGroupingFunction<T> getGroupingFunction() {
+	public AbstractGroupingOperation<T> getGroupingFunction() {
 		return groupingFunction;
 	}
 
-	public void setGroupingFunction(AbstractGroupingFunction<T> groupingFunction) {
+	public void setGroupingFunction(AbstractGroupingOperation<T> groupingFunction) {
 		this.groupingFunction = groupingFunction;
 	}
 

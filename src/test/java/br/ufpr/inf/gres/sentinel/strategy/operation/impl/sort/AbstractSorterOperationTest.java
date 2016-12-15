@@ -3,6 +3,8 @@ package br.ufpr.inf.gres.sentinel.strategy.operation.impl.sort;
 import com.google.common.collect.Lists;
 import org.junit.Test;
 
+import java.util.function.Function;
+
 import static org.junit.Assert.*;
 
 /**
@@ -36,29 +38,33 @@ public class AbstractSorterOperationTest {
 
 	@Test
 	public void testReversed() {
-		AbstractSorterOperation<Integer> stub = new AbstractSorterOperationStub().reversed();
+		AbstractSorterOperation<Integer> stub = new AbstractSorterOperationStub();
+		stub.setReversed(true);
 		int result = stub.doOperation(Lists.newArrayList(1, 1));
 		assertEquals(0, result);
 	}
 
 	@Test
 	public void testReversed2() {
-		AbstractSorterOperation<Integer> stub = new AbstractSorterOperationStub().reversed();
+		AbstractSorterOperation<Integer> stub = new AbstractSorterOperationStub();
+		stub.setReversed(true);
 		int result = stub.doOperation(Lists.newArrayList(1, 2));
 		assertTrue(result > 0);
 	}
 
 	@Test
 	public void testReversed3() {
-		AbstractSorterOperation<Integer> stub = new AbstractSorterOperationStub().reversed();
+		AbstractSorterOperation<Integer> stub = new AbstractSorterOperationStub();
+		stub.setReversed(true);
 		int result = stub.doOperation(Lists.newArrayList(2, 1));
 		assertTrue(result < 0);
 	}
 
 	@Test
-	public void testReversedIsSpecific() {
-		AbstractSorterOperation<Integer> stub = new AbstractSorterOperationStub().reversed();
-		assertFalse(stub.isSpecific());
+	public void testGetAndSetReversed() throws Exception {
+		AbstractSorterOperation<Integer> stub = new AbstractSorterOperationStub();
+		stub.setReversed(true);
+		assertTrue(stub.isReversed());
 	}
 
 	public class AbstractSorterOperationStub extends AbstractSorterOperation<Integer> {
@@ -68,8 +74,8 @@ public class AbstractSorterOperationTest {
 		}
 
 		@Override
-		public int compare(Integer o1, Integer o2) {
-			return Integer.compare(o1, o2);
+		protected Function<Integer, Integer> createSortingFunction() {
+			return integer -> integer;
 		}
 
 		@Override

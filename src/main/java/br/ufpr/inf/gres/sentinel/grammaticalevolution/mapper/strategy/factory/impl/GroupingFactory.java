@@ -5,9 +5,9 @@ import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.representation.Rule
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.Factory;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.TerminalRuleType;
 import br.ufpr.inf.gres.sentinel.strategy.operation.Operation;
-import br.ufpr.inf.gres.sentinel.strategy.operation.impl.sort.AbstractSorterOperation;
-import br.ufpr.inf.gres.sentinel.strategy.operation.impl.sort.impl.operator.MutantQuantityInGroupComparator;
-import br.ufpr.inf.gres.sentinel.strategy.operation.impl.sort.impl.operator.OperatorQuantityInGroupComparator;
+import br.ufpr.inf.gres.sentinel.strategy.operation.impl.group.AbstractGroupingOperation;
+import br.ufpr.inf.gres.sentinel.strategy.operation.impl.group.impl.GroupOperatorsByMutantQuantity;
+import br.ufpr.inf.gres.sentinel.strategy.operation.impl.group.impl.GroupOperatorsByType;
 import com.google.common.base.Preconditions;
 
 import java.util.Iterator;
@@ -15,41 +15,33 @@ import java.util.Iterator;
 /**
  * @author Giovani Guizzo
  */
-public class OperatorGroupSortingFactory implements Factory<Option> {
+public class GroupingFactory implements Factory<Option> {
 
-	private OperatorGroupSortingFactory() {
+	private GroupingFactory() {
 	}
 
-	public static OperatorGroupSortingFactory getInstance() {
+	public static GroupingFactory getInstance() {
 		return SingletonHolder.INSTANCE;
 	}
 
 	@Override
 	public Operation createOperation(Option node, Iterator<Integer> cyclicIterator) {
 		Iterator<Rule> rules = node.getRules().iterator();
+
 		Preconditions.checkArgument(rules.hasNext(), "Malformed grammar option: " + node.toString());
 		Rule rule = rules.next();
-		if (rule.getName().isEmpty()) {
-			return null;
-		}
-
 		rule = rule.getOption(cyclicIterator).getRules().get(0);
-		AbstractSorterOperation mainOperation;
+
+		AbstractGroupingOperation mainOperation;
 		switch (rule.getName()) {
-			case TerminalRuleType.MUTANT_QUANTITY_IN_GROUP:
-				mainOperation = new MutantQuantityInGroupComparator();
+			case TerminalRuleType.TYPE:
+				mainOperation = new GroupOperatorsByType();
 				break;
-			case TerminalRuleType.OPERATOR_QUANTITY_IN_GROUP:
-				mainOperation = new OperatorQuantityInGroupComparator();
+			case TerminalRuleType.MUTANT_QUANTITY:
+				mainOperation = new GroupOperatorsByMutantQuantity();
 				break;
 			default:
 				throw new IllegalArgumentException("Malformed grammar option: " + node.toString());
-		}
-
-		Preconditions.checkArgument(rules.hasNext(), "Malformed grammar option: " + node.toString());
-		rule = rules.next().getOption(cyclicIterator).getRules().get(0);
-		if (rule.getName().equals(TerminalRuleType.DESCENDING)) {
-			mainOperation = mainOperation.reversed();
 		}
 
 		return mainOperation;
@@ -57,7 +49,7 @@ public class OperatorGroupSortingFactory implements Factory<Option> {
 
 	private static class SingletonHolder {
 
-		private static final OperatorGroupSortingFactory INSTANCE = new OperatorGroupSortingFactory();
+		private static final GroupingFactory INSTANCE = new GroupingFactory();
 	}
 
 }

@@ -1,12 +1,11 @@
 package br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.impl;
 
-import br.ufpr.inf.gres.sentinel.base.mutation.Operator;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.representation.Option;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.representation.Rule;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.Factory;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.FactoryFlyweight;
 import br.ufpr.inf.gres.sentinel.strategy.operation.Operation;
-import br.ufpr.inf.gres.sentinel.strategy.operation.impl.group.AbstractGroupingFunction;
+import br.ufpr.inf.gres.sentinel.strategy.operation.impl.group.AbstractGroupingOperation;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.selection.GroupSelectionOperation;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.type.SelectionType;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.sort.AbstractSorterOperation;
@@ -17,13 +16,12 @@ import java.util.Iterator;
 /**
  * @author Giovani Guizzo
  */
-@SuppressWarnings("ALL")
-public class OperatorGroupSelectionTypeFactory implements Factory<Option> {
+public class GroupSelectionTypeFactory implements Factory<Option> {
 
-	private OperatorGroupSelectionTypeFactory() {
+	private GroupSelectionTypeFactory() {
 	}
 
-	public static OperatorGroupSelectionTypeFactory getInstance() {
+	public static GroupSelectionTypeFactory getInstance() {
 		return SingletonHolder.INSTANCE;
 	}
 
@@ -33,9 +31,9 @@ public class OperatorGroupSelectionTypeFactory implements Factory<Option> {
 
 		Preconditions.checkArgument(rules.hasNext(), "Malformed grammar option: " + node.toString());
 		Rule rule = rules.next();
-		GroupSelectionOperation<Operator> mainOperation = new GroupSelectionOperation();
-		mainOperation.setGroupingFunction((AbstractGroupingFunction) FactoryFlyweight.getNonTerminalFactory()
-																					 .createOperation(rule, cyclicIterator));
+		GroupSelectionOperation mainOperation = new GroupSelectionOperation();
+		mainOperation.setGroupingFunction((AbstractGroupingOperation) FactoryFlyweight.getNonTerminalFactory()
+																					  .createOperation(rule, cyclicIterator));
 
 		Preconditions.checkArgument(rules.hasNext(), "Malformed grammar option: " + node.toString());
 		rule = rules.next();
@@ -52,7 +50,7 @@ public class OperatorGroupSelectionTypeFactory implements Factory<Option> {
 
 	private static class SingletonHolder {
 
-		private static final OperatorGroupSelectionTypeFactory INSTANCE = new OperatorGroupSelectionTypeFactory();
+		private static final GroupSelectionTypeFactory INSTANCE = new GroupSelectionTypeFactory();
 	}
 
 }

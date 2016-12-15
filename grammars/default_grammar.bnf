@@ -30,7 +30,7 @@
 
 <operatorAttribute> ::= "Type" | "Mutant Quantity"
 
-<operatorGroupAttribute> ::= "Mutant Quantity in Group" | "Operator Quantity in Group"
+<operatorGroupAttribute> ::= "Quantity in Group" | "Mutant Quantity in Group"
 
 <operatorExecutionType> ::= "Conventional Execution"
 
@@ -58,4 +58,4 @@
 
 <mutantAttribute> ::= "Operator Type" | "Operator" | "FOM or HOM" | "Order"
 
-<mutantGroupAttribute> ::= "Mutant Quantity in Group"
+<mutantGroupAttribute> ::= "Quantity in Group"

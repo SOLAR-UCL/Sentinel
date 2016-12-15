@@ -1,4 +1,4 @@
-package br.ufpr.inf.gres.sentinel.strategy.operation.impl.sort.impl.operator;
+package br.ufpr.inf.gres.sentinel.strategy.operation.impl.sort.impl;
 
 import br.ufpr.inf.gres.sentinel.base.mutation.Operator;
 import org.junit.Test;
@@ -11,14 +11,14 @@ import static org.junit.Assert.*;
 /**
  * @author Giovani Guizzo
  */
-public class OperatorQuantityInGroupComparatorTest {
+public class QuantityInGroupComparatorTest {
 
-	public OperatorQuantityInGroupComparatorTest() {
+	public QuantityInGroupComparatorTest() {
 	}
 
 	@Test
 	public void testCompare() {
-		OperatorQuantityInGroupComparator comparator = new OperatorQuantityInGroupComparator();
+		QuantityInGroupComparator comparator = new QuantityInGroupComparator();
 
 		Operator operator1 = new Operator("Operator1", "Type1");
 		Operator operator2 = new Operator("Operator2", "Type1");
@@ -38,7 +38,7 @@ public class OperatorQuantityInGroupComparatorTest {
 
 	@Test
 	public void testCompare2() {
-		OperatorQuantityInGroupComparator comparator = new OperatorQuantityInGroupComparator();
+		QuantityInGroupComparator comparator = new QuantityInGroupComparator();
 
 		Operator operator1 = new Operator("Operator1", "Type1");
 		Operator operator2 = new Operator("Operator2", "Type1");
@@ -56,7 +56,7 @@ public class OperatorQuantityInGroupComparatorTest {
 
 	@Test
 	public void testCompare3() {
-		OperatorQuantityInGroupComparator comparator = new OperatorQuantityInGroupComparator();
+		QuantityInGroupComparator comparator = new QuantityInGroupComparator();
 
 		Operator operator1 = new Operator("Operator1", "Type1");
 		Operator operator3 = new Operator("Operator3", "Type1");
@@ -74,7 +74,7 @@ public class OperatorQuantityInGroupComparatorTest {
 
 	@Test
 	public void testCompare4() {
-		OperatorQuantityInGroupComparator comparator = new OperatorQuantityInGroupComparator();
+		QuantityInGroupComparator comparator = new QuantityInGroupComparator();
 
 		Operator operator1 = new Operator("Operator1", "Type1");
 
@@ -88,7 +88,7 @@ public class OperatorQuantityInGroupComparatorTest {
 
 	@Test
 	public void testCompare5() {
-		OperatorQuantityInGroupComparator comparator = new OperatorQuantityInGroupComparator();
+		QuantityInGroupComparator comparator = new QuantityInGroupComparator();
 
 		Operator operator3 = new Operator("Operator3", "Type1");
 
@@ -102,7 +102,7 @@ public class OperatorQuantityInGroupComparatorTest {
 
 	@Test
 	public void testCompare6() {
-		OperatorQuantityInGroupComparator comparator = new OperatorQuantityInGroupComparator();
+		QuantityInGroupComparator comparator = new QuantityInGroupComparator();
 
 		List<Operator> group1 = new ArrayList<>();
 		List<Operator> group2 = new ArrayList<>();

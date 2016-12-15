@@ -1,6 +1,5 @@
 package br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.impl;
 
-import br.ufpr.inf.gres.sentinel.base.mutation.Operator;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.representation.Option;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.representation.Rule;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.Factory;
@@ -15,13 +14,12 @@ import java.util.Iterator;
 /**
  * @author Giovani Guizzo
  */
-@SuppressWarnings("ALL")
-public class SelectOperatorsFactory implements Factory<Option> {
+public class SelectFactory implements Factory<Option> {
 
-	private SelectOperatorsFactory() {
+	private SelectFactory() {
 	}
 
-	public static SelectOperatorsFactory getInstance() {
+	public static SelectFactory getInstance() {
 		return SingletonHolder.INSTANCE;
 	}
 
@@ -30,9 +28,9 @@ public class SelectOperatorsFactory implements Factory<Option> {
 		Iterator<Rule> rules = node.getRules().iterator();
 		Preconditions.checkArgument(rules.hasNext(), "Malformed grammar option: " + node.toString());
 		Rule rule = rules.next();
-		SelectionOperation<Operator> mainOperation;
-		mainOperation = (SelectionOperation<Operator>) FactoryFlyweight.getNonTerminalFactory()
-																	   .createOperation(rule, cyclicIterator);
+		SelectionOperation mainOperation;
+		mainOperation = (SelectionOperation) FactoryFlyweight.getNonTerminalFactory()
+															 .createOperation(rule, cyclicIterator);
 		Preconditions.checkArgument(rules.hasNext(), "Malformed grammar option: " + node.toString());
 		rule = rules.next();
 		switch (rule.getName()) {
@@ -52,7 +50,7 @@ public class SelectOperatorsFactory implements Factory<Option> {
 
 	private static class SingletonHolder {
 
-		private static final SelectOperatorsFactory INSTANCE = new SelectOperatorsFactory();
+		private static final SelectFactory INSTANCE = new SelectFactory();
 	}
 
 }
