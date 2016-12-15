@@ -4,29 +4,31 @@ import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.representation.Rule
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.Factory;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.FactoryFlyweight;
 import br.ufpr.inf.gres.sentinel.strategy.operation.Operation;
+
 import java.util.Iterator;
 
 /**
  * Created by Giovani Guizzo on 24/10/2016.
  */
+@SuppressWarnings("ALL")
 public class NonTerminalFactory implements Factory<Rule> {
 
-    private NonTerminalFactory() {
-    }
+	private NonTerminalFactory() {
+	}
 
-    @Override
-    public Operation createOperation(Rule rule, Iterator<Integer> cyclicIterator) {
-        Factory factory = FactoryFlyweight.getFactory(rule.getName());
-        return factory.createOperation(rule.getOption(cyclicIterator), cyclicIterator);
-    }
+	public static NonTerminalFactory getInstance() {
+		return SingletonHolder.INSTANCE;
+	}
 
-    public static NonTerminalFactory getInstance() {
-        return SingletonHolder.INSTANCE;
-    }
+	@Override
+	public Operation createOperation(Rule rule, Iterator<Integer> cyclicIterator) {
+		Factory factory = FactoryFlyweight.getFactory(rule.getName());
+		return factory.createOperation(rule.getOption(cyclicIterator), cyclicIterator);
+	}
 
-    private static class SingletonHolder {
+	private static class SingletonHolder {
 
-        private static final NonTerminalFactory INSTANCE = new NonTerminalFactory();
-    }
+		private static final NonTerminalFactory INSTANCE = new NonTerminalFactory();
+	}
 
 }

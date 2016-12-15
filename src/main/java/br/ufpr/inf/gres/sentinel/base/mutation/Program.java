@@ -4,7 +4,6 @@ import java.io.File;
 import java.util.Objects;
 
 /**
- *
  * @author Giovani Guizzo
  */
 public class Program {

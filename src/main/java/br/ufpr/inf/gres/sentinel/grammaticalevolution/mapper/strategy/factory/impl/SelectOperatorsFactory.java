@@ -9,48 +9,50 @@ import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.No
 import br.ufpr.inf.gres.sentinel.strategy.operation.Operation;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.selection.SelectionOperation;
 import com.google.common.base.Preconditions;
+
 import java.util.Iterator;
 
 /**
- *
  * @author Giovani Guizzo
  */
+@SuppressWarnings("ALL")
 public class SelectOperatorsFactory implements Factory<Option> {
 
-    private SelectOperatorsFactory() {
-    }
+	private SelectOperatorsFactory() {
+	}
 
-    public static SelectOperatorsFactory getInstance() {
-        return SingletonHolder.INSTANCE;
-    }
+	public static SelectOperatorsFactory getInstance() {
+		return SingletonHolder.INSTANCE;
+	}
 
-    @Override
-    public Operation createOperation(Option node, Iterator<Integer> cyclicIterator) {
-        Iterator<Rule> rules = node.getRules().iterator();
-        Preconditions.checkArgument(rules.hasNext(), "Malformed grammar option: " + node.toString());
-        Rule rule = rules.next();
-        SelectionOperation<Operator> mainOperation;
-        mainOperation = (SelectionOperation<Operator>) FactoryFlyweight.getNonTerminalFactory().createOperation(rule, cyclicIterator);
-        Preconditions.checkArgument(rules.hasNext(), "Malformed grammar option: " + node.toString());
-        rule = rules.next();
-        switch (rule.getName()) {
-            case NonTerminalRuleType.QUANTITY:
-                String quantity = rule.getOption(cyclicIterator).getRules().get(0).getName();
-                mainOperation.setQuantity(Integer.parseInt(quantity));
-                break;
-            case NonTerminalRuleType.PERCENTAGE:
-                String percentage = rule.getOption(cyclicIterator).getRules().get(0).getName();
-                mainOperation.setPercentage(Double.parseDouble(percentage));
-                break;
-            default:
-                throw new IllegalArgumentException("Malformed grammar option: " + node.toString());
-        }
-        return mainOperation;
-    }
+	@Override
+	public Operation createOperation(Option node, Iterator<Integer> cyclicIterator) {
+		Iterator<Rule> rules = node.getRules().iterator();
+		Preconditions.checkArgument(rules.hasNext(), "Malformed grammar option: " + node.toString());
+		Rule rule = rules.next();
+		SelectionOperation<Operator> mainOperation;
+		mainOperation = (SelectionOperation<Operator>) FactoryFlyweight.getNonTerminalFactory()
+																	   .createOperation(rule, cyclicIterator);
+		Preconditions.checkArgument(rules.hasNext(), "Malformed grammar option: " + node.toString());
+		rule = rules.next();
+		switch (rule.getName()) {
+			case NonTerminalRuleType.QUANTITY:
+				String quantity = rule.getOption(cyclicIterator).getRules().get(0).getName();
+				mainOperation.setQuantity(Integer.parseInt(quantity));
+				break;
+			case NonTerminalRuleType.PERCENTAGE:
+				String percentage = rule.getOption(cyclicIterator).getRules().get(0).getName();
+				mainOperation.setPercentage(Double.parseDouble(percentage));
+				break;
+			default:
+				throw new IllegalArgumentException("Malformed grammar option: " + node.toString());
+		}
+		return mainOperation;
+	}
 
-    private static class SingletonHolder {
+	private static class SingletonHolder {
 
-        private static final SelectOperatorsFactory INSTANCE = new SelectOperatorsFactory();
-    }
+		private static final SelectOperatorsFactory INSTANCE = new SelectOperatorsFactory();
+	}
 
 }
