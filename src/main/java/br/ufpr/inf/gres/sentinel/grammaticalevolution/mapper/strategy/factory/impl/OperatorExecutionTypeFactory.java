@@ -31,7 +31,7 @@ public class OperatorExecutionTypeFactory implements Factory<Option> {
 		Rule rule = rules.next();
 		OperatorExecutionType mainOperation;
 		switch (rule.getName()) {
-			case TerminalRuleType.CONVENTIONAL_EXECUTION:
+			case TerminalRuleType.CONVENTIONAL:
 				mainOperation = new ConventionalExecution();
 				break;
 			default:

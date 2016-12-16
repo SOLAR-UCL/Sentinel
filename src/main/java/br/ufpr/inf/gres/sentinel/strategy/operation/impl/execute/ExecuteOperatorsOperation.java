@@ -1,5 +1,6 @@
 package br.ufpr.inf.gres.sentinel.strategy.operation.impl.execute;
 
+import br.ufpr.inf.gres.sentinel.base.mutation.Mutant;
 import br.ufpr.inf.gres.sentinel.base.mutation.Operator;
 import br.ufpr.inf.gres.sentinel.base.solution.Solution;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.TerminalRuleType;
@@ -12,7 +13,7 @@ import java.util.List;
 /**
  * @author Giovani Guizzo
  */
-public class ExecuteOperatorsOperation extends Operation<Solution, List<Operator>> {
+public class ExecuteOperatorsOperation extends Operation<Solution, List<Mutant>> {
 
 	private SelectionOperation<Operator> selection;
 	private OperatorExecutionType executionType;
@@ -44,10 +45,10 @@ public class ExecuteOperatorsOperation extends Operation<Solution, List<Operator
 	}
 
 	@Override
-	public List<Operator> doOperation(Solution solution) {
+	public List<Mutant> doOperation(Solution solution) {
 		List<Operator> selectedOperators = selection.doOperation(solution.getOperators());
-		executionType.doOperation(selectedOperators);
-		selectedOperators.forEach((operator) -> solution.getMutants().addAll(operator.getGeneratedMutants()));
+		List<Mutant> generatedMutants = executionType.doOperation(selectedOperators);
+		solution.getMutants().addAll(generatedMutants);
 		return next(solution);
 	}
 

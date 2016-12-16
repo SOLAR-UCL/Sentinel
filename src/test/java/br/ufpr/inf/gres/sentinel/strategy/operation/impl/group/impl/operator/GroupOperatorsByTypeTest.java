@@ -1,4 +1,4 @@
-package br.ufpr.inf.gres.sentinel.strategy.operation.impl.group.impl;
+package br.ufpr.inf.gres.sentinel.strategy.operation.impl.group.impl.operator;
 
 import br.ufpr.inf.gres.sentinel.base.mutation.Operator;
 import org.junit.Test;

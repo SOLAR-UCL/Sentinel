@@ -20,7 +20,7 @@ public class QuantityInGroupComparator<T> extends AbstractSorterOperation<List<T
 	}
 
 	@Override
-	protected Function<List<T>, Integer> createSortingFunction() {
+	public Function<List<T>, Integer> createSortingFunction() {
 		return List::size;
 	}
 }

@@ -39,6 +39,6 @@ public abstract class AbstractSorterOperation<T> extends Operation<List<T>, Inte
 		return comparator.compare(o1, o2);
 	}
 
-	protected abstract Function<T, ? extends Comparable> createSortingFunction();
+	public abstract Function<T, ? extends Comparable> createSortingFunction();
 
 }

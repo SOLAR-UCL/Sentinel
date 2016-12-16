@@ -8,8 +8,12 @@ import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.Fa
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.FactoryFlyweight;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.NonTerminalRuleType;
 import br.ufpr.inf.gres.sentinel.strategy.operation.Operation;
-import br.ufpr.inf.gres.sentinel.strategy.operation.impl.group.impl.GroupOperatorsByMutantQuantity;
-import br.ufpr.inf.gres.sentinel.strategy.operation.impl.group.impl.GroupOperatorsByType;
+import br.ufpr.inf.gres.sentinel.strategy.operation.impl.group.impl.mutant.GroupMutantsByFOMOrHOM;
+import br.ufpr.inf.gres.sentinel.strategy.operation.impl.group.impl.mutant.GroupMutantsByOperator;
+import br.ufpr.inf.gres.sentinel.strategy.operation.impl.group.impl.mutant.GroupMutantsByOperatorType;
+import br.ufpr.inf.gres.sentinel.strategy.operation.impl.group.impl.mutant.GroupMutantsByOrder;
+import br.ufpr.inf.gres.sentinel.strategy.operation.impl.group.impl.operator.GroupOperatorsByMutantQuantity;
+import br.ufpr.inf.gres.sentinel.strategy.operation.impl.group.impl.operator.GroupOperatorsByType;
 import com.google.common.collect.Lists;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -26,7 +30,8 @@ import static org.junit.Assert.*;
  */
 public class GroupingFactoryTest {
 
-	private static Rule testingRule;
+	private static Rule operatorRule;
+	private static Rule mutantRule;
 
 	public GroupingFactoryTest() {
 	}
@@ -35,7 +40,8 @@ public class GroupingFactoryTest {
 	public static void setUpClass() {
 		try {
 			StrategyMapper strategyMapper = new StrategyMapper(GrammarFiles.getDefaultGrammarPath());
-			testingRule = strategyMapper.getNonTerminalRule(NonTerminalRuleType.OPERATOR_GROUPING);
+			operatorRule = strategyMapper.getNonTerminalRule(NonTerminalRuleType.OPERATOR_GROUPING);
+			mutantRule = strategyMapper.getNonTerminalRule(NonTerminalRuleType.MUTANT_GROUPING);
 		} catch (IOException ex) {
 			Logger.getLogger(GroupingFactoryTest.class.getName()).log(Level.SEVERE, null, ex);
 		}
@@ -47,7 +53,7 @@ public class GroupingFactoryTest {
 	@Test
 	public void testCreateOperation() {
 		Iterator<Integer> iterator = Lists.newArrayList(0).iterator();
-		Operation operation = FactoryFlyweight.getNonTerminalFactory().createOperation(testingRule, iterator);
+		Operation operation = FactoryFlyweight.getNonTerminalFactory().createOperation(operatorRule, iterator);
 		assertNotNull(operation);
 		assertTrue(operation instanceof GroupOperatorsByType);
 	}
@@ -58,9 +64,41 @@ public class GroupingFactoryTest {
 	@Test
 	public void testCreateOperation2() {
 		Iterator<Integer> iterator = Lists.newArrayList(1).iterator();
-		Operation operation = FactoryFlyweight.getNonTerminalFactory().createOperation(testingRule, iterator);
+		Operation operation = FactoryFlyweight.getNonTerminalFactory().createOperation(operatorRule, iterator);
 		assertNotNull(operation);
 		assertTrue(operation instanceof GroupOperatorsByMutantQuantity);
+	}
+
+	@Test
+	public void testCreateOperation3() {
+		Iterator<Integer> iterator = Lists.newArrayList(0).iterator();
+		Operation operation = FactoryFlyweight.getNonTerminalFactory().createOperation(mutantRule, iterator);
+		assertNotNull(operation);
+		assertTrue(operation instanceof GroupMutantsByOperatorType);
+	}
+
+	@Test
+	public void testCreateOperation4() {
+		Iterator<Integer> iterator = Lists.newArrayList(1).iterator();
+		Operation operation = FactoryFlyweight.getNonTerminalFactory().createOperation(mutantRule, iterator);
+		assertNotNull(operation);
+		assertTrue(operation instanceof GroupMutantsByOperator);
+	}
+
+	@Test
+	public void testCreateOperation5() {
+		Iterator<Integer> iterator = Lists.newArrayList(2).iterator();
+		Operation operation = FactoryFlyweight.getNonTerminalFactory().createOperation(mutantRule, iterator);
+		assertNotNull(operation);
+		assertTrue(operation instanceof GroupMutantsByFOMOrHOM);
+	}
+
+	@Test
+	public void testCreateOperation6() {
+		Iterator<Integer> iterator = Lists.newArrayList(3).iterator();
+		Operation operation = FactoryFlyweight.getNonTerminalFactory().createOperation(mutantRule, iterator);
+		assertNotNull(operation);
+		assertTrue(operation instanceof GroupMutantsByOrder);
 	}
 
 	@Test(expected = IllegalArgumentException.class)

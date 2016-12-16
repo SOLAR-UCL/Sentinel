@@ -21,7 +21,7 @@ public class MutantQuantityComparator extends AbstractSorterOperation<Operator> 
 	}
 
 	@Override
-	protected Function<Operator, Integer> createSortingFunction() {
+	public Function<Operator, Integer> createSortingFunction() {
 		return operator -> operator.getGeneratedMutants().size();
 	}
 }

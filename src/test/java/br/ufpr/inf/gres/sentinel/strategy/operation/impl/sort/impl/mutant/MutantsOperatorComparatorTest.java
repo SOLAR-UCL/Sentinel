@@ -7,9 +7,6 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-/**
- * Created by Giovani Guizzo on 15/12/2016.
- */
 public class MutantsOperatorComparatorTest {
 
 	@Test
@@ -19,10 +16,25 @@ public class MutantsOperatorComparatorTest {
 		mutant1.getOperators().add(new Operator("Operator1", "Type1"));
 		mutant1.getOperators().add(new Operator("Operator2", "Type2"));
 		Mutant mutant2 = new Mutant("Mutant2", null, IntegrationFacade.getProgramUnderTest());
-		mutant1.getOperators().add(new Operator("Operator2", "Type2"));
-		mutant1.getOperators().add(new Operator("Operator3", "Type3"));
+		mutant2.getOperators().add(new Operator("Operator2", "Type2"));
+		mutant2.getOperators().add(new Operator("Operator3", "Type3"));
 		int result = comparator.compare(mutant1, mutant2);
 		assertTrue(result < 0);
+	}
+
+	@Test
+	public void compare2() throws Exception {
+		MutantsOperatorComparator comparator = new MutantsOperatorComparator();
+		Mutant mutant1 = new Mutant("Mutant1", null, IntegrationFacade.getProgramUnderTest());
+		mutant1.getOperators().add(new Operator("Operator1", "Type1"));
+		mutant1.getOperators().add(new Operator("Operator2", "Type2"));
+		Mutant mutant2 = new Mutant("Mutant2", null, IntegrationFacade.getProgramUnderTest());
+		mutant2.getOperators().add(new Operator("Operator1", "Type2"));
+		mutant2.getOperators().add(new Operator("Operator3", "Type4"));
+		mutant2.getOperators().add(new Operator("Operator4", "Type3"));
+		mutant2.getOperators().add(new Operator("Operator5", "Type3"));
+		int result = comparator.compare(mutant1, mutant2);
+		assertEquals(0, result);
 	}
 
 	@Test

@@ -25,4 +25,10 @@ public class MuJavaFacade extends IntegrationFacade {
 		return Collections.emptyList();
 	}
 
+	@Override
+	public Mutant combineMutants(List<Mutant> mutantsToCombine) {
+		//TODO implement it
+		return null;
+	}
+
 }

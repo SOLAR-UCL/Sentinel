@@ -21,7 +21,7 @@ public class OrderComparator extends AbstractSorterOperation<Mutant> {
 	}
 
 	@Override
-	protected Function<Mutant, Integer> createSortingFunction() {
-		return mutant -> mutant.getConstituentMutants().size();
+	public Function<Mutant, Integer> createSortingFunction() {
+		return mutant -> mutant.getConstituentMutants().size() <= 1 ? 1 : mutant.getConstituentMutants().size();
 	}
 }

@@ -4,6 +4,7 @@ import br.ufpr.inf.gres.sentinel.base.mutation.Mutant;
 import br.ufpr.inf.gres.sentinel.base.mutation.Operator;
 import br.ufpr.inf.gres.sentinel.base.mutation.Program;
 import br.ufpr.inf.gres.sentinel.integration.mujava.MuJavaFacade;
+import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import org.junit.Test;
 
@@ -27,8 +28,8 @@ public class IntegrationFacadeTest {
 		assertTrue(muJava instanceof MuJavaFacade);
 
 		IntegrationFacade.setIntegrationFacade(muJava);
-		assertNotNull(IntegrationFacade.getFacade());
-		assertTrue(IntegrationFacade.getFacade() instanceof MuJavaFacade);
+		assertNotNull(IntegrationFacade.getIntegrationFacade());
+		assertTrue(IntegrationFacade.getIntegrationFacade() instanceof MuJavaFacade);
 	}
 
 	@Test
@@ -51,6 +52,16 @@ public class IntegrationFacadeTest {
 		@Override
 		public List<Mutant> executeOperator(Operator operator, Program programToBeMutated) {
 			return Lists.newArrayList(new Mutant(operator + "_1", new File(operator + "_1"), programToBeMutated), new Mutant(operator + "_2", new File(operator + "_2"), programToBeMutated), new Mutant(operator + "_3", new File(operator + "_3"), programToBeMutated), new Mutant(operator + "_4", new File(operator + "_4"), programToBeMutated));
+		}
+
+		@Override
+		public Mutant combineMutants(List<Mutant> mutantsToCombine) {
+			Mutant generatedMutant = new Mutant("", null, IntegrationFacade.getProgramUnderTest());
+			for (Mutant mutant : mutantsToCombine) {
+				generatedMutant.getConstituentMutants().add(mutant);
+			}
+			generatedMutant.setName(Joiner.on("_").join(mutantsToCombine).toString());
+			return generatedMutant;
 		}
 
 	}

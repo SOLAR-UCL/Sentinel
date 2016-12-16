@@ -47,7 +47,7 @@ public class AbstractGroupingOperationTest {
 		}
 
 		@Override
-		protected Function<String, ?> createGroupingFunction() {
+		public Function<String, ?> createGroupingFunction() {
 			return String::length;
 		}
 

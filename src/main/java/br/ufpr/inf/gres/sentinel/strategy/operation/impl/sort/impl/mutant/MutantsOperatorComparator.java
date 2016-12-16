@@ -25,7 +25,7 @@ public class MutantsOperatorComparator extends AbstractSorterOperation<Mutant> {
 	}
 
 	@Override
-	protected Function<Mutant, String> createSortingFunction() {
+	public Function<Mutant, String> createSortingFunction() {
 		return mutant -> {
 			ArrayList<Operator> operators = new ArrayList<>(mutant.getOperators());
 			Function<Operator, String> getName = Operator::getName;

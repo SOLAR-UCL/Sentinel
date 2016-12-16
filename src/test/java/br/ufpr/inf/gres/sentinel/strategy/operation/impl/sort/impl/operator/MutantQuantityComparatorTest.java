@@ -7,9 +7,6 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-/**
- * @author Giovani Guizzo
- */
 public class MutantQuantityComparatorTest {
 
 	public MutantQuantityComparatorTest() {

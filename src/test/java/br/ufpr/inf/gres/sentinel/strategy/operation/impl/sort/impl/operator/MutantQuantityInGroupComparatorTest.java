@@ -10,9 +10,6 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
-/**
- * @author Giovani Guizzo
- */
 public class MutantQuantityInGroupComparatorTest {
 
 	public MutantQuantityInGroupComparatorTest() {

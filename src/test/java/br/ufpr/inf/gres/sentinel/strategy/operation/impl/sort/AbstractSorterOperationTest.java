@@ -74,7 +74,7 @@ public class AbstractSorterOperationTest {
 		}
 
 		@Override
-		protected Function<Integer, Integer> createSortingFunction() {
+		public Function<Integer, Integer> createSortingFunction() {
 			return integer -> integer;
 		}
 

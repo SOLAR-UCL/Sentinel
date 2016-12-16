@@ -1,5 +1,6 @@
 package br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.impl;
 
+import br.ufpr.inf.gres.sentinel.base.mutation.Mutant;
 import br.ufpr.inf.gres.sentinel.base.mutation.Operator;
 import br.ufpr.inf.gres.sentinel.base.solution.Solution;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.representation.Option;
@@ -35,7 +36,7 @@ public class OperatorOperationFactory implements Factory<Option> {
 		Iterator<Rule> rules = node.getRules().iterator();
 		Preconditions.checkArgument(rules.hasNext(), "Malformed grammar option: " + node.toString());
 		Rule firstRule = rules.next();
-		Operation<Solution, List<Operator>> mainOperation;
+		Operation<Solution, List<Mutant>> mainOperation;
 		switch (firstRule.getName()) {
 			case TerminalRuleType.SELECT_OPERATORS: {
 				Preconditions.checkArgument(rules.hasNext(), "Malformed grammar option: " + node.toString());

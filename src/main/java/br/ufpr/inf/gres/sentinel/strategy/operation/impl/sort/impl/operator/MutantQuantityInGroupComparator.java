@@ -22,7 +22,7 @@ public class MutantQuantityInGroupComparator extends AbstractSorterOperation<Lis
 	}
 
 	@Override
-	protected Function<List<Operator>, Integer> createSortingFunction() {
+	public Function<List<Operator>, Integer> createSortingFunction() {
 		return operators -> operators.stream().mapToInt(operator -> operator.getGeneratedMutants().size()).sum();
 	}
 }

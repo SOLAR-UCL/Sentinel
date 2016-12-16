@@ -19,7 +19,7 @@ public class AddAllOperatorsOperation extends Operation<Solution, List<Mutant>> 
 
 	@Override
 	public List<Mutant> doOperation(Solution solution) {
-		solution.getOperators().addAll(IntegrationFacade.getFacade().getAllOperators());
+		solution.getOperators().addAll(IntegrationFacade.getIntegrationFacade().getAllOperators());
 		return next(solution);
 	}
 

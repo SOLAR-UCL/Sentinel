@@ -32,7 +32,7 @@
 
 <operatorGroupAttribute> ::= "Quantity in Group" | "Mutant Quantity in Group"
 
-<operatorExecutionType> ::= "Conventional Execution"
+<operatorExecutionType> ::= "Conventional"
 
 ## Operações de Mutantes
 
@@ -52,7 +52,7 @@
 
 <mutantGroupSorting> ::= <mutantGroupAttribute> <sortingDirection> | ""
 
-<HOMGeneration> ::= "Single HOM" | "Conventional Generation" <order> | "All HOM Combinations" <order>
+<HOMGeneration> ::= "Single HOM" | "Conventional" <order>
 
 <order> ::= "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" | "10"
 

@@ -1,5 +1,6 @@
 package br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.operation;
 
+import br.ufpr.inf.gres.sentinel.base.mutation.Mutant;
 import br.ufpr.inf.gres.sentinel.base.solution.Solution;
 import br.ufpr.inf.gres.sentinel.strategy.operation.Operation;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.selection.SelectionOperation;
@@ -10,7 +11,7 @@ import java.util.List;
 /**
  * @author Giovani Guizzo
  */
-public abstract class AbstractSelectOperation<T> extends Operation<Solution, List<T>> {
+public abstract class AbstractSelectOperation<T> extends Operation<Solution, List<Mutant>> {
 
 	private SelectionOperation<T> selection;
 
@@ -37,7 +38,7 @@ public abstract class AbstractSelectOperation<T> extends Operation<Solution, Lis
 	}
 
 	@Override
-	public List<T> doOperation(Solution solution) {
+	public List<Mutant> doOperation(Solution solution) {
 		List<T> listToRetain = obtainList(solution);
 		if (selection != null) {
 			listToRetain.retainAll(selection.doOperation(new ArrayList<>(listToRetain)));

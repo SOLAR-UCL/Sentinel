@@ -37,7 +37,7 @@ public class TerminalRuleType {
 
 	public static final String MUTANT_QUANTITY_IN_GROUP = "Mutant Quantity in Group";
 
-	public static final String CONVENTIONAL_EXECUTION = "Conventional Execution";
+	public static final String CONVENTIONAL = "Conventional";
 
 	// Mutants
 	public static final String SELECT_MUTANTS = "Select Mutants";
@@ -45,8 +45,6 @@ public class TerminalRuleType {
 	public static final String COMBINE_MUTANTS = "Combine Mutants";
 	public static final String SELECT_MUTANTS_BY_GROUPS = "Select Mutants by Groups";
 	public static final String SINGLE_HOM = "Single HOM";
-	public static final String CONVENTIONAL_GENERATION = "Conventional Generation";
-	public static final String ALL_HOM_COMBINATIONS = "All HOM Combinations";
 
 	public static final String OPERATOR_TYPE = "Operator Type";
 	public static final String OPERATOR = "Operator";

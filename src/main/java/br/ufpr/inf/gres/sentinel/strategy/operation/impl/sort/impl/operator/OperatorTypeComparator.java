@@ -21,7 +21,7 @@ public class OperatorTypeComparator extends AbstractSorterOperation<Operator> {
 	}
 
 	@Override
-	protected Function<Operator, String> createSortingFunction() {
+	public Function<Operator, String> createSortingFunction() {
 		return Operator::getType;
 	}
 }

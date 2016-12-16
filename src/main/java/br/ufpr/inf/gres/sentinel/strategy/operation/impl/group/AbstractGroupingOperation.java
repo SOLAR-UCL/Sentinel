@@ -23,6 +23,6 @@ public abstract class AbstractGroupingOperation<T> extends Operation<List<T>, Li
 		return new ArrayList<>(collect.values());
 	}
 
-	protected abstract Function<T, ?> createGroupingFunction();
+	public abstract Function<T, ?> createGroupingFunction();
 
 }
