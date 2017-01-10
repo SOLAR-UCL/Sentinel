@@ -1,6 +1,7 @@
 package br.ufpr.inf.gres.sentinel.strategy.operation.impl.combine.generation.impl;
 
 import br.ufpr.inf.gres.sentinel.base.mutation.Mutant;
+import br.ufpr.inf.gres.sentinel.base.mutation.Operator;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.TerminalRuleType;
 import br.ufpr.inf.gres.sentinel.integration.IntegrationFacade;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.combine.generation.AbstractHOMGeneration;
@@ -20,6 +21,13 @@ public class SingleHOMGeneration extends AbstractHOMGeneration {
 	@Override
 	public List<Mutant> doOperation(List<Mutant> input) {
 		Mutant mutant = IntegrationFacade.getIntegrationFacade().combineMutants(input);
+		for (Mutant tempMutant : input) {
+			mutant.getConstituentMutants().add(tempMutant);
+			mutant.getOperators().addAll(tempMutant.getOperators());
+			for (Operator operator : tempMutant.getOperators()) {
+				operator.getGeneratedMutants().add(mutant);
+			}
+		}
 		return Lists.newArrayList(mutant);
 	}
 

@@ -8,6 +8,8 @@ import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.selection.Select
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * @author Giovani Guizzo
  */
@@ -39,10 +41,9 @@ public abstract class AbstractDiscardOperation<T> extends Operation<Solution, Li
 
 	@Override
 	public List<Mutant> doOperation(Solution solution) {
+		checkNotNull(selection, "No selection operation!");
 		List<T> listToDiscard = obtainList(solution);
-		if (selection != null) {
-			listToDiscard.removeAll(selection.doOperation(new ArrayList<>(listToDiscard)));
-		}
+		listToDiscard.removeAll(selection.doOperation(new ArrayList<>(listToDiscard)));
 		return next(solution);
 	}
 

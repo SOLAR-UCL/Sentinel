@@ -10,6 +10,8 @@ import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.selection.Select
 
 import java.util.List;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * @author Giovani Guizzo
  */
@@ -46,6 +48,8 @@ public class ExecuteOperatorsOperation extends Operation<Solution, List<Mutant>>
 
 	@Override
 	public List<Mutant> doOperation(Solution solution) {
+		checkNotNull(selection, "No selection operation!");
+		checkNotNull(executionType, "No execution operation!");
 		List<Operator> selectedOperators = selection.doOperation(solution.getOperators());
 		List<Mutant> generatedMutants = executionType.doOperation(selectedOperators);
 		solution.getMutants().addAll(generatedMutants);

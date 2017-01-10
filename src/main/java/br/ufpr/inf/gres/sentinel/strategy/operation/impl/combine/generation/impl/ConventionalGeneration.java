@@ -2,7 +2,6 @@ package br.ufpr.inf.gres.sentinel.strategy.operation.impl.combine.generation.imp
 
 import br.ufpr.inf.gres.sentinel.base.mutation.Mutant;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.TerminalRuleType;
-import br.ufpr.inf.gres.sentinel.integration.IntegrationFacade;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.combine.generation.AbstractHOMGeneration;
 import com.google.common.collect.Lists;
 
@@ -14,11 +13,13 @@ import java.util.List;
  */
 public class ConventionalGeneration extends AbstractHOMGeneration {
 
+	private SingleHOMGeneration singleHOMGeneration;
 	private int order;
 
 	public ConventionalGeneration(int order) {
 		super(TerminalRuleType.CONVENTIONAL + " Generation");
 		this.order = order;
+		this.singleHOMGeneration = new SingleHOMGeneration();
 	}
 
 	public int getOrder() {
@@ -34,7 +35,7 @@ public class ConventionalGeneration extends AbstractHOMGeneration {
 		List<Mutant> result = new ArrayList<>();
 		List<List<Mutant>> partition = Lists.partition(input, order);
 		for (List<Mutant> mutantList : partition) {
-			result.add(IntegrationFacade.getIntegrationFacade().combineMutants(mutantList));
+			result.addAll(singleHOMGeneration.doOperation(mutantList));
 		}
 		return result;
 	}

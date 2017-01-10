@@ -9,6 +9,8 @@ import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.selection.Select
 
 import java.util.List;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * @author Giovani Guizzo
  */
@@ -39,6 +41,8 @@ public class CombineMutantsOperation extends Operation<Solution, List<Mutant>> {
 
 	@Override
 	public List<Mutant> doOperation(Solution input) {
+		checkNotNull(selection, "No selection operation!");
+		checkNotNull(generation, "No HOM generation operation!");
 		List<Mutant> mutantsToCombine = selection.doOperation(input.getMutants());
 		List<Mutant> generatedHoms = generation.doOperation(mutantsToCombine);
 		input.getMutants().addAll(generatedHoms);
