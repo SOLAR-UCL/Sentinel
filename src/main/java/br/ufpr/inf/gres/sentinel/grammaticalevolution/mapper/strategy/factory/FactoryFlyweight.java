@@ -4,6 +4,8 @@ import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.im
 
 import java.util.HashMap;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * @author Giovani Guizzo
  */
@@ -13,11 +15,8 @@ public class FactoryFlyweight {
 	}
 
 	public static Factory getFactory(String name) {
-		if (name != null) {
-			return FactoryFlyweightHolder.FLYWEIGHT.computeIfAbsent(name, FactoryFlyweight::createNew);
-		} else {
-			throw new IllegalArgumentException("Unidentified grammar rule.");
-		}
+		checkNotNull(name, "Unidentified grammar rule.");
+		return FactoryFlyweightHolder.FLYWEIGHT.computeIfAbsent(name, FactoryFlyweight::createNew);
 	}
 
 	public static NonTerminalFactory getNonTerminalFactory() {

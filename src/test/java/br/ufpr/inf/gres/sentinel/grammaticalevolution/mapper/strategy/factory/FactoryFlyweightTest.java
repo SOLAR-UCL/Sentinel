@@ -18,7 +18,7 @@ public class FactoryFlyweightTest {
 		assertNotNull(nonTerminalFacotry);
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test(expected = NullPointerException.class)
 	public void getFactory() {
 		FactoryFlyweight.getFactory(null);
 	}
