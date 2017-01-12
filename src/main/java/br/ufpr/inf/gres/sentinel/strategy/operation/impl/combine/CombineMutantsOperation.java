@@ -7,6 +7,7 @@ import br.ufpr.inf.gres.sentinel.strategy.operation.Operation;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.combine.generation.AbstractHOMGeneration;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.selection.SelectionOperation;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -21,6 +22,12 @@ public class CombineMutantsOperation extends Operation<Solution, List<Mutant>> {
 
 	public CombineMutantsOperation() {
 		super(TerminalRuleType.COMBINE_MUTANTS);
+	}
+
+	public CombineMutantsOperation(AbstractHOMGeneration generation, SelectionOperation<Mutant> selection) {
+		super(TerminalRuleType.COMBINE_MUTANTS);
+		this.generation = generation;
+		this.selection = selection;
 	}
 
 	public SelectionOperation<Mutant> getSelection() {
@@ -43,7 +50,7 @@ public class CombineMutantsOperation extends Operation<Solution, List<Mutant>> {
 	public List<Mutant> doOperation(Solution input) {
 		checkNotNull(selection, "No selection operation!");
 		checkNotNull(generation, "No HOM generation operation!");
-		List<Mutant> mutantsToCombine = selection.doOperation(input.getMutants());
+		List<Mutant> mutantsToCombine = selection.doOperation(new ArrayList<>(input.getMutants()));
 		List<Mutant> generatedHoms = generation.doOperation(mutantsToCombine);
 		input.getMutants().addAll(generatedHoms);
 		return next(input);

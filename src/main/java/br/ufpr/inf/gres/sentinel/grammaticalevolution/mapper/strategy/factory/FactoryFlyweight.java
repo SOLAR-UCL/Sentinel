@@ -25,6 +25,7 @@ public class FactoryFlyweight {
 
 	private static Factory createNew(String name) throws RuntimeException {
 		switch (name) {
+			// Defaults
 			case NonTerminalRuleType.UNKNOWN_NON_TERMINAL:
 				return NonTerminalFactory.getInstance();
 			case NonTerminalRuleType.STRATEGY:
@@ -33,15 +34,20 @@ public class FactoryFlyweight {
 				return DefaultFactory.getInstance();
 			case NonTerminalRuleType.SELECTION_TYPE:
 				return SelectionTypeFactory.getInstance();
+			// Specific
 			case NonTerminalRuleType.OPERATOR_OPERATION:
 				return OperatorOperationFactory.getInstance();
+			case NonTerminalRuleType.MUTANT_OPERATION:
+				return MutantOperationFactory.getInstance();
+			// Shared
 			case NonTerminalRuleType.SELECT_OPERATORS:
 			case NonTerminalRuleType.SELECT_OPERATOR_GROUPS:
 			case NonTerminalRuleType.SELECT_MUTANTS:
 			case NonTerminalRuleType.SELECT_MUTANT_GROUPS:
 				return SelectFactory.getInstance();
 			case NonTerminalRuleType.OPERATOR_SELECTION_TYPE:
-				return OperatorSelectionTypeFactory.getInstance();
+			case NonTerminalRuleType.MUTANT_SELECTION_TYPE:
+				return SpecificSelectionTypeFactory.getInstance();
 			case NonTerminalRuleType.OPERATOR_GROUP_SELECTION_TYPE:
 			case NonTerminalRuleType.MUTANT_GROUP_SELECTION_TYPE:
 				return GroupSelectionTypeFactory.getInstance();
@@ -54,8 +60,11 @@ public class FactoryFlyweight {
 			case NonTerminalRuleType.OPERATOR_GROUP_SORTING:
 			case NonTerminalRuleType.MUTANT_GROUP_SORTING:
 				return GroupSortingFactory.getInstance();
+			// Specific
 			case NonTerminalRuleType.OPERATOR_EXECUTION_TYPE:
 				return OperatorExecutionTypeFactory.getInstance();
+			case NonTerminalRuleType.HOM_GENERATION:
+				return HOMGenerationFactory.getInstance();
 			default:
 				throw new IllegalArgumentException("Unidentified grammar rule: " + name);
 		}

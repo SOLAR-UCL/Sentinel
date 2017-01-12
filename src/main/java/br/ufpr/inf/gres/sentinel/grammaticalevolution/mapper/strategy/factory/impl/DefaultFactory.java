@@ -25,7 +25,7 @@ public class DefaultFactory implements Factory<Option> {
 	}
 
 	@Override
-	public Operation createOperation(Option option, Iterator<Integer> cyclicIterator) {
+	public Operation createOperation(Option option, Iterator<Integer> integerIterator) {
 		Iterator<Rule> rules = option.getRules().iterator();
 		Preconditions.checkArgument(rules.hasNext(), "Malformed grammar option: " + option.toString());
 		Rule firstRule = rules.next();
@@ -41,20 +41,20 @@ public class DefaultFactory implements Factory<Option> {
 				Preconditions.checkArgument(rules.hasNext(), "Malformed grammar option: " + option.toString());
 				Rule nextRule = rules.next();
 				mainOperation.setSuccessor(FactoryFlyweight.getNonTerminalFactory()
-														   .createOperation(nextRule, cyclicIterator));
+														   .createOperation(nextRule, integerIterator));
 
 				Preconditions.checkArgument(rules.hasNext(), "Malformed grammar option: " + option.toString());
 				nextRule = rules.next();
 				branchOperation.setSecondSuccessor(FactoryFlyweight.getNonTerminalFactory()
-																   .createOperation(nextRule, cyclicIterator));
+																   .createOperation(nextRule, integerIterator));
 				break;
 			}
 			default:
-				mainOperation = FactoryFlyweight.getNonTerminalFactory().createOperation(firstRule, cyclicIterator);
+				mainOperation = FactoryFlyweight.getNonTerminalFactory().createOperation(firstRule, integerIterator);
 				if (rules.hasNext()) {
 					Rule nextRule = rules.next();
 					mainOperation.setSuccessor(FactoryFlyweight.getNonTerminalFactory()
-															   .createOperation(nextRule, cyclicIterator));
+															   .createOperation(nextRule, integerIterator));
 				}
 				break;
 		}

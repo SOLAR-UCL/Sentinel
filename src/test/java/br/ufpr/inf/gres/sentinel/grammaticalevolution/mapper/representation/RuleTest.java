@@ -90,6 +90,22 @@ public class RuleTest {
 		assertFalse(iterator.hasNext());
 	}
 
+	@Test(expected = IllegalArgumentException.class)
+	public void testGetOption_Iterator4() {
+		Rule rule = new Rule("rule1");
+		Rule rule2 = new Rule("rule2");
+		Rule rule3 = new Rule("rule3");
+		Option option1 = new Option(Lists.newArrayList(rule2, rule3));
+		rule.addOption(option1);
+		Option option2 = new Option(Lists.newArrayList(rule3, rule3));
+		rule.addOption(option2);
+
+		Iterator<Integer> iterator = Lists.newArrayList(0).iterator();
+		assertEquals(option1, rule.getOption(iterator));
+		assertFalse(iterator.hasNext());
+		rule.getOption(iterator);
+	}
+
 	@Test
 	public void testHashCode() {
 		Rule rule = new Rule("rule1");

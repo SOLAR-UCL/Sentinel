@@ -28,7 +28,7 @@ public class SortingFactory implements Factory<Option> {
 	}
 
 	@Override
-	public Operation createOperation(Option node, Iterator<Integer> cyclicIterator) {
+	public Operation createOperation(Option node, Iterator<Integer> integerIterator) {
 		Iterator<Rule> rules = node.getRules().iterator();
 		Preconditions.checkArgument(rules.hasNext(), "Malformed grammar option: " + node.toString());
 		Rule rule = rules.next();
@@ -36,7 +36,7 @@ public class SortingFactory implements Factory<Option> {
 			return null;
 		}
 
-		rule = rule.getOption(cyclicIterator).getRules().get(0);
+		rule = rule.getOption(integerIterator).getRules().get(0);
 		AbstractSorterOperation mainOperation;
 		switch (rule.getName()) {
 			case TerminalRuleType.TYPE:
@@ -60,7 +60,7 @@ public class SortingFactory implements Factory<Option> {
 		}
 
 		Preconditions.checkArgument(rules.hasNext(), "Malformed grammar option: " + node.toString());
-		rule = rules.next().getOption(cyclicIterator).getRules().get(0);
+		rule = rules.next().getOption(integerIterator).getRules().get(0);
 		if (rule.getName().equals(TerminalRuleType.DESCENDING)) {
 			mainOperation.setReversed(true);
 		}

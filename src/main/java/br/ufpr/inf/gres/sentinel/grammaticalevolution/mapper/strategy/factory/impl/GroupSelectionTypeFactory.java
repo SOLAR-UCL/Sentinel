@@ -26,24 +26,24 @@ public class GroupSelectionTypeFactory implements Factory<Option> {
 	}
 
 	@Override
-	public Operation createOperation(Option node, Iterator<Integer> cyclicIterator) {
+	public Operation createOperation(Option node, Iterator<Integer> integerIterator) {
 		Iterator<Rule> rules = node.getRules().iterator();
 
 		Preconditions.checkArgument(rules.hasNext(), "Malformed grammar option: " + node.toString());
 		Rule rule = rules.next();
 		GroupSelectionOperation mainOperation = new GroupSelectionOperation();
 		mainOperation.setGroupingFunction((AbstractGroupingOperation) FactoryFlyweight.getNonTerminalFactory()
-																					  .createOperation(rule, cyclicIterator));
+																					  .createOperation(rule, integerIterator));
 
 		Preconditions.checkArgument(rules.hasNext(), "Malformed grammar option: " + node.toString());
 		rule = rules.next();
 		mainOperation.setSelectionType((SelectionType) FactoryFlyweight.getNonTerminalFactory()
-																	   .createOperation(rule, cyclicIterator));
+																	   .createOperation(rule, integerIterator));
 
 		Preconditions.checkArgument(rules.hasNext(), "Malformed grammar option: " + node.toString());
 		rule = rules.next();
 		mainOperation.setSorter((AbstractSorterOperation) FactoryFlyweight.getNonTerminalFactory()
-																		  .createOperation(rule, cyclicIterator));
+																		  .createOperation(rule, integerIterator));
 
 		return mainOperation;
 	}

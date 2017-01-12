@@ -5,10 +5,9 @@ import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.representation.Rule
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.Factory;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.TerminalRuleType;
 import br.ufpr.inf.gres.sentinel.strategy.operation.Operation;
-import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.type.SelectionType;
-import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.type.impl.LastToFirstSelection;
-import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.type.impl.RandomSelection;
-import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.type.impl.SequentialSelection;
+import br.ufpr.inf.gres.sentinel.strategy.operation.impl.combine.generation.AbstractHOMGeneration;
+import br.ufpr.inf.gres.sentinel.strategy.operation.impl.combine.generation.impl.ConventionalGeneration;
+import br.ufpr.inf.gres.sentinel.strategy.operation.impl.combine.generation.impl.SingleHOMGeneration;
 import com.google.common.base.Preconditions;
 
 import java.util.Iterator;
@@ -16,12 +15,12 @@ import java.util.Iterator;
 /**
  * @author Giovani Guizzo
  */
-public class SelectionTypeFactory implements Factory<Option> {
+public class HOMGenerationFactory implements Factory<Option> {
 
-	private SelectionTypeFactory() {
+	private HOMGenerationFactory() {
 	}
 
-	public static SelectionTypeFactory getInstance() {
+	public static HOMGenerationFactory getInstance() {
 		return SingletonHolder.INSTANCE;
 	}
 
@@ -30,26 +29,29 @@ public class SelectionTypeFactory implements Factory<Option> {
 		Iterator<Rule> rules = node.getRules().iterator();
 		Preconditions.checkArgument(rules.hasNext(), "Malformed grammar option: " + node.toString());
 		Rule rule = rules.next();
-		SelectionType mainOperation;
+
+		AbstractHOMGeneration mainOperation;
 		switch (rule.getName()) {
-			case TerminalRuleType.RANDOM:
-				mainOperation = new RandomSelection<>();
+			case TerminalRuleType.SINGLE_HOM:
+				mainOperation = new SingleHOMGeneration();
 				break;
-			case TerminalRuleType.LAST_TO_FIRST:
-				mainOperation = new LastToFirstSelection<>();
-				break;
-			case TerminalRuleType.SEQUENTIAL:
-				mainOperation = new SequentialSelection<>();
+			case TerminalRuleType.CONVENTIONAL:
+				Preconditions.checkArgument(rules.hasNext(), "Malformed grammar option: " + node.toString());
+				rule = rules.next();
+
+				int order = Integer.parseInt(rule.getOption(integerIterator).getRules().get(0).getName());
+				mainOperation = new ConventionalGeneration(order);
 				break;
 			default:
 				throw new IllegalArgumentException("Malformed grammar option: " + node.toString());
 		}
+
 		return mainOperation;
 	}
 
 	private static class SingletonHolder {
 
-		private static final SelectionTypeFactory INSTANCE = new SelectionTypeFactory();
+		private static final HOMGenerationFactory INSTANCE = new HOMGenerationFactory();
 	}
 
 }

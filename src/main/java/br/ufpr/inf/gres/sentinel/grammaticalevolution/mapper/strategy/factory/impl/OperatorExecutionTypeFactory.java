@@ -24,7 +24,7 @@ public class OperatorExecutionTypeFactory implements Factory<Option> {
 	}
 
 	@Override
-	public Operation createOperation(Option node, Iterator<Integer> cyclicIterator) {
+	public Operation createOperation(Option node, Iterator<Integer> integerIterator) {
 		Iterator<Rule> rules = node.getRules().iterator();
 
 		Preconditions.checkArgument(rules.hasNext(), "Malformed grammar option: " + node.toString());

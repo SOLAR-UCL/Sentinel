@@ -21,7 +21,7 @@ public class StrategyFactory implements Factory<Option> {
 	}
 
 	@Override
-	public Operation createOperation(Option option, Iterator<Integer> cyclicIterator) {
+	public Operation createOperation(Option option, Iterator<Integer> integerIterator) {
 		Iterator<Rule> rules = option.getRules().iterator();
 
 		Preconditions.checkArgument(rules.hasNext(), "Malformed grammar option: " + option.toString());
@@ -34,7 +34,7 @@ public class StrategyFactory implements Factory<Option> {
 				Preconditions.checkArgument(rules.hasNext(), "Malformed grammar option: " + option.toString());
 				Rule nextRule = rules.next();
 				mainOperation.setSuccessor(FactoryFlyweight.getNonTerminalFactory()
-														   .createOperation(nextRule, cyclicIterator));
+														   .createOperation(nextRule, integerIterator));
 				break;
 			default:
 				throw new IllegalArgumentException("Malformed grammar option: " + option.toString());

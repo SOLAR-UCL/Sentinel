@@ -24,11 +24,11 @@ import static org.junit.Assert.*;
 /**
  * @author Giovani Guizzo
  */
-public class OperatorSelectionTypeFactoryTest {
+public class SpecificSelectionTypeFactoryTest {
 
 	private static Rule testingRule;
 
-	public OperatorSelectionTypeFactoryTest() {
+	public SpecificSelectionTypeFactoryTest() {
 	}
 
 	@BeforeClass
@@ -37,7 +37,7 @@ public class OperatorSelectionTypeFactoryTest {
 			StrategyMapper strategyMapper = new StrategyMapper(GrammarFiles.getDefaultGrammarPath());
 			testingRule = strategyMapper.getNonTerminalRule(NonTerminalRuleType.OPERATOR_SELECTION_TYPE);
 		} catch (IOException ex) {
-			Logger.getLogger(OperatorSelectionTypeFactoryTest.class.getName()).log(Level.SEVERE, null, ex);
+			Logger.getLogger(SpecificSelectionTypeFactoryTest.class.getName()).log(Level.SEVERE, null, ex);
 		}
 	}
 
@@ -65,7 +65,7 @@ public class OperatorSelectionTypeFactoryTest {
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testCreateInvalidOperation() {
-		Factory factory = OperatorSelectionTypeFactory.getInstance();
+		Factory factory = SpecificSelectionTypeFactory.getInstance();
 		Iterator<Integer> iterator = Lists.newArrayList(0).iterator();
 		factory.createOperation(new Option(Lists.newArrayList(new Rule("Unknown"))), iterator);
 	}

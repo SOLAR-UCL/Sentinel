@@ -17,9 +17,9 @@ public class NonTerminalFactory implements Factory<Rule> {
 	}
 
 	@Override
-	public Operation createOperation(Rule rule, Iterator<Integer> cyclicIterator) {
+	public Operation createOperation(Rule rule, Iterator<Integer> integerIterator) {
 		Factory factory = FactoryFlyweight.getFactory(rule.getName());
-		return factory.createOperation(rule.getOption(cyclicIterator), cyclicIterator);
+		return factory.createOperation(rule.getOption(integerIterator), integerIterator);
 	}
 
 	private static class SingletonHolder {

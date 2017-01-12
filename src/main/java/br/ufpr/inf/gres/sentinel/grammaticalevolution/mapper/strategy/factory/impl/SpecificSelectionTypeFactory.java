@@ -1,6 +1,5 @@
 package br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.impl;
 
-import br.ufpr.inf.gres.sentinel.base.mutation.Operator;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.representation.Option;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.representation.Rule;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.Factory;
@@ -18,45 +17,47 @@ import java.util.Iterator;
 /**
  * @author Giovani Guizzo
  */
-public class OperatorSelectionTypeFactory implements Factory<Option> {
+public class SpecificSelectionTypeFactory implements Factory<Option> {
 
-	private OperatorSelectionTypeFactory() {
+	private SpecificSelectionTypeFactory() {
 	}
 
-	public static OperatorSelectionTypeFactory getInstance() {
+	public static SpecificSelectionTypeFactory getInstance() {
 		return SingletonHolder.INSTANCE;
 	}
 
 	@Override
-	public Operation createOperation(Option node, Iterator<Integer> cyclicIterator) {
+	public Operation createOperation(Option node, Iterator<Integer> integerIterator) {
 		Iterator<Rule> rules = node.getRules().iterator();
 		Preconditions.checkArgument(rules.hasNext(), "Malformed grammar option: " + node.toString());
 		Rule rule = rules.next();
-		SelectionOperation<Operator> mainOperation;
+		SelectionOperation mainOperation;
 		switch (rule.getName()) {
 			case TerminalRuleType.SELECT_OPERATORS:
+			case TerminalRuleType.SELECT_MUTANTS:
 				mainOperation = new SelectionOperation();
 
 				Preconditions.checkArgument(rules.hasNext(), "Malformed grammar option: " + node.toString());
 				rule = rules.next();
 				mainOperation.setSelectionType((SelectionType) FactoryFlyweight.getNonTerminalFactory()
-																			   .createOperation(rule, cyclicIterator));
+																			   .createOperation(rule, integerIterator));
 
 				Preconditions.checkArgument(rules.hasNext(), "Malformed grammar option: " + node.toString());
 				rule = rules.next();
 				mainOperation.setSorter((AbstractSorterOperation) FactoryFlyweight.getNonTerminalFactory()
-																				  .createOperation(rule, cyclicIterator));
+																				  .createOperation(rule, integerIterator));
 				break;
 			case TerminalRuleType.SELECT_OPERATORS_BY_GROUPS:
+			case TerminalRuleType.SELECT_MUTANTS_BY_GROUPS:
 				Preconditions.checkArgument(rules.hasNext(), "Malformed grammar option: " + node.toString());
 				rule = rules.next();
-				GroupSelectionOperation<Operator> groupOperation = (GroupSelectionOperation<Operator>) FactoryFlyweight.getNonTerminalFactory()
-																													   .createOperation(rule, cyclicIterator);
+				GroupSelectionOperation groupOperation = (GroupSelectionOperation) FactoryFlyweight.getNonTerminalFactory()
+																								   .createOperation(rule, integerIterator);
 
 				Preconditions.checkArgument(rules.hasNext(), "Malformed grammar option: " + node.toString());
 				rule = rules.next();
 				groupOperation.setSelectionOperation((SelectionOperation) FactoryFlyweight.getNonTerminalFactory()
-																						  .createOperation(rule, cyclicIterator));
+																						  .createOperation(rule, integerIterator));
 
 				mainOperation = groupOperation;
 				break;
@@ -68,7 +69,7 @@ public class OperatorSelectionTypeFactory implements Factory<Option> {
 
 	private static class SingletonHolder {
 
-		private static final OperatorSelectionTypeFactory INSTANCE = new OperatorSelectionTypeFactory();
+		private static final SpecificSelectionTypeFactory INSTANCE = new SpecificSelectionTypeFactory();
 	}
 
 }

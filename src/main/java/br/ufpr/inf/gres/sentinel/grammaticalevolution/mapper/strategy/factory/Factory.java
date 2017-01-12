@@ -6,6 +6,6 @@ import java.util.Iterator;
 
 public interface Factory<T> {
 
-	Operation createOperation(T node, Iterator<Integer> cyclicIterator);
+	Operation createOperation(T node, Iterator<Integer> integerIterator);
 
 }

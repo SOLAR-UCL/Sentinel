@@ -1,7 +1,6 @@
 package br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.impl;
 
 import br.ufpr.inf.gres.sentinel.base.mutation.Mutant;
-import br.ufpr.inf.gres.sentinel.base.mutation.Operator;
 import br.ufpr.inf.gres.sentinel.base.solution.Solution;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.representation.Option;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.representation.Rule;
@@ -9,10 +8,10 @@ import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.Fa
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.FactoryFlyweight;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.TerminalRuleType;
 import br.ufpr.inf.gres.sentinel.strategy.operation.Operation;
-import br.ufpr.inf.gres.sentinel.strategy.operation.impl.discard.impl.DiscardOperatorsOperation;
-import br.ufpr.inf.gres.sentinel.strategy.operation.impl.execute.ExecuteOperatorsOperation;
-import br.ufpr.inf.gres.sentinel.strategy.operation.impl.execute.type.OperatorExecutionType;
-import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.operation.impl.SelectOperatorsOperation;
+import br.ufpr.inf.gres.sentinel.strategy.operation.impl.combine.CombineMutantsOperation;
+import br.ufpr.inf.gres.sentinel.strategy.operation.impl.combine.generation.AbstractHOMGeneration;
+import br.ufpr.inf.gres.sentinel.strategy.operation.impl.discard.impl.DiscardMutantsOperation;
+import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.operation.impl.SelectMutantsOperation;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.selection.SelectionOperation;
 import com.google.common.base.Preconditions;
 
@@ -22,12 +21,12 @@ import java.util.List;
 /**
  * @author Giovani Guizzo
  */
-public class OperatorOperationFactory implements Factory<Option> {
+public class MutantOperationFactory implements Factory<Option> {
 
-	private OperatorOperationFactory() {
+	private MutantOperationFactory() {
 	}
 
-	public static OperatorOperationFactory getInstance() {
+	public static MutantOperationFactory getInstance() {
 		return SingletonHolder.INSTANCE;
 	}
 
@@ -38,34 +37,34 @@ public class OperatorOperationFactory implements Factory<Option> {
 		Rule firstRule = rules.next();
 		Operation<Solution, List<Mutant>> mainOperation;
 		switch (firstRule.getName()) {
-			case TerminalRuleType.SELECT_OPERATORS: {
+			case TerminalRuleType.SELECT_MUTANTS: {
 				Preconditions.checkArgument(rules.hasNext(), "Malformed grammar option: " + node.toString());
 				Rule nextRule = rules.next();
-				SelectionOperation<Operator> selectionOperation = (SelectionOperation<Operator>) FactoryFlyweight.getNonTerminalFactory()
-																												 .createOperation(nextRule, integerIterator);
-				mainOperation = new SelectOperatorsOperation(selectionOperation);
+				SelectionOperation<Mutant> selectionOperation = (SelectionOperation<Mutant>) FactoryFlyweight.getNonTerminalFactory()
+																											 .createOperation(nextRule, integerIterator);
+				mainOperation = new SelectMutantsOperation(selectionOperation);
 				break;
 			}
-			case TerminalRuleType.DISCARD_OPERATORS: {
+			case TerminalRuleType.DISCARD_MUTANTS: {
 				Preconditions.checkArgument(rules.hasNext(), "Malformed grammar option: " + node.toString());
 				Rule nextRule = rules.next();
-				SelectionOperation<Operator> selectionOperation = (SelectionOperation<Operator>) FactoryFlyweight.getNonTerminalFactory()
-																												 .createOperation(nextRule, integerIterator);
-				mainOperation = new DiscardOperatorsOperation(selectionOperation);
+				SelectionOperation<Mutant> selectionOperation = (SelectionOperation<Mutant>) FactoryFlyweight.getNonTerminalFactory()
+																											 .createOperation(nextRule, integerIterator);
+				mainOperation = new DiscardMutantsOperation(selectionOperation);
 				break;
 			}
-			case TerminalRuleType.EXECUTE_OPERATORS: {
+			case TerminalRuleType.COMBINE_MUTANTS: {
 				Preconditions.checkArgument(rules.hasNext(), "Malformed grammar option: " + node.toString());
 				Rule nextRule = rules.next();
-				OperatorExecutionType executionType = (OperatorExecutionType) FactoryFlyweight.getNonTerminalFactory()
-																							  .createOperation(nextRule, integerIterator);
+				AbstractHOMGeneration generation = (AbstractHOMGeneration) FactoryFlyweight.getNonTerminalFactory()
+																						   .createOperation(nextRule, integerIterator);
 
 				Preconditions.checkArgument(rules.hasNext(), "Malformed grammar option: " + node.toString());
 				nextRule = rules.next();
-				SelectionOperation<Operator> selectionOperation = (SelectionOperation<Operator>) FactoryFlyweight.getNonTerminalFactory()
-																												 .createOperation(nextRule, integerIterator);
+				SelectionOperation<Mutant> selectionOperation = (SelectionOperation<Mutant>) FactoryFlyweight.getNonTerminalFactory()
+																											 .createOperation(nextRule, integerIterator);
 
-				mainOperation = new ExecuteOperatorsOperation(selectionOperation, executionType);
+				mainOperation = new CombineMutantsOperation(generation, selectionOperation);
 				break;
 			}
 			default:
@@ -76,7 +75,7 @@ public class OperatorOperationFactory implements Factory<Option> {
 
 	private static class SingletonHolder {
 
-		private static final OperatorOperationFactory INSTANCE = new OperatorOperationFactory();
+		private static final MutantOperationFactory INSTANCE = new MutantOperationFactory();
 	}
 
 }

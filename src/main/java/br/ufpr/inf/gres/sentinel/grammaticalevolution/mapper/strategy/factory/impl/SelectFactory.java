@@ -24,22 +24,22 @@ public class SelectFactory implements Factory<Option> {
 	}
 
 	@Override
-	public Operation createOperation(Option node, Iterator<Integer> cyclicIterator) {
+	public Operation createOperation(Option node, Iterator<Integer> integerIterator) {
 		Iterator<Rule> rules = node.getRules().iterator();
 		Preconditions.checkArgument(rules.hasNext(), "Malformed grammar option: " + node.toString());
 		Rule rule = rules.next();
 		SelectionOperation mainOperation;
 		mainOperation = (SelectionOperation) FactoryFlyweight.getNonTerminalFactory()
-															 .createOperation(rule, cyclicIterator);
+															 .createOperation(rule, integerIterator);
 		Preconditions.checkArgument(rules.hasNext(), "Malformed grammar option: " + node.toString());
 		rule = rules.next();
 		switch (rule.getName()) {
 			case NonTerminalRuleType.QUANTITY:
-				String quantity = rule.getOption(cyclicIterator).getRules().get(0).getName();
+				String quantity = rule.getOption(integerIterator).getRules().get(0).getName();
 				mainOperation.setQuantity(Integer.parseInt(quantity));
 				break;
 			case NonTerminalRuleType.PERCENTAGE:
-				String percentage = rule.getOption(cyclicIterator).getRules().get(0).getName();
+				String percentage = rule.getOption(integerIterator).getRules().get(0).getName();
 				mainOperation.setPercentage(Double.parseDouble(percentage));
 				break;
 			default:

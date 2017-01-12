@@ -7,6 +7,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 public class Rule {
 
 	protected String name;
@@ -54,7 +56,12 @@ public class Rule {
 	}
 
 	public Option getOption(Iterator<Integer> iterator) {
-		return getOptions().size() > 1 ? getOption(iterator.next()) : getOption(0);
+		if (getOptions().size() > 1) {
+			checkArgument(iterator.hasNext(), "Invalid Iterator. Reached the end of it but I need more integers to consume and interpret the rules.");
+			return getOption(iterator.next());
+		} else {
+			return getOption(0);
+		}
 	}
 
 	public boolean isTerminal() {

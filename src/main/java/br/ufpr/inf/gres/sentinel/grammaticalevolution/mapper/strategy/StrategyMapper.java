@@ -29,11 +29,11 @@ public class StrategyMapper extends AbstractGrammarMapper<Strategy> {
 	}
 
 	@Override
-	protected Strategy hookInterpret(Iterator<Integer> cyclicIterator) {
+	protected Strategy hookInterpret(Iterator<Integer> integerIterable) {
 		Strategy strategy = new Strategy();
 		if (rootNode != null) {
 			strategy.setFirstOperation(FactoryFlyweight.getNonTerminalFactory()
-													   .createOperation(rootNode, cyclicIterator));
+													   .createOperation(rootNode, integerIterable));
 		}
 		return strategy;
 	}

@@ -223,18 +223,17 @@ public abstract class AbstractGrammarMapper<T> {
 	 * @return The built object.
 	 */
 	public T interpret(Iterable<Integer> integerIterable) {
-		//TODO set maximum wraps
-		return hookInterpret(Iterables.unmodifiableIterable(Iterables.cycle(integerIterable)).iterator());
+		return hookInterpret(Iterables.unmodifiableIterable(integerIterable).iterator());
 	}
 
 	/**
 	 * When interpreting an integer vector, this is what the method {@link AbstractGrammarMapper#interpret(java.lang.Iterable)
 	 * interpret} will call.
 	 *
-	 * @param cyclicIterator The unmodifiable integer vector in form of a cyclic iterator object.
+	 * @param integerIterable The unmodifiable integer iterable's iterator.
 	 *
 	 * @return The built object.
 	 */
-	protected abstract T hookInterpret(Iterator<Integer> cyclicIterator);
+	protected abstract T hookInterpret(Iterator<Integer> integerIterable);
 
 }

@@ -29,12 +29,12 @@ public class GroupingFactory implements Factory<Option> {
 	}
 
 	@Override
-	public Operation createOperation(Option node, Iterator<Integer> cyclicIterator) {
+	public Operation createOperation(Option node, Iterator<Integer> integerIterator) {
 		Iterator<Rule> rules = node.getRules().iterator();
 
 		Preconditions.checkArgument(rules.hasNext(), "Malformed grammar option: " + node.toString());
 		Rule rule = rules.next();
-		rule = rule.getOption(cyclicIterator).getRules().get(0);
+		rule = rule.getOption(integerIterator).getRules().get(0);
 
 		AbstractGroupingOperation mainOperation;
 		switch (rule.getName()) {

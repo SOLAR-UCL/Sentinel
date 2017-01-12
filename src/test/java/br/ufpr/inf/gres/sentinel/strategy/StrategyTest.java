@@ -1,15 +1,20 @@
 package br.ufpr.inf.gres.sentinel.strategy;
 
 import br.ufpr.inf.gres.sentinel.base.mutation.Mutant;
+import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.GrammarFiles;
+import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.StrategyMapper;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.TerminalRuleType;
 import br.ufpr.inf.gres.sentinel.integration.IntegrationFacade;
+import br.ufpr.inf.gres.sentinel.integration.IntegrationFacadeTest;
 import br.ufpr.inf.gres.sentinel.strategy.operation.OperationTest;
 import br.ufpr.inf.gres.sentinel.strategy.operation.OperationTest.OperationStub;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.defaults.AddAllOperatorsOperation;
 import com.google.common.collect.Lists;
 import org.junit.Assert;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.io.File;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -20,6 +25,11 @@ import static org.junit.Assert.*;
 public class StrategyTest {
 
 	public StrategyTest() {
+	}
+
+	@BeforeClass
+	public static void setUp() throws Exception {
+		IntegrationFacade.setIntegrationFacade(new IntegrationFacadeTest.IntegrationFacadeStub());
 	}
 
 	@Test
@@ -76,4 +86,13 @@ public class StrategyTest {
 		assertTrue(result.isEmpty());
 	}
 
+	@Test
+	public void testStrategy() throws Exception {
+		StrategyMapper strategyMapper = new StrategyMapper(new File(GrammarFiles.getDefaultGrammarPath()));
+		// Executes all operators in reversed order, then selects the 10% first mutants (1) and store them.
+		Strategy strategy = strategyMapper.interpret(Lists.newArrayList(0, 2, 1, 0, 0, 0, 0, 1, 9, 1, 0, 1, 0, 0, 1, 0, 3, 1, 2));
+		List<Mutant> result = strategy.run();
+		assertEquals(1, result.size());
+		assertEquals("Operator4_1", result.get(0).getName());
+	}
 }
