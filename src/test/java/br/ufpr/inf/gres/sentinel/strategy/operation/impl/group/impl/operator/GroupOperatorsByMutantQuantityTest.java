@@ -29,9 +29,9 @@ public class GroupOperatorsByMutantQuantityTest {
 		Operator operator3 = new Operator("Operator3", "Type1");
 
 		Function<Operator, Integer> grouperFunction = operation.createGroupingFunction();
-		assertEquals((int) 1, (int) grouperFunction.apply(operator1));
-		assertEquals((int) 2, (int) grouperFunction.apply(operator2));
-		assertEquals((int) 0, (int) grouperFunction.apply(operator3));
+		assertEquals(1, (int) grouperFunction.apply(operator1));
+		assertEquals(2, (int) grouperFunction.apply(operator2));
+		assertEquals(0, (int) grouperFunction.apply(operator3));
 	}
 
 	@Test

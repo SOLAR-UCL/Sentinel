@@ -30,7 +30,7 @@ public class SequentialSelectionTest {
 		SequentialSelection<Integer> operation = new SequentialSelection<>();
 		List<Integer> result = operation.selectItems(input, 1);
 		assertEquals(1, result.size());
-		assertEquals((int) 1, (int) result.get(0));
+		assertEquals(1, (int) result.get(0));
 	}
 
 	@Test
@@ -48,19 +48,19 @@ public class SequentialSelectionTest {
 		SequentialSelection<Integer> operation = new SequentialSelection<>();
 		List<Integer> result = operation.selectItems(input, 13);
 		assertEquals(13, result.size());
-		assertEquals((int) 1, (int) result.get(0));
-		assertEquals((int) 2, (int) result.get(1));
-		assertEquals((int) 3, (int) result.get(2));
-		assertEquals((int) 4, (int) result.get(3));
-		assertEquals((int) 5, (int) result.get(4));
-		assertEquals((int) 6, (int) result.get(5));
-		assertEquals((int) 1, (int) result.get(6));
-		assertEquals((int) 2, (int) result.get(7));
-		assertEquals((int) 3, (int) result.get(8));
-		assertEquals((int) 4, (int) result.get(9));
-		assertEquals((int) 5, (int) result.get(10));
-		assertEquals((int) 6, (int) result.get(11));
-		assertEquals((int) 1, (int) result.get(12));
+		assertEquals(1, (int) result.get(0));
+		assertEquals(2, (int) result.get(1));
+		assertEquals(3, (int) result.get(2));
+		assertEquals(4, (int) result.get(3));
+		assertEquals(5, (int) result.get(4));
+		assertEquals(6, (int) result.get(5));
+		assertEquals(1, (int) result.get(6));
+		assertEquals(2, (int) result.get(7));
+		assertEquals(3, (int) result.get(8));
+		assertEquals(4, (int) result.get(9));
+		assertEquals(5, (int) result.get(10));
+		assertEquals(6, (int) result.get(11));
+		assertEquals(1, (int) result.get(12));
 	}
 
 	@Test
@@ -69,9 +69,9 @@ public class SequentialSelectionTest {
 		SequentialSelection<Integer> operation = new SequentialSelection<>();
 		List<Integer> result = operation.selectItems(input, 3);
 		assertEquals(3, result.size());
-		assertEquals((int) 1, (int) result.get(0));
-		assertEquals((int) 1, (int) result.get(1));
-		assertEquals((int) 1, (int) result.get(2));
+		assertEquals(1, (int) result.get(0));
+		assertEquals(1, (int) result.get(1));
+		assertEquals(1, (int) result.get(2));
 	}
 
 	@Test

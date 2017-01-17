@@ -76,7 +76,7 @@ public class StrategyMapperTest {
 		ExecuteOperatorsOperation execute = (ExecuteOperatorsOperation) operation.getSuccessor();
 		assertTrue(execute.getExecutionType() instanceof ConventionalExecution);
 		assertTrue(execute.getSelection() instanceof SelectionOperation);
-		assertEquals(1.0, (double) execute.getSelection().getPercentage(), 0.01D);
+		assertEquals(1.0, execute.getSelection().getPercentage(), 0.01D);
 		assertTrue(execute.getSelection().getSelectionType() instanceof SequentialSelection);
 		assertTrue(execute.getSelection().getSorter() instanceof OperatorTypeComparator);
 		assertFalse(execute.getSelection().getSorter().isReversed());

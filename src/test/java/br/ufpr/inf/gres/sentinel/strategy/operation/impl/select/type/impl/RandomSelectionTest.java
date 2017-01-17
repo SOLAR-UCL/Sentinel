@@ -62,9 +62,9 @@ public class RandomSelectionTest {
 		RandomSelection<Integer> operation = new RandomSelection<>();
 		List<Integer> result = operation.selectItems(input, 3);
 		assertEquals(3, result.size());
-		assertEquals((int) 1, (int) result.get(0));
-		assertEquals((int) 1, (int) result.get(1));
-		assertEquals((int) 1, (int) result.get(2));
+		assertEquals(1, (int) result.get(0));
+		assertEquals(1, (int) result.get(1));
+		assertEquals(1, (int) result.get(2));
 	}
 
 	@Test

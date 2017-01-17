@@ -30,7 +30,7 @@ public class LastToFirstSelectionTest {
 		LastToFirstSelection<Integer> lastToFirst = new LastToFirstSelection();
 		List<Integer> result = lastToFirst.selectItems(input, 1);
 		assertEquals(1, result.size());
-		assertEquals((int) 1, (int) result.get(0));
+		assertEquals(1, (int) result.get(0));
 	}
 
 	@Test
@@ -39,8 +39,8 @@ public class LastToFirstSelectionTest {
 		LastToFirstSelection<Integer> lastToFirst = new LastToFirstSelection();
 		List<Integer> result = lastToFirst.selectItems(input, 2);
 		assertEquals(2, result.size());
-		assertEquals((int) 1, (int) result.get(0));
-		assertEquals((int) 6, (int) result.get(1));
+		assertEquals(1, (int) result.get(0));
+		assertEquals(6, (int) result.get(1));
 	}
 
 	@Test
@@ -49,9 +49,9 @@ public class LastToFirstSelectionTest {
 		LastToFirstSelection<Integer> lastToFirst = new LastToFirstSelection();
 		List<Integer> result = lastToFirst.selectItems(input, 3);
 		assertEquals(3, result.size());
-		assertEquals((int) 1, (int) result.get(0));
-		assertEquals((int) 6, (int) result.get(1));
-		assertEquals((int) 2, (int) result.get(2));
+		assertEquals(1, (int) result.get(0));
+		assertEquals(6, (int) result.get(1));
+		assertEquals(2, (int) result.get(2));
 	}
 
 	@Test
@@ -60,12 +60,12 @@ public class LastToFirstSelectionTest {
 		LastToFirstSelection<Integer> lastToFirst = new LastToFirstSelection();
 		List<Integer> result = lastToFirst.selectItems(input, 6);
 		assertEquals(6, result.size());
-		assertEquals((int) 1, (int) result.get(0));
-		assertEquals((int) 6, (int) result.get(1));
-		assertEquals((int) 2, (int) result.get(2));
-		assertEquals((int) 5, (int) result.get(3));
-		assertEquals((int) 3, (int) result.get(4));
-		assertEquals((int) 4, (int) result.get(5));
+		assertEquals(1, (int) result.get(0));
+		assertEquals(6, (int) result.get(1));
+		assertEquals(2, (int) result.get(2));
+		assertEquals(5, (int) result.get(3));
+		assertEquals(3, (int) result.get(4));
+		assertEquals(4, (int) result.get(5));
 	}
 
 	@Test
@@ -74,15 +74,15 @@ public class LastToFirstSelectionTest {
 		LastToFirstSelection<Integer> lastToFirst = new LastToFirstSelection();
 		List<Integer> result = lastToFirst.selectItems(input, 9);
 		assertEquals(9, result.size());
-		assertEquals((int) 1, (int) result.get(0));
-		assertEquals((int) 6, (int) result.get(1));
-		assertEquals((int) 2, (int) result.get(2));
-		assertEquals((int) 5, (int) result.get(3));
-		assertEquals((int) 3, (int) result.get(4));
-		assertEquals((int) 4, (int) result.get(5));
-		assertEquals((int) 1, (int) result.get(6));
-		assertEquals((int) 6, (int) result.get(7));
-		assertEquals((int) 2, (int) result.get(8));
+		assertEquals(1, (int) result.get(0));
+		assertEquals(6, (int) result.get(1));
+		assertEquals(2, (int) result.get(2));
+		assertEquals(5, (int) result.get(3));
+		assertEquals(3, (int) result.get(4));
+		assertEquals(4, (int) result.get(5));
+		assertEquals(1, (int) result.get(6));
+		assertEquals(6, (int) result.get(7));
+		assertEquals(2, (int) result.get(8));
 	}
 
 	@Test
@@ -91,16 +91,16 @@ public class LastToFirstSelectionTest {
 		LastToFirstSelection<Integer> lastToFirst = new LastToFirstSelection();
 		List<Integer> result = lastToFirst.selectItems(input, 10);
 		assertEquals(10, result.size());
-		assertEquals((int) 1, (int) result.get(0));
-		assertEquals((int) 5, (int) result.get(1));
-		assertEquals((int) 2, (int) result.get(2));
-		assertEquals((int) 4, (int) result.get(3));
-		assertEquals((int) 3, (int) result.get(4));
-		assertEquals((int) 5, (int) result.get(5));
-		assertEquals((int) 1, (int) result.get(6));
-		assertEquals((int) 4, (int) result.get(7));
-		assertEquals((int) 2, (int) result.get(8));
-		assertEquals((int) 5, (int) result.get(9));
+		assertEquals(1, (int) result.get(0));
+		assertEquals(5, (int) result.get(1));
+		assertEquals(2, (int) result.get(2));
+		assertEquals(4, (int) result.get(3));
+		assertEquals(3, (int) result.get(4));
+		assertEquals(5, (int) result.get(5));
+		assertEquals(1, (int) result.get(6));
+		assertEquals(4, (int) result.get(7));
+		assertEquals(2, (int) result.get(8));
+		assertEquals(5, (int) result.get(9));
 	}
 
 	@Test
@@ -109,9 +109,9 @@ public class LastToFirstSelectionTest {
 		LastToFirstSelection<Integer> lastToFirst = new LastToFirstSelection();
 		List<Integer> result = lastToFirst.selectItems(input, 3);
 		assertEquals(3, result.size());
-		assertEquals((int) 1, (int) result.get(0));
-		assertEquals((int) 1, (int) result.get(1));
-		assertEquals((int) 1, (int) result.get(2));
+		assertEquals(1, (int) result.get(0));
+		assertEquals(1, (int) result.get(1));
+		assertEquals(1, (int) result.get(2));
 	}
 
 	@Test
