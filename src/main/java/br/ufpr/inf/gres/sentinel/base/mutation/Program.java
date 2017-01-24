@@ -1,5 +1,8 @@
 package br.ufpr.inf.gres.sentinel.base.mutation;
 
+import com.google.common.base.Splitter;
+import com.google.common.collect.Iterables;
+
 import java.io.File;
 import java.util.Objects;
 
@@ -27,6 +30,10 @@ public class Program {
     public void setName(String name) {
         this.name = name;
     }
+
+	public String getSimpleName() {
+		return Iterables.getLast(Splitter.on('.').splitToList(name));
+	}
 
     public File getSourceFile() {
         return sourceFile;

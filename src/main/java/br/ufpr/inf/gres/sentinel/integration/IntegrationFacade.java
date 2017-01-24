@@ -3,7 +3,6 @@ package br.ufpr.inf.gres.sentinel.integration;
 import br.ufpr.inf.gres.sentinel.base.mutation.Mutant;
 import br.ufpr.inf.gres.sentinel.base.mutation.Operator;
 import br.ufpr.inf.gres.sentinel.base.mutation.Program;
-import br.ufpr.inf.gres.sentinel.integration.mujava.MuJavaFacade;
 
 import java.util.List;
 
@@ -29,10 +28,6 @@ public abstract class IntegrationFacade {
 
 	public static void setProgramUnderTest(Program programUnderTest) {
 		IntegrationFacade.PROGRAM_UNDER_TEST = programUnderTest;
-	}
-
-	public static IntegrationFacade createMuJavaFacade() {
-		return new MuJavaFacade();
 	}
 
 	public abstract List<Operator> getAllOperators();

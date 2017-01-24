@@ -23,10 +23,7 @@ public class IntegrationFacadeTest {
 
 	@Test
 	public void test() {
-		IntegrationFacade muJava = IntegrationFacade.createMuJavaFacade();
-		assertNotNull(muJava);
-		assertTrue(muJava instanceof MuJavaFacade);
-
+		IntegrationFacade muJava = new MuJavaFacade();
 		IntegrationFacade.setIntegrationFacade(muJava);
 		assertNotNull(IntegrationFacade.getIntegrationFacade());
 		assertTrue(IntegrationFacade.getIntegrationFacade() instanceof MuJavaFacade);
