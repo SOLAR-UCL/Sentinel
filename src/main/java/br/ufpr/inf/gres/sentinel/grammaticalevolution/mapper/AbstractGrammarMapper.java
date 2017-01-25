@@ -85,7 +85,7 @@ public abstract class AbstractGrammarMapper<T> {
 	/**
 	 * Get or create a new rule object.
 	 *
-	 * @param ruleName The rule's name.
+	 * @param ruleName The rule's fullName.
 	 *
 	 * @return The rule object.
 	 */
@@ -96,7 +96,7 @@ public abstract class AbstractGrammarMapper<T> {
 	/**
 	 * Get or create a new rule object.
 	 *
-	 * @param ruleName The rule's name.
+	 * @param ruleName The rule's fullName.
 	 *
 	 * @return The rule object.
 	 */
@@ -142,7 +142,7 @@ public abstract class AbstractGrammarMapper<T> {
 					line = Splitter.on("#").trimResults().splitToList(line).get(0);
 					// Split into rule and expressions
 					List<String> lineSplit = Splitter.on("::=").trimResults().splitToList(line);
-					// Get rule name
+					// Get rule fullName
 					String ruleName = lineSplit.get(0);
 					ruleName = CharMatcher.anyOf("<>").removeFrom(ruleName);
 					if (!ruleName.isEmpty()) {

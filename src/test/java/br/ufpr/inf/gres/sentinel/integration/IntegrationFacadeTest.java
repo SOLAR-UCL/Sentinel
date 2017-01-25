@@ -54,7 +54,7 @@ public class IntegrationFacadeTest {
 		@Override
 		public Mutant combineMutants(List<Mutant> mutantsToCombine) {
 			Mutant generatedMutant = new Mutant("", null, IntegrationFacade.getProgramUnderTest());
-			generatedMutant.setName(Joiner.on("_").join(mutantsToCombine).toString());
+			generatedMutant.setFullName(Joiner.on("_").join(mutantsToCombine).toString());
 			return generatedMutant;
 		}
 

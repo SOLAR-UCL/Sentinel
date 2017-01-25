@@ -26,7 +26,7 @@ public class Mutant extends Program {
 	}
 
 	public Mutant(Mutant mutant) {
-		this(mutant.name, mutant.sourceFile, mutant.originalProgram);
+		this(mutant.fullName, mutant.sourceFile, mutant.originalProgram);
 		this.equivalent = mutant.equivalent;
 		this.constituentMutants.addAll(mutant.constituentMutants);
 		this.killingTestCases.addAll(mutant.killingTestCases);
@@ -73,6 +73,10 @@ public class Mutant extends Program {
 		this.killingTestCases = killingTestCases;
 	}
 
+	public boolean isAlive() {
+		return killingTestCases.isEmpty();
+	}
+
 	public int getOrder() {
 		int order = getConstituentMutants().size();
 		return order == 0 ? 1 : order;
@@ -86,7 +90,7 @@ public class Mutant extends Program {
 	public int hashCode() {
 		int hash = 7;
 		hash = 11 * hash + Objects.hashCode(this.originalProgram);
-		hash = 11 * hash + Objects.hashCode(this.name);
+		hash = 11 * hash + Objects.hashCode(this.fullName);
 		return hash;
 	}
 
@@ -102,12 +106,12 @@ public class Mutant extends Program {
 			return false;
 		}
 		final Mutant other = (Mutant) obj;
-		return Objects.equals(this.originalProgram, other.originalProgram) && Objects.equals(this.name, other.name);
+		return Objects.equals(this.originalProgram, other.originalProgram) && Objects.equals(this.fullName, other.fullName);
 	}
 
 	@Override
 	public String toString() {
-		return name;
+		return fullName;
 	}
 
 }

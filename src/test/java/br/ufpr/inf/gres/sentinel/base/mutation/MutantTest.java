@@ -119,8 +119,8 @@ public class MutantTest {
 	@Test
 	public void testGetAndSetName() {
 		Mutant instance = new Mutant("Mutant1", null, IntegrationFacade.getProgramUnderTest());
-		instance.setName("MutantTest");
-		String result = instance.getName();
+		instance.setFullName("MutantTest");
+		String result = instance.getFullName();
 		assertEquals("MutantTest", result);
 	}
 
@@ -165,6 +165,14 @@ public class MutantTest {
 		instance.setKillingTestCases(setUniqueList);
 		SetUniqueList result = instance.getKillingTestCases();
 		assertEquals(setUniqueList, result);
+	}
+
+	@Test
+	public void isAlive() throws Exception {
+		Mutant instance = new Mutant("Mutant1", null, IntegrationFacade.getProgramUnderTest());
+		assertTrue(instance.isAlive());
+		instance.getKillingTestCases().add(new TestCase("TestCase"));
+		assertFalse(instance.isAlive());
 	}
 
 }

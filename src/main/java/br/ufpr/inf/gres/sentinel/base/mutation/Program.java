@@ -11,29 +11,29 @@ import java.util.Objects;
  */
 public class Program {
 
-    protected String name;
+    protected String fullName;
     protected File sourceFile;
 
-    public Program(String name, File sourceFile) {
-        this.name = name;
+    public Program(String fullName, File sourceFile) {
+        this.fullName = fullName;
         this.sourceFile = sourceFile;
     }
 
     public Program(Program program) {
-        this(program.name, program.sourceFile);
+        this(program.fullName, program.sourceFile);
     }
 
-    public String getName() {
-        return name;
+    public String getFullName() {
+        return fullName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
     }
 
 	public String getSimpleName() {
-		return Iterables.getLast(Splitter.on('.').splitToList(name));
-	}
+        return Iterables.getLast(Splitter.on('.').splitToList(fullName));
+    }
 
     public File getSourceFile() {
         return sourceFile;
@@ -46,7 +46,7 @@ public class Program {
     @Override
     public int hashCode() {
         int hash = 5;
-        hash = 31 * hash + Objects.hashCode(this.name);
+        hash = 31 * hash + Objects.hashCode(this.fullName);
         return hash;
     }
 
@@ -62,12 +62,12 @@ public class Program {
             return false;
         }
         final Program other = (Program) obj;
-        return Objects.equals(this.name, other.name);
+        return Objects.equals(this.fullName, other.fullName);
     }
 
     @Override
     public String toString() {
-        return name;
+        return fullName;
     }
 
 }

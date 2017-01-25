@@ -89,10 +89,10 @@ public class ProgramTest {
 	}
 
 	@Test
-	public void testGetAndSetName() {
+	public void testGetAndSetNameFullName() {
 		Program instance = new Program("Program1", new File("Test"));
-		instance.setName("ProgramTest");
-		String result = instance.getName();
+		instance.setFullName("ProgramTest");
+		String result = instance.getFullName();
 		assertEquals("ProgramTest", result);
 	}
 
@@ -102,6 +102,18 @@ public class ProgramTest {
 		instance.setSourceFile(new File("SourceFile"));
 		File result = instance.getSourceFile();
 		assertEquals(new File("SourceFile"), result);
+	}
+
+	@Test
+	public void getSimpleName() throws Exception {
+		Program instance = new Program("test.test.Program1", new File("Test"));
+		assertEquals("Program1", instance.getSimpleName());
+	}
+
+	@Test
+	public void getSimpleName2() throws Exception {
+		Program instance = new Program("Program1", new File("Test"));
+		assertEquals("Program1", instance.getSimpleName());
 	}
 
 }
