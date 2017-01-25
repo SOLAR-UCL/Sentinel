@@ -2,15 +2,23 @@ package br.ufpr.inf.gres.sentinel.integration.mujava;
 
 import br.ufpr.inf.gres.hg4hom.core.MutationSystem;
 import br.ufpr.inf.gres.hg4hom.core.classpath.ClassInfo;
+import br.ufpr.inf.gres.hg4hom.core.classpath.Resources;
 import br.ufpr.inf.gres.hg4hom.core.enums.MutationOperatorType;
+import br.ufpr.inf.gres.hg4hom.core.enums.MutationTestResultType;
 import br.ufpr.inf.gres.hg4hom.core.enums.operator.ClassMutationOperator;
 import br.ufpr.inf.gres.hg4hom.core.enums.operator.TraditionalMutationOperator;
+import br.ufpr.inf.gres.hg4hom.core.exceptions.NoMutantDirException;
 import br.ufpr.inf.gres.hg4hom.core.exceptions.OpenJavaException;
 import br.ufpr.inf.gres.hg4hom.core.mutation.generator.AbstractMutantsGenerator;
 import br.ufpr.inf.gres.hg4hom.core.mutation.generator.SelectionMutantsGeneratorFactory;
+import br.ufpr.inf.gres.hg4hom.core.test.execution.TestResult;
+import br.ufpr.inf.gres.hg4hom.core.test.runner.AbstractTestBuilder;
+import br.ufpr.inf.gres.hg4hom.core.test.runner.ClassMutantsBuilder;
+import br.ufpr.inf.gres.hg4hom.core.test.runner.TraditionalMutantsBuilder;
 import br.ufpr.inf.gres.sentinel.base.mutation.Mutant;
 import br.ufpr.inf.gres.sentinel.base.mutation.Operator;
 import br.ufpr.inf.gres.sentinel.base.mutation.Program;
+import br.ufpr.inf.gres.sentinel.base.mutation.TestCase;
 import br.ufpr.inf.gres.sentinel.integration.IntegrationFacade;
 import com.beust.jcommander.internal.Lists;
 
@@ -18,6 +26,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author Giovani Guizzo
@@ -82,26 +92,55 @@ public class MuJavaFacade extends IntegrationFacade {
 		}
 
 		try {
-			ClassInfo classInfo = new ClassInfo(programToBeMutated.getSourceFile(), new File(MutationSystem.SRC_PATH));
+			ClassInfo originalClass = new ClassInfo(programToBeMutated.getSourceFile(), new File(MutationSystem.SRC_PATH));
+			ClassInfo testSet = new Resources(MutationSystem.TESTSET_PATH).getClasses()
+																		  .stream()
+																		  .filter(test -> test.getClassName()
+																							  .equals(programToBeMutated
+																									  .getSimpleName() + "Test"))
+																		  .collect(Collectors.toList())
+																		  .get(0);
 
-			// [1] Examine if the target class is testable
-			if (classInfo.isTestable()) {
-				// [2] Apply mutation testing
-				// Remember: The folders are recreated!
-				MutationSystem.setMutationSystemPath(classInfo);
+			MutationSystem.setMutationSystemPath(originalClass);
 
-				List<String> mutationOperators = Lists.newArrayList(operator.getName());
+			List<String> mutationOperators = Lists.newArrayList(operator.getName());
 
-				AbstractMutantsGenerator mutantsGenerator = new SelectionMutantsGeneratorFactory().getMutantsGeneratorSelector(classInfo, mutationType, mutationOperators);
+			AbstractMutantsGenerator mutantsGenerator = new SelectionMutantsGeneratorFactory().getMutantsGeneratorSelector(originalClass, mutationType, mutationOperators);
+			mutantsGenerator.makeMutants();
+			mutantsGenerator.compileMutants();
 
-				mutantsGenerator.makeMutants();
-				mutantsGenerator.compileMutants();
+			TestResult testResult;
+			AbstractTestBuilder executor;
+			if (mutationType.equals(MutationOperatorType.TraditionalMutation)) {
+				executor = new TraditionalMutantsBuilder(testSet, originalClass);
+
+				List<String> methods = ((TraditionalMutantsBuilder) executor).getMethods();
+				for (String method : methods) {
+					MutationSystem.MUTANT_PATH = MutationSystem.TRADITIONAL_MUTANT_PATH + File.separator + method;
+					executor.runMutants(executor.getMutants()
+												.stream()
+												.filter(s -> s.startsWith(operator.getName() + "_"))
+												.collect(Collectors.toList()));
+				}
+			} else {
+				executor = new ClassMutantsBuilder(testSet, originalClass);
+
+				executor.runMutants(executor.getMutants()
+											.stream()
+											.filter(s -> s.startsWith(operator.getName() + "_"))
+											.collect(Collectors.toList()));
 			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (OpenJavaException e) {
+			testResult = executor.classifyResult();
+			for (Map.Entry<String, MutationTestResultType> entry : testResult.mutantState.entrySet()) {
+				String mutantName = entry.getKey();
+				Mutant mutant = new Mutant(mutantName, programToBeMutated.getSourceFile(), programToBeMutated);
+				mutant.getOperators().add(operator);
+				ArrayList<String> testCases = testResult.testCaseMutants.get(mutantName);
+				mutant.getKillingTestCases()
+					  .addAll(testCases.stream().map(temp -> new TestCase(temp)).collect(Collectors.toList()));
+				mutants.add(mutant);
+			}
+		} catch (IOException | OpenJavaException | NoMutantDirException e) {
 			e.printStackTrace();
 		}
 
