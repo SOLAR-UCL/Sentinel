@@ -7,8 +7,6 @@ import br.ufpr.inf.gres.hg4hom.core.enums.MutationOperatorType;
 import br.ufpr.inf.gres.hg4hom.core.enums.MutationTestResultType;
 import br.ufpr.inf.gres.hg4hom.core.enums.operator.ClassMutationOperator;
 import br.ufpr.inf.gres.hg4hom.core.enums.operator.TraditionalMutationOperator;
-import br.ufpr.inf.gres.hg4hom.core.exceptions.NoMutantDirException;
-import br.ufpr.inf.gres.hg4hom.core.exceptions.OpenJavaException;
 import br.ufpr.inf.gres.hg4hom.core.mutation.generator.AbstractMutantsGenerator;
 import br.ufpr.inf.gres.hg4hom.core.mutation.generator.SelectionMutantsGeneratorFactory;
 import br.ufpr.inf.gres.hg4hom.core.test.execution.TestResult;
@@ -23,7 +21,6 @@ import br.ufpr.inf.gres.sentinel.integration.IntegrationFacade;
 import com.beust.jcommander.internal.Lists;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -42,7 +39,8 @@ public class MuJavaFacade extends IntegrationFacade {
 	 * List of names of traditional mutation operators
 	 */
 	public static final TraditionalMutationOperator[] TM_OPERATORS = TraditionalMutationOperator.values();
-	private String systemHome;
+
+	private String muJavaHome;
 
 	//	/**
 	//	 * List of names of exception-related mutation operators
@@ -54,16 +52,16 @@ public class MuJavaFacade extends IntegrationFacade {
 	public MuJavaFacade() {
 	}
 
-	public MuJavaFacade(String systemHome) {
-		this.systemHome = systemHome;
+	public MuJavaFacade(String muJavaHome) {
+		this.muJavaHome = muJavaHome;
 	}
 
-	public String getSystemHome() {
-		return systemHome;
+	public String getMuJavaHome() {
+		return muJavaHome;
 	}
 
-	public void setSystemHome(String systemHome) {
-		this.systemHome = systemHome;
+	public void setMuJavaHome(String muJavaHome) {
+		this.muJavaHome = muJavaHome;
 	}
 
 	@Override
@@ -80,7 +78,7 @@ public class MuJavaFacade extends IntegrationFacade {
 
 	@Override
 	public List<Mutant> executeOperator(Operator operator, Program programToBeMutated) {
-		MutationSystem.setJMutationStructure(systemHome, programToBeMutated.getSimpleName());
+		MutationSystem.setJMutationStructure(muJavaHome, programToBeMutated.getSimpleName());
 
 		List<Mutant> mutants = new ArrayList<>();
 
@@ -102,6 +100,7 @@ public class MuJavaFacade extends IntegrationFacade {
 																		  .get(0);
 
 			MutationSystem.setMutationSystemPath(originalClass);
+			MutationSystem.recordInheritanceRelation();
 
 			List<String> mutationOperators = Lists.newArrayList(operator.getName());
 
@@ -140,8 +139,8 @@ public class MuJavaFacade extends IntegrationFacade {
 					  .addAll(testCases.stream().map(temp -> new TestCase(temp)).collect(Collectors.toList()));
 				mutants.add(mutant);
 			}
-		} catch (IOException | OpenJavaException | NoMutantDirException e) {
-			e.printStackTrace();
+		} catch (Exception ex) {
+			throw new RuntimeException(ex);
 		}
 
 		return mutants;
