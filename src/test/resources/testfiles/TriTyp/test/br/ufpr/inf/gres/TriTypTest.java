@@ -27,8 +27,8 @@ import static org.junit.Assert.*;
  */
 public class TriTypTest {
 
-	@Rule
-	public Timeout globalTimeout = new Timeout(2000);
+//	@Rule
+//	public Timeout globalTimeout = new Timeout(1000);
 
 	@Test(expected = IllegalArgumentException.class)
 	public void test_1() {

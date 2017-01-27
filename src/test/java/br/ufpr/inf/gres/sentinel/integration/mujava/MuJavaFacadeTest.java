@@ -5,6 +5,7 @@ import br.ufpr.inf.gres.sentinel.base.mutation.Operator;
 import br.ufpr.inf.gres.sentinel.base.mutation.Program;
 import br.ufpr.inf.gres.sentinel.integration.IntegrationFacade;
 import com.google.common.base.Stopwatch;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
@@ -112,6 +113,7 @@ public class MuJavaFacadeTest {
 	}
 
 	@Test
+	@Ignore
 	public void executeOperator6() throws Exception {
 		Program programUnderTest = new Program("br.ufpr.inf.gres.TriTyp", new File("src/test/resources/testfiles/TriTyp/src/br/ufpr/inf/gres/TriTyp.java"));
 
@@ -132,27 +134,11 @@ public class MuJavaFacadeTest {
 
 		System.out.println("Alive: " + aliveMutants.size());
 		System.out.println("Dead: " + deadMutants.size());
-		System.out.println("Time: " + stopwatch.elapsed(TimeUnit.SECONDS) + "s");
+		System.out.println("Time s: " + stopwatch.elapsed(TimeUnit.SECONDS) + "s");
+		System.out.println("Time m: " + stopwatch.elapsed(TimeUnit.MINUTES) + "m");
+		assertEquals(79, aliveMutants.size());
+		assertEquals(526, deadMutants.size());
 	}
-
-	//	@Test
-	//	public void executeOperator7() throws Exception {
-	//		Program programUnderTest = new Program("br.ufpr.inf.gres.TriTyp", new File("src/test/resources/testfiles/TriTyp/src/br/ufpr/inf/gres/TriTyp.java"));
-	//
-	//		MuJavaFacade facade = new MuJavaFacade(System.getProperty("user.dir") + File.separator + "src/test/resources/testfiles");
-	//
-	//		IntegrationFacade.setIntegrationFacade(facade);
-	//		IntegrationFacade.setProgramUnderTest(programUnderTest);
-	//
-	//		Operator operator = new Operator("PNC", "Class_P");
-	//
-	//		List<Mutant> mutants = facade.executeOperator(operator, programUnderTest);
-	//		assertEquals(39, mutants.size());
-	//		for (Mutant mutant : mutants) {
-	//			assertTrue(mutant.getOperators().contains(operator));
-	//		}
-	//		assertFalse(mutants.get(16).getKillingTestCases().isEmpty());
-	//	}
 
 	@Test
 	public void combineMutants() throws Exception {
