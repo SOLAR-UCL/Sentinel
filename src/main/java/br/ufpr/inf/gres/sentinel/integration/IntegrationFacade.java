@@ -32,7 +32,7 @@ public abstract class IntegrationFacade {
 
 	public abstract List<Operator> getAllOperators();
 
-	public abstract List<Mutant> executeOperator(Operator operator, Program programToBeMutated);
+	public abstract List<Mutant> executeOperator(Operator operator);
 
 	public abstract Mutant combineMutants(List<Mutant> mutantsToCombine);
 

@@ -3,7 +3,7 @@ package br.ufpr.inf.gres.sentinel.integration;
 import br.ufpr.inf.gres.sentinel.base.mutation.Mutant;
 import br.ufpr.inf.gres.sentinel.base.mutation.Operator;
 import br.ufpr.inf.gres.sentinel.base.mutation.Program;
-import br.ufpr.inf.gres.sentinel.integration.mujava.MuJavaFacade;
+import br.ufpr.inf.gres.sentinel.integration.mujava.HG4HOMFacade;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import org.junit.Test;
@@ -23,10 +23,10 @@ public class IntegrationFacadeTest {
 
 	@Test
 	public void test() {
-		IntegrationFacade muJava = new MuJavaFacade();
+		IntegrationFacade muJava = new HG4HOMFacade("");
 		IntegrationFacade.setIntegrationFacade(muJava);
 		assertNotNull(IntegrationFacade.getIntegrationFacade());
-		assertTrue(IntegrationFacade.getIntegrationFacade() instanceof MuJavaFacade);
+		assertTrue(IntegrationFacade.getIntegrationFacade() instanceof HG4HOMFacade);
 	}
 
 	@Test
@@ -47,7 +47,8 @@ public class IntegrationFacadeTest {
 		}
 
 		@Override
-		public List<Mutant> executeOperator(Operator operator, Program programToBeMutated) {
+		public List<Mutant> executeOperator(Operator operator) {
+			Program programToBeMutated = IntegrationFacade.getProgramUnderTest();
 			return Lists.newArrayList(new Mutant(operator + "_1", new File(operator + "_1"), programToBeMutated), new Mutant(operator + "_2", new File(operator + "_2"), programToBeMutated), new Mutant(operator + "_3", new File(operator + "_3"), programToBeMutated), new Mutant(operator + "_4", new File(operator + "_4"), programToBeMutated));
 		}
 

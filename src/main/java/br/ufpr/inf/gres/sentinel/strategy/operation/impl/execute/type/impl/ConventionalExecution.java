@@ -23,8 +23,7 @@ public class ConventionalExecution extends OperatorExecutionType {
 	public List<Mutant> doOperation(List<Operator> input) {
 		List<Mutant> result = SetUniqueList.setUniqueList(new ArrayList<>());
 		for (Operator operator : input) {
-			List<Mutant> generatedMutants = IntegrationFacade.getIntegrationFacade()
-															 .executeOperator(operator, IntegrationFacade.getProgramUnderTest());
+			List<Mutant> generatedMutants = IntegrationFacade.getIntegrationFacade().executeOperator(operator);
 			operator.getGeneratedMutants().addAll(generatedMutants);
 			result.addAll(generatedMutants);
 		}
