@@ -204,7 +204,6 @@ public class HG4HOMFacade extends IntegrationFacade {
 				return generatedHom;
 			}
 		} catch (HomException e) {
-			e.printStackTrace();
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
