@@ -31,6 +31,7 @@ import org.apache.commons.collections4.list.SetUniqueList;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -117,7 +118,7 @@ public class HG4HOMFacade extends IntegrationFacade {
 			loadedFoms.removeIf(fom -> !fom.getOperator().equals(operator.getName()));
 			for (Fom fom : loadedFoms) {
 				String mutantName = fom.getName();
-				Mutant mutant = new Mutant(mutantName, programToBeMutated.getSourceFile(), programToBeMutated);
+				Mutant mutant = new Mutant(mutantName, new File(fom.getPath()), programToBeMutated);
 				mutant.getOperators().add(operator);
 				mutants.add(mutant);
 			}
@@ -125,7 +126,7 @@ public class HG4HOMFacade extends IntegrationFacade {
 			throw new RuntimeException(ex);
 		}
 
-		mutants.sort((mutant, mutant2) -> mutant.getFullName().compareTo(mutant2.getFullName()));
+		mutants.sort(Comparator.comparing(Program::getFullName));
 		return mutants;
 	}
 
@@ -151,7 +152,7 @@ public class HG4HOMFacade extends IntegrationFacade {
 
 				MutationSystem.setMutationSystemPath(originalClass);
 
-				MutationLog<Fom> mutationLog = new MutationLog();
+				MutationLog<Fom> mutationLog = new MutationLog<>();
 				mutationLog.setPath(MutationSystem.CLASS_MUTANT_PATH);
 				ArrayList<Fom> foms = mutationLog.load(Fom[].class);
 				mutationLog.setPath(MutationSystem.TRADITIONAL_MUTANT_PATH);
