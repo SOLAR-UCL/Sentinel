@@ -36,4 +36,8 @@ public abstract class IntegrationFacade {
 
 	public abstract Mutant combineMutants(List<Mutant> mutantsToCombine);
 
+	public abstract void executeMutant(Mutant mutantToExecute);
+
+	public abstract void executeMutants(List<Mutant> mutantsToExecute);
+
 }

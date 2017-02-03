@@ -8,12 +8,12 @@ import br.ufpr.inf.gres.hg4hom.core.enums.MutationTestResultType;
 import br.ufpr.inf.gres.hg4hom.core.enums.operator.ClassMutationOperator;
 import br.ufpr.inf.gres.hg4hom.core.enums.operator.TraditionalMutationOperator;
 import br.ufpr.inf.gres.hg4hom.core.exceptions.HomException;
+import br.ufpr.inf.gres.hg4hom.core.exceptions.NoMutantDirException;
 import br.ufpr.inf.gres.hg4hom.core.mutation.generator.AbstractMutantsGenerator;
 import br.ufpr.inf.gres.hg4hom.core.mutation.generator.SelectionMutantsGeneratorFactory;
 import br.ufpr.inf.gres.hg4hom.core.mutation.type.Fom;
 import br.ufpr.inf.gres.hg4hom.core.mutation.type.Hom;
 import br.ufpr.inf.gres.hg4hom.core.test.execution.TestResult;
-import br.ufpr.inf.gres.hg4hom.core.test.runner.AbstractTestBuilder;
 import br.ufpr.inf.gres.hg4hom.core.test.runner.ClassMutantsBuilder;
 import br.ufpr.inf.gres.hg4hom.core.test.runner.TraditionalMutantsBuilder;
 import br.ufpr.inf.gres.hg4hom.core.util.mutation.MutationLog;
@@ -95,13 +95,6 @@ public class HG4HOMFacade extends IntegrationFacade {
 
 		try {
 			ClassInfo originalClass = new ClassInfo(programToBeMutated.getSourceFile(), new File(MutationSystem.SRC_PATH));
-			ClassInfo testSet = new Resources(MutationSystem.TESTSET_PATH).getClasses()
-																		  .stream()
-																		  .filter(test -> test.getClassName()
-																							  .equals(programToBeMutated
-																									  .getSimpleName() + "Test"))
-																		  .collect(Collectors.toList())
-																		  .get(0);
 
 			MutationSystem.setMutationSystemPath(originalClass);
 			MutationSystem.recordInheritanceRelation();
@@ -112,40 +105,27 @@ public class HG4HOMFacade extends IntegrationFacade {
 			mutantsGenerator.makeMutants();
 			mutantsGenerator.compileMutants();
 
-			TestResult testResult;
-			AbstractTestBuilder executor;
+			MutationLog<Fom> mutationLog = new MutationLog<>();
+			ArrayList<Fom> loadedFoms = new ArrayList<>();
 			if (mutationType.equals(MutationOperatorType.TraditionalMutation)) {
-				executor = new TraditionalMutantsBuilder(testSet, originalClass);
-
-				List<String> methods = ((TraditionalMutantsBuilder) executor).getMethods();
-				for (String method : methods) {
-					MutationSystem.MUTANT_PATH = MutationSystem.TRADITIONAL_MUTANT_PATH + File.separator + method;
-					executor.runMutants(executor.getMutants()
-												.stream()
-												.filter(s -> s.startsWith(operator.getName() + "_"))
-												.collect(Collectors.toList()));
-				}
+				MutationSystem.MUTANT_PATH = MutationSystem.TRADITIONAL_MUTANT_PATH;
 			} else {
-				executor = new ClassMutantsBuilder(testSet, originalClass);
-
-				executor.runMutants(executor.getMutants()
-											.stream()
-											.filter(s -> s.startsWith(operator.getName() + "_"))
-											.collect(Collectors.toList()));
+				MutationSystem.MUTANT_PATH = MutationSystem.CLASS_MUTANT_PATH;
 			}
-			testResult = executor.classifyResult();
-			for (Map.Entry<String, MutationTestResultType> entry : testResult.mutantState.entrySet()) {
-				String mutantName = entry.getKey();
+			mutationLog.setPath(MutationSystem.MUTANT_PATH);
+			loadedFoms.addAll(mutationLog.load(Fom[].class));
+			loadedFoms.removeIf(fom -> !fom.getOperator().equals(operator.getName()));
+			for (Fom fom : loadedFoms) {
+				String mutantName = fom.getName();
 				Mutant mutant = new Mutant(mutantName, programToBeMutated.getSourceFile(), programToBeMutated);
 				mutant.getOperators().add(operator);
-				ArrayList<String> testCases = testResult.testCaseMutants.get(mutantName);
-				mutant.getKillingTestCases().addAll(testCases.stream().map(TestCase::new).collect(Collectors.toList()));
 				mutants.add(mutant);
 			}
 		} catch (Exception ex) {
 			throw new RuntimeException(ex);
 		}
 
+		mutants.sort((mutant, mutant2) -> mutant.getFullName().compareTo(mutant2.getFullName()));
 		return mutants;
 	}
 
@@ -185,12 +165,9 @@ public class HG4HOMFacade extends IntegrationFacade {
 				HomBuilder builder = new HomBuilder(new EachChoiceStrategy(foms), originalClass, testSet);
 				Hom hom = builder.create();
 				builder.compile(hom);
-				builder.test(hom);
 
 				Mutant generatedHom = new Mutant(hom.getName(), new File(hom.getPath()), programToBeMutated);
 				generatedHom.getConstituentMutants().addAll(mutantsToCombine);
-				generatedHom.getKillingTestCases()
-							.addAll(hom.getTestCases().stream().map(TestCase::new).collect(Collectors.toList()));
 				generatedHom.getOperators()
 							.addAll(mutantsToCombine.stream()
 													.map(Mutant::getOperators)
@@ -203,11 +180,128 @@ public class HG4HOMFacade extends IntegrationFacade {
 													.get());
 				return generatedHom;
 			}
-		} catch (HomException e) {
+		} catch (HomException ignored) {
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
 		return null;
+	}
+
+	@Override
+	public void executeMutant(Mutant mutantToExecute) {
+		executeMutants(Lists.newArrayList(mutantToExecute));
+	}
+
+	@Override
+	public void executeMutants(List<Mutant> mutantsToExecute) {
+		Program programToBeMutated = IntegrationFacade.getProgramUnderTest();
+		Preconditions.checkNotNull(programToBeMutated, "Program to be Mutated cannot be null.");
+
+		MutationSystem.setJMutationStructure(muJavaHome, programToBeMutated.getSimpleName());
+
+		try {
+			ClassInfo originalClass = new ClassInfo(programToBeMutated.getSourceFile(), new File(MutationSystem.SRC_PATH));
+			ClassInfo testSet = new Resources(MutationSystem.TESTSET_PATH).getClasses()
+																		  .stream()
+																		  .filter(test -> test.getClassName()
+																							  .equals(programToBeMutated
+																									  .getSimpleName() + "Test"))
+																		  .collect(Collectors.toList())
+																		  .get(0);
+
+			MutationSystem.setMutationSystemPath(originalClass);
+
+			Map<Boolean, List<Mutant>> mutants = mutantsToExecute.stream()
+																 .collect(Collectors.groupingBy(Mutant::isHigherOrder));
+
+			// Executing HOMs
+			List<Mutant> homs = mutants.get(true);
+			if (homs != null && !homs.isEmpty()) {
+				List<String> homsNames = homs.stream().map(Program::getFullName).collect(Collectors.toList());
+
+				MutationSystem.MUTANT_PATH = MutationSystem.HIGHER_ORDER_MUTANT_PATH;
+				HomBuilder builder = new HomBuilder(new EachChoiceStrategy(new ArrayList<>()), originalClass, testSet);
+				ArrayList<Hom> allHoms = builder.loadHoms("mutation_log.json");
+				allHoms.removeIf(hom -> !homsNames.contains(hom.getName()));
+				for (Hom hom : allHoms) {
+					builder.test(hom);
+					Mutant foundHom = homs.stream()
+										  .filter(mutant -> mutant.getFullName().equals(hom.getName()))
+										  .findFirst()
+										  .get();
+					foundHom.getKillingTestCases()
+							.addAll(hom.getTestCases().stream().map(TestCase::new).collect(Collectors.toList()));
+				}
+			}
+
+			// Executing FOMs
+			List<Mutant> foms = mutants.get(false);
+			if (foms != null && !foms.isEmpty()) {
+				mutants = foms.stream()
+							  .collect(Collectors.groupingBy(mutant -> mutant.getOperators()
+																			 .get(0)
+																			 .getType()
+																			 .startsWith("Class")));
+
+				// Executing Traditional Mutants
+				List<Mutant> traditionalMutants = mutants.get(false);
+				if (traditionalMutants != null && !traditionalMutants.isEmpty()) {
+					List<String> traditionalFomsNames = traditionalMutants.stream()
+																		  .map(Program::getFullName)
+																		  .collect(Collectors.toList());
+					TraditionalMutantsBuilder traditionalMutantsBuilder = new TraditionalMutantsBuilder(testSet, originalClass);
+					List<String> methods = traditionalMutantsBuilder.getMethods();
+					for (String method : methods) {
+						MutationSystem.MUTANT_PATH = MutationSystem.TRADITIONAL_MUTANT_PATH + File.separator + method;
+						traditionalMutantsBuilder.runMutants(traditionalMutantsBuilder.getMutants()
+																					  .stream()
+																					  .filter(traditionalFomsNames::contains)
+																					  .collect(Collectors.toList()));
+					}
+					TestResult testResult = traditionalMutantsBuilder.classifyResult();
+					for (Map.Entry<String, MutationTestResultType> entry : testResult.mutantState.entrySet()) {
+						String mutantName = entry.getKey();
+						Mutant foundMutant = traditionalMutants.stream()
+															   .filter(mutant -> mutant.getFullName()
+																					   .equals(mutantName))
+															   .findFirst()
+															   .get();
+						ArrayList<String> testCases = testResult.testCaseMutants.get(mutantName);
+						foundMutant.getKillingTestCases()
+								   .addAll(testCases.stream().map(TestCase::new).collect(Collectors.toList()));
+					}
+				}
+
+				// Executing Class Mutants
+				List<Mutant> classMutants = mutants.get(true);
+				if (classMutants != null && !classMutants.isEmpty()) {
+					List<String> classFomsNames = classMutants.stream()
+															  .map(Program::getFullName)
+															  .collect(Collectors.toList());
+					ClassMutantsBuilder classMutantsBuilder = new ClassMutantsBuilder(testSet, originalClass);
+					MutationSystem.MUTANT_PATH = MutationSystem.CLASS_MUTANT_PATH;
+					classMutantsBuilder.runMutants(classMutantsBuilder.getMutants()
+																	  .stream()
+																	  .filter(classFomsNames::contains)
+																	  .collect(Collectors.toList()));
+
+					TestResult testResult = classMutantsBuilder.classifyResult();
+					for (Map.Entry<String, MutationTestResultType> entry : testResult.mutantState.entrySet()) {
+						String mutantName = entry.getKey();
+						Mutant foundMutant = classMutants.stream()
+														 .filter(mutant -> mutant.getFullName().equals(mutantName))
+														 .findFirst()
+														 .get();
+						ArrayList<String> testCases = testResult.testCaseMutants.get(mutantName);
+						foundMutant.getKillingTestCases()
+								   .addAll(testCases.stream().map(TestCase::new).collect(Collectors.toList()));
+					}
+				}
+			}
+		} catch (HomException ignored) {
+		} catch (IOException | NoMutantDirException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 }

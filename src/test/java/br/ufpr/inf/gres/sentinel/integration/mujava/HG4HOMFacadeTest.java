@@ -49,7 +49,8 @@ public class HG4HOMFacadeTest {
 		for (Mutant mutant : mutants) {
 			assertTrue(mutant.getOperators().contains(operator));
 		}
-		assertFalse(mutants.get(0).getKillingTestCases().isEmpty());
+		facade.executeMutants(mutants);
+		assertFalse(mutants.get(0).isAlive());
 	}
 
 	@Test
@@ -68,7 +69,8 @@ public class HG4HOMFacadeTest {
 		for (Mutant mutant : mutants) {
 			assertTrue(mutant.getOperators().contains(operator));
 		}
-		assertFalse(mutants.get(16).getKillingTestCases().isEmpty());
+		facade.executeMutants(mutants);
+		assertFalse(mutants.get(8).isAlive());
 	}
 
 	@Test(expected = Exception.class)
@@ -128,6 +130,7 @@ public class HG4HOMFacadeTest {
 		List<Mutant> deadMutants = new ArrayList<>();
 		for (Operator operator : facade.getAllOperators()) {
 			List<Mutant> mutants = facade.executeOperator(operator);
+			facade.executeMutants(mutants);
 			aliveMutants.addAll(mutants.stream().filter(mutant -> mutant.isAlive()).collect(Collectors.toList()));
 			deadMutants.addAll(mutants.stream().filter(mutant -> !mutant.isAlive()).collect(Collectors.toList()));
 		}
@@ -154,10 +157,14 @@ public class HG4HOMFacadeTest {
 
 		List<Mutant> mutants = facade.executeOperator(operator);
 
-		mutants = Lists.newArrayList(mutants.get(0), mutants.get(3));
+		mutants = Lists.newArrayList(mutants.get(0), mutants.stream()
+															.filter(mutant -> mutant.getFullName().equals("AMC_4"))
+															.findAny()
+															.get());
 		Mutant hom = facade.combineMutants(mutants);
-
 		assertNotNull(hom);
+
+		facade.executeMutant(hom);
 		assertEquals("AMC_1_and_AMC_4", hom.getFullName());
 		assertEquals(1, hom.getOperators().size());
 		assertEquals(2, hom.getOrder());
@@ -178,7 +185,7 @@ public class HG4HOMFacadeTest {
 		Operator operator = new Operator("AMC", "Class_A");
 
 		List<Mutant> mutants = facade.executeOperator(operator);
-		mutants = Lists.newArrayList(mutants.get(0), mutants.get(1));
+		mutants = Lists.newArrayList(mutants.get(0), mutants.get(11));
 
 		Mutant hom = facade.combineMutants(mutants);
 		assertNull(hom);
@@ -203,10 +210,14 @@ public class HG4HOMFacadeTest {
 
 		List<Mutant> mutants = facade.executeOperator(operator);
 
-		mutants = Lists.newArrayList(mutants.get(0), mutants.get(16));
+		mutants = Lists.newArrayList(mutants.get(0), mutants.stream()
+															.filter(mutant -> mutant.getFullName().equals("AMC_17"))
+															.findAny()
+															.get());
 		Mutant hom = facade.combineMutants(mutants);
-
 		assertNotNull(hom);
+
+		facade.executeMutant(hom);
 		assertEquals("AMC_1_and_AMC_17", hom.getFullName());
 		assertEquals(1, hom.getOperators().size());
 		assertEquals(2, hom.getOrder());
@@ -230,10 +241,14 @@ public class HG4HOMFacadeTest {
 		operator = new Operator("LOI", "Traditional_L");
 		mutants.addAll(facade.executeOperator(operator));
 
-		mutants = Lists.newArrayList(mutants.get(0), mutants.get(39));
+		mutants = Lists.newArrayList(mutants.get(0), mutants.stream()
+															.filter(mutant -> mutant.getFullName().equals("LOI_1"))
+															.findAny()
+															.get());
 		Mutant hom = facade.combineMutants(mutants);
-
 		assertNotNull(hom);
+
+		facade.executeMutant(hom);
 		assertEquals("AMC_1_and_LOI_1", hom.getFullName());
 		assertEquals(2, hom.getOperators().size());
 		assertEquals(2, hom.getOrder());

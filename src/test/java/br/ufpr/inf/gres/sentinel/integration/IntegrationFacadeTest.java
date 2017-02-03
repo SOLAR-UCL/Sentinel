@@ -3,6 +3,7 @@ package br.ufpr.inf.gres.sentinel.integration;
 import br.ufpr.inf.gres.sentinel.base.mutation.Mutant;
 import br.ufpr.inf.gres.sentinel.base.mutation.Operator;
 import br.ufpr.inf.gres.sentinel.base.mutation.Program;
+import br.ufpr.inf.gres.sentinel.base.mutation.TestCase;
 import br.ufpr.inf.gres.sentinel.integration.mujava.HG4HOMFacade;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
@@ -57,6 +58,18 @@ public class IntegrationFacadeTest {
 			Mutant generatedMutant = new Mutant("", null, IntegrationFacade.getProgramUnderTest());
 			generatedMutant.setFullName(Joiner.on("_").join(mutantsToCombine).toString());
 			return generatedMutant;
+		}
+
+		@Override
+		public void executeMutant(Mutant mutantToExecute) {
+			executeMutants(Lists.newArrayList(mutantToExecute));
+		}
+
+		@Override
+		public void executeMutants(List<Mutant> mutantsToExecute) {
+			for (Mutant mutant : mutantsToExecute) {
+				mutant.getKillingTestCases().add(new TestCase(mutant.getFullName() + "_TEST"));
+			}
 		}
 
 	}
