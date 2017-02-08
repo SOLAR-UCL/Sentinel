@@ -4,13 +4,13 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>br.ufpr.inf.gres</groupId>
     <artifactId>Sentinel</artifactId>
-    <version>0.1-BETA</version>
+    <version>1.0</version>
     <packaging>jar</packaging>
     <dependencies>
         <dependency>
             <groupId>org.uma.jmetal</groupId>
-            <artifactId>jmetal-exec</artifactId>
-            <version>5.1</version>
+            <artifactId>jmetal-algorithm</artifactId>
+            <version>5.2</version>
             <classifier>jar-with-dependencies</classifier>
         </dependency>
         <dependency>
@@ -53,7 +53,6 @@
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/hg4hom-2.0-SNAPSHOT.jar</systemPath>
         </dependency>
-
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
@@ -97,26 +96,6 @@
             <artifactId>commons-lang3</artifactId>
             <version>3.4</version>
         </dependency>
-        <!--<dependency>-->
-        <!--<groupId>org.uma.jmetal</groupId>-->
-        <!--<artifactId>jmetal-algorithm</artifactId>-->
-        <!--<version>5.2-SNAPSHOT</version>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-        <!--<groupId>org.uma.jmetal</groupId>-->
-        <!--<artifactId>jmetal-core</artifactId>-->
-        <!--<version>5.2-SNAPSHOT</version>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-        <!--<groupId>org.uma.jmetal</groupId>-->
-        <!--<artifactId>jmetal-problem</artifactId>-->
-        <!--<version>5.2-SNAPSHOT</version>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-        <!--<groupId>org.uma.jmetal</groupId>-->
-        <!--<artifactId>jmetal-exec</artifactId>-->
-        <!--<version>5.2-SNAPSHOT</version>-->
-        <!--</dependency>  -->
         <dependency>
             <groupId>commons-collections</groupId>
             <artifactId>commons-collections</artifactId>
@@ -141,7 +120,6 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-configuration2</artifactId>
             <version>2.1</version>
-            <!--<classifier>test-sources</classifier>-->
         </dependency>
         <dependency>
             <groupId>commons-beanutils</groupId>
@@ -193,29 +171,29 @@
                 </includes>
             </testResource>
         </testResources>
-        <!--<plugins>-->
-        <!--<plugin>-->
-        <!--<artifactId>maven-assembly-plugin</artifactId>-->
-        <!--<configuration>-->
-        <!--<archive>-->
-        <!--<manifest>-->
-        <!--<mainClass>fully.qualified.MainClass</mainClass>-->
-        <!--</manifest>-->
-        <!--</archive>-->
-        <!--<descriptorRefs>-->
-        <!--<descriptorRef>jar-with-dependencies</descriptorRef>-->
-        <!--</descriptorRefs>-->
-        <!--</configuration>-->
-        <!--<executions>-->
-        <!--<execution>-->
-        <!--<id>make-assembly</id>-->
-        <!--<phase>package</phase>-->
-        <!--<goals>-->
-        <!--<goal>single</goal>-->
-        <!--</goals>-->
-        <!--</execution>-->
-        <!--</executions>-->
-        <!--</plugin>-->
-        <!--</plugins>-->
+        <plugins>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>fully.qualified.MainClass</mainClass>
+                        </manifest>
+                    </archive>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
     </build>
 </project>
