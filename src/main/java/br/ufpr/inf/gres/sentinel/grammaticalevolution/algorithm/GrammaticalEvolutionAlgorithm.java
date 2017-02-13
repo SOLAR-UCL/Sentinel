@@ -1,62 +1,95 @@
 package br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm;
 
-import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.representation.VariableLengthIntegerSolution;
-import org.uma.jmetal.algorithm.impl.AbstractGeneticAlgorithm;
-import org.uma.jmetal.problem.Problem;
+import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.operators.duplicate.DuplicateOperator;
+import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.operators.prune.PruneOperator;
+import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.problem.AbstractVariableLengthProblem;
+import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.representation.VariableLengthSolution;
+import org.uma.jmetal.algorithm.multiobjective.nsgaii.NSGAII;
+import org.uma.jmetal.operator.CrossoverOperator;
+import org.uma.jmetal.operator.MutationOperator;
+import org.uma.jmetal.operator.SelectionOperator;
+import org.uma.jmetal.util.evaluator.SolutionListEvaluator;
 
 import java.util.List;
 
 /**
  * @author Giovani Guizzo
  */
-public class GrammaticalEvolutionAlgorithm extends AbstractGeneticAlgorithm<VariableLengthIntegerSolution, List<VariableLengthIntegerSolution>> {
+public class GrammaticalEvolutionAlgorithm<T> extends NSGAII<VariableLengthSolution<T>> {
+
+	private final PruneOperator<VariableLengthSolution<T>> pruneOperator;
+	private final DuplicateOperator<VariableLengthSolution<T>> duplicateOperator;
 
 	/**
 	 * Constructor
 	 *
-	 * @param problem The problem to solve
+	 * @param problem
+	 * @param maxEvaluations
+	 * @param populationSize
+	 * @param crossoverOperator
+	 * @param mutationOperator
+	 * @param selectionOperator
+	 * @param evaluator
 	 */
-	public GrammaticalEvolutionAlgorithm(Problem<VariableLengthIntegerSolution> problem) {
-		super(problem);
+	public GrammaticalEvolutionAlgorithm(AbstractVariableLengthProblem<T> problem,
+										 int maxEvaluations,
+										 int populationSize,
+										 DuplicateOperator<VariableLengthSolution<T>> duplicateOperator,
+										 PruneOperator<VariableLengthSolution<T>> pruneOperator,
+										 CrossoverOperator<VariableLengthSolution<T>> crossoverOperator,
+										 MutationOperator<VariableLengthSolution<T>> mutationOperator,
+										 SelectionOperator<List<VariableLengthSolution<T>>, VariableLengthSolution<T>> selectionOperator,
+										 SolutionListEvaluator<VariableLengthSolution<T>> evaluator) {
+		super(problem,
+			  maxEvaluations,
+			  populationSize,
+			  crossoverOperator,
+			  mutationOperator,
+			  selectionOperator,
+			  evaluator);
+		this.pruneOperator = pruneOperator;
+		this.duplicateOperator = duplicateOperator;
+	}
+
+	private List<VariableLengthSolution<T>> duplicate(List<VariableLengthSolution<T>> population) {
+		for (VariableLengthSolution<T> solution : population) {
+			duplicateOperator.execute(solution);
+		}
+		return population;
+	}
+
+	private List<VariableLengthSolution<T>> prune(List<VariableLengthSolution<T>> population) {
+		for (VariableLengthSolution<T> solution : population) {
+			pruneOperator.execute(solution);
+		}
+		return population;
 	}
 
 	@Override
-	protected void initProgress() {
+	public void run() {
+		this.setPopulation(this.createInitialPopulation());
+		this.setPopulation(this.evaluatePopulation(this.getPopulation()));
+		this.initProgress();
 
-	}
-
-	@Override
-	protected void updateProgress() {
-
-	}
-
-	@Override
-	protected boolean isStoppingConditionReached() {
-		return false;
-	}
-
-	@Override
-	protected List<VariableLengthIntegerSolution> evaluatePopulation(List<VariableLengthIntegerSolution> population) {
-		return null;
-	}
-
-	@Override
-	protected List<VariableLengthIntegerSolution> replacement(List<VariableLengthIntegerSolution> population, List<VariableLengthIntegerSolution> offspringPopulation) {
-		return null;
-	}
-
-	@Override
-	public List<VariableLengthIntegerSolution> getResult() {
-		return null;
+		while (!this.isStoppingConditionReached()) {
+			List<VariableLengthSolution<T>> matingPopulation = this.selection(this.getPopulation());
+			List<VariableLengthSolution<T>> offspringPopulation = this.reproduction(matingPopulation);
+			offspringPopulation = this.prune(offspringPopulation);
+			offspringPopulation = this.duplicate(offspringPopulation);
+			offspringPopulation = this.evaluatePopulation(offspringPopulation);
+			this.setPopulation(this.replacement(this.getPopulation(), offspringPopulation));
+			this.updateProgress();
+		}
 	}
 
 	@Override
 	public String getName() {
-		return null;
+		return "GE-NSGA-II";
 	}
 
 	@Override
 	public String getDescription() {
-		return null;
+		return "Multi-Objective Grammatical Evolution Algorithm based on NSGA-II";
 	}
+
 }
