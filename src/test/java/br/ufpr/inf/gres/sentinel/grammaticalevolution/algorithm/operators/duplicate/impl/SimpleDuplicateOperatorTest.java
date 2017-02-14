@@ -27,7 +27,14 @@ public class SimpleDuplicateOperatorTest {
 	@BeforeClass
 	public static void setUpClass() throws IOException {
 		randomGenerator = JMetalRandom.getInstance();
-		problem = new MutationStrategyGenerationProblem(GrammarFiles.getDefaultGrammarPath(), 10, 15, 1, 10, 2);
+		problem = new MutationStrategyGenerationProblem(GrammarFiles.getDefaultGrammarPath(),
+														10,
+														15,
+														1,
+														10,
+														2,
+														1,
+														null);
 	}
 
 	@AfterClass
@@ -106,8 +113,7 @@ public class SimpleDuplicateOperatorTest {
 				10,
 				10,
 				1,
-				10,
-				2));
+				10, 2, 1, null));
 		SimpleDuplicateOperator<Integer> duplicateOperator = new SimpleDuplicateOperator<>(1.0, 10);
 		solution = duplicateOperator.execute(solution);
 		assertEquals(10, solution.getNumberOfVariables());

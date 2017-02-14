@@ -95,14 +95,18 @@ public class HG4HOMFacade extends IntegrationFacade {
 		}
 
 		try {
-			ClassInfo originalClass = new ClassInfo(programToBeMutated.getSourceFile(), new File(MutationSystem.SRC_PATH));
+			ClassInfo originalClass = new ClassInfo(programToBeMutated.getSourceFile(),
+													new File(MutationSystem.SRC_PATH));
 
 			MutationSystem.setMutationSystemPath(originalClass);
 			MutationSystem.recordInheritanceRelation();
 
 			List<String> mutationOperators = Lists.newArrayList(operator.getName());
 
-			AbstractMutantsGenerator mutantsGenerator = new SelectionMutantsGeneratorFactory().getMutantsGeneratorSelector(originalClass, mutationType, mutationOperators);
+			AbstractMutantsGenerator mutantsGenerator = new SelectionMutantsGeneratorFactory().getMutantsGeneratorSelector(
+					originalClass,
+					mutationType,
+					mutationOperators);
 			mutantsGenerator.makeMutants();
 			mutantsGenerator.compileMutants();
 
@@ -133,20 +137,24 @@ public class HG4HOMFacade extends IntegrationFacade {
 	@Override
 	public Mutant combineMutants(List<Mutant> mutantsToCombine) {
 		Preconditions.checkNotNull(mutantsToCombine, "Mutant List cannot be null.");
-		Preconditions.checkArgument(mutantsToCombine.size() == 2, "There must be exactly 2 mutants in the list. Unfortunately, more than 2 mutants is not supported right now. Found mutants: " + mutantsToCombine
-				.size() + ".");
+		Preconditions.checkArgument(mutantsToCombine.size() == 2,
+									"There must be exactly 2 mutants in the list. Unfortunately, more than 2 mutants is not supported right now. Found mutants: " +
+									mutantsToCombine.size() +
+									".");
 
 		try {
 			if (mutantsToCombine.stream().noneMatch(Mutant::isHigherOrder)) {
 				Program programToBeMutated = IntegrationFacade.getProgramUnderTest();
 				MutationSystem.setJMutationStructure(muJavaHome, programToBeMutated.getSimpleName());
 
-				ClassInfo originalClass = new ClassInfo(programToBeMutated.getSourceFile(), new File(MutationSystem.SRC_PATH));
+				ClassInfo originalClass = new ClassInfo(programToBeMutated.getSourceFile(),
+														new File(MutationSystem.SRC_PATH));
 				ClassInfo testSet = new Resources(MutationSystem.TESTSET_PATH).getClasses()
 																			  .stream()
 																			  .filter(test -> test.getClassName()
 																								  .equals(programToBeMutated
-																										  .getSimpleName() + "Test"))
+																												  .getSimpleName() +
+																										  "Test"))
 																			  .collect(Collectors.toList())
 																			  .get(0);
 
@@ -201,12 +209,14 @@ public class HG4HOMFacade extends IntegrationFacade {
 		MutationSystem.setJMutationStructure(muJavaHome, programToBeMutated.getSimpleName());
 
 		try {
-			ClassInfo originalClass = new ClassInfo(programToBeMutated.getSourceFile(), new File(MutationSystem.SRC_PATH));
+			ClassInfo originalClass = new ClassInfo(programToBeMutated.getSourceFile(),
+													new File(MutationSystem.SRC_PATH));
 			ClassInfo testSet = new Resources(MutationSystem.TESTSET_PATH).getClasses()
 																		  .stream()
 																		  .filter(test -> test.getClassName()
 																							  .equals(programToBeMutated
-																									  .getSimpleName() + "Test"))
+																											  .getSimpleName() +
+																									  "Test"))
 																		  .collect(Collectors.toList())
 																		  .get(0);
 
@@ -250,7 +260,8 @@ public class HG4HOMFacade extends IntegrationFacade {
 					List<String> traditionalFomsNames = traditionalMutants.stream()
 																		  .map(Program::getFullName)
 																		  .collect(Collectors.toList());
-					TraditionalMutantsBuilder traditionalMutantsBuilder = new TraditionalMutantsBuilder(testSet, originalClass);
+					TraditionalMutantsBuilder traditionalMutantsBuilder = new TraditionalMutantsBuilder(testSet,
+																										originalClass);
 					List<String> methods = traditionalMutantsBuilder.getMethods();
 					for (String method : methods) {
 						MutationSystem.MUTANT_PATH = MutationSystem.TRADITIONAL_MUTANT_PATH + File.separator + method;

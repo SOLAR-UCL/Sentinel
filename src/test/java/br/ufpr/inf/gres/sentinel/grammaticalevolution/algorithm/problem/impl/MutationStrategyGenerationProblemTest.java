@@ -16,7 +16,14 @@ public class MutationStrategyGenerationProblemTest {
 
 	@BeforeClass
 	public static void setUp() throws Exception {
-		problem = new MutationStrategyGenerationProblem(GrammarFiles.getDefaultGrammarPath(), 10, 15, 1, 10, 2);
+		problem = new MutationStrategyGenerationProblem(GrammarFiles.getDefaultGrammarPath(),
+														10,
+														15,
+														1,
+														10,
+														2,
+														1,
+														null);
 	}
 
 	@Test

@@ -25,7 +25,14 @@ public class SimplePruneOperatorTest {
 	@BeforeClass
 	public static void setUpClass() throws IOException {
 		randomGenerator = JMetalRandom.getInstance();
-		problem = new MutationStrategyGenerationProblem(GrammarFiles.getDefaultGrammarPath(), 10, 15, 1, 10, 2);
+		problem = new MutationStrategyGenerationProblem(GrammarFiles.getDefaultGrammarPath(),
+														10,
+														15,
+														1,
+														10,
+														2,
+														1,
+														null);
 	}
 
 	@AfterClass
