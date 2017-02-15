@@ -2,7 +2,6 @@ package br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.representation.
 
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.problem.AbstractVariableLengthIntegerProblem;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.representation.VariableLengthSolution;
-import org.uma.jmetal.solution.Solution;
 
 /**
  * @author Giovani Guizzo
@@ -28,7 +27,7 @@ public class DefaultVariableLengthIntegerSolution extends VariableLengthSolution
 	}
 
 	@Override
-	public Solution<Integer> copy() {
+	public DefaultVariableLengthIntegerSolution copy() {
 		return new DefaultVariableLengthIntegerSolution(this);
 	}
 }

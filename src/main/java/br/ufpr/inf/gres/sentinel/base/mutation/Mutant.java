@@ -114,4 +114,7 @@ public class Mutant extends Program {
 		return fullName;
 	}
 
+	public boolean isDead() {
+		return !isAlive();
+	}
 }

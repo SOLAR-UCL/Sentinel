@@ -173,6 +173,7 @@ public class MutantTest {
 		assertTrue(instance.isAlive());
 		instance.getKillingTestCases().add(new TestCase("TestCase"));
 		assertFalse(instance.isAlive());
+		assertTrue(instance.isDead());
 	}
 
 }

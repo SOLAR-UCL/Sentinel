@@ -78,4 +78,6 @@ public abstract class VariableLengthSolution<T> extends AbstractGenericSolution<
 		return variables.size();
 	}
 
+	public abstract VariableLengthSolution<T> copy();
+
 }

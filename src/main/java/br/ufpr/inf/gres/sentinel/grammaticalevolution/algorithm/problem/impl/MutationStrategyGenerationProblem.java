@@ -89,14 +89,6 @@ public class MutationStrategyGenerationProblem implements AbstractVariableLength
 		return "Mutation Strategy Generation Problem";
 	}
 
-	public int getNumberOfStrategyRuns() {
-		return numberOfStrategyRuns;
-	}
-
-	public List<Program> getTestPrograms() {
-		return testPrograms;
-	}
-
 	@Override
 	public void evaluate(VariableLengthSolution<Integer> solution) {
 		try {
@@ -115,8 +107,9 @@ public class MutationStrategyGenerationProblem implements AbstractVariableLength
 					integrationFacade.executeMutants(mutants);
 					stopwatch.stop();
 					// Summing the elapsed time
-					elapsedMs += (double) stopwatch.elapsed(TimeUnit.MILLISECONDS) /
-								 integrationFacade.getConventionalMutationTime(testProgram, TimeUnit.MILLISECONDS);
+					elapsedMs +=
+							(double) stopwatch.elapsed(TimeUnit.NANOSECONDS) /
+							integrationFacade.getConventionalMutationTime(testProgram, TimeUnit.NANOSECONDS);
 					// Summing the number of mutants
 					numberOfMutants += (double) mutants.size() /
 									   integrationFacade.getConventionalQuantityOfMutants(testProgram);
@@ -157,7 +150,7 @@ public class MutationStrategyGenerationProblem implements AbstractVariableLength
 		if (tempStrategy == null) {
 			List<Integer> variables = solution.getVariablesCopy();
 			Iterable<Integer> variablesIterator = Iterables.limit(Iterables.cycle(variables),
-																  variables.size() * maxWraps);
+																  variables.size() * (maxWraps + 1));
 			tempStrategy = strategyMapper.interpret(variablesIterator);
 			solution.setAttribute("Strategy", tempStrategy);
 		}

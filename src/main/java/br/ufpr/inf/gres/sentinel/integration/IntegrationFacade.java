@@ -5,26 +5,24 @@ import br.ufpr.inf.gres.sentinel.base.mutation.Operator;
 import br.ufpr.inf.gres.sentinel.base.mutation.Program;
 import br.ufpr.inf.gres.sentinel.base.mutation.TestCase;
 import com.google.common.base.Stopwatch;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
-import org.apache.commons.collections4.list.SetUniqueList;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * @author Giovani Guizzo
  */
 public abstract class IntegrationFacade {
 
-	private static final HashMap<Program, Long> conventionalExecutionTimes = new HashMap<>();
-	private static final HashMap<Program, Integer> conventionalQuantities = new HashMap<>();
-	private static final HashMap<Program, Double> conventionalScores = new HashMap<>();
-	private static final HashMap<Program, List<Mutant>> conventionalMutants = new HashMap<>();
 	private static IntegrationFacade FACADE_INSTANCE;
 	private static Program PROGRAM_UNDER_TEST;
+	private final HashMap<Program, Long> conventionalExecutionTimes = new HashMap<>();
+	private final HashMap<Program, Integer> conventionalQuantities = new HashMap<>();
+	private final HashMap<Program, Double> conventionalScores = new HashMap<>();
+	private final HashMap<Program, List<Mutant>> conventionalMutants = new HashMap<>();
 
 	public static IntegrationFacade getIntegrationFacade() {
 		return FACADE_INSTANCE;
@@ -68,13 +66,12 @@ public abstract class IntegrationFacade {
 			runConventionalStrategy(program);
 		}
 		List<Mutant> mutants = new ArrayList<>(conventionalMutants.get(program));
-		double relativeScore = mutants.size();
-		mutants.retainAll(testCases.stream()
-								   .map(TestCase::getKillingMutants)
-								   .reduce((mutants1, mutants2) -> SetUniqueList.setUniqueList(Lists.newArrayList(
-										   Iterables.concat(mutants1, mutants2))))
-								   .get());
-		return (double) mutants.size() / relativeScore;
+		int originalSize = mutants.size();
+		mutants =
+				mutants.stream()
+					   .filter(mutant -> mutant.getKillingTestCases().stream().anyMatch(testCases::contains))
+					   .collect(Collectors.toList());
+		return (double) mutants.size() / originalSize;
 	}
 
 	protected void runConventionalStrategy(Program program) {
@@ -90,9 +87,9 @@ public abstract class IntegrationFacade {
 		stopwatch.stop();
 		conventionalExecutionTimes.put(program, stopwatch.elapsed(TimeUnit.NANOSECONDS));
 		conventionalQuantities.put(program, allMutants.size());
-		long numberOfDeadMutants = allMutants.stream().filter(mutant -> !mutant.isAlive()).count();
+		long numberOfDeadMutants = allMutants.stream().filter(Mutant::isDead).count();
 		conventionalScores.put(program, (double) numberOfDeadMutants / (double) allMutants.size());
-		conventionalMutants.put(program, allMutants);
+		conventionalMutants.put(program, allMutants.stream().filter(Mutant::isDead).collect(Collectors.toList()));
 		IntegrationFacade.setProgramUnderTest(tempProgram);
 	}
 

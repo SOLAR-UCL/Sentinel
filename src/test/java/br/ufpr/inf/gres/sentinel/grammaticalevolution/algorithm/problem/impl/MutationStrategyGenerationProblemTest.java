@@ -1,9 +1,17 @@
 package br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.problem.impl;
 
+import br.ufpr.inf.gres.sentinel.base.mutation.Program;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.representation.VariableLengthSolution;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.GrammarFiles;
-import org.junit.BeforeClass;
+import br.ufpr.inf.gres.sentinel.integration.IntegrationFacade;
+import br.ufpr.inf.gres.sentinel.integration.IntegrationFacadeTest;
+import br.ufpr.inf.gres.sentinel.integration.mujava.HG4HOMFacade;
+import com.google.common.collect.Lists;
+import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
+
+import java.io.File;
 
 import static org.junit.Assert.*;
 
@@ -14,16 +22,17 @@ public class MutationStrategyGenerationProblemTest {
 
 	private static MutationStrategyGenerationProblem problem;
 
-	@BeforeClass
-	public static void setUp() throws Exception {
+	@Before
+	public void setUp() throws Exception {
 		problem = new MutationStrategyGenerationProblem(GrammarFiles.getDefaultGrammarPath(),
 														10,
 														15,
 														1,
 														10,
-														2,
-														1,
-														null);
+														0,
+														5,
+														Lists.newArrayList(new Program("Test1", null),
+																		   new Program("Test2", null)));
 	}
 
 	@Test
@@ -60,8 +69,68 @@ public class MutationStrategyGenerationProblemTest {
 
 	@Test
 	public void evaluate() throws Exception {
-		//TODO implement it
-		problem.evaluate(null);
+		IntegrationFacade.setIntegrationFacade(new IntegrationFacadeTest.IntegrationFacadeStub());
+		VariableLengthSolution<Integer> solution = problem.createSolution();
+		solution.clearVariables();
+		solution.addAllVariables(Lists.newArrayList(0, 2, 1, 0, 0, 1, 9, 3));
+		problem.evaluate(solution);
+		assertNotNull(solution.getAttribute("Strategy"));
+		assertTrue(solution.getObjective(0) > 0);
+		assertEquals(1, solution.getObjective(1), 0.000001);
+		assertEquals(1, solution.getObjective(2), 0.000001);
+	}
+
+	@Test
+	public void evaluate2() throws Exception {
+		IntegrationFacade.setIntegrationFacade(new IntegrationFacadeTest.IntegrationFacadeStub());
+		VariableLengthSolution<Integer> solution = problem.createSolution();
+		solution.clearVariables();
+		solution.addAllVariables(Lists.newArrayList(0, 2, 1, 0, 0, 1, 9));
+		problem.evaluate(solution);
+		assertNull(solution.getAttribute("Strategy"));
+		assertEquals(Double.MAX_VALUE, solution.getObjective(0), 0.0001);
+		assertEquals(Double.MAX_VALUE, solution.getObjective(1), 0.000001);
+		assertEquals(-1, solution.getObjective(2), 0.000001);
+	}
+
+	@Test
+	@Ignore
+	public void evaluate3() throws Exception {
+		Program
+				programUnderTest =
+				new Program("br.ufpr.inf.gres.TriTyp",
+							new File("src/test/resources/testfiles/TriTyp/src/br/ufpr/inf/gres/TriTyp.java"));
+		problem =
+				new MutationStrategyGenerationProblem(GrammarFiles.getDefaultGrammarPath(),
+													  15,
+													  100,
+													  0,
+													  179,
+													  0,
+													  1,
+													  Lists.newArrayList(programUnderTest));
+
+		HG4HOMFacade
+				facade =
+				new HG4HOMFacade(System.getProperty("user.dir") + File.separator + "src/test/resources/testfiles");
+
+		IntegrationFacade.setIntegrationFacade(facade);
+		IntegrationFacade.setProgramUnderTest(programUnderTest);
+
+		VariableLengthSolution<Integer> solution = problem.createSolution();
+		solution.clearVariables();
+		solution.addAllVariables(Lists.newArrayList(0, 2, 1, 0, 0, 1, 9, 3));
+		problem.evaluate(solution);
+
+		System.out.println(solution.getAttribute("Strategy"));
+		System.out.println("Objective 1\t(time)\texp > 0:\t" + solution.getObjective(0));
+		System.out.println("Objective 2\t(quantity)\texp = 1:\t" + solution.getObjective(1));
+		System.out.println("Objective 3\t(score):\texp = 1:\t" + solution.getObjective(2));
+
+		assertNotNull(solution.getAttribute("Strategy"));
+		assertTrue(solution.getObjective(0) > 0);
+		assertEquals(1, solution.getObjective(1), 0.000001);
+		assertEquals(1, solution.getObjective(2), 0.000001);
 	}
 
 	@Test

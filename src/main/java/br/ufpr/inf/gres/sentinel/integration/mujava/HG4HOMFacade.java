@@ -242,6 +242,9 @@ public class HG4HOMFacade extends IntegrationFacade {
 										  .get();
 					foundHom.getKillingTestCases()
 							.addAll(hom.getTestCases().stream().map(TestCase::new).collect(Collectors.toList()));
+					for (TestCase testCase : foundHom.getKillingTestCases()) {
+						testCase.getKillingMutants().add(foundHom);
+					}
 				}
 			}
 
@@ -270,18 +273,7 @@ public class HG4HOMFacade extends IntegrationFacade {
 																					  .filter(traditionalFomsNames::contains)
 																					  .collect(Collectors.toList()));
 					}
-					TestResult testResult = traditionalMutantsBuilder.classifyResult();
-					for (Map.Entry<String, MutationTestResultType> entry : testResult.mutantState.entrySet()) {
-						String mutantName = entry.getKey();
-						Mutant foundMutant = traditionalMutants.stream()
-															   .filter(mutant -> mutant.getFullName()
-																					   .equals(mutantName))
-															   .findFirst()
-															   .get();
-						ArrayList<String> testCases = testResult.testCaseMutants.get(mutantName);
-						foundMutant.getKillingTestCases()
-								   .addAll(testCases.stream().map(TestCase::new).collect(Collectors.toList()));
-					}
+					computeTestResults(traditionalMutants, traditionalMutantsBuilder.classifyResult());
 				}
 
 				// Executing Class Mutants
@@ -297,22 +289,27 @@ public class HG4HOMFacade extends IntegrationFacade {
 																	  .filter(classFomsNames::contains)
 																	  .collect(Collectors.toList()));
 
-					TestResult testResult = classMutantsBuilder.classifyResult();
-					for (Map.Entry<String, MutationTestResultType> entry : testResult.mutantState.entrySet()) {
-						String mutantName = entry.getKey();
-						Mutant foundMutant = classMutants.stream()
-														 .filter(mutant -> mutant.getFullName().equals(mutantName))
-														 .findFirst()
-														 .get();
-						ArrayList<String> testCases = testResult.testCaseMutants.get(mutantName);
-						foundMutant.getKillingTestCases()
-								   .addAll(testCases.stream().map(TestCase::new).collect(Collectors.toList()));
-					}
+					computeTestResults(classMutants, classMutantsBuilder.classifyResult());
 				}
 			}
 		} catch (HomException ignored) {
 		} catch (IOException | NoMutantDirException e) {
 			throw new RuntimeException(e);
+		}
+	}
+
+	private void computeTestResults(List<Mutant> mutants, TestResult testResult) {
+		for (Map.Entry<String, MutationTestResultType> entry : testResult.mutantState.entrySet()) {
+			String mutantName = entry.getKey();
+			Mutant
+					foundMutant =
+					mutants.stream().filter(mutant -> mutant.getFullName().equals(mutantName)).findFirst().get();
+			ArrayList<String> testCases = testResult.testCaseMutants.get(mutantName);
+			foundMutant.getKillingTestCases()
+					   .addAll(testCases.stream().map(TestCase::new).collect(Collectors.toList()));
+			for (TestCase testCase : foundMutant.getKillingTestCases()) {
+				testCase.getKillingMutants().add(foundMutant);
+			}
 		}
 	}
 
