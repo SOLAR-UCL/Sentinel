@@ -84,6 +84,16 @@ public class IntegrationFacadeTest {
 		}
 
 		@Override
+		public List<Program> instantiatePrograms(List<String> programNames) {
+			return null;
+		}
+
+		@Override
+		public Program instantiateProgram(String programName) {
+			return null;
+		}
+
+		@Override
 		public List<Operator> getAllOperators() {
 			return Lists.newArrayList(new Operator("Operator1", "Type1"),
 									  new Operator("Operator2", "Type1"),

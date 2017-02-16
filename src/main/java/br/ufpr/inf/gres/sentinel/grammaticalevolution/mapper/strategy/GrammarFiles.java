@@ -1,5 +1,7 @@
 package br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy;
 
+import com.google.common.base.CharMatcher;
+
 import java.io.File;
 
 /**
@@ -15,7 +17,7 @@ public class GrammarFiles {
 	}
 
 	public static void setWorkingDirectory(String workingDirectory) {
-		WORKING_DIRECTORY = workingDirectory;
+		WORKING_DIRECTORY = CharMatcher.anyOf("\\/").replaceFrom(workingDirectory, File.separator);
 	}
 
 	public static String getDefaultGrammarPath() {

@@ -26,6 +26,68 @@ public class HG4HOMFacadeTest {
 	}
 
 	@Test
+	public void instantiateProgram() throws Exception {
+		HG4HOMFacade facade = new HG4HOMFacade(System.getProperty("user.dir") + File.separator + "training");
+		Program program = facade.instantiateProgram("test.test.Program");
+		assertNotNull(program);
+		assertEquals(System.getProperty("user.dir") +
+					 File.separator +
+					 "training" +
+					 File.separator +
+					 "src" +
+					 File.separator +
+					 "test" +
+					 File.separator +
+					 "test" +
+					 File.separator +
+					 "Program.java", program.getSourceFile().getAbsolutePath());
+	}
+
+	@Test
+	public void instantiateProgram2() throws Exception {
+		HG4HOMFacade facade = new HG4HOMFacade(System.getProperty("user.dir") + File.separator + "training");
+		Program program = facade.instantiateProgram("test/test/Program.java");
+		assertNotNull(program);
+		assertEquals(System.getProperty("user.dir") +
+					 File.separator +
+					 "training" +
+					 File.separator +
+					 "src" +
+					 File.separator +
+					 "test" +
+					 File.separator +
+					 "test" +
+					 File.separator +
+					 "Program.java", program.getSourceFile().getAbsolutePath());
+	}
+
+	@Test
+	public void instantiatePrograms() throws Exception {
+		HG4HOMFacade facade = new HG4HOMFacade(System.getProperty("user.dir") + File.separator + "training");
+		List<Program> program = facade.instantiatePrograms(Lists.newArrayList("test.test.Program", "Program2"));
+		assertNotNull(program);
+		assertFalse(program.isEmpty());
+		assertEquals(System.getProperty("user.dir") +
+					 File.separator +
+					 "training" +
+					 File.separator +
+					 "src" +
+					 File.separator +
+					 "test" +
+					 File.separator +
+					 "test" +
+					 File.separator +
+					 "Program.java", program.get(0).getSourceFile().getAbsolutePath());
+		assertEquals(System.getProperty("user.dir") +
+					 File.separator +
+					 "training" +
+					 File.separator +
+					 "src" +
+					 File.separator +
+					 "Program2.java", program.get(1).getSourceFile().getAbsolutePath());
+	}
+
+	@Test
 	public void getAllOperators() throws Exception {
 		IntegrationFacade muJavaFacade = new HG4HOMFacade("");
 		List<Operator> allOperators = muJavaFacade.getAllOperators();
@@ -37,7 +99,7 @@ public class HG4HOMFacadeTest {
 	public void executeOperator() throws Exception {
 		Program
 				programUnderTest =
-				new Program("br.ufpr.inf.gres.TriTyp", new File("training/TriTyp/src/br/ufpr/inf/gres/TriTyp.java"));
+				new Program("br.ufpr.inf.gres.TriTyp", new File("training/src/br/ufpr/inf/gres/TriTyp.java"));
 
 		HG4HOMFacade facade = new HG4HOMFacade(System.getProperty("user.dir") + File.separator + "training");
 
@@ -59,7 +121,7 @@ public class HG4HOMFacadeTest {
 	public void executeOperator2() throws Exception {
 		Program
 				programUnderTest =
-				new Program("br.ufpr.inf.gres.TriTyp", new File("training/TriTyp/src/br/ufpr/inf/gres/TriTyp.java"));
+				new Program("br.ufpr.inf.gres.TriTyp", new File("training/src/br/ufpr/inf/gres/TriTyp.java"));
 
 		HG4HOMFacade facade = new HG4HOMFacade(System.getProperty("user.dir") + File.separator + "training");
 
@@ -79,9 +141,7 @@ public class HG4HOMFacadeTest {
 
 	@Test(expected = Exception.class)
 	public void executeOperator3() throws Exception {
-		Program
-				programUnderTest =
-				new Program("test.Unknown", new File("training/TriTyp/src/br/ufpr/inf/gres/TriTyp.java"));
+		Program programUnderTest = new Program("test.Unknown", new File("training/src/br/ufpr/inf/gres/TriTyp.java"));
 
 		HG4HOMFacade facade = new HG4HOMFacade(System.getProperty("user.dir") + File.separator + "training");
 
@@ -111,7 +171,7 @@ public class HG4HOMFacadeTest {
 	public void executeOperator5() throws Exception {
 		Program
 				programUnderTest =
-				new Program("br.ufpr.inf.gres.TriTyp", new File("training/TriTyp/src/br/ufpr/inf/gres/TriTyp.java"));
+				new Program("br.ufpr.inf.gres.TriTyp", new File("training/src/br/ufpr/inf/gres/TriTyp.java"));
 
 		HG4HOMFacade facade = new HG4HOMFacade(System.getProperty("user.dir") + File.separator + "training/wrongPath");
 
@@ -128,7 +188,7 @@ public class HG4HOMFacadeTest {
 	public void executeOperator6() throws Exception {
 		Program
 				programUnderTest =
-				new Program("br.ufpr.inf.gres.TriTyp", new File("training/TriTyp/src/br/ufpr/inf/gres/TriTyp.java"));
+				new Program("br.ufpr.inf.gres.TriTyp", new File("training/src/br/ufpr/inf/gres/TriTyp.java"));
 
 		HG4HOMFacade facade = new HG4HOMFacade(System.getProperty("user.dir") + File.separator + "training");
 
@@ -158,7 +218,7 @@ public class HG4HOMFacadeTest {
 	public void combineMutants() throws Exception {
 		Program
 				programUnderTest =
-				new Program("br.ufpr.inf.gres.TriTyp", new File("training/TriTyp/src/br/ufpr/inf/gres/TriTyp.java"));
+				new Program("br.ufpr.inf.gres.TriTyp", new File("training/src/br/ufpr/inf/gres/TriTyp.java"));
 
 		HG4HOMFacade facade = new HG4HOMFacade(System.getProperty("user.dir") + File.separator + "training");
 
@@ -191,7 +251,7 @@ public class HG4HOMFacadeTest {
 	public void combineMutants2() throws Exception {
 		Program
 				programUnderTest =
-				new Program("br.ufpr.inf.gres.TriTyp", new File("training/TriTyp/src/br/ufpr/inf/gres/TriTyp.java"));
+				new Program("br.ufpr.inf.gres.TriTyp", new File("training/src/br/ufpr/inf/gres/TriTyp.java"));
 
 		HG4HOMFacade facade = new HG4HOMFacade(System.getProperty("user.dir") + File.separator + "training");
 
@@ -217,7 +277,7 @@ public class HG4HOMFacadeTest {
 	public void combineMutants3() throws Exception {
 		Program
 				programUnderTest =
-				new Program("br.ufpr.inf.gres.TriTyp", new File("training/TriTyp/src/br/ufpr/inf/gres/TriTyp.java"));
+				new Program("br.ufpr.inf.gres.TriTyp", new File("training/src/br/ufpr/inf/gres/TriTyp.java"));
 
 		HG4HOMFacade facade = new HG4HOMFacade(System.getProperty("user.dir") + File.separator + "training");
 
@@ -250,7 +310,7 @@ public class HG4HOMFacadeTest {
 	public void combineMutants4() throws Exception {
 		Program
 				programUnderTest =
-				new Program("br.ufpr.inf.gres.TriTyp", new File("training/TriTyp/src/br/ufpr/inf/gres/TriTyp.java"));
+				new Program("br.ufpr.inf.gres.TriTyp", new File("training/src/br/ufpr/inf/gres/TriTyp.java"));
 
 		HG4HOMFacade facade = new HG4HOMFacade(System.getProperty("user.dir") + File.separator + "training");
 

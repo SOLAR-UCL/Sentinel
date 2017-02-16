@@ -6,7 +6,44 @@
     <artifactId>Sentinel</artifactId>
     <version>1.0</version>
     <packaging>jar</packaging>
+    <repositories>
+        <repository>
+            <id>ProjectRepo</id>
+            <name>ProjectRepo</name>
+            <url>file://${project.basedir}/lib</url>
+        </repository>
+    </repositories>
     <dependencies>
+        <dependency>
+            <groupId>hg4hom</groupId>
+            <artifactId>hg4hom</artifactId>
+            <version>2.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>openjava</groupId>
+            <artifactId>openjava</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>evosuite</groupId>
+            <artifactId>evosuite</artifactId>
+            <version>1.0.3</version>
+        </dependency>
+        <dependency>
+            <groupId>hymo</groupId>
+            <artifactId>hymo</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>tools</groupId>
+            <artifactId>tools</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.5</version>
+        </dependency>
         <dependency>
             <groupId>org.uma.jmetal</groupId>
             <artifactId>jmetal-algorithm</artifactId>
@@ -45,46 +82,6 @@
             <artifactId>selenium-java</artifactId>
             <scope>test</scope>
             <version>2.44.0</version>
-        </dependency>
-        <dependency>
-            <groupId>hg4hom</groupId>
-            <artifactId>hg4hom</artifactId>
-            <version>2.0</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/hg4hom-2.0-SNAPSHOT.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-            <version>2.5</version>
-        </dependency>
-        <dependency>
-            <groupId>openjava</groupId>
-            <artifactId>openjava</artifactId>
-            <version>1.0</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/openjava-1.0.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>evosuite</groupId>
-            <artifactId>evosuite</artifactId>
-            <version>1.0.3</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/evosuite-1.0.3.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>hymo</groupId>
-            <artifactId>hymo</artifactId>
-            <version>1.0</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/hymo-1.0.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>tools</groupId>
-            <artifactId>tools</artifactId>
-            <version>1.0</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/tools-1.0.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>com.google.code.gson</groupId>
@@ -161,6 +158,9 @@
             </resource>
             <resource>
                 <directory>training</directory>
+                <excludes>
+                    <exclude>result/**</exclude>
+                </excludes>
             </resource>
         </resources>
         <testResources>
@@ -169,15 +169,30 @@
             </testResource>
             <testResource>
                 <directory>training</directory>
+                <excludes>
+                    <exclude>result/**</exclude>
+                </excludes>
             </testResource>
         </testResources>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <mainClass>br.ufpr.inf.gres.sentinel.main.cli.Sentinel</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>br.ufpr.inf.gres.sentinel.main.Sentinel</mainClass>
+                            <mainClass>br.ufpr.inf.gres.sentinel.main.cli.Sentinel</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>

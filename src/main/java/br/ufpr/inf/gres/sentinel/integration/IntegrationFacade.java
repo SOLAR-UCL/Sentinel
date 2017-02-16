@@ -93,6 +93,10 @@ public abstract class IntegrationFacade {
 		IntegrationFacade.setProgramUnderTest(tempProgram);
 	}
 
+	public abstract List<Program> instantiatePrograms(List<String> programNames);
+
+	public abstract Program instantiateProgram(String programName);
+
 	public abstract List<Operator> getAllOperators();
 
 	public abstract List<Mutant> executeOperator(Operator operator);

@@ -24,6 +24,7 @@ import br.ufpr.inf.gres.sentinel.base.mutation.Operator;
 import br.ufpr.inf.gres.sentinel.base.mutation.Program;
 import br.ufpr.inf.gres.sentinel.base.mutation.TestCase;
 import br.ufpr.inf.gres.sentinel.integration.IntegrationFacade;
+import com.google.common.base.CharMatcher;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import org.apache.commons.collections4.list.SetUniqueList;
@@ -55,6 +56,7 @@ public class HG4HOMFacade extends IntegrationFacade {
 
 	public HG4HOMFacade(String muJavaHome) {
 		this.muJavaHome = muJavaHome;
+		MutationSystem.setJMutationStructureWithoutSession(muJavaHome);
 	}
 
 	public String getMuJavaHome() {
@@ -63,6 +65,7 @@ public class HG4HOMFacade extends IntegrationFacade {
 
 	public void setMuJavaHome(String muJavaHome) {
 		this.muJavaHome = muJavaHome;
+		MutationSystem.setJMutationStructureWithoutSession(muJavaHome);
 	}
 
 	@Override
@@ -83,8 +86,6 @@ public class HG4HOMFacade extends IntegrationFacade {
 		Preconditions.checkNotNull(operator, "Operator cannot be null.");
 		Preconditions.checkNotNull(programToBeMutated, "Program to be Mutated cannot be null.");
 
-		MutationSystem.setJMutationStructure(muJavaHome, programToBeMutated.getSimpleName());
-
 		List<Mutant> mutants = new ArrayList<>();
 
 		MutationOperatorType mutationType;
@@ -95,18 +96,23 @@ public class HG4HOMFacade extends IntegrationFacade {
 		}
 
 		try {
-			ClassInfo originalClass = new ClassInfo(programToBeMutated.getSourceFile(),
-													new File(MutationSystem.SRC_PATH));
+			ClassInfo
+					originalClass =
+					new ClassInfo(programToBeMutated.getSourceFile(), new File(MutationSystem.SRC_PATH));
+
+			Preconditions.checkArgument(programToBeMutated.getFullName().equals(originalClass.getWholeClassName()),
+										"Program name do not match its source file.");
 
 			MutationSystem.setMutationSystemPath(originalClass);
 			MutationSystem.recordInheritanceRelation();
 
 			List<String> mutationOperators = Lists.newArrayList(operator.getName());
 
-			AbstractMutantsGenerator mutantsGenerator = new SelectionMutantsGeneratorFactory().getMutantsGeneratorSelector(
-					originalClass,
-					mutationType,
-					mutationOperators);
+			AbstractMutantsGenerator
+					mutantsGenerator =
+					new SelectionMutantsGeneratorFactory().getMutantsGeneratorSelector(originalClass,
+																					   mutationType,
+																					   mutationOperators);
 			mutantsGenerator.makeMutants();
 			mutantsGenerator.compileMutants();
 
@@ -145,18 +151,19 @@ public class HG4HOMFacade extends IntegrationFacade {
 		try {
 			if (mutantsToCombine.stream().noneMatch(Mutant::isHigherOrder)) {
 				Program programToBeMutated = IntegrationFacade.getProgramUnderTest();
-				MutationSystem.setJMutationStructure(muJavaHome, programToBeMutated.getSimpleName());
 
-				ClassInfo originalClass = new ClassInfo(programToBeMutated.getSourceFile(),
-														new File(MutationSystem.SRC_PATH));
-				ClassInfo testSet = new Resources(MutationSystem.TESTSET_PATH).getClasses()
-																			  .stream()
-																			  .filter(test -> test.getClassName()
-																								  .equals(programToBeMutated
-																												  .getSimpleName() +
-																										  "Test"))
-																			  .collect(Collectors.toList())
-																			  .get(0);
+				ClassInfo
+						originalClass =
+						new ClassInfo(programToBeMutated.getSourceFile(), new File(MutationSystem.SRC_PATH));
+				ClassInfo
+						testSet =
+						new Resources(MutationSystem.TESTSET_PATH).getClasses()
+																  .stream()
+																  .filter(test -> test.getClassName()
+																					  .equals(programToBeMutated.getSimpleName() +
+																							  "Test"))
+																  .collect(Collectors.toList())
+																  .get(0);
 
 				MutationSystem.setMutationSystemPath(originalClass);
 
@@ -165,9 +172,9 @@ public class HG4HOMFacade extends IntegrationFacade {
 				ArrayList<Fom> foms = mutationLog.load(Fom[].class);
 				mutationLog.setPath(MutationSystem.TRADITIONAL_MUTANT_PATH);
 				foms.addAll(mutationLog.load(Fom[].class));
-				List<String> mutantNames = mutantsToCombine.stream()
-														   .map(Program::getFullName)
-														   .collect(Collectors.toList());
+				List<String>
+						mutantNames =
+						mutantsToCombine.stream().map(Program::getFullName).collect(Collectors.toList());
 				foms.removeIf(fom -> !mutantNames.contains(fom.getName()));
 
 				MutationSystem.MUTANT_PATH = MutationSystem.HIGHER_ORDER_MUTANT_PATH;
@@ -181,7 +188,9 @@ public class HG4HOMFacade extends IntegrationFacade {
 							.addAll(mutantsToCombine.stream()
 													.map(Mutant::getOperators)
 													.reduce((operators, operators2) -> {
-														SetUniqueList<Operator> union = SetUniqueList.setUniqueList(new ArrayList<>());
+														SetUniqueList<Operator>
+																union =
+																SetUniqueList.setUniqueList(new ArrayList<>());
 														union.addAll(operators);
 														union.addAll(operators2);
 														return union;
@@ -206,24 +215,25 @@ public class HG4HOMFacade extends IntegrationFacade {
 		Program programToBeMutated = IntegrationFacade.getProgramUnderTest();
 		Preconditions.checkNotNull(programToBeMutated, "Program to be Mutated cannot be null.");
 
-		MutationSystem.setJMutationStructure(muJavaHome, programToBeMutated.getSimpleName());
-
 		try {
-			ClassInfo originalClass = new ClassInfo(programToBeMutated.getSourceFile(),
-													new File(MutationSystem.SRC_PATH));
-			ClassInfo testSet = new Resources(MutationSystem.TESTSET_PATH).getClasses()
-																		  .stream()
-																		  .filter(test -> test.getClassName()
-																							  .equals(programToBeMutated
-																											  .getSimpleName() +
-																									  "Test"))
-																		  .collect(Collectors.toList())
-																		  .get(0);
+			ClassInfo
+					originalClass =
+					new ClassInfo(programToBeMutated.getSourceFile(), new File(MutationSystem.SRC_PATH));
+			ClassInfo
+					testSet =
+					new Resources(MutationSystem.TESTSET_PATH).getClasses()
+															  .stream()
+															  .filter(test -> test.getClassName()
+																				  .equals(programToBeMutated.getSimpleName() +
+																						  "Test"))
+															  .collect(Collectors.toList())
+															  .get(0);
 
 			MutationSystem.setMutationSystemPath(originalClass);
 
-			Map<Boolean, List<Mutant>> mutants = mutantsToExecute.stream()
-																 .collect(Collectors.groupingBy(Mutant::isHigherOrder));
+			Map<Boolean, List<Mutant>>
+					mutants =
+					mutantsToExecute.stream().collect(Collectors.groupingBy(Mutant::isHigherOrder));
 
 			// Executing HOMs
 			List<Mutant> homs = mutants.get(true);
@@ -236,10 +246,12 @@ public class HG4HOMFacade extends IntegrationFacade {
 				allHoms.removeIf(hom -> !homsNames.contains(hom.getName()));
 				for (Hom hom : allHoms) {
 					builder.test(hom);
-					Mutant foundHom = homs.stream()
-										  .filter(mutant -> mutant.getFullName().equals(hom.getName()))
-										  .findFirst()
-										  .get();
+					Mutant
+							foundHom =
+							homs.stream()
+								.filter(mutant -> mutant.getFullName().equals(hom.getName()))
+								.findFirst()
+								.get();
 					foundHom.getKillingTestCases()
 							.addAll(hom.getTestCases().stream().map(TestCase::new).collect(Collectors.toList()));
 					for (TestCase testCase : foundHom.getKillingTestCases()) {
@@ -251,20 +263,22 @@ public class HG4HOMFacade extends IntegrationFacade {
 			// Executing FOMs
 			List<Mutant> foms = mutants.get(false);
 			if (foms != null && !foms.isEmpty()) {
-				mutants = foms.stream()
-							  .collect(Collectors.groupingBy(mutant -> mutant.getOperators()
-																			 .get(0)
-																			 .getType()
-																			 .startsWith("Class")));
+				mutants =
+						foms.stream()
+							.collect(Collectors.groupingBy(mutant -> mutant.getOperators()
+																		   .get(0)
+																		   .getType()
+																		   .startsWith("Class")));
 
 				// Executing Traditional Mutants
 				List<Mutant> traditionalMutants = mutants.get(false);
 				if (traditionalMutants != null && !traditionalMutants.isEmpty()) {
-					List<String> traditionalFomsNames = traditionalMutants.stream()
-																		  .map(Program::getFullName)
-																		  .collect(Collectors.toList());
-					TraditionalMutantsBuilder traditionalMutantsBuilder = new TraditionalMutantsBuilder(testSet,
-																										originalClass);
+					List<String>
+							traditionalFomsNames =
+							traditionalMutants.stream().map(Program::getFullName).collect(Collectors.toList());
+					TraditionalMutantsBuilder
+							traditionalMutantsBuilder =
+							new TraditionalMutantsBuilder(testSet, originalClass);
 					List<String> methods = traditionalMutantsBuilder.getMethods();
 					for (String method : methods) {
 						MutationSystem.MUTANT_PATH = MutationSystem.TRADITIONAL_MUTANT_PATH + File.separator + method;
@@ -279,9 +293,9 @@ public class HG4HOMFacade extends IntegrationFacade {
 				// Executing Class Mutants
 				List<Mutant> classMutants = mutants.get(true);
 				if (classMutants != null && !classMutants.isEmpty()) {
-					List<String> classFomsNames = classMutants.stream()
-															  .map(Program::getFullName)
-															  .collect(Collectors.toList());
+					List<String>
+							classFomsNames =
+							classMutants.stream().map(Program::getFullName).collect(Collectors.toList());
 					ClassMutantsBuilder classMutantsBuilder = new ClassMutantsBuilder(testSet, originalClass);
 					MutationSystem.MUTANT_PATH = MutationSystem.CLASS_MUTANT_PATH;
 					classMutantsBuilder.runMutants(classMutantsBuilder.getMutants()
@@ -313,4 +327,19 @@ public class HG4HOMFacade extends IntegrationFacade {
 		}
 	}
 
+	@Override
+	public List<Program> instantiatePrograms(List<String> programNames) {
+		List<Program> programs = new ArrayList<>();
+		for (String programName : programNames) {
+			programs.add(instantiateProgram(programName));
+		}
+		return programs;
+	}
+
+	@Override
+	public Program instantiateProgram(String programName) {
+		String replace = programName.replace(".java", "");
+		replace = CharMatcher.anyOf("\\/.").replaceFrom(replace, File.separator);
+		return new Program(programName, new File(MutationSystem.SRC_PATH + File.separator + replace + ".java"));
+	}
 }
