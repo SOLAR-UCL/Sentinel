@@ -9,7 +9,7 @@ import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.problem.impl.Mut
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.representation.VariableLengthSolution;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.GrammarFiles;
 import br.ufpr.inf.gres.sentinel.integration.IntegrationFacade;
-import br.ufpr.inf.gres.sentinel.integration.mujava.HG4HOMFacade;
+import br.ufpr.inf.gres.sentinel.integration.hg4hom.HG4HOMFacade;
 import com.google.common.collect.Lists;
 import org.junit.BeforeClass;
 import org.junit.Test;

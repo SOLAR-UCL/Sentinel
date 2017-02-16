@@ -6,7 +6,7 @@ import br.ufpr.inf.gres.sentinel.base.solution.Solution;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.AbstractGrammarMapperTest;
 import br.ufpr.inf.gres.sentinel.integration.IntegrationFacade;
 import br.ufpr.inf.gres.sentinel.integration.IntegrationFacadeTest;
-import br.ufpr.inf.gres.sentinel.integration.mujava.HG4HOMFacade;
+import br.ufpr.inf.gres.sentinel.integration.hg4hom.HG4HOMFacade;
 import br.ufpr.inf.gres.sentinel.strategy.Strategy;
 import br.ufpr.inf.gres.sentinel.strategy.operation.Operation;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.defaults.AddAllOperatorsOperation;

@@ -1,26 +1,34 @@
 package br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy;
 
-import java.net.URISyntaxException;
+import java.io.File;
 
 /**
  * @author Giovani Guizzo
  */
 public class GrammarFiles {
 
-	private static String DEFAULT_GRAMMAR;
+	public static final String DEFAULT_GRAMMAR = "default";
 
-	static {
-		try {
-			DEFAULT_GRAMMAR = ClassLoader.getSystemResource("default_grammar.bnf").toURI().getPath();
-		} catch (URISyntaxException ex) {
-		}
-	}
+	private static String WORKING_DIRECTORY = System.getProperty("user.dir");
 
 	private GrammarFiles() {
 	}
 
-	public static String getDefaultGrammarPath() {
-		return DEFAULT_GRAMMAR;
+	public static void setWorkingDirectory(String workingDirectory) {
+		WORKING_DIRECTORY = workingDirectory;
 	}
 
+	public static String getDefaultGrammarPath() {
+		return getGrammarPath(GrammarFiles.DEFAULT_GRAMMAR);
+	}
+
+	public static String getGrammarPath(String grammarName) {
+		String directory = WORKING_DIRECTORY + File.separator + "grammars" + File.separator;
+		switch (grammarName.toLowerCase()) {
+			case DEFAULT_GRAMMAR:
+				return directory + "default_grammar.bnf";
+			default:
+				throw new IllegalArgumentException("Grammar " + grammarName + " not recognized.");
+		}
+	}
 }

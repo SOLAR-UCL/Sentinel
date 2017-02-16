@@ -4,7 +4,7 @@ import br.ufpr.inf.gres.sentinel.base.mutation.Mutant;
 import br.ufpr.inf.gres.sentinel.base.mutation.Operator;
 import br.ufpr.inf.gres.sentinel.base.mutation.Program;
 import br.ufpr.inf.gres.sentinel.base.mutation.TestCase;
-import br.ufpr.inf.gres.sentinel.integration.mujava.HG4HOMFacade;
+import br.ufpr.inf.gres.sentinel.integration.hg4hom.HG4HOMFacade;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import org.junit.Test;

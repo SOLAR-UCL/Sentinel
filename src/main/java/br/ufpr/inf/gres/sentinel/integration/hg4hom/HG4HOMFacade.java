@@ -1,4 +1,4 @@
-package br.ufpr.inf.gres.sentinel.integration.mujava;
+package br.ufpr.inf.gres.sentinel.integration.hg4hom;
 
 import br.ufpr.inf.gres.hg4hom.core.MutationSystem;
 import br.ufpr.inf.gres.hg4hom.core.classpath.ClassInfo;

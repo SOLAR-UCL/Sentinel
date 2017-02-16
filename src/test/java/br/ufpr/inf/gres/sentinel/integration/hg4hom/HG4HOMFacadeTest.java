@@ -1,4 +1,4 @@
-package br.ufpr.inf.gres.sentinel.integration.mujava;
+package br.ufpr.inf.gres.sentinel.integration.hg4hom;
 
 import br.ufpr.inf.gres.sentinel.base.mutation.Mutant;
 import br.ufpr.inf.gres.sentinel.base.mutation.Operator;
@@ -35,9 +35,11 @@ public class HG4HOMFacadeTest {
 
 	@Test
 	public void executeOperator() throws Exception {
-		Program programUnderTest = new Program("br.ufpr.inf.gres.TriTyp", new File("src/test/resources/testfiles/TriTyp/src/br/ufpr/inf/gres/TriTyp.java"));
+		Program
+				programUnderTest =
+				new Program("br.ufpr.inf.gres.TriTyp", new File("training/TriTyp/src/br/ufpr/inf/gres/TriTyp.java"));
 
-		HG4HOMFacade facade = new HG4HOMFacade(System.getProperty("user.dir") + File.separator + "src/test/resources/testfiles");
+		HG4HOMFacade facade = new HG4HOMFacade(System.getProperty("user.dir") + File.separator + "training");
 
 		IntegrationFacade.setIntegrationFacade(facade);
 		IntegrationFacade.setProgramUnderTest(programUnderTest);
@@ -55,9 +57,11 @@ public class HG4HOMFacadeTest {
 
 	@Test
 	public void executeOperator2() throws Exception {
-		Program programUnderTest = new Program("br.ufpr.inf.gres.TriTyp", new File("src/test/resources/testfiles/TriTyp/src/br/ufpr/inf/gres/TriTyp.java"));
+		Program
+				programUnderTest =
+				new Program("br.ufpr.inf.gres.TriTyp", new File("training/TriTyp/src/br/ufpr/inf/gres/TriTyp.java"));
 
-		HG4HOMFacade facade = new HG4HOMFacade(System.getProperty("user.dir") + File.separator + "src/test/resources/testfiles");
+		HG4HOMFacade facade = new HG4HOMFacade(System.getProperty("user.dir") + File.separator + "training");
 
 		IntegrationFacade.setIntegrationFacade(facade);
 		IntegrationFacade.setProgramUnderTest(programUnderTest);
@@ -75,9 +79,11 @@ public class HG4HOMFacadeTest {
 
 	@Test(expected = Exception.class)
 	public void executeOperator3() throws Exception {
-		Program programUnderTest = new Program("test.Unknown", new File("src/test/resources/testfiles/TriTyp/src/br/ufpr/inf/gres/TriTyp.java"));
+		Program
+				programUnderTest =
+				new Program("test.Unknown", new File("training/TriTyp/src/br/ufpr/inf/gres/TriTyp.java"));
 
-		HG4HOMFacade facade = new HG4HOMFacade(System.getProperty("user.dir") + File.separator + "src/test/resources/testfiles");
+		HG4HOMFacade facade = new HG4HOMFacade(System.getProperty("user.dir") + File.separator + "training");
 
 		IntegrationFacade.setIntegrationFacade(facade);
 		IntegrationFacade.setProgramUnderTest(programUnderTest);
@@ -89,9 +95,9 @@ public class HG4HOMFacadeTest {
 
 	@Test(expected = Exception.class)
 	public void executeOperator4() throws Exception {
-		Program programUnderTest = new Program("br.ufpr.inf.gres.TriTyp", new File("wrongPath"));
+		Program programUnderTest = new Program("br.ufpr.inf.gres.TriTyp", new File("training/wrongPath"));
 
-		HG4HOMFacade facade = new HG4HOMFacade(System.getProperty("user.dir") + File.separator + "src/test/resources/testfiles");
+		HG4HOMFacade facade = new HG4HOMFacade(System.getProperty("user.dir") + File.separator + "training");
 
 		IntegrationFacade.setIntegrationFacade(facade);
 		IntegrationFacade.setProgramUnderTest(programUnderTest);
@@ -103,9 +109,11 @@ public class HG4HOMFacadeTest {
 
 	@Test(expected = Exception.class)
 	public void executeOperator5() throws Exception {
-		Program programUnderTest = new Program("br.ufpr.inf.gres.TriTyp", new File("src/test/resources/testfiles/TriTyp/src/br/ufpr/inf/gres/TriTyp.java"));
+		Program
+				programUnderTest =
+				new Program("br.ufpr.inf.gres.TriTyp", new File("training/TriTyp/src/br/ufpr/inf/gres/TriTyp.java"));
 
-		HG4HOMFacade facade = new HG4HOMFacade(System.getProperty("user.dir") + File.separator + "wrongPath");
+		HG4HOMFacade facade = new HG4HOMFacade(System.getProperty("user.dir") + File.separator + "training/wrongPath");
 
 		IntegrationFacade.setIntegrationFacade(facade);
 		IntegrationFacade.setProgramUnderTest(programUnderTest);
@@ -118,9 +126,11 @@ public class HG4HOMFacadeTest {
 	@Test
 	@Ignore
 	public void executeOperator6() throws Exception {
-		Program programUnderTest = new Program("br.ufpr.inf.gres.TriTyp", new File("src/test/resources/testfiles/TriTyp/src/br/ufpr/inf/gres/TriTyp.java"));
+		Program
+				programUnderTest =
+				new Program("br.ufpr.inf.gres.TriTyp", new File("training/TriTyp/src/br/ufpr/inf/gres/TriTyp.java"));
 
-		HG4HOMFacade facade = new HG4HOMFacade(System.getProperty("user.dir") + File.separator + "src/test/resources/testfiles");
+		HG4HOMFacade facade = new HG4HOMFacade(System.getProperty("user.dir") + File.separator + "training");
 
 		IntegrationFacade.setIntegrationFacade(facade);
 		IntegrationFacade.setProgramUnderTest(programUnderTest);
@@ -131,8 +141,8 @@ public class HG4HOMFacadeTest {
 		for (Operator operator : facade.getAllOperators()) {
 			List<Mutant> mutants = facade.executeOperator(operator);
 			facade.executeMutants(mutants);
-			aliveMutants.addAll(mutants.stream().filter(mutant -> mutant.isAlive()).collect(Collectors.toList()));
-			deadMutants.addAll(mutants.stream().filter(mutant -> !mutant.isAlive()).collect(Collectors.toList()));
+			aliveMutants.addAll(mutants.stream().filter(Mutant::isAlive).collect(Collectors.toList()));
+			deadMutants.addAll(mutants.stream().filter(Mutant::isDead).collect(Collectors.toList()));
 		}
 		stopwatch.stop();
 
@@ -146,9 +156,11 @@ public class HG4HOMFacadeTest {
 
 	@Test
 	public void combineMutants() throws Exception {
-		Program programUnderTest = new Program("br.ufpr.inf.gres.TriTyp", new File("src/test/resources/testfiles/TriTyp/src/br/ufpr/inf/gres/TriTyp.java"));
+		Program
+				programUnderTest =
+				new Program("br.ufpr.inf.gres.TriTyp", new File("training/TriTyp/src/br/ufpr/inf/gres/TriTyp.java"));
 
-		HG4HOMFacade facade = new HG4HOMFacade(System.getProperty("user.dir") + File.separator + "src/test/resources/testfiles");
+		HG4HOMFacade facade = new HG4HOMFacade(System.getProperty("user.dir") + File.separator + "training");
 
 		IntegrationFacade.setIntegrationFacade(facade);
 		IntegrationFacade.setProgramUnderTest(programUnderTest);
@@ -157,10 +169,12 @@ public class HG4HOMFacadeTest {
 
 		List<Mutant> mutants = facade.executeOperator(operator);
 
-		mutants = Lists.newArrayList(mutants.get(0), mutants.stream()
-															.filter(mutant -> mutant.getFullName().equals("AMC_4"))
-															.findAny()
-															.get());
+		mutants =
+				Lists.newArrayList(mutants.get(0),
+								   mutants.stream()
+										  .filter(mutant -> mutant.getFullName().equals("AMC_4"))
+										  .findAny()
+										  .get());
 		Mutant hom = facade.combineMutants(mutants);
 		assertNotNull(hom);
 
@@ -175,9 +189,11 @@ public class HG4HOMFacadeTest {
 
 	@Test(expected = Exception.class)
 	public void combineMutants2() throws Exception {
-		Program programUnderTest = new Program("br.ufpr.inf.gres.TriTyp", new File("src/test/resources/testfiles/TriTyp/src/br/ufpr/inf/gres/TriTyp.java"));
+		Program
+				programUnderTest =
+				new Program("br.ufpr.inf.gres.TriTyp", new File("training/TriTyp/src/br/ufpr/inf/gres/TriTyp.java"));
 
-		HG4HOMFacade facade = new HG4HOMFacade(System.getProperty("user.dir") + File.separator + "src/test/resources/testfiles");
+		HG4HOMFacade facade = new HG4HOMFacade(System.getProperty("user.dir") + File.separator + "training");
 
 		IntegrationFacade.setIntegrationFacade(facade);
 		IntegrationFacade.setProgramUnderTest(programUnderTest);
@@ -199,9 +215,11 @@ public class HG4HOMFacadeTest {
 
 	@Test
 	public void combineMutants3() throws Exception {
-		Program programUnderTest = new Program("br.ufpr.inf.gres.TriTyp", new File("src/test/resources/testfiles/TriTyp/src/br/ufpr/inf/gres/TriTyp.java"));
+		Program
+				programUnderTest =
+				new Program("br.ufpr.inf.gres.TriTyp", new File("training/TriTyp/src/br/ufpr/inf/gres/TriTyp.java"));
 
-		HG4HOMFacade facade = new HG4HOMFacade(System.getProperty("user.dir") + File.separator + "src/test/resources/testfiles");
+		HG4HOMFacade facade = new HG4HOMFacade(System.getProperty("user.dir") + File.separator + "training");
 
 		IntegrationFacade.setIntegrationFacade(facade);
 		IntegrationFacade.setProgramUnderTest(programUnderTest);
@@ -210,10 +228,12 @@ public class HG4HOMFacadeTest {
 
 		List<Mutant> mutants = facade.executeOperator(operator);
 
-		mutants = Lists.newArrayList(mutants.get(0), mutants.stream()
-															.filter(mutant -> mutant.getFullName().equals("AMC_17"))
-															.findAny()
-															.get());
+		mutants =
+				Lists.newArrayList(mutants.get(0),
+								   mutants.stream()
+										  .filter(mutant -> mutant.getFullName().equals("AMC_17"))
+										  .findAny()
+										  .get());
 		Mutant hom = facade.combineMutants(mutants);
 		assertNotNull(hom);
 
@@ -228,9 +248,11 @@ public class HG4HOMFacadeTest {
 
 	@Test
 	public void combineMutants4() throws Exception {
-		Program programUnderTest = new Program("br.ufpr.inf.gres.TriTyp", new File("src/test/resources/testfiles/TriTyp/src/br/ufpr/inf/gres/TriTyp.java"));
+		Program
+				programUnderTest =
+				new Program("br.ufpr.inf.gres.TriTyp", new File("training/TriTyp/src/br/ufpr/inf/gres/TriTyp.java"));
 
-		HG4HOMFacade facade = new HG4HOMFacade(System.getProperty("user.dir") + File.separator + "src/test/resources/testfiles");
+		HG4HOMFacade facade = new HG4HOMFacade(System.getProperty("user.dir") + File.separator + "training");
 
 		IntegrationFacade.setIntegrationFacade(facade);
 		IntegrationFacade.setProgramUnderTest(programUnderTest);
@@ -241,10 +263,12 @@ public class HG4HOMFacadeTest {
 		operator = new Operator("LOI", "Traditional_L");
 		mutants.addAll(facade.executeOperator(operator));
 
-		mutants = Lists.newArrayList(mutants.get(0), mutants.stream()
-															.filter(mutant -> mutant.getFullName().equals("LOI_1"))
-															.findAny()
-															.get());
+		mutants =
+				Lists.newArrayList(mutants.get(0),
+								   mutants.stream()
+										  .filter(mutant -> mutant.getFullName().equals("LOI_1"))
+										  .findAny()
+										  .get());
 		Mutant hom = facade.combineMutants(mutants);
 		assertNotNull(hom);
 

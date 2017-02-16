@@ -159,16 +159,16 @@
             <resource>
                 <directory>grammars</directory>
             </resource>
+            <resource>
+                <directory>training</directory>
+            </resource>
         </resources>
         <testResources>
             <testResource>
                 <directory>grammars</directory>
             </testResource>
             <testResource>
-                <directory>src/test/resources</directory>
-                <includes>
-                    <include>*.bnf</include>
-                </includes>
+                <directory>training</directory>
             </testResource>
         </testResources>
         <plugins>
@@ -177,7 +177,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>fully.qualified.MainClass</mainClass>
+                            <mainClass>br.ufpr.inf.gres.sentinel.main.Sentinel</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>
