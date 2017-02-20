@@ -111,18 +111,18 @@ public class MutationStrategyGenerationProblem implements AbstractVariableLength
 							(double) stopwatch.elapsed(TimeUnit.NANOSECONDS) /
 							integrationFacade.getConventionalMutationTime(testProgram, TimeUnit.NANOSECONDS);
 					// Summing the number of mutants
-					numberOfMutants += (double) mutants.size() /
-									   integrationFacade.getConventionalQuantityOfMutants(testProgram);
+					numberOfMutants +=
+							(double) mutants.size() / integrationFacade.getConventionalQuantityOfMutants(testProgram);
 					// Summing the score
-					score += integrationFacade.getRelativeMutationScore(testProgram,
-																		mutants.stream()
-																			   .map(Mutant::getKillingTestCases)
-																			   .reduce((testCases, testCases2) -> SetUniqueList
-																					   .setUniqueList(Lists.newArrayList(
-																							   Iterables.concat(
-																									   testCases,
-																									   testCases2))))
-																			   .get());
+					score +=
+							integrationFacade.getRelativeMutationScore(testProgram,
+																	   mutants.stream()
+																			  .map(Mutant::getKillingTestCases)
+																			  .reduce((testCases, testCases2) -> SetUniqueList
+																					  .setUniqueList(Lists.newArrayList(
+																							  Iterables.concat(testCases,
+																											   testCases2))))
+																			  .get());
 				}
 			}
 			IntegrationFacade.setProgramUnderTest(tempProgram);
@@ -137,11 +137,11 @@ public class MutationStrategyGenerationProblem implements AbstractVariableLength
 			solution.setObjective(1, numberOfMutants);
 			solution.setObjective(2, score);
 		} catch (Exception ex) {
+			//			ex.printStackTrace();
 			// Invalid strategy. Probably discarded due to maximum wraps.
 			solution.setObjective(0, Double.MAX_VALUE);
 			solution.setObjective(1, Double.MAX_VALUE);
 			solution.setObjective(2, -1.0);
-			return;
 		}
 	}
 
@@ -149,8 +149,9 @@ public class MutationStrategyGenerationProblem implements AbstractVariableLength
 		Object tempStrategy = solution.getAttribute("Strategy");
 		if (tempStrategy == null) {
 			List<Integer> variables = solution.getVariablesCopy();
-			Iterable<Integer> variablesIterator = Iterables.limit(Iterables.cycle(variables),
-																  variables.size() * (maxWraps + 1));
+			Iterable<Integer>
+					variablesIterator =
+					Iterables.limit(Iterables.cycle(variables), variables.size() * (maxWraps + 1));
 			tempStrategy = strategyMapper.interpret(variablesIterator);
 			solution.setAttribute("Strategy", tempStrategy);
 		}
