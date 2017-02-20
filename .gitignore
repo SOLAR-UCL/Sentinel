@@ -175,8 +175,7 @@ nbproject/
 
 
 ### Sentinel Specific ###
-/training/**
-!/training/classes
-!/training/src
-!/training/test
+training/result
 lib/.index/
+/training/compile_output
+*.out
