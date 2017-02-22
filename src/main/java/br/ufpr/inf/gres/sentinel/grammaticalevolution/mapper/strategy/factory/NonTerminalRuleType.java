@@ -19,7 +19,6 @@ public class NonTerminalRuleType {
 	public static final String SELECT_OPERATORS = "selectOperators";
 	public static final String OPERATOR_SELECTION_TYPE = "operatorSelectionType";
 	public static final String OPERATOR_SORTING = "operatorSorting";
-	public static final String SELECT_OPERATOR_GROUPS = "selectOperatorGroups";
 	public static final String OPERATOR_GROUP_SELECTION_TYPE = "operatorGroupSelectionType";
 	public static final String OPERATOR_GROUPING = "operatorGrouping";
 	public static final String OPERATOR_GROUP_SORTING = "operatorGroupSorting";
@@ -32,7 +31,6 @@ public class NonTerminalRuleType {
 	public static final String SELECT_MUTANTS = "selectMutants";
 	public static final String MUTANT_SELECTION_TYPE = "mutantSelectionType";
 	public static final String MUTANT_SORTING = "mutantSorting";
-	public static final String SELECT_MUTANT_GROUPS = "selectMutantGroups";
 	public static final String MUTANT_GROUP_SELECTION_TYPE = "mutantGroupSelectionType";
 	public static final String MUTANT_GROUPING = "mutantGrouping";
 	public static final String MUTANT_GROUP_SORTING = "mutantGroupSorting";

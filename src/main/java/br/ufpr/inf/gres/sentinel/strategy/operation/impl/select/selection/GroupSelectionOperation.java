@@ -46,26 +46,34 @@ public class GroupSelectionOperation<T> extends SelectionOperation<T> {
 		checkNotNull(selectionType, "No group selection type defined for group selection!");
 		checkNotNull(groupingFunction, "No grouping function defined for group selection!");
 		checkNotNull(selectionOperation, "No operator selection type defined for group selection!");
-
-		List<List<T>> groups = groupingFunction.doOperation(input);
-
-		int numberToSelect;
-		if (percentage != 0D) {
-			numberToSelect = DoubleMath.roundToInt(groups.size() * percentage, RoundingMode.DOWN);
-		} else {
-			numberToSelect = quantity;
-		}
-		checkArgument(numberToSelect != 0, "No quantity or percentage defined for group selection!");
-
-		if (sorter != null) {
-			groups.sort(sorter);
-		}
-
-		groups = selectionType.selectItems(groups, numberToSelect);
+		checkArgument(percentage != 0D || quantity != 0,
+					  "No quantity or percentage defined for group selection! " +
+					  "Percentage: " +
+					  percentage +
+					  ". Quantity: " +
+					  quantity +
+					  ".");
 
 		List<T> result = new ArrayList<>();
-		for (List<T> group : groups) {
-			result.addAll(selectionOperation.doOperation(group));
+		List<List<T>> groups = groupingFunction.doOperation(input);
+
+		if (groups.size() > 0) {
+			int numberToSelect;
+			if (percentage != 0D) {
+				numberToSelect = DoubleMath.roundToInt(groups.size() * percentage, RoundingMode.CEILING);
+			} else {
+				numberToSelect = quantity;
+			}
+
+			if (sorter != null) {
+				groups.sort(sorter);
+			}
+
+			groups = selectionType.selectItems(groups, numberToSelect);
+
+			for (List<T> group : groups) {
+				result.addAll(selectionOperation.doOperation(group));
+			}
 		}
 		return result;
 	}

@@ -92,12 +92,12 @@ public class SelectionOperationTest {
 		assertEquals(operator1, result.get(4));
 	}
 
-	@Test(expected = IllegalArgumentException.class)
-	public void testDoOperation4() {
+	@Test(expected = Exception.class)
+	public void testDoOperation4() throws Exception {
 		SelectionOperation<Operator> selectionOp = new SelectionOperation<>();
 		selectionOp.setSelectionType(new SequentialSelection());
 		selectionOp.setSorter(new OperatorTypeComparator());
-		selectionOp.setPercentage(0.1);
+		selectionOp.setPercentage(0.0);
 
 		Operator operator1 = new Operator("Operator1", "Type1");
 		Operator operator2 = new Operator("Operator2", "Type2");
@@ -233,6 +233,19 @@ public class SelectionOperationTest {
 		List<Operator> result = selectionOp.doOperation(group1);
 		assertEquals(1, result.size());
 		assertEquals(operator1, result.get(0));
+	}
+
+	@Test
+	public void testDoOperation10() {
+		SelectionOperation<Operator> selectionOp = new SelectionOperation<>();
+		selectionOp.setSelectionType(new SequentialSelection());
+		selectionOp.setSorter(null);
+		selectionOp.setQuantity(1);
+
+		List<Operator> group1 = new ArrayList<>();
+
+		List<Operator> result = selectionOp.doOperation(group1);
+		assertTrue(result.isEmpty());
 	}
 
 }

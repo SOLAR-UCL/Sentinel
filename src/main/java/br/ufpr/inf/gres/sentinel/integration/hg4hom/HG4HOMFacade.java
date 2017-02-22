@@ -143,11 +143,11 @@ public class HG4HOMFacade extends IntegrationFacade {
 	@Override
 	public Mutant combineMutants(List<Mutant> mutantsToCombine) {
 		Preconditions.checkNotNull(mutantsToCombine, "Mutant List cannot be null.");
-		Preconditions.checkArgument(mutantsToCombine.size() == 2,
-									"There must be exactly 2 mutants in the list. Unfortunately, more than 2 mutants is not supported right now. Found mutants: " +
+		Preconditions.checkArgument(mutantsToCombine.size() >= 2,
+									"There must be at least 2 mutants in the list. Unfortunately, more than 2 mutants is not supported right now and only one HOM will be generated. Found mutants: " +
 									mutantsToCombine.size() +
 									".");
-
+		mutantsToCombine = mutantsToCombine.subList(0, 2);
 		try {
 			if (mutantsToCombine.stream().noneMatch(Mutant::isHigherOrder)) {
 				Program programToBeMutated = IntegrationFacade.getProgramUnderTest();

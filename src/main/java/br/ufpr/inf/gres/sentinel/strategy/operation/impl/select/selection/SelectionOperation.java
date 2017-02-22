@@ -6,6 +6,7 @@ import br.ufpr.inf.gres.sentinel.strategy.operation.impl.sort.AbstractSorterOper
 import com.google.common.math.DoubleMath;
 
 import java.math.RoundingMode;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkArgument;
@@ -67,20 +68,31 @@ public class SelectionOperation<T> extends Operation<List<T>, List<T>> {
 
 	@Override
 	public List<T> doOperation(List<T> input) {
-		int numberToSelect;
-		if (percentage != 0D) {
-			numberToSelect = DoubleMath.roundToInt(input.size() * percentage, RoundingMode.DOWN);
+		if (input.size() > 0) {
+			checkNotNull(selectionType, "No selection type defined for selection!");
+			checkArgument(percentage != 0D || quantity != 0,
+						  "No quantity or percentage defined for selection! " +
+						  "Percentage: " +
+						  percentage +
+						  ". Quantity: " +
+						  quantity +
+						  ".");
+
+			int numberToSelect;
+			if (percentage != 0D) {
+				numberToSelect = DoubleMath.roundToInt(input.size() * percentage, RoundingMode.DOWN);
+			} else {
+				numberToSelect = quantity;
+			}
+
+			if (sorter != null) {
+				input.sort(sorter);
+			}
+
+			return selectionType.selectItems(input, numberToSelect);
 		} else {
-			numberToSelect = quantity;
+			return new ArrayList<>();
 		}
-		checkArgument(numberToSelect != 0, "No quantity or percentage defined for selection!");
-		checkNotNull(selectionType, "No selection type defined for selection!");
-
-		if (sorter != null) {
-			input.sort(sorter);
-		}
-
-		return selectionType.selectItems(input, numberToSelect);
 	}
 
 	@Override

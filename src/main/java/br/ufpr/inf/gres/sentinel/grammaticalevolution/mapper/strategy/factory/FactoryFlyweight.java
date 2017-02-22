@@ -41,9 +41,7 @@ public class FactoryFlyweight {
 				return MutantOperationFactory.getInstance();
 			// Shared
 			case NonTerminalRuleType.SELECT_OPERATORS:
-			case NonTerminalRuleType.SELECT_OPERATOR_GROUPS:
 			case NonTerminalRuleType.SELECT_MUTANTS:
-			case NonTerminalRuleType.SELECT_MUTANT_GROUPS:
 				return SelectFactory.getInstance();
 			case NonTerminalRuleType.OPERATOR_SELECTION_TYPE:
 			case NonTerminalRuleType.MUTANT_SELECTION_TYPE:

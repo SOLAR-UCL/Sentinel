@@ -16,11 +16,9 @@
 
 <selectOperators> ::= <operatorSelectionType> <quantity> | <operatorSelectionType> <percentage>
 
-<operatorSelectionType> ::= "Select Operators" <selectionType> <operatorSorting> | "Select Operators by Groups" <selectOperatorGroups> <operatorSelectionType>
+<operatorSelectionType> ::= "Select Operators" <selectionType> <operatorSorting> | "Select Operators by Groups" <operatorGroupSelectionType> <selectOperators>
 
 <operatorSorting> ::=  <operatorAttribute> <sortingDirection> | ""
-
-<selectOperatorGroups> ::= <operatorGroupSelectionType> <quantity> | <operatorGroupSelectionType> <percentage>
 
 <operatorGroupSelectionType> ::= <operatorGrouping> <selectionType> <operatorGroupSorting>
 
@@ -40,11 +38,9 @@
 
 <selectMutants> ::= <mutantSelectionType> <quantity> | <mutantSelectionType> <percentage>
 
-<mutantSelectionType> ::= "Select Mutants" <selectionType> <mutantSorting> | "Select Mutants by Groups" <selectMutantGroups> <mutantSelectionType>
+<mutantSelectionType> ::= "Select Mutants" <selectionType> <mutantSorting> | "Select Mutants by Groups" <mutantGroupSelectionType> <selectMutants>
 
 <mutantSorting> ::= <mutantAttribute> <sortingDirection> | ""
-
-<selectMutantGroups> ::= <mutantGroupSelectionType> <quantity> | <mutantGroupSelectionType> <percentage>
 
 <mutantGroupSelectionType> ::= <mutantGrouping> <selectionType> <mutantGroupSorting>
 

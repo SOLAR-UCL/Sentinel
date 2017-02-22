@@ -70,7 +70,7 @@ public class AbstractGrammarMapperTest {
 	@Test
 	public void loadGrammarTest() throws IOException {
 		HashMap<String, Rule> nodes = DEFAULT_MAPPER.nonTerminalNodes;
-		assertEquals(29, nodes.size());
+		assertEquals(27, nodes.size());
 		assertNotNull(nodes.get(NonTerminalRuleType.STRATEGY));
 		assertNotNull(nodes.get(NonTerminalRuleType.DEFAULT_OPERATION));
 		assertNotNull(nodes.get(NonTerminalRuleType.SELECTION_TYPE));
@@ -81,7 +81,6 @@ public class AbstractGrammarMapperTest {
 		assertNotNull(nodes.get(NonTerminalRuleType.SELECT_OPERATORS));
 		assertNotNull(nodes.get(NonTerminalRuleType.OPERATOR_SELECTION_TYPE));
 		assertNotNull(nodes.get(NonTerminalRuleType.OPERATOR_SORTING));
-		assertNotNull(nodes.get(NonTerminalRuleType.SELECT_OPERATOR_GROUPS));
 		assertNotNull(nodes.get(NonTerminalRuleType.OPERATOR_GROUP_SELECTION_TYPE));
 		assertNotNull(nodes.get(NonTerminalRuleType.OPERATOR_GROUPING));
 		assertNotNull(nodes.get(NonTerminalRuleType.OPERATOR_GROUP_SORTING));
@@ -93,7 +92,6 @@ public class AbstractGrammarMapperTest {
 		assertNotNull(nodes.get(NonTerminalRuleType.SELECT_MUTANTS));
 		assertNotNull(nodes.get(NonTerminalRuleType.MUTANT_SELECTION_TYPE));
 		assertNotNull(nodes.get(NonTerminalRuleType.MUTANT_SORTING));
-		assertNotNull(nodes.get(NonTerminalRuleType.SELECT_MUTANT_GROUPS));
 		assertNotNull(nodes.get(NonTerminalRuleType.MUTANT_GROUP_SELECTION_TYPE));
 		assertNotNull(nodes.get(NonTerminalRuleType.MUTANT_GROUPING));
 		assertNotNull(nodes.get(NonTerminalRuleType.MUTANT_GROUP_SORTING));
@@ -213,15 +211,6 @@ public class AbstractGrammarMapperTest {
 	}
 
 	@Test
-	public void loadGrammarTest12() throws IOException {
-		HashMap<String, Rule> nodes = DEFAULT_MAPPER.nonTerminalNodes;
-		Rule node = nodes.get(NonTerminalRuleType.SELECT_OPERATOR_GROUPS);
-		assertEquals(2, node.getOptions().size());
-		assertEquals(2, node.getOption(0).getRules().size());
-		assertEquals(2, node.getOption(1).getRules().size());
-	}
-
-	@Test
 	public void loadGrammarTest13() throws IOException {
 		HashMap<String, Rule> nodes = DEFAULT_MAPPER.nonTerminalNodes;
 		Rule node = nodes.get(NonTerminalRuleType.OPERATOR_GROUP_SELECTION_TYPE);
@@ -307,15 +296,6 @@ public class AbstractGrammarMapperTest {
 		assertEquals(2, node.getOptions().size());
 		assertEquals(2, node.getOption(0).getRules().size());
 		assertEquals(1, node.getOption(1).getRules().size());
-	}
-
-	@Test
-	public void loadGrammarTest24() throws IOException {
-		HashMap<String, Rule> nodes = DEFAULT_MAPPER.nonTerminalNodes;
-		Rule node = nodes.get(NonTerminalRuleType.SELECT_MUTANT_GROUPS);
-		assertEquals(2, node.getOptions().size());
-		assertEquals(2, node.getOption(0).getRules().size());
-		assertEquals(2, node.getOption(1).getRules().size());
 	}
 
 	@Test

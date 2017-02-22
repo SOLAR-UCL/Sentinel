@@ -16,6 +16,10 @@ public class GrammarFiles {
 	private GrammarFiles() {
 	}
 
+	public static String getWorkingDirectory() {
+		return WORKING_DIRECTORY;
+	}
+
 	public static void setWorkingDirectory(String workingDirectory) {
 		WORKING_DIRECTORY = CharMatcher.anyOf("\\/").replaceFrom(workingDirectory, File.separator);
 	}

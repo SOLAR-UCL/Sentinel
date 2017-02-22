@@ -1,5 +1,7 @@
 package br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
@@ -10,6 +12,18 @@ import static org.junit.Assert.*;
  * @author Giovani Guizzo
  */
 public class GrammarFilesTest {
+
+	private String workingDirectory;
+
+	@Before
+	public void setUp() {
+		this.workingDirectory = GrammarFiles.getWorkingDirectory();
+	}
+
+	@After
+	public void tearDown() {
+		GrammarFiles.setWorkingDirectory(this.workingDirectory);
+	}
 
 	@Test
 	public void setWorkingDirectory() throws Exception {

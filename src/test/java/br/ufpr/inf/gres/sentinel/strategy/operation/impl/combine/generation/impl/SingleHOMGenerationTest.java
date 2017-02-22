@@ -48,6 +48,9 @@ public class SingleHOMGenerationTest {
 		assertTrue(hom.isHigherOrder());
 		assertTrue(operator1.getGeneratedMutants().contains(hom));
 		assertTrue(operator2.getGeneratedMutants().contains(hom));
+
+		mutants = operation.doOperation(Lists.newArrayList(mutant1));
+		assertTrue(mutants.isEmpty());
 	}
 
 	@Test

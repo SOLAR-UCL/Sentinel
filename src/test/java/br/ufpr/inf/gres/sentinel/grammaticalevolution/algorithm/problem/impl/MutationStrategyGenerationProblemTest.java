@@ -77,7 +77,7 @@ public class MutationStrategyGenerationProblemTest {
 		assertNotNull(solution.getAttribute("Strategy"));
 		assertTrue(solution.getObjective(0) > 0);
 		assertEquals(1, solution.getObjective(1), 0.000001);
-		assertEquals(1, solution.getObjective(2), 0.000001);
+		assertEquals(-1, solution.getObjective(2), 0.000001);
 	}
 
 	@Test
@@ -90,7 +90,7 @@ public class MutationStrategyGenerationProblemTest {
 		assertNull(solution.getAttribute("Strategy"));
 		assertEquals(Double.MAX_VALUE, solution.getObjective(0), 0.0001);
 		assertEquals(Double.MAX_VALUE, solution.getObjective(1), 0.000001);
-		assertEquals(-1, solution.getObjective(2), 0.000001);
+		assertEquals(Double.MAX_VALUE, solution.getObjective(2), 0.000001);
 	}
 
 	@Test
@@ -130,7 +130,20 @@ public class MutationStrategyGenerationProblemTest {
 		assertNotNull(solution.getAttribute("Strategy"));
 		assertTrue(solution.getObjective(0) > 0);
 		assertEquals(1, solution.getObjective(1), 0.000001);
-		assertEquals(1, solution.getObjective(2), 0.000001);
+		assertEquals(-1, solution.getObjective(2), 0.000001);
+	}
+
+	@Test
+	public void evaluate4() throws Exception {
+		IntegrationFacade.setIntegrationFacade(new IntegrationFacadeTest.IntegrationFacadeStub());
+		VariableLengthSolution<Integer> solution = problem.createSolution();
+		solution.clearVariables();
+		solution.addAllVariables(Lists.newArrayList(3));
+		problem.evaluate(solution);
+		assertNotNull(solution.getAttribute("Strategy"));
+		assertEquals(Double.MAX_VALUE, solution.getObjective(0), 0.0001);
+		assertEquals(Double.MAX_VALUE, solution.getObjective(1), 0.000001);
+		assertEquals(Double.MAX_VALUE, solution.getObjective(2), 0.000001);
 	}
 
 	@Test

@@ -67,7 +67,9 @@ public class StrategyMapperTest {
 	@Test
 	public void testCreate2() throws IOException {
 		StrategyMapper strategyMapper = new StrategyMapper(new File(GrammarFiles.getDefaultGrammarPath()));
-		Strategy strategy = strategyMapper.interpret(Lists.newArrayList(0, 2, 1, 0, 0, 0, 0, 0, 9, 1, 0, 1, 0, 0, 1, 0, 3, 1, 2));
+		Strategy
+				strategy =
+				strategyMapper.interpret(Lists.newArrayList(0, 2, 1, 0, 0, 0, 0, 0, 9, 1, 0, 1, 0, 0, 1, 0, 3, 1, 2));
 		assertNotNull(strategy);
 		assertEquals("1.All Operators - 2.Execute Operators - 3.Select Mutants - 4.Store Mutants", strategy.toString());
 
@@ -101,13 +103,18 @@ public class StrategyMapperTest {
 	@Test
 	@Ignore
 	public void testCreate3() throws IOException {
-		Program programUnderTest = new Program("br.ufpr.inf.gres.TriTyp", new File("src/test/resources/testfiles/TriTyp/src/br/ufpr/inf/gres/TriTyp.java"));
-		HG4HOMFacade facade = new HG4HOMFacade(System.getProperty("user.dir") + File.separator + "src/test/resources/testfiles");
+		Program
+				programUnderTest =
+				new Program("br.ufpr.inf.gres.TriTyp",
+							new File("src/test/resources/testfiles/TriTyp/src/br/ufpr/inf/gres/TriTyp.java"));
+		HG4HOMFacade facade = new HG4HOMFacade(System.getProperty("user.dir") + File.separator + "training");
 		IntegrationFacade.setIntegrationFacade(facade);
 		IntegrationFacade.setProgramUnderTest(programUnderTest);
 
 		StrategyMapper strategyMapper = new StrategyMapper(new File(GrammarFiles.getDefaultGrammarPath()));
-		Strategy strategy = strategyMapper.interpret(Lists.newArrayList(0, 2, 1, 0, 0, 0, 0, 0, 9, 1, 0, 1, 0, 0, 1, 0, 3, 1, 2));
+		Strategy
+				strategy =
+				strategyMapper.interpret(Lists.newArrayList(0, 2, 1, 0, 0, 0, 0, 0, 9, 1, 0, 1, 0, 0, 1, 0, 3, 1, 2));
 		assertNotNull(strategy);
 		assertEquals("1.All Operators - 2.Execute Operators - 3.Select Mutants - 4.Store Mutants", strategy.toString());
 
@@ -140,5 +147,23 @@ public class StrategyMapperTest {
 		List<Mutant> result = strategy.run();
 		assertFalse(result.isEmpty());
 		setUpClass();
+	}
+
+	@Test
+	@Ignore
+	public void testCreate4() throws Exception {
+		Program
+				programUnderTest =
+				new Program("br.ufpr.inf.gres.TriTyp",
+							new File("src/test/resources/testfiles/TriTyp/src/br/ufpr/inf/gres/TriTyp.java"));
+		HG4HOMFacade facade = new HG4HOMFacade(System.getProperty("user.dir") + File.separator + "training");
+		IntegrationFacade.setIntegrationFacade(facade);
+		IntegrationFacade.setProgramUnderTest(programUnderTest);
+
+		StrategyMapper strategyMapper = new StrategyMapper(new File(GrammarFiles.getDefaultGrammarPath()));
+		List<Integer> solution = Lists.newArrayList();
+		Strategy strategy = strategyMapper.interpret(solution);
+		assertNotNull(strategy);
+
 	}
 }

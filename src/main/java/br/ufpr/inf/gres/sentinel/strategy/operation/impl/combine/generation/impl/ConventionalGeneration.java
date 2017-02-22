@@ -33,10 +33,12 @@ public class ConventionalGeneration extends AbstractHOMGeneration {
 	@Override
 	public List<Mutant> doOperation(List<Mutant> input) {
 		List<Mutant> result = new ArrayList<>();
-		List<List<Mutant>> partition = Lists.partition(input, order);
-		for (List<Mutant> mutantList : partition) {
-			if (mutantList.size() > 1) {
-				result.addAll(singleHOMGeneration.doOperation(mutantList));
+		if (input.size() >= 2) {
+			List<List<Mutant>> partition = Lists.partition(input, order);
+			for (List<Mutant> mutantList : partition) {
+				if (mutantList.size() >= 2) {
+					result.addAll(singleHOMGeneration.doOperation(mutantList));
+				}
 			}
 		}
 		return result;

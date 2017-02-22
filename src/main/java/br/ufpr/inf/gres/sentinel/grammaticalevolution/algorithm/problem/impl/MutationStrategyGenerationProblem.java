@@ -14,6 +14,7 @@ import com.google.common.collect.Lists;
 import org.apache.commons.collections4.list.SetUniqueList;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -30,6 +31,7 @@ public class MutationStrategyGenerationProblem implements AbstractVariableLength
 	private int minLength;
 	private int maxLength;
 	private int maxWraps;
+	private int evaluationCount;
 
 	public MutationStrategyGenerationProblem(String grammarFile,
 											 int minLength,
@@ -47,6 +49,7 @@ public class MutationStrategyGenerationProblem implements AbstractVariableLength
 		this.maxWraps = maxWraps;
 		this.numberOfStrategyRuns = numberOfStrategyRuns;
 		this.testPrograms = testPrograms;
+		this.evaluationCount = 0;
 	}
 
 	@Override
@@ -91,6 +94,7 @@ public class MutationStrategyGenerationProblem implements AbstractVariableLength
 
 	@Override
 	public void evaluate(VariableLengthSolution<Integer> solution) {
+		System.out.println("Evaluation: " + (++evaluationCount));
 		try {
 			Strategy strategy = getOrCreateStrategy(solution);
 
@@ -122,27 +126,36 @@ public class MutationStrategyGenerationProblem implements AbstractVariableLength
 																					  .setUniqueList(Lists.newArrayList(
 																							  Iterables.concat(testCases,
 																											   testCases2))))
-																			  .get());
+																			  .orElse(SetUniqueList.setUniqueList(new ArrayList<>())));
 				}
 			}
 			IntegrationFacade.setProgramUnderTest(tempProgram);
 
-			// Normalizing
-			int normalizationFactor = testPrograms.size() * numberOfStrategyRuns;
-			elapsedMs /= normalizationFactor;
-			numberOfMutants /= normalizationFactor;
-			score /= normalizationFactor;
+			if (numberOfMutants > 0) {
+				// Normalizing
+				int normalizationFactor = testPrograms.size() * numberOfStrategyRuns;
+				elapsedMs /= normalizationFactor;
+				numberOfMutants /= normalizationFactor;
+				score /= normalizationFactor;
 
-			solution.setObjective(0, elapsedMs);
-			solution.setObjective(1, numberOfMutants);
-			solution.setObjective(2, score);
+				solution.setObjective(0, elapsedMs);
+				solution.setObjective(1, numberOfMutants);
+				solution.setObjective(2, score * -1);
+			} else {
+				setWorst(solution);
+			}
 		} catch (Exception ex) {
-			//			ex.printStackTrace();
+			System.out.println("Exception! Solution: " + solution.getVariablesCopy());
+			System.out.println(ex.getMessage());
 			// Invalid strategy. Probably discarded due to maximum wraps.
-			solution.setObjective(0, Double.MAX_VALUE);
-			solution.setObjective(1, Double.MAX_VALUE);
-			solution.setObjective(2, -1.0);
+			setWorst(solution);
 		}
+	}
+
+	private void setWorst(VariableLengthSolution<Integer> solution) {
+		solution.setObjective(0, Double.MAX_VALUE);
+		solution.setObjective(1, Double.MAX_VALUE);
+		solution.setObjective(2, Double.MAX_VALUE);
 	}
 
 	private Strategy getOrCreateStrategy(VariableLengthSolution<Integer> solution) {

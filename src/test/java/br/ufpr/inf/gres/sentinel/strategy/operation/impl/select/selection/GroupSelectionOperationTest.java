@@ -11,6 +11,7 @@ import br.ufpr.inf.gres.sentinel.strategy.operation.impl.sort.impl.operator.Oper
 import com.google.common.collect.Lists;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -190,6 +191,31 @@ public class GroupSelectionOperationTest {
 		assertEquals(operator3, result.get(0));
 		assertEquals(operator2, result.get(1));
 		assertEquals(operator3, result.get(2));
+	}
+
+	@Test
+	public void testDoOperation7() {
+		SelectionOperation<Operator> selectionOp = new SelectionOperation<>();
+		selectionOp.setSelectionType(new SequentialSelection());
+		selectionOp.setSorter(new OperatorTypeComparator());
+		selectionOp.setQuantity(1);
+
+		GroupSelectionOperation<Operator> groupOp2 = new GroupSelectionOperation<>();
+		groupOp2.setSelectionOperation(selectionOp);
+		groupOp2.setGroupingFunction(new GroupOperatorsByType());
+		groupOp2.setSelectionType(new SequentialSelection());
+		groupOp2.setQuantity(1);
+
+		GroupSelectionOperation<Operator> groupOp = new GroupSelectionOperation<>();
+		groupOp.setSelectionOperation(groupOp2);
+		groupOp.setGroupingFunction(new GroupOperatorsByMutantQuantity());
+		groupOp.setSelectionType(new SequentialSelection());
+		groupOp.setQuantity(3);
+
+		List<Operator> group1 = new ArrayList<>();
+
+		List<Operator> result = groupOp.doOperation(group1);
+		assertTrue(result.isEmpty());
 	}
 
 	@Test
