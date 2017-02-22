@@ -17,6 +17,7 @@ import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.operation.impl.S
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.selection.SelectionOperation;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.type.impl.SequentialSelection;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.sort.impl.operator.OperatorTypeComparator;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
@@ -161,8 +162,10 @@ public class StrategyMapperTest {
 		IntegrationFacade.setProgramUnderTest(programUnderTest);
 
 		StrategyMapper strategyMapper = new StrategyMapper(new File(GrammarFiles.getDefaultGrammarPath()));
-		List<Integer> solution = Lists.newArrayList();
-		Strategy strategy = strategyMapper.interpret(solution);
+		List<Integer>
+				solution =
+				Lists.newArrayList(28, 132, 4, 100, 154, 79, 144, 133, 3, 112, 150, 145, 77, 13, 176, 3, 112, 150, 145);
+		Strategy strategy = strategyMapper.interpret(Iterables.limit(Iterables.cycle(solution), 10));
 		assertNotNull(strategy);
 
 	}

@@ -131,6 +131,7 @@ public class HG4HOMFacade extends IntegrationFacade {
 				Mutant mutant = new Mutant(mutantName, new File(fom.getPath()), programToBeMutated);
 				mutant.getOperators().add(operator);
 				mutants.add(mutant);
+				operator.getGeneratedMutants().add(mutant);
 			}
 		} catch (Exception ex) {
 			throw new RuntimeException(ex);
@@ -194,8 +195,8 @@ public class HG4HOMFacade extends IntegrationFacade {
 														union.addAll(operators);
 														union.addAll(operators2);
 														return union;
-													})
-													.get());
+													}).orElse(SetUniqueList.setUniqueList(new ArrayList<>())));
+				generatedHom.getOperators().forEach(operator -> operator.getGeneratedMutants().add(generatedHom));
 				return generatedHom;
 			}
 		} catch (HomException ignored) {

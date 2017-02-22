@@ -110,8 +110,10 @@ public class HG4HOMFacadeTest {
 
 		List<Mutant> mutants = facade.executeOperator(operator);
 		assertEquals(57, mutants.size());
+		assertEquals(57, operator.getGeneratedMutants().size());
 		for (Mutant mutant : mutants) {
 			assertTrue(mutant.getOperators().contains(operator));
+			assertTrue(operator.getGeneratedMutants().contains(mutant));
 		}
 		facade.executeMutants(mutants);
 		assertFalse(mutants.get(0).isAlive());
@@ -132,8 +134,10 @@ public class HG4HOMFacadeTest {
 
 		List<Mutant> mutants = facade.executeOperator(operator);
 		assertEquals(39, mutants.size());
+		assertEquals(39, operator.getGeneratedMutants().size());
 		for (Mutant mutant : mutants) {
 			assertTrue(mutant.getOperators().contains(operator));
+			assertTrue(operator.getGeneratedMutants().contains(mutant));
 		}
 		facade.executeMutants(mutants);
 		assertFalse(mutants.get(8).isAlive());
@@ -346,6 +350,41 @@ public class HG4HOMFacadeTest {
 		HG4HOMFacade facade = new HG4HOMFacade("Test");
 		facade.setMuJavaHome("Test2");
 		assertEquals("Test2", facade.getMuJavaHome());
+	}
+
+	@Test
+	public void combineMutants5() throws Exception {
+		Program
+				programUnderTest =
+				new Program("br.ufpr.inf.gres.TriTyp", new File("training/src/br/ufpr/inf/gres/TriTyp.java"));
+
+		HG4HOMFacade facade = new HG4HOMFacade(System.getProperty("user.dir") + File.separator + "training");
+
+		IntegrationFacade.setIntegrationFacade(facade);
+		IntegrationFacade.setProgramUnderTest(programUnderTest);
+
+		Operator operator = new Operator("AMC", "Class_A");
+
+		List<Mutant> mutants = facade.executeOperator(operator);
+
+		mutants =
+				Lists.newArrayList(mutants.get(0),
+								   mutants.stream()
+										  .filter(mutant -> mutant.getFullName().equals("AMC_4"))
+										  .findAny()
+										  .get(),
+								   mutants.get(5));
+		Mutant hom = facade.combineMutants(mutants);
+		assertNotNull(hom);
+
+		facade.executeMutant(hom);
+		assertEquals("AMC_1_and_AMC_4", hom.getFullName());
+		assertEquals(1, hom.getOperators().size());
+		assertEquals(2, hom.getOrder());
+		assertEquals(40, operator.getGeneratedMutants().size());
+		assertArrayEquals(mutants.subList(0, 2).toArray(), hom.getConstituentMutants().toArray());
+		assertTrue(hom.isAlive());
+		assertEquals(programUnderTest, hom.getOriginalProgram());
 	}
 
 }

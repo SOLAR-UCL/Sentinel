@@ -23,17 +23,18 @@ public class SingleHOMGeneration extends AbstractHOMGeneration {
 	public List<Mutant> doOperation(List<Mutant> input) {
 		if (input.size() >= 2) {
 			Mutant mutant = IntegrationFacade.getIntegrationFacade().combineMutants(input);
-			for (Mutant tempMutant : input) {
-				mutant.getConstituentMutants().add(tempMutant);
-				mutant.getOperators().addAll(tempMutant.getOperators());
-				for (Operator operator : tempMutant.getOperators()) {
-					operator.getGeneratedMutants().add(mutant);
+			if (mutant != null && mutant.getConstituentMutants().isEmpty()) {
+				for (Mutant tempMutant : input) {
+					mutant.getConstituentMutants().add(tempMutant);
+					mutant.getOperators().addAll(tempMutant.getOperators());
+					for (Operator operator : tempMutant.getOperators()) {
+						operator.getGeneratedMutants().add(mutant);
+					}
 				}
+				return Lists.newArrayList(mutant);
 			}
-			return Lists.newArrayList(mutant);
-		} else {
-			return new ArrayList<>();
 		}
+		return new ArrayList<>();
 	}
 
 	@Override
