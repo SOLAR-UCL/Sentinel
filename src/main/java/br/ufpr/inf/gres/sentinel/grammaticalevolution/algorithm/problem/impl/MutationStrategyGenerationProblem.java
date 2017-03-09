@@ -105,6 +105,7 @@ public class MutationStrategyGenerationProblem implements AbstractVariableLength
 			for (Program testProgram : testPrograms) {
 				IntegrationFacade.setProgramUnderTest(testProgram);
 				for (int i = 0; i < numberOfStrategyRuns; i++) {
+					//TODO: Change to CPU time
 					Stopwatch stopwatch = Stopwatch.createStarted();
 					List<Mutant> mutants = strategy.run();
 					IntegrationFacade integrationFacade = IntegrationFacade.getIntegrationFacade();
