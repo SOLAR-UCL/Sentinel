@@ -1,9 +1,12 @@
 package br.ufpr.inf.gres.sentinel.integration;
 
+import br.ufpr.inf.gres.hg4hom.core.MutationSystem;
 import br.ufpr.inf.gres.sentinel.base.mutation.Mutant;
 import br.ufpr.inf.gres.sentinel.base.mutation.Operator;
 import br.ufpr.inf.gres.sentinel.base.mutation.Program;
 import br.ufpr.inf.gres.sentinel.base.mutation.TestCase;
+import com.google.common.base.CharMatcher;
+import java.io.File;
 import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadMXBean;
 import java.util.ArrayList;
@@ -80,10 +83,7 @@ public abstract class IntegrationFacade {
         ThreadMXBean threadBean = ManagementFactory.getThreadMXBean();
         long currentThreadCpuTime = threadBean.getCurrentThreadCpuTime();
         List<Operator> operators = getAllOperators();
-        List<Mutant> allMutants = new ArrayList<>();
-        for (Operator operator : operators) {
-            allMutants.addAll(executeOperator(operator));
-        }
+        List<Mutant> allMutants = executeOperators(operators);
         executeMutants(allMutants);
         currentThreadCpuTime = threadBean.getCurrentThreadCpuTime() - currentThreadCpuTime;
         conventionalExecutionTimes.put(program, currentThreadCpuTime);
@@ -94,13 +94,25 @@ public abstract class IntegrationFacade {
         IntegrationFacade.setProgramUnderTest(tempProgram);
     }
 
-    public abstract List<Program> instantiatePrograms(List<String> programNames);
+    public List<Program> instantiatePrograms(List<String> programNames) {
+        List<Program> programs = new ArrayList<>();
+        for (String programName : programNames) {
+            programs.add(instantiateProgram(programName));
+        }
+        return programs;
+    }
 
-    public abstract Program instantiateProgram(String programName);
+    public Program instantiateProgram(String programName) {
+        String replace = programName.replace(".java", "");
+        replace = CharMatcher.anyOf("\\/.").replaceFrom(replace, File.separator);
+        return new Program(programName, new File(MutationSystem.SRC_PATH + File.separator + replace + ".java"));
+    }
 
     public abstract List<Operator> getAllOperators();
 
     public abstract List<Mutant> executeOperator(Operator operator);
+
+    public abstract List<Mutant> executeOperators(List<Operator> operators);
 
     public abstract Mutant combineMutants(List<Mutant> mutantsToCombine);
 

@@ -131,6 +131,15 @@ public class IntegrationFacadeTest {
             }
         }
 
+        @Override
+        public List<Mutant> executeOperators(List<Operator> operators) {
+            List<Mutant> allMutants = new ArrayList<>();
+            for (Operator operator : operators) {
+                allMutants.addAll(executeOperator(operator));
+            }
+            return allMutants;
+        }
+
     }
 
 }

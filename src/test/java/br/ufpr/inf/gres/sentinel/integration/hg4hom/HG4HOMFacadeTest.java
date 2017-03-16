@@ -196,12 +196,10 @@ public class HG4HOMFacadeTest {
         Stopwatch stopwatch = Stopwatch.createStarted();
         List<Mutant> aliveMutants = new ArrayList<>();
         List<Mutant> deadMutants = new ArrayList<>();
-        for (Operator operator : facade.getAllOperators()) {
-            List<Mutant> mutants = facade.executeOperator(operator);
-            facade.executeMutants(mutants);
-            aliveMutants.addAll(mutants.stream().filter(Mutant::isAlive).collect(Collectors.toList()));
-            deadMutants.addAll(mutants.stream().filter(Mutant::isDead).collect(Collectors.toList()));
-        }
+        List<Mutant> mutants = facade.executeOperators(facade.getAllOperators());
+        facade.executeMutants(mutants);
+        aliveMutants.addAll(mutants.stream().filter(Mutant::isAlive).collect(Collectors.toList()));
+        deadMutants.addAll(mutants.stream().filter(Mutant::isDead).collect(Collectors.toList()));
         stopwatch.stop();
 
         System.out.println("Alive: " + aliveMutants.size());
@@ -210,6 +208,25 @@ public class HG4HOMFacadeTest {
         System.out.println("Time m: " + stopwatch.elapsed(TimeUnit.MINUTES) + "m");
         assertEquals(79, aliveMutants.size());
         assertEquals(526, deadMutants.size());
+    }
+
+    @Test
+    public void executeOperators() throws Exception {
+        Program programUnderTest
+                = new Program("br.ufpr.inf.gres.TriTyp", new File("training/src/br/ufpr/inf/gres/TriTyp.java"));
+
+        HG4HOMFacade facade = new HG4HOMFacade(System.getProperty("user.dir") + File.separator + "training");
+
+        IntegrationFacade.setIntegrationFacade(facade);
+        IntegrationFacade.setProgramUnderTest(programUnderTest);
+
+        Operator operator = new Operator("LOI", "Traditional_L");
+        Operator operator2 = new Operator("AMC", "Class_A");
+
+        List<Mutant> mutants = facade.executeOperators(Lists.newArrayList(operator, operator2));
+        assertEquals(96, mutants.size());
+        assertEquals(57, operator.getGeneratedMutants().size());
+        assertEquals(39, operator2.getGeneratedMutants().size());
     }
 
     @Test

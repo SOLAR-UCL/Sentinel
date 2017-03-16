@@ -94,21 +94,17 @@ public class MutationStrategyGenerationProblemTest {
     @Test
     @Ignore
     public void evaluate3() throws Exception {
-        Program programUnderTest
-                = new Program("br.ufpr.inf.gres.TriTyp",
-                        new File("training/src/br/ufpr/inf/gres/TriTyp.java"));
-        problem
-                = new MutationStrategyGenerationProblem(GrammarFiles.getDefaultGrammarPath(),
-                        15,
-                        100,
-                        0,
-                        179,
-                        0,
-                        1,
-                        Lists.newArrayList(programUnderTest));
+        Program programUnderTest = new Program("br.ufpr.inf.gres.TriTyp", new File("training/src/br/ufpr/inf/gres/TriTyp.java"));
+        problem = new MutationStrategyGenerationProblem(GrammarFiles.getDefaultGrammarPath(),
+                15,
+                100,
+                0,
+                179,
+                0,
+                1,
+                Lists.newArrayList(programUnderTest));
 
-        HG4HOMFacade facade
-                = new HG4HOMFacade(System.getProperty("user.dir") + File.separator + "training");
+        HG4HOMFacade facade = new HG4HOMFacade(System.getProperty("user.dir") + File.separator + "training");
 
         IntegrationFacade.setIntegrationFacade(facade);
         IntegrationFacade.setProgramUnderTest(programUnderTest);
