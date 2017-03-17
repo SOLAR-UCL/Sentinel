@@ -1,12 +1,9 @@
 package br.ufpr.inf.gres.sentinel.integration;
 
-import br.ufpr.inf.gres.hg4hom.core.MutationSystem;
 import br.ufpr.inf.gres.sentinel.base.mutation.Mutant;
 import br.ufpr.inf.gres.sentinel.base.mutation.Operator;
 import br.ufpr.inf.gres.sentinel.base.mutation.Program;
 import br.ufpr.inf.gres.sentinel.base.mutation.TestCase;
-import com.google.common.base.CharMatcher;
-import java.io.File;
 import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadMXBean;
 import java.util.ArrayList;
@@ -102,11 +99,7 @@ public abstract class IntegrationFacade {
         return programs;
     }
 
-    public Program instantiateProgram(String programName) {
-        String replace = programName.replace(".java", "");
-        replace = CharMatcher.anyOf("\\/.").replaceFrom(replace, File.separator);
-        return new Program(programName, new File(MutationSystem.SRC_PATH + File.separator + replace + ".java"));
-    }
+    public abstract Program instantiateProgram(String programName);
 
     public abstract List<Operator> getAllOperators();
 

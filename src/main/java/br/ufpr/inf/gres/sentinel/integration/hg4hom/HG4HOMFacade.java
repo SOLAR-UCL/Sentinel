@@ -24,6 +24,7 @@ import br.ufpr.inf.gres.sentinel.base.mutation.Operator;
 import br.ufpr.inf.gres.sentinel.base.mutation.Program;
 import br.ufpr.inf.gres.sentinel.base.mutation.TestCase;
 import br.ufpr.inf.gres.sentinel.integration.IntegrationFacade;
+import com.google.common.base.CharMatcher;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import java.io.File;
@@ -319,5 +320,12 @@ public class HG4HOMFacade extends IntegrationFacade {
             allMutants.addAll(executeOperator(operator));
         }
         return allMutants;
+    }
+
+    @Override
+    public Program instantiateProgram(String programName) {
+        String replace = programName.replace(".java", "");
+        replace = CharMatcher.anyOf("\\/.").replaceFrom(replace, File.separator);
+        return new Program(programName, new File(MutationSystem.SRC_PATH + File.separator + replace + ".java"));
     }
 }
