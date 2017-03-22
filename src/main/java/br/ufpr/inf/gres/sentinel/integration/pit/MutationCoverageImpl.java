@@ -4,7 +4,6 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -25,6 +24,8 @@ import org.pitest.help.PitHelpError;
 import org.pitest.mutationtest.HistoryStore;
 import org.pitest.mutationtest.MutationAnalyser;
 import org.pitest.mutationtest.MutationConfig;
+import org.pitest.mutationtest.MutationResult;
+import org.pitest.mutationtest.MutationResultListener;
 import org.pitest.mutationtest.build.MutationAnalysisUnit;
 import org.pitest.mutationtest.build.MutationGrouper;
 import org.pitest.mutationtest.build.MutationSource;
@@ -59,6 +60,7 @@ public class MutationCoverageImpl {
     private final File baseDir;
     private final SettingsFactory settings;
     private final CoverageDatabase coverageData;
+    private MutantResultListenerImpl listener = new MutantResultListenerImpl();
 
     public MutationCoverageImpl(final MutationStrategies strategies,
             final File baseDir, final CodeSource code, final ReportOptions data,
@@ -89,16 +91,25 @@ public class MutationCoverageImpl {
         return Iterables.getFirst(tus, null);
     }
 
-    public MutationAnalysisUnit runMutants(MutationAnalysisUnit unit) throws IOException {
+    public Collection<MutationResult> runMutants(MutationAnalysisUnit unit) throws IOException {
+        final long t0 = System.currentTimeMillis();
         checkMutationsFound(unit);
         recordClassPath(coverageData);
 
+        MutationEngine engine = this.strategies.factory().createEngine(
+                this.data.isMutateStaticInitializers(),
+                Prelude.or(this.data.getExcludedMethods()),
+                this.data.getLoggingClasses(), this.data.getMutators(),
+                this.data.isDetectInlinedCode());
+
+        final List<MutationResultListener> config = Lists.newArrayList(listener);
+
         final MutationAnalysisExecutor mae = new MutationAnalysisExecutor(
-                numberOfThreads(), new ArrayList<>());
+                numberOfThreads(), config);
         this.timings.registerStart(Timings.Stage.RUN_MUTATION_TESTS);
         mae.run(Lists.newArrayList(unit));
         this.timings.registerEnd(Timings.Stage.RUN_MUTATION_TESTS);
-        return unit;
+        return listener.getResults();
     }
 
     private void checkExcludedRunners() {
