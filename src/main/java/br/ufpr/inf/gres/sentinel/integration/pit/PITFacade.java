@@ -26,18 +26,7 @@ import org.pitest.mutationtest.config.PluginServices;
 import org.pitest.mutationtest.config.ReportOptions;
 import org.pitest.mutationtest.config.SettingsFactory;
 import org.pitest.mutationtest.engine.MutationDetails;
-import org.pitest.mutationtest.engine.gregor.mutators.ArgumentPropagationMutator;
-import org.pitest.mutationtest.engine.gregor.mutators.ConditionalsBoundaryMutator;
-import org.pitest.mutationtest.engine.gregor.mutators.ConstructorCallMutator;
-import org.pitest.mutationtest.engine.gregor.mutators.IncrementsMutator;
-import org.pitest.mutationtest.engine.gregor.mutators.InlineConstantMutator;
-import org.pitest.mutationtest.engine.gregor.mutators.InvertNegsMutator;
-import org.pitest.mutationtest.engine.gregor.mutators.MathMutator;
-import org.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator;
-import org.pitest.mutationtest.engine.gregor.mutators.NonVoidMethodCallMutator;
-import org.pitest.mutationtest.engine.gregor.mutators.RemoveConditionalMutator;
-import org.pitest.mutationtest.engine.gregor.mutators.ReturnValsMutator;
-import org.pitest.mutationtest.engine.gregor.mutators.VoidMethodCallMutator;
+import org.pitest.mutationtest.engine.gregor.mutators.*;
 import org.pitest.testapi.TestGroupConfig;
 import org.pitest.util.Glob;
 
@@ -167,7 +156,7 @@ public class PITFacade extends IntegrationFacade {
                     }).collect(Collectors.toList()));
                     mutationUnits.putIfAbsent(programUnderTest, testUnit);
                 } else {
-                    System.err.println("This should not be happening!");
+                    throw new IllegalArgumentException("This should not be happening!");
                 }
             } catch (IOException | NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException ex) {
                 Logger.getLogger(PITFacade.class.getName()).log(Level.SEVERE, null, ex);
@@ -178,7 +167,9 @@ public class PITFacade extends IntegrationFacade {
 
     @Override
     public void executeMutant(Mutant mutantToExecute) {
-        executeMutants(Lists.newArrayList(mutantToExecute));
+        if (mutantToExecute != null) {
+            executeMutants(Lists.newArrayList(mutantToExecute));
+        }
     }
 
     @Override
@@ -191,28 +182,32 @@ public class PITFacade extends IntegrationFacade {
             try {
                 final Program programUnderTest = IntegrationFacade.getProgramUnderTest();
                 MutationTestUnit unit = mutationUnits.get(programUnderTest);
-                Field field = unit.getClass().getDeclaredField("availableMutations");
-                field.setAccessible(true);
-                Collection<MutationDetails> fieldValue = (Collection<MutationDetails>) field.get(unit);
-                fieldValue.clear();
-                HashMap<Mutant, MutationDetails> descriptions = generatedMutants.get(programUnderTest);
-                for (Mutant mutant : mutantsToExecute) {
-                    MutationDetails description = descriptions.get(mutant);
-                    fieldValue.add(description);
-                }
-                EntryPointImpl entryPoint = getOrCreateEntryPoint();
-                Collection<MutationResult> result = entryPoint.executeMutants(new File(trainingDircetory), reportOptions, new SettingsFactory(reportOptions, plugins), new HashMap<>(), unit);
+                if (unit != null) {
+                    Field field = unit.getClass().getDeclaredField("availableMutations");
+                    field.setAccessible(true);
+                    Collection<MutationDetails> fieldValue = (Collection<MutationDetails>) field.get(unit);
+                    fieldValue.clear();
+                    HashMap<Mutant, MutationDetails> descriptions = generatedMutants.get(programUnderTest);
+                    for (Mutant mutant : mutantsToExecute) {
+                        MutationDetails description = descriptions.get(mutant);
+                        fieldValue.add(description);
+                    }
+                    EntryPointImpl entryPoint = getOrCreateEntryPoint();
+                    Collection<MutationResult> result = entryPoint.executeMutants(new File(trainingDircetory), reportOptions, new SettingsFactory(reportOptions, plugins), new HashMap<>(), unit);
 
-                for (Mutant mutant : mutantsToExecute) {
-                    MutationDetails description = descriptions.get(mutant);
-                    MutationResult specificResult = Iterables.find(result, (tempItem) -> {
-                        return tempItem.getDetails().equals(description);
-                    });
-                    mutant.getKillingTestCases().addAll(specificResult.getKillingTest().map((testCase) -> {
-                        TestCase sentinelTestCase = new TestCase(testCase);
-                        sentinelTestCase.getKillingMutants().add(mutant);
-                        return sentinelTestCase;
-                    }));
+                    for (Mutant mutant : mutantsToExecute) {
+                        MutationDetails description = descriptions.get(mutant);
+                        MutationResult specificResult = Iterables.find(result, (tempItem) -> {
+                            return tempItem.getDetails().equals(description);
+                        });
+                        mutant.getKillingTestCases().addAll(specificResult.getKillingTest().map((testCase) -> {
+                            TestCase sentinelTestCase = new TestCase(testCase);
+                            sentinelTestCase.getKillingMutants().add(mutant);
+                            return sentinelTestCase;
+                        }));
+                    }
+                } else {
+                    throw new IOException("Something went wrong. I could not find the mutation unit for the mutation procedure. This has something to do to the program under test. Maybe it is non-existent?");
                 }
             } catch (IOException | SecurityException | IllegalArgumentException | NoSuchFieldException | IllegalAccessException ex) {
                 Logger.getLogger(PITFacade.class.getName()).log(Level.SEVERE, null, ex);
@@ -229,7 +224,7 @@ public class PITFacade extends IntegrationFacade {
     public Program instantiateProgram(String programName) {
         String replace = programName.replace(".java", "");
         replace = CharMatcher.anyOf("\\/.").replaceFrom(replace, File.separator);
-        return new Program(programName, new File(replace + ".java"));
+        return new Program(programName, new File(trainingDircetory + File.separator + replace + ".java"));
     }
 
     private ReportOptions createDefaultReportOptions() {
@@ -268,26 +263,25 @@ public class PITFacade extends IntegrationFacade {
         }
     }
 
-    public static void main(String[] args) {
-        PITFacade facade = new PITFacade("training");
-        IntegrationFacade.setIntegrationFacade(facade);
-        IntegrationFacade.setProgramUnderTest(new Program("br.ufpr.inf.gres.TriTyp", new File("training/br/ufpr/inf/gres/TriTyp.java")));
-        List<Mutant> mutants = facade.executeOperators(Lists.newArrayList(new Operator("ALL", "Conditionals")));
-        System.out.println("Number of generated mutants: " + mutants.size());
-        facade.executeMutants(mutants);
-        System.out.println("Number of dead mutants: " + mutants.stream().filter(Mutant::isDead).count());
-        System.out.println("Number of alive mutants: " + mutants.stream().filter(Mutant::isAlive).count());
-
-        System.out.println("");
-        System.out.println("====================================");
-        System.out.println("");
-
-        mutants = facade.executeOperators(Lists.newArrayList(new Operator("ALL", "Conditionals")));
-        System.out.println("Number of generated mutants: " + mutants.size());
-        facade.executeMutants(mutants);
-        System.out.println("Number of dead mutants: " + mutants.stream().filter(Mutant::isDead).count());
-        System.out.println("Number of alive mutants: " + mutants.stream().filter(Mutant::isAlive).count());
-        facade.tearDown();
-    }
-
+//    public static void main(String[] args) {
+//        PITFacade facade = new PITFacade("training");
+//        IntegrationFacade.setIntegrationFacade(facade);
+//        IntegrationFacade.setProgramUnderTest(new Program("br.ufpr.inf.gres.TriTyp", new File("training/br/ufpr/inf/gres/TriTyp.java")));
+//        List<Mutant> mutants = facade.executeOperators(Lists.newArrayList(new Operator("ALL", "Conditionals")));
+//        System.out.println("Number of generated mutants: " + mutants.size());
+//        facade.executeMutants(mutants);
+//        System.out.println("Number of dead mutants: " + mutants.stream().filter(Mutant::isDead).count());
+//        System.out.println("Number of alive mutants: " + mutants.stream().filter(Mutant::isAlive).count());
+//
+//        System.out.println("");
+//        System.out.println("====================================");
+//        System.out.println("");
+//
+//        mutants = facade.executeOperators(Lists.newArrayList(new Operator("ALL", "Conditionals")));
+//        System.out.println("Number of generated mutants: " + mutants.size());
+//        facade.executeMutants(mutants);
+//        System.out.println("Number of dead mutants: " + mutants.stream().filter(Mutant::isDead).count());
+//        System.out.println("Number of alive mutants: " + mutants.stream().filter(Mutant::isAlive).count());
+//        facade.tearDown();
+//    }
 }
