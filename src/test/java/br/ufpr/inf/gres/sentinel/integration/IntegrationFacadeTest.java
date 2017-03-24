@@ -102,10 +102,15 @@ public class IntegrationFacadeTest {
         @Override
         public List<Mutant> executeOperator(Operator operator) {
             Program programToBeMutated = IntegrationFacade.getProgramUnderTest();
-            return Lists.newArrayList(new Mutant(operator + "_1", new File(operator + "_1"), programToBeMutated),
+            ArrayList<Mutant> mutants = Lists.newArrayList(new Mutant(operator + "_1", new File(operator + "_1"), programToBeMutated),
                     new Mutant(operator + "_2", new File(operator + "_2"), programToBeMutated),
                     new Mutant(operator + "_3", new File(operator + "_3"), programToBeMutated),
                     new Mutant(operator + "_4", new File(operator + "_4"), programToBeMutated));
+            for (Mutant mutant : mutants) {
+                mutant.getOperators().add(operator);
+                operator.getGeneratedMutants().add(mutant);
+            }
+            return mutants;
         }
 
         @Override

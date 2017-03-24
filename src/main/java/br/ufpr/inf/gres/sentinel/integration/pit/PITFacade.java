@@ -39,11 +39,11 @@ public class PITFacade extends IntegrationFacade {
     private static final ArrayList<Operator> ALL_OPERATORS = new ArrayList<>();
     private static final HashMap<String, Operator> ALL_OPERATORS_BY_CLASS = new HashMap<>();
 
-    private HashMap<Program, MutationTestUnit> mutationUnits = new HashMap<>();
-    private HashMap<Program, HashMap<Mutant, MutationDetails>> generatedMutants = new HashMap<>();
-    private HashMap<Program, EntryPointImpl> entryPoints = new HashMap<>();
+    private final HashMap<Program, MutationTestUnit> mutationUnits = new HashMap<>();
+    private final HashMap<Program, HashMap<Mutant, MutationDetails>> generatedMutants = new HashMap<>();
+    private final HashMap<Program, EntryPointImpl> entryPoints = new HashMap<>();
 
-    private String trainingDircetory;
+    private final String trainingDircetory;
 
     static {
         Operator operator = new Operator("CONDITIONALS_BOUNDARY", "Conditionals");
@@ -121,7 +121,11 @@ public class PITFacade extends IntegrationFacade {
 
     @Override
     public List<Operator> getAllOperators() {
-        return Lists.newArrayList(ALL_OPERATORS);
+        ArrayList<Operator> operators = new ArrayList<>();
+        for (Operator operator : ALL_OPERATORS) {
+            operators.add(new Operator(operator));
+        }
+        return operators;
     }
 
     @Override
@@ -142,21 +146,26 @@ public class PITFacade extends IntegrationFacade {
                 final Program programUnderTest = IntegrationFacade.getProgramUnderTest();
                 EntryPointImpl entryPoint = getOrCreateEntryPoint();
                 MutationAnalysisUnit unit = entryPoint.generateMutants(new File(trainingDircetory), reportOptions, new SettingsFactory(reportOptions, plugins), new HashMap<>());
-                if (unit instanceof MutationTestUnit) {
-                    MutationTestUnit testUnit = (MutationTestUnit) unit;
-                    Field field = testUnit.getClass().getDeclaredField("availableMutations");
-                    field.setAccessible(true);
-                    Collection<MutationDetails> fieldValue = (Collection<MutationDetails>) field.get(testUnit);
-                    mutants.addAll(fieldValue.stream().map((mutationDetails) -> {
-                        Mutant mutant = new Mutant(mutationDetails.getId().toString(), null, programUnderTest);
-                        mutant.getOperators().add(getOperatorByName(mutationDetails.getMutator()));
-                        HashMap<Mutant, MutationDetails> programMutants = generatedMutants.computeIfAbsent(programUnderTest, (t) -> new HashMap<>());
-                        programMutants.putIfAbsent(mutant, mutationDetails);
-                        return mutant;
-                    }).collect(Collectors.toList()));
-                    mutationUnits.putIfAbsent(programUnderTest, testUnit);
-                } else {
-                    throw new IllegalArgumentException("This should not be happening!");
+                if (unit != null) {
+                    if (unit instanceof MutationTestUnit) {
+                        MutationTestUnit testUnit = (MutationTestUnit) unit;
+                        Field field = testUnit.getClass().getDeclaredField("availableMutations");
+                        field.setAccessible(true);
+                        Collection<MutationDetails> fieldValue = (Collection<MutationDetails>) field.get(testUnit);
+                        mutants.addAll(fieldValue.stream().map((mutationDetails) -> {
+                            Mutant mutant = new Mutant(mutationDetails.getId().toString(), null, programUnderTest);
+                            Operator mappedOperator = ALL_OPERATORS_BY_CLASS.get(mutationDetails.getMutator());
+                            Operator operator = Iterables.find(operators, (tempOperator) -> tempOperator.equals(mappedOperator));
+                            mutant.getOperators().add(operator);
+                            operator.getGeneratedMutants().add(mutant);
+                            HashMap<Mutant, MutationDetails> programMutants = generatedMutants.computeIfAbsent(programUnderTest, (t) -> new HashMap<>());
+                            programMutants.putIfAbsent(mutant, mutationDetails);
+                            return mutant;
+                        }).collect(Collectors.toList()));
+                        mutationUnits.putIfAbsent(programUnderTest, testUnit);
+                    } else {
+                        throw new IllegalArgumentException("This should not be happening!");
+                    }
                 }
             } catch (IOException | NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException ex) {
                 Logger.getLogger(PITFacade.class.getName()).log(Level.SEVERE, null, ex);
@@ -243,12 +252,6 @@ public class PITFacade extends IntegrationFacade {
         reportOptions.setShouldCreateTimestampedReports(false);
         reportOptions.setIncludeLaunchClasspath(true);
         return reportOptions;
-    }
-
-    private Operator getOperatorByName(final String operatorName) {
-        return Iterables.find(ALL_OPERATORS, (operator) -> {
-            return ALL_OPERATORS_BY_CLASS.get(operatorName).equals(operator);
-        });
     }
 
     private EntryPointImpl getOrCreateEntryPoint() {

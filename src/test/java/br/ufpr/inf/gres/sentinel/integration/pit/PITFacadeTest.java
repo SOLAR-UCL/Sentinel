@@ -79,11 +79,14 @@ public class PITFacadeTest {
     public void testExecuteOperator() {
         IntegrationFacade.setIntegrationFacade(facade);
         IntegrationFacade.setProgramUnderTest(programUnderTest);
+        List<Operator> allOperators = facade.getAllOperators();
 
-        List<Mutant> mutants = facade.executeOperator(facade.getAllOperators().get(0));
+        List<Mutant> mutants = facade.executeOperator(allOperators.get(0));
         assertNotNull(mutants);
         assertEquals(13, mutants.size());
         assertTrue(mutants.stream().allMatch(Mutant::isAlive));
+        assertTrue(mutants.stream().allMatch((t) -> t.getOperators().contains(allOperators.get(0))));
+        assertTrue(allOperators.get(0).getGeneratedMutants().containsAll(mutants));
     }
 
     @Test
