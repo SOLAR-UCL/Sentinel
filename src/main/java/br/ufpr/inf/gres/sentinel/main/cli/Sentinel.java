@@ -35,6 +35,7 @@ public class Sentinel {
     public static TrainingArgs TRAINING_ARGS;
 
     public static void main(String[] args) throws Exception {
+//        args = new String[]{"training", "--grammar", "default_no_homs"};
         RAW_ARGS = args;
 
         MAIN_ARGS = new MainArgs();

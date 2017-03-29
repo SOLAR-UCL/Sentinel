@@ -8,6 +8,8 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.pitest.classinfo.ClassByteArraySource;
 import org.pitest.classinfo.ClassInfo;
 import org.pitest.classinfo.ClassName;
@@ -21,18 +23,8 @@ import org.pitest.functional.FCollection;
 import org.pitest.functional.prelude.Prelude;
 import org.pitest.help.Help;
 import org.pitest.help.PitHelpError;
-import org.pitest.mutationtest.HistoryStore;
-import org.pitest.mutationtest.MutationAnalyser;
-import org.pitest.mutationtest.MutationConfig;
-import org.pitest.mutationtest.MutationResult;
-import org.pitest.mutationtest.MutationResultListener;
-import org.pitest.mutationtest.build.MutationAnalysisUnit;
-import org.pitest.mutationtest.build.MutationGrouper;
-import org.pitest.mutationtest.build.MutationSource;
-import org.pitest.mutationtest.build.MutationTestBuilder;
-import org.pitest.mutationtest.build.PercentAndConstantTimeoutStrategy;
-import org.pitest.mutationtest.build.TestPrioritiser;
-import org.pitest.mutationtest.build.WorkerFactory;
+import org.pitest.mutationtest.*;
+import org.pitest.mutationtest.build.*;
 import org.pitest.mutationtest.config.ReportOptions;
 import org.pitest.mutationtest.config.SettingsFactory;
 import org.pitest.mutationtest.engine.MutationEngine;
@@ -92,23 +84,26 @@ public class MutationCoverageImpl {
     }
 
     public Collection<MutationResult> runMutants(MutationAnalysisUnit unit) throws IOException {
-        final long t0 = System.currentTimeMillis();
-        checkMutationsFound(unit);
-        recordClassPath(coverageData);
+        try {
+            checkMutationsFound(unit);
+            recordClassPath(coverageData);
 
-        MutationEngine engine = this.strategies.factory().createEngine(
-                this.data.isMutateStaticInitializers(),
-                Prelude.or(this.data.getExcludedMethods()),
-                this.data.getLoggingClasses(), this.data.getMutators(),
-                this.data.isDetectInlinedCode());
+            MutationEngine engine = this.strategies.factory().createEngine(
+                    this.data.isMutateStaticInitializers(),
+                    Prelude.or(this.data.getExcludedMethods()),
+                    this.data.getLoggingClasses(), this.data.getMutators(),
+                    this.data.isDetectInlinedCode());
 
-        final List<MutationResultListener> config = Lists.newArrayList(listener);
+            final List<MutationResultListener> config = Lists.newArrayList(listener);
 
-        final MutationAnalysisExecutor mae = new MutationAnalysisExecutor(
-                numberOfThreads(), config);
-        this.timings.registerStart(Timings.Stage.RUN_MUTATION_TESTS);
-        mae.run(Lists.newArrayList(unit));
-        this.timings.registerEnd(Timings.Stage.RUN_MUTATION_TESTS);
+            final MutationAnalysisExecutor mae = new MutationAnalysisExecutor(
+                    numberOfThreads(), config);
+            this.timings.registerStart(Timings.Stage.RUN_MUTATION_TESTS);
+            mae.run(Lists.newArrayList(unit));
+            this.timings.registerEnd(Timings.Stage.RUN_MUTATION_TESTS);
+        } catch (SecurityException | IllegalArgumentException ex) {
+            Logger.getLogger(MutationCoverageImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
         return listener.getResults();
     }
 
@@ -154,36 +149,32 @@ public class MutationCoverageImpl {
     private List<MutationAnalysisUnit> buildMutationTests(
             final CoverageDatabase coverageData, final MutationEngine engine) {
 
+        MutationTestBuilder builder = getBuilder(engine, coverageData);
+
+        return builder.createMutationTestUnits(this.code.getCodeUnderTestNames());
+    }
+
+    public MutationTestBuilder getBuilder(final MutationEngine engine, final CoverageDatabase coverageData1) {
         final MutationConfig mutationConfig = new MutationConfig(engine, coverage()
                 .getLaunchOptions());
-
         ClassByteArraySource bas = new ClassPathByteArraySource(
                 this.data.getClassPath());
-
-        TestPrioritiser testPrioritiser = this.settings.getTestPrioritiser()
-                .makeTestPrioritiser(this.data.getFreeFormProperties(), this.code,
-                        coverageData);
-
+        TestPrioritiser testPrioritiser = this.settings.getTestPrioritiser().makeTestPrioritiser(this.data.getFreeFormProperties(), this.code, coverageData1);
         final MutationSource source = new MutationSource(mutationConfig,
                 makeFilter().createFilter(this.data.getFreeFormProperties(), this.code,
                         this.data.getMaxMutationsPerClass()), testPrioritiser, bas);
-
-        final MutationAnalyser analyser = new IncrementalAnalyser(
-                new DefaultCodeHistory(this.code, history()), coverageData);
-
+        final MutationAnalyser analyser = new IncrementalAnalyser(new DefaultCodeHistory(this.code, history()), coverageData1);
         final WorkerFactory wf = new WorkerFactory(this.baseDir, coverage()
                 .getConfiguration(), mutationConfig,
                 new PercentAndConstantTimeoutStrategy(this.data.getTimeoutFactor(),
                         this.data.getTimeoutConstant()), this.data.isVerbose(), this.data
                 .getClassPath().getLocalClassPath());
-
         MutationGrouper grouper = this.settings.getMutationGrouper().makeFactory(
                 this.data.getFreeFormProperties(), this.code,
                 this.data.getNumberOfThreads(), this.data.getMutationUnitSize());
         final MutationTestBuilder builder = new MutationTestBuilder(wf, analyser,
                 source, grouper);
-
-        return builder.createMutationTestUnits(this.code.getCodeUnderTestNames());
+        return builder;
     }
 
     private MutationFilterFactory makeFilter() {

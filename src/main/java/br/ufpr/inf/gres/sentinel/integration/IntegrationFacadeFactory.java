@@ -13,15 +13,19 @@ public class IntegrationFacadeFactory {
     public static final String PIT = "PIT";
 
     public static IntegrationFacade createIntegrationFacade(String name, String trainingDirectory) {
+        IntegrationFacade facade;
         switch (name.toUpperCase()) {
             case MU_JAVA:
             case HG4HOM:
-                return new HG4HOMFacade(trainingDirectory);
+                facade = new HG4HOMFacade(trainingDirectory);
+                break;
             case PIT:
-                return new PITFacade(trainingDirectory);
+                facade = new PITFacade(trainingDirectory);
+                break;
             default:
                 throw new IllegalArgumentException("Mutation tool " + name + " not found!");
         }
+        return facade;
     }
 
 }

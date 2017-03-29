@@ -162,7 +162,7 @@ public class PITFacade extends IntegrationFacade {
                             programMutants.putIfAbsent(mutant, mutationDetails);
                             return mutant;
                         }).collect(Collectors.toList()));
-                        mutationUnits.putIfAbsent(programUnderTest, testUnit);
+                        mutationUnits.put(programUnderTest, testUnit);
                     } else {
                         throw new IllegalArgumentException("This should not be happening!");
                     }

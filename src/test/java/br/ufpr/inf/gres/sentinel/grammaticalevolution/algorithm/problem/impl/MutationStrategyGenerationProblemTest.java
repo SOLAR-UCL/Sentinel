@@ -4,14 +4,16 @@ import br.ufpr.inf.gres.sentinel.base.mutation.Program;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.representation.VariableLengthSolution;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.GrammarFiles;
 import br.ufpr.inf.gres.sentinel.integration.IntegrationFacade;
+import br.ufpr.inf.gres.sentinel.integration.IntegrationFacadeFactory;
 import br.ufpr.inf.gres.sentinel.integration.IntegrationFacadeTest;
 import br.ufpr.inf.gres.sentinel.integration.hg4hom.HG4HOMFacade;
 import com.google.common.collect.Lists;
 import java.io.File;
-import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 /**
  * @author Giovani Guizzo
@@ -136,6 +138,30 @@ public class MutationStrategyGenerationProblemTest {
         assertEquals(Double.MAX_VALUE, solution.getObjective(0), 0.0001);
         assertEquals(Double.MAX_VALUE, solution.getObjective(1), 0.000001);
         assertEquals(Double.MAX_VALUE, solution.getObjective(2), 0.000001);
+    }
+
+    @Test
+    @Ignore
+    public void evaluate5() throws Exception {
+        Program programUnderTest = new Program("br.ufpr.inf.gres.TriTyp", new File("training/br/ufpr/inf/gres/TriTyp.java"));
+        IntegrationFacade.setProgramUnderTest(programUnderTest);
+        IntegrationFacade facade = IntegrationFacadeFactory.createIntegrationFacade("PIT", System.getProperty("user.dir") + File.separator + "training");
+        IntegrationFacade.setIntegrationFacade(facade);
+        problem = new MutationStrategyGenerationProblem(GrammarFiles.getGrammarPath(GrammarFiles.DEFAULT_GRAMMAR_NO_HOMS),
+                10,
+                100,
+                1,
+                179,
+                10,
+                10,
+                Lists.newArrayList(programUnderTest));
+
+        VariableLengthSolution<Integer> solution = problem.createSolution();
+        solution.clearVariables();
+        solution.addAllVariables(Lists.newArrayList(40, 5, 172, 175, 111, 92, 116, 119, 171, 104, 18, 113, 115, 19, 124, 79, 34, 119, 144));
+        problem.evaluate(solution);
+        assertNotNull(solution.getAttribute("Strategy"));
+        assertTrue(solution.getObjective(0) > 0.0);
     }
 
     @Test
