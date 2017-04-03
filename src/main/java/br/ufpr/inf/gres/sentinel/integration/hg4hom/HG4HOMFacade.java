@@ -328,4 +328,13 @@ public class HG4HOMFacade extends IntegrationFacade {
         replace = CharMatcher.anyOf("\\/.").replaceFrom(replace, File.separator);
         return new Program(programName, new File(MutationSystem.SRC_PATH + File.separator + replace + ".java"));
     }
+
+    @Override
+    public void executeMutantsAgainstAllTestCases(List<Mutant> mutantsToExecute) {
+        executeMutants(mutantsToExecute);
+    }
+
+    @Override
+    public void tearDown() {
+    }
 }

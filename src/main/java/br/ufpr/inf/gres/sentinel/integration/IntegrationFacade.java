@@ -113,4 +113,8 @@ public abstract class IntegrationFacade {
 
     public abstract void executeMutants(List<Mutant> mutantsToExecute);
 
+    public abstract void executeMutantsAgainstAllTestCases(List<Mutant> mutantsToExecute);
+
+    public abstract void tearDown();
+
 }

@@ -1,4 +1,4 @@
-package br.ufpr.inf.gres.sentinel.base.subsuming;
+package br.ufpr.inf.gres.sentinel.util.subsuming;
 
 import br.ufpr.inf.gres.sentinel.base.mutation.Mutant;
 import java.util.List;

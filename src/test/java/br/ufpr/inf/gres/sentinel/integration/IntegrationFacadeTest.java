@@ -11,8 +11,9 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import static org.junit.Assert.*;
 import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 /**
  * @author Giovani Guizzo
@@ -143,6 +144,15 @@ public class IntegrationFacadeTest {
                 allMutants.addAll(executeOperator(operator));
             }
             return allMutants;
+        }
+
+        @Override
+        public void executeMutantsAgainstAllTestCases(List<Mutant> mutantsToExecute) {
+            executeMutants(mutantsToExecute);
+        }
+
+        @Override
+        public void tearDown() {
         }
 
     }

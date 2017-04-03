@@ -251,6 +251,7 @@ public class PITFacade extends IntegrationFacade {
         reportOptions.setDetectInlinedCode(true);
         reportOptions.setShouldCreateTimestampedReports(false);
         reportOptions.setIncludeLaunchClasspath(true);
+        reportOptions.setVerbose(false);
         return reportOptions;
     }
 
@@ -260,31 +261,57 @@ public class PITFacade extends IntegrationFacade {
         });
     }
 
+    @Override
+    public void executeMutantsAgainstAllTestCases(List<Mutant> mutantsToExecute) {
+        if (mutantsToExecute != null && !mutantsToExecute.isEmpty()) {
+            PluginServices plugins = PluginServices.makeForContextLoader();
+
+            ReportOptions reportOptions = createDefaultReportOptions();
+
+            try {
+                final Program programUnderTest = IntegrationFacade.getProgramUnderTest();
+                MutationTestUnit unit = mutationUnits.get(programUnderTest);
+                if (unit != null) {
+                    Field field = unit.getClass().getDeclaredField("availableMutations");
+                    field.setAccessible(true);
+                    Collection<MutationDetails> fieldValue = (Collection<MutationDetails>) field.get(unit);
+                    fieldValue.clear();
+                    HashMap<Mutant, MutationDetails> descriptions = generatedMutants.get(programUnderTest);
+                    for (Mutant mutant : mutantsToExecute) {
+                        MutationDetails description = descriptions.get(mutant);
+                        fieldValue.add(description);
+                    }
+                    EntryPointImpl entryPoint = getOrCreateEntryPoint();
+                    Collection<MutationResult> result = entryPoint.executeMutants(new File(trainingDircetory), reportOptions, new SettingsFactory(reportOptions, plugins), new HashMap<>(), unit);
+
+                    for (Mutant mutant : mutantsToExecute) {
+                        MutationDetails description = descriptions.get(mutant);
+                        MutationResult specificResult = Iterables.find(result, (tempItem) -> {
+                            return tempItem.getDetails().equals(description);
+                        });
+                        mutant.getKillingTestCases().addAll(specificResult.getKillingTest().map((testCase) -> {
+                            TestCase sentinelTestCase = new TestCase(testCase);
+                            sentinelTestCase.getKillingMutants().add(mutant);
+                            return sentinelTestCase;
+                        }));
+                    }
+                } else {
+                    throw new IOException("Something went wrong. I could not find the mutation unit for the mutation procedure. This has something to do to the program under test. Maybe it is non-existent?");
+                }
+            } catch (IOException | SecurityException | IllegalArgumentException | NoSuchFieldException | IllegalAccessException ex) {
+                Logger.getLogger(PITFacade.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+
+    @Override
     public void tearDown() {
         for (EntryPointImpl entry : entryPoints.values()) {
             entry.close();
         }
+        entryPoints.clear();
+        mutationUnits.clear();
+        generatedMutants.clear();
     }
 
-//    public static void main(String[] args) {
-//        PITFacade facade = new PITFacade("training");
-//        IntegrationFacade.setIntegrationFacade(facade);
-//        IntegrationFacade.setProgramUnderTest(new Program("br.ufpr.inf.gres.TriTyp", new File("training/br/ufpr/inf/gres/TriTyp.java")));
-//        List<Mutant> mutants = facade.executeOperators(Lists.newArrayList(new Operator("ALL", "Conditionals")));
-//        System.out.println("Number of generated mutants: " + mutants.size());
-//        facade.executeMutants(mutants);
-//        System.out.println("Number of dead mutants: " + mutants.stream().filter(Mutant::isDead).count());
-//        System.out.println("Number of alive mutants: " + mutants.stream().filter(Mutant::isAlive).count());
-//
-//        System.out.println("");
-//        System.out.println("====================================");
-//        System.out.println("");
-//
-//        mutants = facade.executeOperators(Lists.newArrayList(new Operator("ALL", "Conditionals")));
-//        System.out.println("Number of generated mutants: " + mutants.size());
-//        facade.executeMutants(mutants);
-//        System.out.println("Number of dead mutants: " + mutants.stream().filter(Mutant::isDead).count());
-//        System.out.println("Number of alive mutants: " + mutants.stream().filter(Mutant::isAlive).count());
-//        facade.tearDown();
-//    }
 }
