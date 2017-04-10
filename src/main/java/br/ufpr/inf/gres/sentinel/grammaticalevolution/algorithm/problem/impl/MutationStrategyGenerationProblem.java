@@ -99,17 +99,17 @@ public class MutationStrategyGenerationProblem implements AbstractVariableLength
             Strategy strategy = getOrCreateStrategy(solution);
 
             Program tempProgram = IntegrationFacade.getProgramUnderTest();
+            IntegrationFacade integrationFacade = IntegrationFacade.getIntegrationFacade();
             double numberOfMutants = 0;
             double score = 0;
             double elapsedMs = 0;
             for (Program testProgram : testPrograms) {
                 IntegrationFacade.setProgramUnderTest(testProgram);
+                integrationFacade.initializeForProgram(testProgram);
                 for (int i = 0; i < numberOfStrategyRuns; i++) {
-                    //TODO: Change to CPU time
                     ThreadMXBean threadBean = ManagementFactory.getThreadMXBean();
                     long currentThreadCpuTime = threadBean.getCurrentThreadCpuTime();
                     List<Mutant> mutants = strategy.run();
-                    IntegrationFacade integrationFacade = IntegrationFacade.getIntegrationFacade();
                     integrationFacade.executeMutants(mutants);
                     currentThreadCpuTime = threadBean.getCurrentThreadCpuTime() - currentThreadCpuTime;
                     // Summing the elapsed time

@@ -99,6 +99,16 @@ public abstract class IntegrationFacade {
         return programs;
     }
 
+    public void initializeForProgram(Program program) {
+        if (!conventionalExecutionTimes.containsKey(program)) {
+            runConventionalStrategy(program);
+            conventionalExecutionTimes.remove(program);
+            conventionalQuantities.remove(program);
+            conventionalScores.remove(program);
+            conventionalMutants.remove(program);
+        }
+    }
+
     public abstract Program instantiateProgram(String programName);
 
     public abstract List<Operator> getAllOperators();

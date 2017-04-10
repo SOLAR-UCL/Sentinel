@@ -153,15 +153,17 @@ public class MutationStrategyGenerationProblemTest {
                 1,
                 179,
                 10,
-                10,
+                5,
                 Lists.newArrayList(programUnderTest));
 
         VariableLengthSolution<Integer> solution = problem.createSolution();
         solution.clearVariables();
-        solution.addAllVariables(Lists.newArrayList(40, 5, 172, 175, 111, 92, 116, 119, 171, 104, 18, 113, 115, 19, 124, 79, 34, 119, 144));
+        solution.addAllVariables(Lists.newArrayList(0, 2, 1, 0, 0, 1, 9, 3));
         problem.evaluate(solution);
         assertNotNull(solution.getAttribute("Strategy"));
-        assertTrue(solution.getObjective(0) > 0.0);
+        System.out.println("Objective 1: " + solution.getObjective(0));
+        System.out.println("Objective 2: " + solution.getObjective(1));
+        System.out.println("Objective 3: " + solution.getObjective(2));
     }
 
     @Test
