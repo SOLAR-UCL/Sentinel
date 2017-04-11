@@ -4,7 +4,6 @@ import br.ufpr.inf.gres.sentinel.main.cli.converter.SeparatorConverter;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
 import com.google.common.collect.Lists;
-
 import java.util.List;
 
 /**
@@ -37,11 +36,11 @@ public class TrainingArgs extends MainArgs {
     public Integer upperVariableBound = 179;
 
     @Parameter(names = "--maxWraps", description = "Maximum chromosome wraps.")
-    public Integer maxWraps = 0;
+    public Integer maxWraps = 2;
 
     @Parameter(names = "--trainingRuns",
             description = "Number of training runs for each training program in each training evaluation.")
-    public Integer numberOfTrainingRuns = 10;
+    public Integer numberOfTrainingRuns = 5;
 
     @Parameter(names = "--maxEvaluations", description = "Maximum number of fitness evaluations.")
     public Integer maxEvaluations = 10000;
@@ -60,5 +59,8 @@ public class TrainingArgs extends MainArgs {
 
     @Parameter(names = "--mutationProbability", description = "Mutation probability.")
     public Double mutationProbability = 0.01D;
+
+    @Parameter(names = {"--outputFile", "-o"}, description = "Output file containing the training results. File is outputed to training directory.")
+    public String outputFile = "result.json";
 
 }

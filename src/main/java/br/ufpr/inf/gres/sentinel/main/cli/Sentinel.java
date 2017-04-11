@@ -8,14 +8,21 @@ import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.operators.mutati
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.operators.prune.impl.SimplePruneOperator;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.problem.impl.MutationStrategyGenerationProblem;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.representation.VariableLengthSolution;
+import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.representation.impl.DefaultVariableLengthIntegerSolution;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.GrammarFiles;
 import br.ufpr.inf.gres.sentinel.integration.IntegrationFacade;
 import br.ufpr.inf.gres.sentinel.integration.IntegrationFacadeFactory;
 import br.ufpr.inf.gres.sentinel.main.cli.args.MainArgs;
 import br.ufpr.inf.gres.sentinel.main.cli.args.TrainingArgs;
+import br.ufpr.inf.gres.sentinel.main.cli.gson.VariableLengthSolutionGsonSerializer;
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
+import com.google.common.io.Files;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import java.io.File;
+import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Stream;
@@ -35,7 +42,7 @@ public class Sentinel {
     public static TrainingArgs TRAINING_ARGS;
 
     public static void main(String[] args) throws Exception {
-//        args = new String[]{"training", "--grammar", "default_no_homs"};
+//        args = new String[]{"training", "--grammar", "default_no_homs", "--maxEvaluations", "30", "--populationSize", "10"};
         RAW_ARGS = args;
 
         MAIN_ARGS = new MainArgs();
@@ -106,7 +113,7 @@ public class Sentinel {
 
         algorithm.run();
         List<VariableLengthSolution<Integer>> result = algorithm.getResult();
-        printAlgorithmResults(result);
+        outputResults(result);
     }
 
     private static void execute() {
@@ -133,25 +140,17 @@ public class Sentinel {
         return path;
     }
 
-    private static void printAlgorithmResults(List<VariableLengthSolution<Integer>> result) {
+    private static void outputResults(List<VariableLengthSolution<Integer>> result) throws IOException {
         result.sort(Comparator.comparingDouble(o -> o.getObjective(2)));
-        final int[] i = {0};
-        System.out.println("Variables -> Strategy description -> Time -> Quantity -> Score");
-        result.forEach(solution -> {
-            Object strategy = solution.getAttribute("Strategy");
-            System.out.println("Solution #"
-                    + (++i[0])
-                    + "\n\tVariables: "
-                    + solution.getVariablesCopy()
-                    + "\n\tStrategy: "
-                    + (strategy != null ? strategy : "Invalid Strategy")
-                    + "\n\tObjectives: "
-                    + solution.getObjective(0)
-                    + "\t"
-                    + solution.getObjective(1)
-                    + "\t"
-                    + solution.getObjective(2));
-        });
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(DefaultVariableLengthIntegerSolution.class, new VariableLengthSolutionGsonSerializer())
+                .setPrettyPrinting()
+                .create();
+        Files.write(gson.toJson(result), new File(TRAINING_ARGS.workingDirectory
+                + File.separator
+                + TRAINING_ARGS.trainingDirectory
+                + File.separator
+                + TRAINING_ARGS.outputFile), Charset.defaultCharset());
     }
 
     private static void usage(JCommander commander) {
