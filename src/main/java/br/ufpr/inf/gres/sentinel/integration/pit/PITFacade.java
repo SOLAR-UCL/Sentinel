@@ -263,45 +263,7 @@ public class PITFacade extends IntegrationFacade {
 
     @Override
     public void executeMutantsAgainstAllTestCases(List<Mutant> mutantsToExecute) {
-        if (mutantsToExecute != null && !mutantsToExecute.isEmpty()) {
-            PluginServices plugins = PluginServices.makeForContextLoader();
-
-            ReportOptions reportOptions = createDefaultReportOptions();
-
-            try {
-                final Program programUnderTest = IntegrationFacade.getProgramUnderTest();
-                MutationTestUnit unit = mutationUnits.get(programUnderTest);
-                if (unit != null) {
-                    Field field = unit.getClass().getDeclaredField("availableMutations");
-                    field.setAccessible(true);
-                    Collection<MutationDetails> fieldValue = (Collection<MutationDetails>) field.get(unit);
-                    fieldValue.clear();
-                    HashMap<Mutant, MutationDetails> descriptions = generatedMutants.get(programUnderTest);
-                    for (Mutant mutant : mutantsToExecute) {
-                        MutationDetails description = descriptions.get(mutant);
-                        fieldValue.add(description);
-                    }
-                    EntryPointImpl entryPoint = getOrCreateEntryPoint();
-                    Collection<MutationResult> result = entryPoint.executeMutants(new File(trainingDircetory), reportOptions, new SettingsFactory(reportOptions, plugins), new HashMap<>(), unit);
-
-                    for (Mutant mutant : mutantsToExecute) {
-                        MutationDetails description = descriptions.get(mutant);
-                        MutationResult specificResult = Iterables.find(result, (tempItem) -> {
-                            return tempItem.getDetails().equals(description);
-                        });
-                        mutant.getKillingTestCases().addAll(specificResult.getKillingTest().map((testCase) -> {
-                            TestCase sentinelTestCase = new TestCase(testCase);
-                            sentinelTestCase.getKillingMutants().add(mutant);
-                            return sentinelTestCase;
-                        }));
-                    }
-                } else {
-                    throw new IOException("Something went wrong. I could not find the mutation unit for the mutation procedure. This has something to do to the program under test. Maybe it is non-existent?");
-                }
-            } catch (IOException | SecurityException | IllegalArgumentException | NoSuchFieldException | IllegalAccessException ex) {
-                Logger.getLogger(PITFacade.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
+        //TODO
     }
 
     @Override

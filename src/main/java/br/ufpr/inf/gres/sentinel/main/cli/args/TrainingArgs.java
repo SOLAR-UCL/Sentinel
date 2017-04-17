@@ -36,7 +36,7 @@ public class TrainingArgs extends MainArgs {
     public Integer upperVariableBound = 179;
 
     @Parameter(names = "--maxWraps", description = "Maximum chromosome wraps.")
-    public Integer maxWraps = 2;
+    public Integer maxWraps = 10;
 
     @Parameter(names = "--trainingRuns",
             description = "Number of training runs for each training program in each training evaluation.")

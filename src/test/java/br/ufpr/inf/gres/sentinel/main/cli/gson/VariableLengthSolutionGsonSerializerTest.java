@@ -1,20 +1,20 @@
 package br.ufpr.inf.gres.sentinel.main.cli.gson;
 
-import br.ufpr.inf.gres.sentinel.base.mutation.Program;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.problem.impl.MutationStrategyGenerationProblem;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.representation.VariableLengthSolution;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.representation.impl.DefaultVariableLengthIntegerSolution;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.GrammarFiles;
+import br.ufpr.inf.gres.sentinel.integration.IntegrationFacade;
+import br.ufpr.inf.gres.sentinel.integration.IntegrationFacadeFactory;
 import br.ufpr.inf.gres.sentinel.strategy.Strategy;
 import br.ufpr.inf.gres.sentinel.strategy.operation.Operation;
 import br.ufpr.inf.gres.sentinel.strategy.operation.OperationTest;
 import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import java.io.File;
 import java.io.IOException;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.*;
 
 /**
  *
@@ -23,18 +23,29 @@ import org.junit.Test;
 public class VariableLengthSolutionGsonSerializerTest {
 
     private static MutationStrategyGenerationProblem problem;
+    private static IntegrationFacade facade;
+    private static IntegrationFacade oldFacade;
 
     @BeforeClass
     public static void setUpClass() throws IOException {
-        problem = new MutationStrategyGenerationProblem(GrammarFiles.getDefaultGrammarPath(),
-                10,
+        facade = IntegrationFacadeFactory.createIntegrationFacade("PIT",
+                System.getProperty("user.dir") + File.separator + "training");
+        oldFacade = IntegrationFacade.getIntegrationFacade();
+        IntegrationFacade.setIntegrationFacade(facade);
+
+        problem = new MutationStrategyGenerationProblem(GrammarFiles.getGrammarPath(GrammarFiles.DEFAULT_GRAMMAR_NO_HOMS),
                 15,
-                1,
-                10,
+                100,
                 0,
+                179,
+                10,
                 5,
-                Lists.newArrayList(new Program("Test1", null),
-                        new Program("Test2", null)));
+                Lists.newArrayList(facade.instantiateProgram("br.ufpr.inf.gres.TriTyp")));
+    }
+
+    @AfterClass
+    public static void tearDownClass() {
+        IntegrationFacade.setIntegrationFacade(oldFacade);
     }
 
     @Test
@@ -79,6 +90,23 @@ public class VariableLengthSolutionGsonSerializerTest {
                 .registerTypeAdapter(DefaultVariableLengthIntegerSolution.class, new VariableLengthSolutionGsonSerializer())
                 .create();
         Assert.assertEquals("{\"variables\":[],\"objectives\":[0.0,0.0,0.0]}", gson.toJson(solution));
+    }
+
+    @Test
+    @Ignore
+    public void testSerialize4() throws IOException {
+        VariableLengthSolution<Integer> solution = problem.createSolution();
+        solution.clearVariables();
+        solution.addAllVariables(Lists.newArrayList(152, 152, 44, 123, 144, 11, 161, 16, 154, 103, 91, 37, 177, 124, 165));
+        problem.evaluate(solution);
+
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(DefaultVariableLengthIntegerSolution.class, new VariableLengthSolutionGsonSerializer())
+                .registerTypeAdapter(Operation.class, new OperationSerializer())
+                .setPrettyPrinting()
+                .create();
+        System.out.println(gson.toJson(solution));
+//        Assert.assertEquals("{\"variables\":[],\"objectives\":[0.0,0.0,0.0]}", gson.toJson(solution));
     }
 
 }

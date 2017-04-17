@@ -8,26 +8,26 @@ import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.representation.V
  */
 public class DefaultVariableLengthIntegerSolution extends VariableLengthSolution<Integer> {
 
-	/**
-	 * Constructor
-	 *
-	 * @param problem
-	 */
-	public DefaultVariableLengthIntegerSolution(AbstractVariableLengthIntegerProblem problem) {
-		super(problem);
+    /**
+     * Constructor
+     *
+     * @param problem
+     */
+    public DefaultVariableLengthIntegerSolution(AbstractVariableLengthIntegerProblem problem) {
+        super(problem);
 
-		int numberOfVariables = randomGenerator.nextInt(problem.getMinLength(), problem.getMaxLength());
-		for (int i = 0; i < numberOfVariables; i++) {
-			addVariable(randomGenerator.nextInt(problem.getLowerVariableBound(), problem.getUpperVariableBound()));
-		}
-	}
+        int numberOfVariables = randomGenerator.nextInt(problem.getMinLength(), problem.getMaxLength());
+        for (int i = 0; i < numberOfVariables; i++) {
+            addVariable(randomGenerator.nextInt(problem.getLowerVariableBound(), problem.getUpperVariableBound()));
+        }
+    }
 
-	public DefaultVariableLengthIntegerSolution(DefaultVariableLengthIntegerSolution solution) {
-		super(solution);
-	}
+    public DefaultVariableLengthIntegerSolution(DefaultVariableLengthIntegerSolution solution) {
+        super(solution);
+    }
 
-	@Override
-	public DefaultVariableLengthIntegerSolution copy() {
-		return new DefaultVariableLengthIntegerSolution(this);
-	}
+    @Override
+    public DefaultVariableLengthIntegerSolution copy() {
+        return new DefaultVariableLengthIntegerSolution(this);
+    }
 }

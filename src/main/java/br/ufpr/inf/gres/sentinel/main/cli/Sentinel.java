@@ -14,7 +14,9 @@ import br.ufpr.inf.gres.sentinel.integration.IntegrationFacade;
 import br.ufpr.inf.gres.sentinel.integration.IntegrationFacadeFactory;
 import br.ufpr.inf.gres.sentinel.main.cli.args.MainArgs;
 import br.ufpr.inf.gres.sentinel.main.cli.args.TrainingArgs;
+import br.ufpr.inf.gres.sentinel.main.cli.gson.OperationSerializer;
 import br.ufpr.inf.gres.sentinel.main.cli.gson.VariableLengthSolutionGsonSerializer;
+import br.ufpr.inf.gres.sentinel.strategy.operation.Operation;
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
 import com.google.common.io.Files;
@@ -144,6 +146,7 @@ public class Sentinel {
         result.sort(Comparator.comparingDouble(o -> o.getObjective(2)));
         Gson gson = new GsonBuilder()
                 .registerTypeAdapter(DefaultVariableLengthIntegerSolution.class, new VariableLengthSolutionGsonSerializer())
+                .registerTypeAdapter(Operation.class, new OperationSerializer())
                 .setPrettyPrinting()
                 .create();
         Files.write(gson.toJson(result), new File(TRAINING_ARGS.workingDirectory
