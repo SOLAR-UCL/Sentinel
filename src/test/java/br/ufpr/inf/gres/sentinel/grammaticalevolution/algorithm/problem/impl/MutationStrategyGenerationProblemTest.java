@@ -54,7 +54,7 @@ public class MutationStrategyGenerationProblemTest {
 
     @Test
     public void getNumberOfObjectives() throws Exception {
-        assertEquals(3, problem.getNumberOfObjectives());
+        assertEquals(2, problem.getNumberOfObjectives());
     }
 
     @Test
@@ -76,8 +76,8 @@ public class MutationStrategyGenerationProblemTest {
         problem.evaluate(solution);
         assertNotNull(solution.getAttribute("Strategy"));
         assertTrue(solution.getObjective(0) >= 0);
-        assertEquals(1, solution.getObjective(1), 0.000001);
-        assertEquals(-1, solution.getObjective(2), 0.000001);
+        assertEquals(1, (double) solution.getAttribute("Quantity"), 0.000001);
+        assertEquals(-1, solution.getObjective(1), 0.000001);
     }
 
     @Test
@@ -90,7 +90,7 @@ public class MutationStrategyGenerationProblemTest {
         assertNull(solution.getAttribute("Strategy"));
         assertEquals(Double.MAX_VALUE, solution.getObjective(0), 0.0001);
         assertEquals(Double.MAX_VALUE, solution.getObjective(1), 0.000001);
-        assertEquals(Double.MAX_VALUE, solution.getObjective(2), 0.000001);
+        assertEquals(Double.MAX_VALUE, (double) solution.getAttribute("Quantity"), 0.000001);
     }
 
     @Test
@@ -118,13 +118,13 @@ public class MutationStrategyGenerationProblemTest {
 
         System.out.println(solution.getAttribute("Strategy"));
         System.out.println("Objective 1\t(time)\texp > 0:\t" + solution.getObjective(0));
-        System.out.println("Objective 2\t(quantity)\texp = 1:\t" + solution.getObjective(1));
-        System.out.println("Objective 3\t(score):\texp = 1:\t" + solution.getObjective(2));
+        System.out.println("Objective 2\t(score)\texp = 1:\t" + solution.getObjective(1));
+        System.out.println("Objective 3\t(quantity):\texp = 1:\t" + (double) solution.getAttribute("Quantity"));
 
         assertNotNull(solution.getAttribute("Strategy"));
         assertTrue(solution.getObjective(0) > 0);
-        assertEquals(1, solution.getObjective(1), 0.000001);
-        assertEquals(-1, solution.getObjective(2), 0.000001);
+        assertEquals(1, (double) solution.getAttribute("Quantity"), 0.000001);
+        assertEquals(-1, solution.getObjective(1), 0.000001);
     }
 
     @Test
@@ -137,7 +137,7 @@ public class MutationStrategyGenerationProblemTest {
         assertNotNull(solution.getAttribute("Strategy"));
         assertEquals(Double.MAX_VALUE, solution.getObjective(0), 0.0001);
         assertEquals(Double.MAX_VALUE, solution.getObjective(1), 0.000001);
-        assertEquals(Double.MAX_VALUE, solution.getObjective(2), 0.000001);
+        assertEquals(Double.MAX_VALUE, (double) solution.getAttribute("Quantity"), 0.000001);
     }
 
     @Test
@@ -163,7 +163,7 @@ public class MutationStrategyGenerationProblemTest {
         assertNotNull(solution.getAttribute("Strategy"));
         System.out.println("Objective 1: " + solution.getObjective(0));
         System.out.println("Objective 2: " + solution.getObjective(1));
-        System.out.println("Objective 3: " + solution.getObjective(2));
+        System.out.println("Objective 3: " + (double) solution.getAttribute("Quantity"));
     }
 
     @Test

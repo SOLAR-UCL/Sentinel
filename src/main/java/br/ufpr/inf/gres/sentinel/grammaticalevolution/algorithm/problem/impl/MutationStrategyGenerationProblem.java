@@ -79,7 +79,7 @@ public class MutationStrategyGenerationProblem implements AbstractVariableLength
 
     @Override
     public int getNumberOfObjectives() {
-        return 3;
+        return 2;
     }
 
     @Override
@@ -142,8 +142,9 @@ public class MutationStrategyGenerationProblem implements AbstractVariableLength
                 score /= normalizationFactor;
 
                 solution.setObjective(0, elapsedMs);
-                solution.setObjective(1, numberOfMutants);
-                solution.setObjective(2, score * -1);
+                solution.setObjective(1, score * -1);
+//                solution.setObjective(2, numberOfMutants);
+                solution.setAttribute("Quantity", numberOfMutants);
             } else {
                 setWorst(solution);
             }
@@ -158,7 +159,8 @@ public class MutationStrategyGenerationProblem implements AbstractVariableLength
     private void setWorst(VariableLengthSolution<Integer> solution) {
         solution.setObjective(0, Double.MAX_VALUE);
         solution.setObjective(1, Double.MAX_VALUE);
-        solution.setObjective(2, Double.MAX_VALUE);
+        solution.setAttribute("Quantity", Double.MAX_VALUE);
+//        solution.setObjective(2, Double.MAX_VALUE);
     }
 
     private Strategy getOrCreateStrategy(VariableLengthSolution<Integer> solution) {
