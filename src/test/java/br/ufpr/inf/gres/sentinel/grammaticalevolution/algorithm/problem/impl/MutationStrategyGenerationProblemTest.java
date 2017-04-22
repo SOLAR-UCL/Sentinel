@@ -70,14 +70,30 @@ public class MutationStrategyGenerationProblemTest {
     @Test
     public void evaluate() throws Exception {
         IntegrationFacade.setIntegrationFacade(new IntegrationFacadeTest.IntegrationFacadeStub());
+
         VariableLengthSolution<Integer> solution = problem.createSolution();
         solution.clearVariables();
         solution.addAllVariables(Lists.newArrayList(0, 2, 1, 0, 0, 1, 9, 3));
         problem.evaluate(solution);
+
         assertNotNull(solution.getAttribute("Strategy"));
+        Object strategy = solution.getAttribute("Strategy");
         assertTrue(solution.getObjective(0) >= 0);
         assertEquals(1, (double) solution.getAttribute("Quantity"), 0.000001);
         assertEquals(-1, solution.getObjective(1), 0.000001);
+
+        VariableLengthSolution<Integer> copy = solution.copy();
+        copy.clearVariables();
+        copy.addAllVariables(Lists.newArrayList(0, 2, 1, 0, 0, 1, 9, 0, 2, 1, 0, 0, 1, 9, 3));
+        problem.evaluate(copy);
+
+        assertNotNull(copy.getAttribute("Strategy"));
+        Object strategy2 = copy.getAttribute("Strategy");
+        assertTrue(copy.getObjective(0) >= 0);
+        assertEquals(1, (double) copy.getAttribute("Quantity"), 0.000001);
+        assertEquals(-1, copy.getObjective(1), 0.000001);
+
+        assertNotEquals(strategy2, strategy);
     }
 
     @Test

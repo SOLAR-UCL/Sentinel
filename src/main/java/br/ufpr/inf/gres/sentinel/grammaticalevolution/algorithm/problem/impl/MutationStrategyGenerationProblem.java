@@ -96,7 +96,7 @@ public class MutationStrategyGenerationProblem implements AbstractVariableLength
     public void evaluate(VariableLengthSolution<Integer> solution) {
         System.out.println("Evaluation: " + (++evaluationCount));
         try {
-            Strategy strategy = getOrCreateStrategy(solution);
+            Strategy strategy = createStrategy(solution);
 
             Program tempProgram = IntegrationFacade.getProgramUnderTest();
             IntegrationFacade integrationFacade = IntegrationFacade.getIntegrationFacade();
@@ -163,16 +163,13 @@ public class MutationStrategyGenerationProblem implements AbstractVariableLength
 //        solution.setObjective(2, Double.MAX_VALUE);
     }
 
-    private Strategy getOrCreateStrategy(VariableLengthSolution<Integer> solution) {
-        Object tempStrategy = solution.getAttribute("Strategy");
-        if (tempStrategy == null) {
-            List<Integer> variables = solution.getVariablesCopy();
-            Iterable<Integer> variablesIterator
-                    = Iterables.limit(Iterables.cycle(variables), variables.size() * (maxWraps + 1));
-            tempStrategy = strategyMapper.interpret(variablesIterator);
-            solution.setAttribute("Strategy", tempStrategy);
-        }
-        return (Strategy) tempStrategy;
+    private Strategy createStrategy(VariableLengthSolution<Integer> solution) {
+        List<Integer> variables = solution.getVariablesCopy();
+        Iterable<Integer> variablesIterator
+                = Iterables.limit(Iterables.cycle(variables), variables.size() * (maxWraps + 1));
+        Strategy strategy = strategyMapper.interpret(variablesIterator);
+        solution.setAttribute("Strategy", strategy);
+        return (Strategy) strategy;
     }
 
     @Override
