@@ -44,7 +44,7 @@ public class Sentinel {
     public static TrainingArgs TRAINING_ARGS;
 
     public static void main(String[] args) throws Exception {
-//        args = new String[]{"training", "--grammar", "default_no_homs", "--maxEvaluations", "30", "--populationSize", "10"};
+        args = new String[]{"training", "--maxEvaluations", "10", "--populationSize", "10", "--trainingRuns", "1"};
         RAW_ARGS = args;
 
         MAIN_ARGS = new MainArgs();
@@ -143,7 +143,7 @@ public class Sentinel {
     }
 
     private static void outputResults(List<VariableLengthSolution<Integer>> result) throws IOException {
-        result.sort(Comparator.comparingDouble(o -> o.getObjective(2)));
+        result.sort(Comparator.comparingDouble(o -> o.getObjective(1)));
         Gson gson = new GsonBuilder()
                 .registerTypeAdapter(DefaultVariableLengthIntegerSolution.class, new VariableLengthSolutionGsonSerializer())
                 .registerTypeAdapter(Operation.class, new OperationSerializer())
