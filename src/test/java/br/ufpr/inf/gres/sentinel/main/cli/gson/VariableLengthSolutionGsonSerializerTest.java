@@ -58,13 +58,14 @@ public class VariableLengthSolutionGsonSerializerTest {
 //        solution.setObjective(2, 3000);
         solution.setAttribute("Strategy", new Strategy(OperationTest.getComplexTestOperationChain()));
         solution.setAttribute("Quantity", 3000);
+        solution.setAttribute("Consumed Items Count", 2);
 
         Gson gson = new GsonBuilder()
                 .registerTypeAdapter(DefaultVariableLengthIntegerSolution.class, new VariableLengthSolutionGsonSerializer())
                 .registerTypeAdapter(Operation.class, new OperationSerializer())
                 .create();
         String result = gson.toJson(solution);
-        Assert.assertEquals("{\"variables\":[0,2,1,0,0,1,9,3],\"objectives\":[1000.0,2000.0],\"quantity\":3000,\"strategy\":{\"firstOperation\":{\"name\":\"TestOperation\",\"successor\":{\"name\":\"TestOperation2\",\"successor\":{\"name\":\"New Branch\",\"successor\":{\"name\":\"TestOperation3\"},\"secondSuccessor\":{\"name\":\"New Branch\",\"successor\":{\"name\":\"New Branch\",\"successor\":{\"name\":\"TestOperation5\"},\"secondSuccessor\":{\"name\":\"TestOperation6\"}},\"secondSuccessor\":{\"name\":\"TestOperation4\"}}}}}}}", result);
+        Assert.assertEquals("{\"objectives\":[1000.0,2000.0],\"quantity\":3000,\"consumedItemsCount\":2,\"variables\":[0,2,1,0,0,1,9,3],\"strategy\":{\"firstOperation\":{\"name\":\"TestOperation\",\"successor\":{\"name\":\"TestOperation2\",\"successor\":{\"name\":\"New Branch\",\"successor\":{\"name\":\"TestOperation3\"},\"secondSuccessor\":{\"name\":\"New Branch\",\"successor\":{\"name\":\"New Branch\",\"successor\":{\"name\":\"TestOperation5\"},\"secondSuccessor\":{\"name\":\"TestOperation6\"}},\"secondSuccessor\":{\"name\":\"TestOperation4\"}}}}}}}", result);
     }
 
     @Test
@@ -79,7 +80,7 @@ public class VariableLengthSolutionGsonSerializerTest {
         Gson gson = new GsonBuilder()
                 .registerTypeAdapter(DefaultVariableLengthIntegerSolution.class, new VariableLengthSolutionGsonSerializer())
                 .create();
-        Assert.assertEquals("{\"variables\":[0,2,1,0,0,1,9,3],\"objectives\":[1000.0,2000.0]}", gson.toJson(solution));
+        Assert.assertEquals("{\"objectives\":[1000.0,2000.0],\"variables\":[0,2,1,0,0,1,9,3]}", gson.toJson(solution));
     }
 
     @Test
@@ -90,7 +91,7 @@ public class VariableLengthSolutionGsonSerializerTest {
         Gson gson = new GsonBuilder()
                 .registerTypeAdapter(DefaultVariableLengthIntegerSolution.class, new VariableLengthSolutionGsonSerializer())
                 .create();
-        Assert.assertEquals("{\"variables\":[],\"objectives\":[0.0,0.0]}", gson.toJson(solution));
+        Assert.assertEquals("{\"objectives\":[0.0,0.0],\"variables\":[]}", gson.toJson(solution));
     }
 
     @Test
@@ -107,7 +108,6 @@ public class VariableLengthSolutionGsonSerializerTest {
                 .setPrettyPrinting()
                 .create();
         System.out.println(gson.toJson(solution));
-//        Assert.assertEquals("{\"variables\":[],\"objectives\":[0.0,0.0,0.0]}", gson.toJson(solution));
     }
 
 }

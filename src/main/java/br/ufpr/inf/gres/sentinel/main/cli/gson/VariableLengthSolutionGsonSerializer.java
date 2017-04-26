@@ -16,9 +16,10 @@ public class VariableLengthSolutionGsonSerializer<T extends Number> implements J
             jsonObjectives.add(src.getObjective(i));
         }
 
-        jsonSolution.add("variables", context.serialize(src.getVariablesCopy()));
         jsonSolution.add("objectives", jsonObjectives);
         jsonSolution.add("quantity", context.serialize(src.getAttribute("Quantity")));
+        jsonSolution.add("consumedItemsCount", context.serialize(src.getAttribute("Consumed Items Count")));
+        jsonSolution.add("variables", context.serialize(src.getVariablesCopy()));
         jsonSolution.add("strategy", context.serialize(src.getAttribute("Strategy"), Strategy.class));
         return jsonSolution;
     }
