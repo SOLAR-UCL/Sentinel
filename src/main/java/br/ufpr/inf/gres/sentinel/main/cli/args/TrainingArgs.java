@@ -84,4 +84,9 @@ public class TrainingArgs {
     @Parameter(names = {"--outputFile", "-o"}, description = "Output file containing the training results. File is outputed to training directory.")
     public String outputFile = "result.json";
 
+    @Parameter(names = "--session",
+            description = "Session name for the results. This is used later for analysis. Results from the same session are used to compute the overall quality of the algorithm used in this session. If no session is provided, then all the results are outputed to the training directory.",
+            converter = SeparatorConverter.class)
+    public String session = "";
+
 }

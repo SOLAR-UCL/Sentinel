@@ -6,7 +6,6 @@ import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.Te
 import br.ufpr.inf.gres.sentinel.integration.IntegrationFacade;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.combine.generation.AbstractHOMGeneration;
 import com.google.common.collect.Lists;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,30 +14,30 @@ import java.util.List;
  */
 public class SingleHOMGeneration extends AbstractHOMGeneration {
 
-	public SingleHOMGeneration() {
-		super(TerminalRuleType.SINGLE_HOM + " Generation");
-	}
+    public SingleHOMGeneration() {
+        super(TerminalRuleType.SINGLE_HOM + " Generation");
+    }
 
-	@Override
-	public List<Mutant> doOperation(List<Mutant> input) {
-		if (input.size() >= 2) {
-			Mutant mutant = IntegrationFacade.getIntegrationFacade().combineMutants(input);
-			if (mutant != null && mutant.getConstituentMutants().isEmpty()) {
-				for (Mutant tempMutant : input) {
-					mutant.getConstituentMutants().add(tempMutant);
-					mutant.getOperators().addAll(tempMutant.getOperators());
-					for (Operator operator : tempMutant.getOperators()) {
-						operator.getGeneratedMutants().add(mutant);
-					}
-				}
-				return Lists.newArrayList(mutant);
-			}
-		}
-		return new ArrayList<>();
-	}
+    @Override
+    public List<Mutant> doOperation(List<Mutant> input) {
+        if (input.size() >= 2) {
+            Mutant mutant = IntegrationFacade.getIntegrationFacade().combineMutants(input);
+            if (mutant != null && mutant.getConstituentMutants().isEmpty()) {
+                for (Mutant tempMutant : input) {
+                    mutant.getConstituentMutants().add(tempMutant);
+                    mutant.getOperators().addAll(tempMutant.getOperators());
+                    for (Operator operator : tempMutant.getOperators()) {
+                        operator.getGeneratedMutants().add(mutant);
+                    }
+                }
+                return Lists.newArrayList(mutant);
+            }
+        }
+        return new ArrayList<>();
+    }
 
-	@Override
-	public boolean isSpecific() {
-		return false;
-	}
+    @Override
+    public boolean isSpecific() {
+        return false;
+    }
 }

@@ -13,9 +13,6 @@ public class GrammarFiles {
 
     private static String WORKING_DIRECTORY = System.getProperty("user.dir");
 
-    private GrammarFiles() {
-    }
-
     public static String getWorkingDirectory() {
         return WORKING_DIRECTORY;
     }

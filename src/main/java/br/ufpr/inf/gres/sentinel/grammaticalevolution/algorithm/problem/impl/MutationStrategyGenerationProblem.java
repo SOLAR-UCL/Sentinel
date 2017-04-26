@@ -5,6 +5,7 @@ import br.ufpr.inf.gres.sentinel.base.mutation.Program;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.problem.AbstractVariableLengthIntegerProblem;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.representation.VariableLengthSolution;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.representation.impl.DefaultVariableLengthIntegerSolution;
+import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.iterator.CountingIterator;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.StrategyMapper;
 import br.ufpr.inf.gres.sentinel.integration.IntegrationFacade;
 import br.ufpr.inf.gres.sentinel.strategy.Strategy;
@@ -165,10 +166,11 @@ public class MutationStrategyGenerationProblem implements AbstractVariableLength
 
     private Strategy createStrategy(VariableLengthSolution<Integer> solution) {
         List<Integer> variables = solution.getVariablesCopy();
-        Iterable<Integer> variablesIterator
-                = Iterables.limit(Iterables.cycle(variables), variables.size() * (maxWraps + 1));
+        CountingIterator<Integer> variablesIterator
+                = new CountingIterator<>(Iterables.limit(Iterables.cycle(variables), variables.size() * (maxWraps + 1)).iterator());
         Strategy strategy = strategyMapper.interpret(variablesIterator);
         solution.setAttribute("Strategy", strategy);
+        solution.setAttribute("Consumed Items Count", variablesIterator.getCount());
         return (Strategy) strategy;
     }
 

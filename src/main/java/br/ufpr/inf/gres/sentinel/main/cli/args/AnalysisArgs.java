@@ -3,7 +3,7 @@ package br.ufpr.inf.gres.sentinel.main.cli.args;
 import br.ufpr.inf.gres.sentinel.main.cli.converter.SeparatorConverter;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
-import java.util.ArrayList;
+import com.google.common.collect.Lists;
 import java.util.List;
 
 /**
@@ -32,13 +32,19 @@ public class AnalysisArgs {
             converter = SeparatorConverter.class)
     public String outputDirectory = "analysis";
 
-    @Parameter(names = {"--inputFilesRegex", "-ir"},
-            description = "The regex for finding input files for the analysis. Sentinel will look into the training directory for these.")
-    public String inputFilesRegex = "result*.json";
+    @Parameter(names = {"--sessions", "-s"},
+            description = "The sessions for finding input files for the analysis. Each session corresponds to a group of results that shall be analysed together. Sentinel will look into the training directory for these sessions, where each session is a folder inside the trianing directory and each json file is an independent run result. If no session is provided, then Sentinel will look for json files in the training directory.",
+            variableArity = true,
+            converter = SeparatorConverter.class)
+    public List<String> sessions = Lists.newArrayList("");
 
-    @Parameter(names = {"--inputFiles", "-i"},
-            description = "The input files for the analysis. Sentinel will look into the training directory for these. Sentinel will give priority to this argument over \"--inputFilesRegex\".",
+    @Parameter(names = "--indicators",
+            description = "The indicators used to compute the quality of the results. Available options are: hypervolume, igd.",
             variableArity = true)
-    public List<String> inputFiles = new ArrayList<>();
+    public List<String> indicators = Lists.newArrayList("hypervolume");
+
+    @Parameter(names = "--printParetoFronts",
+            description = "A boolean argument to determine if Sentinel should print Pareto fronts.")
+    public boolean printParetoFronts = true;
 
 }

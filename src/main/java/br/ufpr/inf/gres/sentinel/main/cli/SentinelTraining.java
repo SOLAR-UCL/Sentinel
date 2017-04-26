@@ -5,7 +5,7 @@ import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.GrammaticalEvolu
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.operators.crossover.impl.SinglePointVariableCrossover;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.operators.duplicate.impl.SimpleDuplicateOperator;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.operators.mutation.impl.SimpleRandomVariableMutation;
-import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.operators.prune.impl.SimplePruneOperator;
+import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.operators.prune.impl.PruneToUsedOperator;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.problem.impl.MutationStrategyGenerationProblem;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.representation.VariableLengthSolution;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.representation.impl.DefaultVariableLengthIntegerSolution;
@@ -61,8 +61,7 @@ public class SentinelTraining {
                         trainingArgs.populationSize,
                         new SimpleDuplicateOperator<>(trainingArgs.duplicateProbability,
                                 trainingArgs.maxLength),
-                        new SimplePruneOperator<>(trainingArgs.pruneProbability,
-                                trainingArgs.minLength),
+                        new PruneToUsedOperator<>(trainingArgs.pruneProbability),
                         new SinglePointVariableCrossover<>(trainingArgs.crossoverProbability),
                         new SimpleRandomVariableMutation(trainingArgs.mutationProbability,
                                 trainingArgs.lowerVariableBound,
@@ -77,7 +76,11 @@ public class SentinelTraining {
         List<VariableLengthSolution<Integer>> resultSolutions = algorithm.getResult();
         resultSolutions.sort(Comparator.comparingDouble(o -> o.getObjective(1)));
 
-        ResultWrapper result = new ResultWrapper(timeMillis, resultSolutions);
+        ResultWrapper result = new ResultWrapper()
+                .setExecutionTimeInMillis(timeMillis)
+                .setResult(resultSolutions)
+                .setGrammarFile(trainingArgs.grammarFilePath)
+                .setSession(trainingArgs.session);
 
         Gson gson = new GsonBuilder()
                 .registerTypeAdapter(DefaultVariableLengthIntegerSolution.class, new VariableLengthSolutionGsonSerializer())
@@ -85,11 +88,15 @@ public class SentinelTraining {
                 .registerTypeAdapter(Operation.class, new OperationSerializer())
                 .setPrettyPrinting()
                 .create();
-        Files.write(gson.toJson(result), new File(trainingArgs.workingDirectory
+        File outputFile = new File(trainingArgs.workingDirectory
                 + File.separator
                 + trainingArgs.trainingDirectory
                 + File.separator
-                + trainingArgs.outputFile), Charset.defaultCharset());
+                + trainingArgs.session
+                + File.separator
+                + trainingArgs.outputFile);
+        outputFile.getParentFile().mkdirs();
+        Files.write(gson.toJson(result), outputFile, Charset.defaultCharset());
     }
 
 }

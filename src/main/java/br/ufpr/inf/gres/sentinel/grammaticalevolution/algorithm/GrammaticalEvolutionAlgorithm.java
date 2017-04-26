@@ -75,9 +75,9 @@ public class GrammaticalEvolutionAlgorithm<T> extends NSGAII<VariableLengthSolut
         while (!this.isStoppingConditionReached()) {
             List<VariableLengthSolution<T>> matingPopulation = this.selection(this.getPopulation());
             List<VariableLengthSolution<T>> offspringPopulation = this.reproduction(matingPopulation);
-            offspringPopulation = this.prune(offspringPopulation);
             offspringPopulation = this.duplicate(offspringPopulation);
             offspringPopulation = this.evaluatePopulation(offspringPopulation);
+            offspringPopulation = this.prune(offspringPopulation);
             this.setPopulation(this.replacement(this.getPopulation(), offspringPopulation));
             this.updateProgress();
         }

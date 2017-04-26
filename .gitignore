@@ -180,5 +180,7 @@ training/result
 training/output
 lib/.index/
 /training/compile_output
+/analysis*
+
 *.out
 *.json

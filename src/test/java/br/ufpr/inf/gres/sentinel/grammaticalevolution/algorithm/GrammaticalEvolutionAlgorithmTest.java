@@ -4,7 +4,7 @@ import br.ufpr.inf.gres.sentinel.base.mutation.Program;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.operators.crossover.impl.SinglePointVariableCrossover;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.operators.duplicate.impl.SimpleDuplicateOperator;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.operators.mutation.impl.SimpleRandomVariableMutation;
-import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.operators.prune.impl.SimplePruneOperator;
+import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.operators.prune.impl.PruneToMinimumOperator;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.problem.impl.MutationStrategyGenerationProblem;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.representation.VariableLengthSolution;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.GrammarFiles;
@@ -56,7 +56,7 @@ public class GrammaticalEvolutionAlgorithmTest {
                         100,
                         50,
                         new SimpleDuplicateOperator<>(0.1, 100),
-                        new SimplePruneOperator<>(0.1, 10),
+                        new PruneToMinimumOperator<>(0.1, 10),
                         new SinglePointVariableCrossover<>(1.0),
                         new SimpleRandomVariableMutation(0.01, 0, 179),
                         new BinaryTournamentSelection<>(new RankingAndCrowdingDistanceComparator<>()),

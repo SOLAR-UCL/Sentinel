@@ -9,31 +9,45 @@ import java.util.List;
  */
 public class ResultWrapper {
 
+    private String session;
+    private String grammarFile;
     private long executionTimeInMillis;
     private List<VariableLengthSolution<Integer>> result;
 
-    public ResultWrapper() {
-    }
-
-    public ResultWrapper(long executionTimeInMillis, List<VariableLengthSolution<Integer>> result) {
-        this.executionTimeInMillis = executionTimeInMillis;
-        this.result = result;
-    }
-
     public long getExecutionTimeInMillis() {
         return executionTimeInMillis;
+    }
+
+    public ResultWrapper setExecutionTimeInMillis(long executionTimeInMillis) {
+        this.executionTimeInMillis = executionTimeInMillis;
+        return this;
     }
 
     public List<VariableLengthSolution<Integer>> getResult() {
         return result;
     }
 
-    public void setExecutionTimeInMillis(long executionTimeInMillis) {
-        this.executionTimeInMillis = executionTimeInMillis;
+    public ResultWrapper setResult(List<VariableLengthSolution<Integer>> result) {
+        this.result = result;
+        return this;
     }
 
-    public void setResult(List<VariableLengthSolution<Integer>> result) {
-        this.result = result;
+    public String getSession() {
+        return session;
+    }
+
+    public ResultWrapper setSession(String session) {
+        this.session = session;
+        return this;
+    }
+
+    public String getGrammarFile() {
+        return grammarFile;
+    }
+
+    public ResultWrapper setGrammarFile(String grammarFile) {
+        this.grammarFile = grammarFile;
+        return this;
     }
 
 }
