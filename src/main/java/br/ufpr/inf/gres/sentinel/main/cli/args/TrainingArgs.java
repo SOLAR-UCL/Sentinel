@@ -10,13 +10,34 @@ import java.util.List;
  * @author Giovani Guizzo
  */
 @Parameters(commandDescription = "If Sentinel must be executed for generating strategies (training).",
-        commandNames = "training")
-public class TrainingArgs extends MainArgs {
+        commandNames = "train")
+public class TrainingArgs {
+
+    @Parameter(names = {"--help", "-h"}, description = "Shows this message.")
+    public boolean help = false;
+
+    @Parameter(names = {
+        "--facade", "--integrationFacade", "--tool", "--mutationTool", "-m"
+    },
+            description = "The tool used to effectively generate the mutants. Available options: \"PIT\", \"muJava\", \"HG4HOM\" (same as muJava).")
+    public String facade = "PIT";
+
+    @Parameter(names = {"--workingDirectory", "-w"},
+            description = "The working directory of Sentinel.",
+            converter = SeparatorConverter.class)
+    public String workingDirectory = System.getProperty("user.dir");
 
     @Parameter(names = {"--trainingDirectory", "-td"},
             description = "The directory (relative to the working directory) in which the training programs are located and where the training will be executed.",
             converter = SeparatorConverter.class)
     public String trainingDirectory = "training";
+
+    @Parameter(names = {
+        "--grammar", "--grammarFile", "-g"
+    },
+            description = "The grammar file path (relative to the working directory) used to interpret the strategies.",
+            converter = SeparatorConverter.class)
+    public String grammarFilePath = "grammars/default_grammar_no_homs.bnf";
 
     @Parameter(names = {"--trainingPrograms", "-tp"},
             description = "The names of the training programs to generate strategies. Sentinel will search for the programs in /path/to/training/directory/ according to the tool used for the mutant generation.",

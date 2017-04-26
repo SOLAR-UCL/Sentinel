@@ -25,6 +25,8 @@ public class GrammaticalEvolutionAlgorithm<T> extends NSGAII<VariableLengthSolut
      * @param problem
      * @param maxEvaluations
      * @param populationSize
+     * @param duplicateOperator
+     * @param pruneOperator
      * @param crossoverOperator
      * @param mutationOperator
      * @param selectionOperator
