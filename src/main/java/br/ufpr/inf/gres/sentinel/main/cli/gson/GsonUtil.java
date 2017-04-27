@@ -7,10 +7,11 @@ import br.ufpr.inf.gres.sentinel.strategy.operation.Operation;
 import com.google.common.io.Files;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.nio.file.Path;
 
 /**
  *
@@ -39,12 +40,18 @@ public class GsonUtil {
         return gson.toJson(result);
     }
 
-    public ResultWrapper fromJson(String jsonFilePath) throws FileNotFoundException {
+    public ResultWrapper fromJson(Path jsonFilePath) throws IOException {
+        return this.fromJson(jsonFilePath.toFile());
+    }
+
+    public ResultWrapper fromJson(String jsonFilePath) throws IOException {
         return this.fromJson(new File(jsonFilePath));
     }
 
-    public ResultWrapper fromJson(File jsonFile) throws FileNotFoundException {
-        return gson.fromJson(Files.newReader(jsonFile, Charset.defaultCharset()), ResultWrapper.class);
+    public ResultWrapper fromJson(File jsonFile) throws IOException {
+        try (BufferedReader reader = Files.newReader(jsonFile, Charset.defaultCharset())) {
+            return gson.fromJson(reader, ResultWrapper.class);
+        }
     }
 
 }

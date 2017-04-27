@@ -40,4 +40,10 @@ public class SentinelTest {
         Sentinel.main(args);
     }
 
+    @Test
+    public void testSentinelAnalysis() throws Exception {
+        String[] args = new String[]{"analyse", "--inputDirectory", "training/GE"};
+        Sentinel.main(args);
+    }
+
 }

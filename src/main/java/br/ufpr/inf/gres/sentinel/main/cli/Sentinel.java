@@ -27,30 +27,30 @@ public class Sentinel {
 
         try {
             commander.parse(args);
-
-            if (mainArgs.help) {
-                commander.usage();
-            } else if (trainingArgs.help || testingArgs.help || analysisArgs.help) {
-                commander.usage(commander.getParsedCommand());
-            } else {
-
-                JCommander command = commander.getCommands().get(commander.getParsedCommand());
-                if (command == null) {
-                    throw new IllegalArgumentException("Command not found. Here are the usage instructions for you.");
-                } else {
-                    Object chosenCommand = command.getObjects().get(0);
-                    if (chosenCommand instanceof TrainingArgs) {
-                        SentinelTraining.train(trainingArgs, args);
-                    } else if (chosenCommand instanceof TestingArgs) {
-                        SentinelTesting.test(testingArgs, args);
-                    } else if (chosenCommand instanceof AnalysisArgs) {
-                        SentinelAnalysis.analyse(analysisArgs, args);
-                    }
-                }
-            }
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
             commander.usage();
+        }
+
+        if (mainArgs.help) {
+            commander.usage();
+        } else if (trainingArgs.help || testingArgs.help || analysisArgs.help) {
+            commander.usage(commander.getParsedCommand());
+        } else {
+
+            JCommander command = commander.getCommands().get(commander.getParsedCommand());
+            if (command == null) {
+                throw new IllegalArgumentException("Command not found. Here are the usage instructions for you.");
+            } else {
+                Object chosenCommand = command.getObjects().get(0);
+                if (chosenCommand instanceof TrainingArgs) {
+                    SentinelTraining.train(trainingArgs, args);
+                } else if (chosenCommand instanceof TestingArgs) {
+                    SentinelTesting.test(testingArgs, args);
+                } else if (chosenCommand instanceof AnalysisArgs) {
+                    SentinelAnalysis.analyse(analysisArgs, args);
+                }
+            }
         }
     }
 
