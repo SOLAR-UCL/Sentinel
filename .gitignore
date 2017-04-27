@@ -184,3 +184,6 @@ lib/.index/
 
 *.out
 *.json
+
+!src/test/resources
+!src/main/resources

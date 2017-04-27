@@ -33,6 +33,8 @@ public class MutationStrategyGenerationProblem implements AbstractVariableLength
     private int maxLength;
     private int maxWraps;
     private int evaluationCount;
+    private int numberOfObjectives;
+    private int numberOfConstraints;
 
     public MutationStrategyGenerationProblem(String grammarFile,
             int minLength,
@@ -51,6 +53,8 @@ public class MutationStrategyGenerationProblem implements AbstractVariableLength
         this.numberOfStrategyRuns = numberOfStrategyRuns;
         this.testPrograms = testPrograms;
         this.evaluationCount = 0;
+        this.numberOfObjectives = 2;
+        this.numberOfConstraints = 0;
     }
 
     @Override
@@ -80,12 +84,12 @@ public class MutationStrategyGenerationProblem implements AbstractVariableLength
 
     @Override
     public int getNumberOfObjectives() {
-        return 2;
+        return numberOfObjectives;
     }
 
     @Override
     public int getNumberOfConstraints() {
-        return 0;
+        return numberOfConstraints;
     }
 
     @Override

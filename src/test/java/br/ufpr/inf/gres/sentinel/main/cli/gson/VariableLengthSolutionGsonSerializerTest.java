@@ -55,7 +55,6 @@ public class VariableLengthSolutionGsonSerializerTest {
         solution.addAllVariables(Lists.newArrayList(0, 2, 1, 0, 0, 1, 9, 3));
         solution.setObjective(0, 1000);
         solution.setObjective(1, 2000);
-//        solution.setObjective(2, 3000);
         solution.setAttribute("Strategy", new Strategy(OperationTest.getComplexTestOperationChain()));
         solution.setAttribute("Quantity", 3000);
         solution.setAttribute("Consumed Items Count", 2);
@@ -75,7 +74,6 @@ public class VariableLengthSolutionGsonSerializerTest {
         solution.addAllVariables(Lists.newArrayList(0, 2, 1, 0, 0, 1, 9, 3));
         solution.setObjective(0, 1000);
         solution.setObjective(1, 2000);
-//        solution.setObjective(2, 3000);
 
         Gson gson = new GsonBuilder()
                 .registerTypeAdapter(DefaultVariableLengthIntegerSolution.class, new VariableLengthSolutionGsonSerializer())
