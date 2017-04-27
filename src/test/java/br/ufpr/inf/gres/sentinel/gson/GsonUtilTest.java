@@ -1,5 +1,7 @@
-package br.ufpr.inf.gres.sentinel.main.cli.gson;
+package br.ufpr.inf.gres.sentinel.gson;
 
+import br.ufpr.inf.gres.sentinel.gson.ResultWrapper;
+import br.ufpr.inf.gres.sentinel.gson.GsonUtil;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;

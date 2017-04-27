@@ -38,6 +38,6 @@ public class GrammarFiles {
     }
 
     public static String getGrammarPathFromWorkingDirectory(String grammarFileName) {
-        return WORKING_DIRECTORY + File.separator + "grammars" + File.separator + grammarFileName;
+        return WORKING_DIRECTORY + File.separator + grammarFileName;
     }
 }

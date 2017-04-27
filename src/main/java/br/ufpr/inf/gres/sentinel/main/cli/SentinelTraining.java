@@ -11,8 +11,8 @@ import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.representation.V
 import br.ufpr.inf.gres.sentinel.integration.IntegrationFacade;
 import br.ufpr.inf.gres.sentinel.integration.IntegrationFacadeFactory;
 import br.ufpr.inf.gres.sentinel.main.cli.args.TrainingArgs;
-import br.ufpr.inf.gres.sentinel.main.cli.gson.GsonUtil;
-import br.ufpr.inf.gres.sentinel.main.cli.gson.ResultWrapper;
+import br.ufpr.inf.gres.sentinel.gson.GsonUtil;
+import br.ufpr.inf.gres.sentinel.gson.ResultWrapper;
 import com.google.common.io.Files;
 import java.io.File;
 import java.io.IOException;

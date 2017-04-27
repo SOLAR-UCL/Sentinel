@@ -1,18 +1,22 @@
 package br.ufpr.inf.gres.sentinel.main.cli;
 
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.representation.VariableLengthSolution;
+import br.ufpr.inf.gres.sentinel.gson.GsonUtil;
+import br.ufpr.inf.gres.sentinel.gson.ResultWrapper;
+import br.ufpr.inf.gres.sentinel.indictaors.IndicatorFactory;
 import br.ufpr.inf.gres.sentinel.main.cli.args.AnalysisArgs;
-import br.ufpr.inf.gres.sentinel.main.cli.gson.GsonUtil;
-import br.ufpr.inf.gres.sentinel.main.cli.gson.ResultWrapper;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
 import java.awt.Color;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -21,11 +25,19 @@ import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.StandardChartTheme;
+import org.jfree.chart.axis.CategoryAxis;
+import org.jfree.chart.axis.NumberAxis;
+import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.chart.renderer.category.BoxAndWhiskerRenderer;
+import org.jfree.data.statistics.DefaultBoxAndWhiskerCategoryDataset;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
+import org.uma.jmetal.qualityindicator.impl.GenericIndicator;
 import org.uma.jmetal.util.SolutionListUtils;
 import org.uma.jmetal.util.fileoutput.SolutionListOutput;
+import org.uma.jmetal.util.front.Front;
+import org.uma.jmetal.util.front.imp.ArrayFront;
 
 /**
  *
@@ -38,8 +50,8 @@ public class SentinelAnalysis {
         File outputDirectory = new File(analysisArgs.workingDirectory + File.separator + analysisArgs.outputDirectory);
         outputDirectory.mkdirs();
         if (analysisArgs.printParetoFronts) {
-            List<VariableLengthSolution<Integer>> nonDominatedSolutions = printNonDominatedParetoFront(resultsFromJson, outputDirectory, analysisArgs);
-            printOtherFronts(nonDominatedSolutions, resultsFromJson, outputDirectory, analysisArgs);
+            printNonDominatedParetoFront(resultsFromJson, outputDirectory, analysisArgs);
+            printOtherFronts(resultsFromJson, outputDirectory, analysisArgs);
         }
         computeQualityIndicators(resultsFromJson, outputDirectory, analysisArgs);
     }
@@ -52,77 +64,140 @@ public class SentinelAnalysis {
         try (DirectoryStream<Path> jsonFiles = Files.newDirectoryStream(inputDirectory.toPath(), analysisArgs.inputFilesRegex)) {
             for (Path jsonFile : jsonFiles) {
                 ResultWrapper result = gson.fromJson(jsonFile);
-                results.put(result.getSession(), result);
+                results.put(result.getSession().isEmpty() ? "EMPTY_SESSION" : result.getSession(), result);
             }
         }
         return results;
     }
 
-    private static List<VariableLengthSolution<Integer>> printNonDominatedParetoFront(ListMultimap<String, ResultWrapper> resultsFromJson, File outputDirectory, AnalysisArgs analysisArgs) throws IOException {
+    private static List<VariableLengthSolution<Integer>> getNonDominatedSolutions(Collection<ResultWrapper> resultsFromJson) {
         Optional<Stream<VariableLengthSolution<Integer>>> reduce = resultsFromJson
-                .values()
                 .stream()
                 .map(result -> result.getResult().stream())
                 .reduce((firstList, secondList) -> {
                     return Stream.concat(firstList, secondList);
                 });
-        List<VariableLengthSolution<Integer>> allSolutions = null;
+        List<VariableLengthSolution<Integer>> allSolutions = new ArrayList<>();
         if (reduce.isPresent()) {
             allSolutions = reduce.get().collect(Collectors.toList());
             allSolutions = SolutionListUtils.getNondominatedSolutions(allSolutions);
-            if (analysisArgs.printIntermediateFiles) {
-                new SolutionListOutput(allSolutions).printObjectivesToFile(outputDirectory.getPath() + File.separator + "ND.txt");
-            }
-            XYSeries plotSeries = createNonDominatedSeries("Non-Dominated Solutions", allSolutions);
-            printChart(new XYSeriesCollection(plotSeries), new File(outputDirectory.getPath() + File.separator + "ND.png"), analysisArgs);
-//            printChart(new XYSeriesCollection(plotSeries), new File(outputDirectory.getPath() + File.separator + "ND_TQ.png"), analysisArgs);
-//            printChart(new XYSeriesCollection(plotSeries), new File(outputDirectory.getPath() + File.separator + "ND_SQ.png"), analysisArgs);
         }
         return allSolutions;
     }
 
-    private static void printOtherFronts(List<VariableLengthSolution<Integer>> nonDominatedSolutions, ListMultimap<String, ResultWrapper> resultsFromJson, File outputDirectory, AnalysisArgs analysisArgs) throws IOException {
+    private static List<VariableLengthSolution<Integer>> printNonDominatedParetoFront(ListMultimap<String, ResultWrapper> resultsFromJson, File outputDirectory, AnalysisArgs analysisArgs) throws IOException {
+        List<VariableLengthSolution<Integer>> allSolutions = getNonDominatedSolutions(resultsFromJson.values());
+        if (analysisArgs.printIntermediateFiles) {
+            new SolutionListOutput(allSolutions).printObjectivesToFile(outputDirectory.getPath() + File.separator + "ND.txt");
+        }
+        XYSeries plotSeries = createNonDominatedSeries("Non-Dominated Solutions", allSolutions);
+        printScatterPlot(new XYSeriesCollection(plotSeries), new File(outputDirectory.getPath() + File.separator + "ND.png"), analysisArgs);
+//            printChart(new XYSeriesCollection(plotSeries), new File(outputDirectory.getPath() + File.separator + "ND_TQ.png"), analysisArgs);
+//            printChart(new XYSeriesCollection(plotSeries), new File(outputDirectory.getPath() + File.separator + "ND_SQ.png"), analysisArgs);
+        return allSolutions;
+    }
+
+    private static void printOtherFronts(ListMultimap<String, ResultWrapper> resultsFromJson, File outputDirectory, AnalysisArgs analysisArgs) throws IOException {
         XYSeriesCollection allFrontsPlot = new XYSeriesCollection();
+        List<VariableLengthSolution<Integer>> nonDominatedSolutions = getNonDominatedSolutions(resultsFromJson.values());
         XYSeries nonDominatedSeries = createNonDominatedSeries("Non-Dominated Solutions", nonDominatedSolutions);
         allFrontsPlot.addSeries(nonDominatedSeries);
 
         for (String key : resultsFromJson.keySet()) {
             List<ResultWrapper> allResults = resultsFromJson.get(key);
-            Optional<Stream<VariableLengthSolution<Integer>>> reduce = allResults.stream()
-                    .map(result -> result.getResult().stream())
-                    .reduce((firstList, secondList) -> {
-                        return Stream.concat(firstList, secondList);
-                    });
+            List<VariableLengthSolution<Integer>> result = getNonDominatedSolutions(allResults);
 
-            key = key.isEmpty() ? "EMPTY_SESSION" : key;
             String outputSession = outputDirectory.getPath() + File.separator + key + File.separator;
             Files.createDirectories(Paths.get(outputSession));
-            if (reduce.isPresent()) {
-                List<VariableLengthSolution<Integer>> result = reduce.get().collect(Collectors.toList());
-                result = SolutionListUtils.getNondominatedSolutions(result);
-                if (analysisArgs.printIntermediateFiles) {
-                    new SolutionListOutput(result).printObjectivesToFile(outputSession + "FUN.txt");
-                }
-                XYSeries sessionSeries = createNonDominatedSeries(key, result);
-                allFrontsPlot.addSeries(sessionSeries);
-            }
 
-            XYSeriesCollection allRuns = new XYSeriesCollection();
-            allRuns.addSeries(nonDominatedSeries);
-            for (int i = 0; i < allResults.size(); i++) {
-                ResultWrapper result = allResults.get(i);
-                List<VariableLengthSolution<Integer>> resultSolutions = result.getResult();
-                XYSeries sessionSeries = createNonDominatedSeries(key + " " + (i + 1), resultSolutions);
-                allRuns.addSeries(sessionSeries);
+            if (analysisArgs.printIntermediateFiles) {
+                new SolutionListOutput(result).printObjectivesToFile(outputSession + "FUN.txt");
             }
-            printChart(allRuns, new File(outputSession + "FUN.png"), analysisArgs);
-//            printChart(allRuns, new File(outputSession + "FUN_TQ.png"), analysisArgs);
-//            printChart(allRuns, new File(outputSession + "FUN_SQ.png"), analysisArgs);
+            XYSeries sessionSeries = createNonDominatedSeries(key, result);
+            allFrontsPlot.addSeries(sessionSeries);
+
+            XYSeriesCollection runsSeries = new XYSeriesCollection();
+            runsSeries.addSeries(nonDominatedSeries);
+            for (int i = 0; i < allResults.size(); i++) {
+                ResultWrapper runResult = allResults.get(i);
+                List<VariableLengthSolution<Integer>> resultSolutions = runResult.getResult();
+                XYSeries runSeries = createNonDominatedSeries(key + " " + (i + 1), resultSolutions);
+                runsSeries.addSeries(runSeries);
+            }
+            printScatterPlot(runsSeries, new File(outputSession + "FUN.png"), analysisArgs);
+//            printChart(runsSeries, new File(outputSession + "FUN_TQ.png"), analysisArgs);
+//            printChart(runsSeries, new File(outputSession + "FUN_SQ.png"), analysisArgs);
         }
-        printChart(allFrontsPlot, new File(outputDirectory.getPath() + File.separator + "FUN_ALL.png"), analysisArgs);
+        printScatterPlot(allFrontsPlot, new File(outputDirectory.getPath() + File.separator + "FUN_ALL.png"), analysisArgs);
 //        printChart(allFrontsPlot, new File(outputDirectory.getPath() + File.separator + "FUN_ALL_TQ.png"), analysisArgs);
 //        printChart(allFrontsPlot, new File(outputDirectory.getPath() + File.separator + "FUN_ALL_SQ.png"), analysisArgs);
 
+    }
+
+    private static void computeQualityIndicators(ListMultimap<String, ResultWrapper> resultsFromJson, File outputDirectory, AnalysisArgs analysisArgs) throws IOException {
+        ArrayFront referenceFront = new ArrayFront(getNonDominatedSolutions(resultsFromJson.values()));
+        for (String indicatorName : analysisArgs.indicators) {
+            ListMultimap<String, Double> results = getIndicatorResults(resultsFromJson, indicatorName, referenceFront);
+            DefaultBoxAndWhiskerCategoryDataset dataset = new DefaultBoxAndWhiskerCategoryDataset();
+            for (String session : results.keySet()) {
+                List<Double> indicatorValues = results.get(session);
+                if (analysisArgs.printIntermediateFiles) {
+                    String outputSession = outputDirectory.getPath() + File.separator + session + File.separator;
+                    Files.createDirectories(Paths.get(outputSession));
+                    try (FileWriter writer = new FileWriter(outputSession + indicatorName.toUpperCase() + ".txt")) {
+                        for (Double doubleValue : indicatorValues) {
+                            writer.write(String.valueOf(doubleValue) + "\n");
+                        }
+                    }
+                }
+                dataset.add(indicatorValues, "", session);
+            }
+            printBoxPlot(dataset, indicatorName, new File(outputDirectory + File.separator + indicatorName + ".png"), analysisArgs);
+        }
+    }
+
+    private static void printBoxPlot(DefaultBoxAndWhiskerCategoryDataset dataSet, String indicatorName, File outputFile, AnalysisArgs analysisArgs) throws IOException {
+        final CategoryAxis xAxis = new CategoryAxis(indicatorName);
+        xAxis.setLowerMargin(0.15);
+        xAxis.setUpperMargin(0.15);
+        xAxis.setCategoryMargin(0.25);
+
+        final NumberAxis yAxis = new NumberAxis("Value");
+        yAxis.setAutoRangeIncludesZero(false);
+
+        final BoxAndWhiskerRenderer renderer = new BoxAndWhiskerRenderer();
+        renderer.setFillBox(false);
+        renderer.setMeanVisible(false);
+        renderer.setMaximumBarWidth(0.1);
+        renderer.setUseOutlinePaintForWhiskers(true);
+        for (int i = 0; i < dataSet.getColumnCount(); i++) {
+            renderer.setSeriesPaint(i, Color.BLACK);
+            renderer.setSeriesOutlinePaint(i, Color.BLACK);
+            renderer.setSeriesFillPaint(i, Color.GRAY);
+        }
+
+        final CategoryPlot plot = new CategoryPlot(dataSet, xAxis, yAxis, renderer);
+
+        final JFreeChart chart = new JFreeChart(
+                null,
+                null,
+                plot,
+                false
+        );
+
+        printChart(chart, outputFile, analysisArgs);
+    }
+
+    public static ListMultimap<String, Double> getIndicatorResults(ListMultimap<String, ResultWrapper> resultsFromJson, String indicatorName, Front referenceFront) throws IOException {
+        GenericIndicator<VariableLengthSolution<Integer>> indicator = IndicatorFactory.createIndicator(indicatorName, referenceFront);
+        ArrayListMultimap<String, Double> results = ArrayListMultimap.create();
+        for (String session : resultsFromJson.keySet()) {
+            for (ResultWrapper resultWrapper : resultsFromJson.get(session)) {
+                Double indicatorResult = indicator.evaluate(resultWrapper.getResult());
+                results.put(session, indicatorResult);
+            }
+        }
+        return results;
     }
 
     private static XYSeries createNonDominatedSeries(String title, List<VariableLengthSolution<Integer>> nonDominatedSolutions) {
@@ -135,17 +210,23 @@ public class SentinelAnalysis {
         return nonDominatedSeries;
     }
 
-    private static void printChart(XYSeriesCollection plotData, File outputFile, AnalysisArgs analysisArgs) throws IOException {
-        JFreeChart scatterPlot = ChartFactory.createScatterPlot(null, "Quantity", "Score", plotData, PlotOrientation.VERTICAL, true, false, false);
+    private static void printScatterPlot(XYSeriesCollection plotData, File outputFile, AnalysisArgs analysisArgs) throws IOException {
+        JFreeChart scatterPlot = ChartFactory.createScatterPlot(null, "Time", "Score", plotData, PlotOrientation.VERTICAL, true, false, false);
+        printChart(scatterPlot, outputFile, analysisArgs);
+    }
+
+    public static void printChart(JFreeChart plot, File outputFile, AnalysisArgs analysisArgs) throws IOException {
+        StandardChartTheme theme = createChartTheme();
+        theme.apply(plot);
+        ChartUtilities.saveChartAsPNG(new File(outputFile.getPath()), plot, analysisArgs.plotWidth, analysisArgs.plotHeight);
+    }
+
+    public static StandardChartTheme createChartTheme() {
         StandardChartTheme theme = new StandardChartTheme("JFree/Shadow");
         theme.setPlotBackgroundPaint(Color.WHITE);
         theme.setDomainGridlinePaint(Color.GRAY);
         theme.setRangeGridlinePaint(Color.GRAY);
-        theme.apply(scatterPlot);
-        ChartUtilities.saveChartAsPNG(new File(outputFile.getPath()), scatterPlot, analysisArgs.plotWidth, analysisArgs.plotHeight);
-    }
-
-    private static void computeQualityIndicators(ListMultimap<String, ResultWrapper> resultsFromJson, File outputDirectory, AnalysisArgs analysisArgs) {
+        return theme;
     }
 
 }

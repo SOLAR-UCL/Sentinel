@@ -2,9 +2,10 @@ package br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy;
 
 import java.io.File;
 import org.junit.After;
-import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author Giovani Guizzo
@@ -44,7 +45,7 @@ public class GrammarFilesTest {
     public void testGetGrammarPathFromWorkingDirectory() {
         GrammarFiles.setWorkingDirectory("test");
         String grammar = GrammarFiles.getGrammarPathFromWorkingDirectory("Test2.bnf");
-        assertEquals("test" + File.separator + "grammars" + File.separator + "Test2.bnf", grammar);
+        assertEquals("test" + File.separator + "Test2.bnf", grammar);
     }
 
 }

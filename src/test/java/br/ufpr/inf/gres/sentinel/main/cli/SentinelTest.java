@@ -42,7 +42,7 @@ public class SentinelTest {
 
     @Test
     public void testSentinelAnalysis() throws Exception {
-        String[] args = new String[]{"analyse", "--inputDirectory", "training/GE"};
+        String[] args = new String[]{"analyse", "--inputDirectory", "analysis/GE", "--printIntermediateFiles"};
         Sentinel.main(args);
     }
 

@@ -1,5 +1,6 @@
 package br.ufpr.inf.gres.sentinel.main.cli.args;
 
+import br.ufpr.inf.gres.sentinel.indictaors.IndicatorFactory;
 import br.ufpr.inf.gres.sentinel.main.cli.converter.SeparatorConverter;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
@@ -41,7 +42,7 @@ public class AnalysisArgs {
     @Parameter(names = "--indicators",
             description = "The indicators used to compute the quality of the results. Available options are: hypervolume, igd.",
             variableArity = true)
-    public List<String> indicators = Lists.newArrayList("hypervolume");
+    public List<String> indicators = Lists.newArrayList(IndicatorFactory.HYPERVOLUME, IndicatorFactory.IGD);
 
     @Parameter(names = "--printParetoFronts",
             description = "A boolean argument to determine if Sentinel should print Pareto fronts.")

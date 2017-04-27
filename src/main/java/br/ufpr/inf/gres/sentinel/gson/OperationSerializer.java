@@ -1,4 +1,4 @@
-package br.ufpr.inf.gres.sentinel.main.cli.gson;
+package br.ufpr.inf.gres.sentinel.gson;
 
 import br.ufpr.inf.gres.sentinel.strategy.operation.Operation;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.defaults.NewBranchOperation;

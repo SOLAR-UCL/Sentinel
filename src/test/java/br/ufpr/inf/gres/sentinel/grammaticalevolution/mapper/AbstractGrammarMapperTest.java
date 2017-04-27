@@ -9,9 +9,10 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import static org.junit.Assert.*;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 /**
  * @author Giovani Guizzo
@@ -29,8 +30,8 @@ public class AbstractGrammarMapperTest {
     @BeforeClass
     public static void setUpClass() {
         DEFAULT_GRAMMAR = GrammarFiles.getDefaultGrammarPath();
-        TEST_GRAMMAR = GrammarFiles.getGrammarPathFromWorkingDirectory("testgrammar.bnf");
-        TEST_GRAMMAR_2 = GrammarFiles.getGrammarPathFromWorkingDirectory("testgrammar2.bnf");
+        TEST_GRAMMAR = GrammarFiles.getGrammarPathFromWorkingDirectory("src" + File.separator + "test" + File.separator + "resources" + File.separator + "testgrammar.bnf");
+        TEST_GRAMMAR_2 = GrammarFiles.getGrammarPathFromWorkingDirectory("src" + File.separator + "test" + File.separator + "resources" + File.separator + "testgrammar2.bnf");
         try {
             DEFAULT_MAPPER = new StubMapper(DEFAULT_GRAMMAR);
         } catch (IOException ex) {

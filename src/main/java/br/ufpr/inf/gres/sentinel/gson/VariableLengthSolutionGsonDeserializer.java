@@ -1,4 +1,4 @@
-package br.ufpr.inf.gres.sentinel.main.cli.gson;
+package br.ufpr.inf.gres.sentinel.gson;
 
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.problem.impl.MutationStrategyGenerationProblem;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.representation.VariableLengthSolution;

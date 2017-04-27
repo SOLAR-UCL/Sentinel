@@ -1,5 +1,6 @@
-package br.ufpr.inf.gres.sentinel.main.cli.gson;
+package br.ufpr.inf.gres.sentinel.gson;
 
+import br.ufpr.inf.gres.sentinel.gson.ResultWrapper;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.representation.VariableLengthSolution;
 import java.util.ArrayList;
 import org.junit.Assert;
