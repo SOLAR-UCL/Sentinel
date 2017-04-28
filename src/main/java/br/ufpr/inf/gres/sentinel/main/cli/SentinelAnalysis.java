@@ -35,7 +35,6 @@ import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 import org.uma.jmetal.qualityindicator.impl.GenericIndicator;
 import org.uma.jmetal.util.SolutionListUtils;
-import org.uma.jmetal.util.fileoutput.SolutionListOutput;
 import org.uma.jmetal.util.front.Front;
 import org.uma.jmetal.util.front.imp.ArrayFront;
 
@@ -70,7 +69,7 @@ public class SentinelAnalysis {
         return results;
     }
 
-    private static List<VariableLengthSolution<Integer>> getNonDominatedSolutions(Collection<ResultWrapper> resultsFromJson) {
+    private static List<VariableLengthSolution<Integer>> getSolutions(Collection<ResultWrapper> resultsFromJson) {
         Optional<Stream<VariableLengthSolution<Integer>>> reduce = resultsFromJson
                 .stream()
                 .map(result -> result.getResult().stream())
@@ -80,15 +79,28 @@ public class SentinelAnalysis {
         List<VariableLengthSolution<Integer>> allSolutions = new ArrayList<>();
         if (reduce.isPresent()) {
             allSolutions = reduce.get().collect(Collectors.toList());
-            allSolutions = SolutionListUtils.getNondominatedSolutions(allSolutions);
         }
         return allSolutions;
+    }
+
+    private static List<VariableLengthSolution<Integer>> getNonDominatedSolutions(Collection<ResultWrapper> resultsFromJson) {
+        return SolutionListUtils.getNondominatedSolutions(getSolutions(resultsFromJson));
     }
 
     private static List<VariableLengthSolution<Integer>> printNonDominatedParetoFront(ListMultimap<String, ResultWrapper> resultsFromJson, File outputDirectory, AnalysisArgs analysisArgs) throws IOException {
         List<VariableLengthSolution<Integer>> allSolutions = getNonDominatedSolutions(resultsFromJson.values());
         if (analysisArgs.printIntermediateFiles) {
-            new SolutionListOutput(allSolutions).printObjectivesToFile(outputDirectory.getPath() + File.separator + "ND.txt");
+            try (FileWriter writer = new FileWriter(outputDirectory.getPath() + File.separator + "ND.txt")) {
+                for (VariableLengthSolution<Integer> resultSolution : allSolutions) {
+                    writer.write(resultSolution.getObjective(0) + " " + resultSolution.getObjective(1) + " " + resultSolution.getAttribute("Quantity") + "\n");
+                }
+            }
+
+            try (FileWriter writer = new FileWriter(outputDirectory.getPath() + File.separator + "FUN_ALL_RUNS.txt")) {
+                for (VariableLengthSolution<Integer> resultSolution : getSolutions(resultsFromJson.values())) {
+                    writer.write(resultSolution.getObjective(0) + " " + resultSolution.getObjective(1) + " " + resultSolution.getAttribute("Quantity") + "\n");
+                }
+            }
         }
         XYSeries plotSeries = createNonDominatedSeries("Non-Dominated Solutions", allSolutions);
         printScatterPlot(new XYSeriesCollection(plotSeries), new File(outputDirectory.getPath() + File.separator + "ND.png"), analysisArgs);
@@ -111,7 +123,11 @@ public class SentinelAnalysis {
             Files.createDirectories(Paths.get(outputSession));
 
             if (analysisArgs.printIntermediateFiles) {
-                new SolutionListOutput(result).printObjectivesToFile(outputSession + "FUN.txt");
+                try (FileWriter writer = new FileWriter(outputSession + "FUN.txt")) {
+                    for (VariableLengthSolution<Integer> resultSolution : result) {
+                        writer.write(resultSolution.getObjective(0) + " " + resultSolution.getObjective(1) + " " + resultSolution.getAttribute("Quantity") + "\n");
+                    }
+                }
             }
             XYSeries sessionSeries = createNonDominatedSeries(key, result);
             allFrontsPlot.addSeries(sessionSeries);
@@ -119,10 +135,18 @@ public class SentinelAnalysis {
             XYSeriesCollection runsSeries = new XYSeriesCollection();
             runsSeries.addSeries(nonDominatedSeries);
             for (int i = 0; i < allResults.size(); i++) {
-                ResultWrapper runResult = allResults.get(i);
-                List<VariableLengthSolution<Integer>> resultSolutions = runResult.getResult();
-                XYSeries runSeries = createNonDominatedSeries(key + " " + (i + 1), resultSolutions);
-                runsSeries.addSeries(runSeries);
+                try (FileWriter writer = new FileWriter(outputSession + "FUN_" + (i + 1) + ".txt")) {
+                    ResultWrapper runResult = allResults.get(i);
+                    List<VariableLengthSolution<Integer>> resultSolutions = runResult.getResult();
+                    if (analysisArgs.printIntermediateFiles) {
+//                    new SolutionListOutput(resultSolutions).printObjectivesToFile(outputSession + "FUN_" + (i + 1) + ".txt");
+                        for (VariableLengthSolution<Integer> resultSolution : resultSolutions) {
+                            writer.write(resultSolution.getObjective(0) + " " + resultSolution.getObjective(1) + " " + resultSolution.getAttribute("Quantity") + "\n");
+                        }
+                    }
+                    XYSeries runSeries = createNonDominatedSeries(key + " " + (i + 1), resultSolutions);
+                    runsSeries.addSeries(runSeries);
+                }
             }
             printScatterPlot(runsSeries, new File(outputSession + "FUN.png"), analysisArgs);
 //            printChart(runsSeries, new File(outputSession + "FUN_TQ.png"), analysisArgs);
