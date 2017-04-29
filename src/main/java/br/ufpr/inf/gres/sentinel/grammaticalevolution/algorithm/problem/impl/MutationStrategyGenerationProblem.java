@@ -110,7 +110,7 @@ public class MutationStrategyGenerationProblem implements AbstractVariableLength
             double elapsedMs = 0;
             for (Program testProgram : testPrograms) {
                 IntegrationFacade.setProgramUnderTest(testProgram);
-                integrationFacade.initializeForProgram(testProgram);
+                integrationFacade.initializeForProgram(testProgram, numberOfStrategyRuns * 10);
                 for (int i = 0; i < numberOfStrategyRuns; i++) {
                     ThreadMXBean threadBean = ManagementFactory.getThreadMXBean();
                     long currentThreadCpuTime = threadBean.getCurrentThreadCpuTime();
@@ -148,8 +148,8 @@ public class MutationStrategyGenerationProblem implements AbstractVariableLength
 
                 solution.setObjective(0, elapsedMs);
                 solution.setObjective(1, score * -1);
-//                solution.setObjective(2, numberOfMutants);
                 solution.setAttribute("Quantity", numberOfMutants);
+                solution.setAttribute("Evaluation", evaluationCount);
             } else {
                 setWorst(solution);
             }
@@ -165,7 +165,6 @@ public class MutationStrategyGenerationProblem implements AbstractVariableLength
         solution.setObjective(0, Double.MAX_VALUE);
         solution.setObjective(1, Double.MAX_VALUE);
         solution.setAttribute("Quantity", Double.MAX_VALUE);
-//        solution.setObjective(2, Double.MAX_VALUE);
     }
 
     private Strategy createStrategy(VariableLengthSolution<Integer> solution) {

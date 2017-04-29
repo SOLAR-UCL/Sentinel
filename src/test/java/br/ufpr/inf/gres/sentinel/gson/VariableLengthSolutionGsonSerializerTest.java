@@ -1,7 +1,5 @@
 package br.ufpr.inf.gres.sentinel.gson;
 
-import br.ufpr.inf.gres.sentinel.gson.VariableLengthSolutionGsonSerializer;
-import br.ufpr.inf.gres.sentinel.gson.OperationSerializer;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.problem.impl.MutationStrategyGenerationProblem;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.representation.VariableLengthSolution;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.representation.impl.DefaultVariableLengthIntegerSolution;
@@ -59,6 +57,7 @@ public class VariableLengthSolutionGsonSerializerTest {
         solution.setObjective(1, 2000);
         solution.setAttribute("Strategy", new Strategy(OperationTest.getComplexTestOperationChain()));
         solution.setAttribute("Quantity", 3000);
+        solution.setAttribute("Evaluation", 100);
         solution.setAttribute("Consumed Items Count", 2);
 
         Gson gson = new GsonBuilder()
@@ -66,7 +65,7 @@ public class VariableLengthSolutionGsonSerializerTest {
                 .registerTypeAdapter(Operation.class, new OperationSerializer())
                 .create();
         String result = gson.toJson(solution);
-        Assert.assertEquals("{\"objectives\":[1000.0,2000.0],\"quantity\":3000,\"consumedItemsCount\":2,\"variables\":[0,2,1,0,0,1,9,3],\"strategy\":{\"firstOperation\":{\"name\":\"TestOperation\",\"successor\":{\"name\":\"TestOperation2\",\"successor\":{\"name\":\"New Branch\",\"successor\":{\"name\":\"TestOperation3\"},\"secondSuccessor\":{\"name\":\"New Branch\",\"successor\":{\"name\":\"New Branch\",\"successor\":{\"name\":\"TestOperation5\"},\"secondSuccessor\":{\"name\":\"TestOperation6\"}},\"secondSuccessor\":{\"name\":\"TestOperation4\"}}}}}}}", result);
+        Assert.assertEquals("{\"objectives\":[1000.0,2000.0],\"quantity\":3000,\"evaluation\":100,\"consumedItemsCount\":2,\"variables\":[0,2,1,0,0,1,9,3],\"strategy\":{\"firstOperation\":{\"name\":\"TestOperation\",\"successor\":{\"name\":\"TestOperation2\",\"successor\":{\"name\":\"New Branch\",\"successor\":{\"name\":\"TestOperation3\"},\"secondSuccessor\":{\"name\":\"New Branch\",\"successor\":{\"name\":\"New Branch\",\"successor\":{\"name\":\"TestOperation5\"},\"secondSuccessor\":{\"name\":\"TestOperation6\"}},\"secondSuccessor\":{\"name\":\"TestOperation4\"}}}}}}}", result);
     }
 
     @Test

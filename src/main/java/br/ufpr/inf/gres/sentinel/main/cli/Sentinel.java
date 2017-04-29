@@ -40,7 +40,8 @@ public class Sentinel {
 
             JCommander command = commander.getCommands().get(commander.getParsedCommand());
             if (command == null) {
-                throw new IllegalArgumentException("Command not found. Here are the usage instructions for you.");
+                System.out.println("Command not found. Here are the usage instructions for you.");
+                commander.usage();
             } else {
                 Object chosenCommand = command.getObjects().get(0);
                 if (chosenCommand instanceof TrainingArgs) {

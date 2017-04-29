@@ -45,6 +45,11 @@ public class VariableLengthSolutionGsonDeserializer implements JsonDeserializer<
             solution.setAttribute("Quantity", quantity.getAsDouble());
         }
 
+        JsonElement evaluation = jsonObject.get("evaluation");
+        if (evaluation != null) {
+            solution.setAttribute("Evaluation", evaluation.getAsInt());
+        }
+
         JsonElement consumedItemsCount = jsonObject.get("consumedItemsCount");
         if (consumedItemsCount != null) {
             solution.setAttribute("Consumed Items Count", consumedItemsCount.getAsInt());

@@ -42,28 +42,28 @@ public abstract class IntegrationFacade {
 
     public long getConventionalMutationTime(Program program, TimeUnit timeUnit) {
         if (!conventionalExecutionTimes.containsKey(program)) {
-            runConventionalStrategy(program);
+            runConventionalStrategy(program, 10);
         }
         return timeUnit.convert(conventionalExecutionTimes.get(program), TimeUnit.NANOSECONDS);
     }
 
     public int getConventionalQuantityOfMutants(Program program) {
         if (!conventionalExecutionTimes.containsKey(program)) {
-            runConventionalStrategy(program);
+            runConventionalStrategy(program, 10);
         }
         return conventionalQuantities.get(program);
     }
 
     public double getConventionalMutationScore(Program program) {
         if (!conventionalExecutionTimes.containsKey(program)) {
-            runConventionalStrategy(program);
+            runConventionalStrategy(program, 10);
         }
         return conventionalScores.get(program);
     }
 
     public double getRelativeMutationScore(Program program, List<TestCase> testCases) {
         if (!conventionalMutants.containsKey(program)) {
-            runConventionalStrategy(program);
+            runConventionalStrategy(program, 10);
         }
         List<Mutant> mutants = new ArrayList<>(conventionalMutants.get(program));
         int originalSize = mutants.size();
@@ -74,16 +74,19 @@ public abstract class IntegrationFacade {
         return (double) mutants.size() / originalSize;
     }
 
-    protected void runConventionalStrategy(Program program) {
+    protected void runConventionalStrategy(Program program, int repetitions) {
         Program tempProgram = IntegrationFacade.getProgramUnderTest();
         IntegrationFacade.setProgramUnderTest(program);
         ThreadMXBean threadBean = ManagementFactory.getThreadMXBean();
         long currentThreadCpuTime = threadBean.getCurrentThreadCpuTime();
-        List<Operator> operators = getAllOperators();
-        List<Mutant> allMutants = executeOperators(operators);
-        executeMutants(allMutants);
+        List<Mutant> allMutants = new ArrayList<>();
+        for (int i = 0; i < repetitions; i++) {
+            List<Operator> operators = getAllOperators();
+            allMutants = executeOperators(operators);
+            executeMutants(allMutants);
+        }
         currentThreadCpuTime = threadBean.getCurrentThreadCpuTime() - currentThreadCpuTime;
-        conventionalExecutionTimes.put(program, currentThreadCpuTime);
+        conventionalExecutionTimes.put(program, currentThreadCpuTime / repetitions);
         conventionalQuantities.put(program, allMutants.size());
         long numberOfDeadMutants = allMutants.stream().filter(Mutant::isDead).count();
         conventionalScores.put(program, (double) numberOfDeadMutants / (double) allMutants.size());
@@ -99,13 +102,14 @@ public abstract class IntegrationFacade {
         return programs;
     }
 
-    public void initializeForProgram(Program program) {
+    public void initializeForProgram(Program program, int repetitions) {
         if (!conventionalExecutionTimes.containsKey(program)) {
-            runConventionalStrategy(program);
+            runConventionalStrategy(program, 1);
             conventionalExecutionTimes.remove(program);
             conventionalQuantities.remove(program);
             conventionalScores.remove(program);
             conventionalMutants.remove(program);
+            runConventionalStrategy(program, repetitions);
         }
     }
 
