@@ -8,11 +8,11 @@ import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.operators.mutati
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.operators.prune.impl.PruneToUsedOperator;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.problem.impl.MutationStrategyGenerationProblem;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.representation.VariableLengthSolution;
+import br.ufpr.inf.gres.sentinel.gson.GsonUtil;
+import br.ufpr.inf.gres.sentinel.gson.ResultWrapper;
 import br.ufpr.inf.gres.sentinel.integration.IntegrationFacade;
 import br.ufpr.inf.gres.sentinel.integration.IntegrationFacadeFactory;
 import br.ufpr.inf.gres.sentinel.main.cli.args.TrainingArgs;
-import br.ufpr.inf.gres.sentinel.gson.GsonUtil;
-import br.ufpr.inf.gres.sentinel.gson.ResultWrapper;
 import com.google.common.io.Files;
 import java.io.File;
 import java.io.IOException;

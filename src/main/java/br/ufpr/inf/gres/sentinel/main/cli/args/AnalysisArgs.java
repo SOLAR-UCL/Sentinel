@@ -33,11 +33,9 @@ public class AnalysisArgs {
             converter = SeparatorConverter.class)
     public String outputDirectory = "analysis";
 
-    @Parameter(names = {"--inputFilesRegex"},
-            description = "The sessions for finding input files for the analysis. Each session corresponds to a group of results that shall be analysed together. Sentinel will look into the training directory for these sessions, where each session is a folder inside the trianing directory and each json file is an independent run result. If no session is provided, then Sentinel will look for json files in the training directory.",
-            variableArity = true,
-            converter = SeparatorConverter.class)
-    public String inputFilesRegex = "*.json";
+    @Parameter(names = {"--inputFilesGlob"},
+            description = "The input files glob for finding input files for the analysis. If no input directory is provided, then Sentinel will look for files in the training directory.")
+    public String inputFilesGlob = "**.json";
 
     @Parameter(names = "--indicators",
             description = "The indicators used to compute the quality of the results. Available options are: hypervolume, igd.",

@@ -1,12 +1,14 @@
 package br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.selection;
 
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.group.AbstractGroupingOperation;
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.math.DoubleMath;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.commons.collections4.list.SetUniqueList;
+
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * @param <T>
@@ -51,7 +53,7 @@ public class GroupSelectionOperation<T> extends SelectionOperation<T> {
                 + quantity
                 + ".");
 
-        List<T> result = new ArrayList<>();
+        List<T> result = SetUniqueList.setUniqueList(new ArrayList<>());
         List<List<T>> groups = groupingFunction.doOperation(input);
 
         if (groups.size() > 0) {

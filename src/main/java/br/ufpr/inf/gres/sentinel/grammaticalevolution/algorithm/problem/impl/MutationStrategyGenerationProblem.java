@@ -101,13 +101,32 @@ public class MutationStrategyGenerationProblem implements AbstractVariableLength
     public void evaluate(VariableLengthSolution<Integer> solution) {
         System.out.println("Evaluation: " + (++evaluationCount));
         try {
+
+            setWorst(solution);
+
+            solution.clearVariables();
+            solution.addAllVariables(Lists.newArrayList(166,
+                    63,
+                    90,
+                    1,
+                    119,
+                    60,
+                    136,
+                    140,
+                    71,
+                    170,
+                    155,
+                    81,
+                    37,
+                    39));
             Strategy strategy = createStrategy(solution);
 
             Program tempProgram = IntegrationFacade.getProgramUnderTest();
             IntegrationFacade integrationFacade = IntegrationFacade.getIntegrationFacade();
             double numberOfMutants = 0;
             double score = 0;
-            double elapsedMs = 0;
+            double elapsedNano = 0;
+            programFor:
             for (Program testProgram : testPrograms) {
                 IntegrationFacade.setProgramUnderTest(testProgram);
                 integrationFacade.initializeForProgram(testProgram, numberOfStrategyRuns * 10);
@@ -117,24 +136,27 @@ public class MutationStrategyGenerationProblem implements AbstractVariableLength
                     List<Mutant> mutants = strategy.run();
                     integrationFacade.executeMutants(mutants);
                     currentThreadCpuTime = threadBean.getCurrentThreadCpuTime() - currentThreadCpuTime;
+                    if (mutants.isEmpty()) {
+                        numberOfMutants = 0;
+                        break programFor;
+                    }
                     // Summing the elapsed time
                     long conventionalMutationTime = integrationFacade.getConventionalMutationTime(testProgram, TimeUnit.NANOSECONDS);
-                    elapsedMs
+                    elapsedNano
                             += (double) currentThreadCpuTime
-                            / (conventionalMutationTime == 0 ? 1 : conventionalMutationTime);
+                            / (double) (conventionalMutationTime == 0 ? 1 : conventionalMutationTime);
                     // Summing the number of mutants
                     numberOfMutants
-                            += (double) mutants.size() / integrationFacade.getConventionalQuantityOfMutants(testProgram);
+                            += (double) mutants.size() / (double) integrationFacade.getConventionalQuantityOfMutants(testProgram);
                     // Summing the score
-                    score
-                            += integrationFacade.getRelativeMutationScore(testProgram,
-                                    mutants.stream()
-                                            .map(Mutant::getKillingTestCases)
-                                            .reduce((testCases, testCases2) -> SetUniqueList
-                                            .setUniqueList(Lists.newArrayList(
-                                                    Iterables.concat(testCases,
-                                                            testCases2))))
-                                            .orElse(SetUniqueList.setUniqueList(new ArrayList<>())));
+                    score += integrationFacade.getRelativeMutationScore(testProgram,
+                            mutants.stream()
+                                    .map(Mutant::getKillingTestCases)
+                                    .reduce((testCases, testCases2) -> SetUniqueList
+                                    .setUniqueList(Lists.newArrayList(
+                                            Iterables.concat(testCases,
+                                                    testCases2))))
+                                    .orElse(SetUniqueList.setUniqueList(new ArrayList<>())));
                 }
             }
             IntegrationFacade.setProgramUnderTest(tempProgram);
@@ -142,11 +164,12 @@ public class MutationStrategyGenerationProblem implements AbstractVariableLength
             if (numberOfMutants > 0) {
                 // Normalizing
                 int normalizationFactor = testPrograms.size() * numberOfStrategyRuns;
-                elapsedMs /= normalizationFactor;
+                elapsedNano /= normalizationFactor;
                 numberOfMutants /= normalizationFactor;
                 score /= normalizationFactor;
 
-                solution.setObjective(0, elapsedMs);
+                solution.setObjective(0, elapsedNano);
+                System.out.println("Time: " + elapsedNano);
                 solution.setObjective(1, score * -1);
                 solution.setAttribute("Quantity", numberOfMutants);
                 solution.setAttribute("Evaluation", evaluationCount);

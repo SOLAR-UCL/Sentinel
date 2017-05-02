@@ -78,8 +78,8 @@ public abstract class IntegrationFacade {
         Program tempProgram = IntegrationFacade.getProgramUnderTest();
         IntegrationFacade.setProgramUnderTest(program);
         ThreadMXBean threadBean = ManagementFactory.getThreadMXBean();
-        long currentThreadCpuTime = threadBean.getCurrentThreadCpuTime();
         List<Mutant> allMutants = new ArrayList<>();
+        long currentThreadCpuTime = threadBean.getCurrentThreadCpuTime();
         for (int i = 0; i < repetitions; i++) {
             List<Operator> operators = getAllOperators();
             allMutants = executeOperators(operators);

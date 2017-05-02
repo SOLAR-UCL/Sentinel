@@ -174,13 +174,25 @@ public class MutationStrategyGenerationProblemTest {
 
         VariableLengthSolution<Integer> solution = problem.createSolution();
         solution.clearVariables();
-        solution.addAllVariables(Lists.newArrayList(52, 152, 152, 11, 136, 51, 41, 128, 40, 47, 1, 6, 18, 88, 130, 43, 174, 68, 14, 141, 129, 64, 116, 15, 28, 68, 174, 113, 39, 3, 19, 156, 58, 6, 170, 37, 30, 98, 153, 171, 141, 29, 9, 88, 151, 40, 142, 49, 102, 40, 47, 1, 116, 124, 142, 11, 102, 40, 47, 1, 6, 18, 88, 130, 43, 174, 68, 14, 141, 129, 64, 116, 15, 28, 68, 174, 48, 39, 3, 19, 156, 67, 30, 36));
+        solution.addAllVariables(Lists.newArrayList(166,
+                63,
+                90,
+                1,
+                119,
+                60,
+                136,
+                140,
+                71,
+                170,
+                155,
+                81,
+                37,
+                39));
         String runs = "";
         for (int i = 0; i < 10; i++) {
             problem.evaluate(solution);
             runs += solution.getObjective(0) + " " + solution.getObjective(1) + " " + solution.getAttribute("Quantity") + "\n";
         }
-        assertNotNull(solution.getAttribute("Strategy"));
         System.out.println("Runs:\n" + runs);
     }
 

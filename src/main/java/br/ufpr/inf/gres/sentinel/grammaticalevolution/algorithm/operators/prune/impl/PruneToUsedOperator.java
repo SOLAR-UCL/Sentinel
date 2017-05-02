@@ -23,11 +23,14 @@ public class PruneToUsedOperator<T> implements PruneOperator<VariableLengthSolut
     public VariableLengthSolution<T> execute(VariableLengthSolution<T> variableLengthSolution) {
         if (randomGenerator.nextDouble() < probability) {
             List<T> variables = variableLengthSolution.getVariablesCopy();
-            int count = (int) variableLengthSolution.getAttribute("Consumed Items Count");
-            if (variables.size() > count && count != 0) {
-                variables = variables.subList(0, count);
-                variableLengthSolution.clearVariables();
-                variableLengthSolution.addAllVariables(variables);
+            Object attribute = variableLengthSolution.getAttribute("Consumed Items Count");
+            if (attribute != null) {
+                int count = (int) attribute;
+                if (variables.size() > count && count != 0) {
+                    variables = variables.subList(0, count);
+                    variableLengthSolution.clearVariables();
+                    variableLengthSolution.addAllVariables(variables);
+                }
             }
         }
         return variableLengthSolution;
