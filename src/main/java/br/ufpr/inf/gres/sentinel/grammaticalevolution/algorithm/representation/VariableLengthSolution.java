@@ -1,12 +1,12 @@
 package br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.representation;
 
-import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.problem.AbstractVariableLengthProblem;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import org.uma.jmetal.problem.Problem;
 import org.uma.jmetal.solution.Solution;
 import org.uma.jmetal.solution.impl.AbstractGenericSolution;
+import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.problem.VariableLengthProblem;
 
 /**
  * @author Giovani Guizzo
@@ -20,7 +20,7 @@ public abstract class VariableLengthSolution<T> extends AbstractGenericSolution<
      *
      * @param problem
      */
-    public VariableLengthSolution(AbstractVariableLengthProblem<T> problem) {
+    public VariableLengthSolution(VariableLengthProblem<T> problem) {
         super(problem);
         this.variables = new ArrayList<>();
         initializeObjectiveValues();

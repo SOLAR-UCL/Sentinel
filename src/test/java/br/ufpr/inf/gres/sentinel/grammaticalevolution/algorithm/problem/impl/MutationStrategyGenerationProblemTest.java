@@ -157,7 +157,7 @@ public class MutationStrategyGenerationProblemTest {
     }
 
     @Test
-    @Ignore
+//    @Ignore
     public void evaluate5() throws Exception {
         Program programUnderTest = new Program("br.ufpr.inf.gres.TriTyp", new File("training/br/ufpr/inf/gres/TriTyp.java"));
         IntegrationFacade.setProgramUnderTest(programUnderTest);
@@ -169,25 +169,44 @@ public class MutationStrategyGenerationProblemTest {
                 1,
                 179,
                 10,
-                5,
+                1,
                 Lists.newArrayList(programUnderTest));
 
         VariableLengthSolution<Integer> solution = problem.createSolution();
         solution.clearVariables();
-        solution.addAllVariables(Lists.newArrayList(166,
-                63,
-                90,
-                1,
-                119,
-                60,
-                136,
-                140,
-                71,
+        solution.addAllVariables(Lists.newArrayList(168,
+                159,
+                87,
+                106,
+                171,
+                102,
+                64,
+                92,
+                16,
+                132,
+                2,
+                107,
+                9,
+                89,
+                76,
                 170,
-                155,
-                81,
-                37,
-                39));
+                67,
+                158,
+                166,
+                131,
+                131,
+                22,
+                70,
+                98,
+                30,
+                178,
+                54,
+                135,
+                141,
+                19,
+                75,
+                100,
+                3));
         String runs = "";
         for (int i = 0; i < 10; i++) {
             problem.evaluate(solution);

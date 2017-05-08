@@ -4,6 +4,7 @@ import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.representation.V
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.representation.impl.DefaultVariableLengthIntegerSolution;
 import br.ufpr.inf.gres.sentinel.main.cli.args.TrainingArgs;
 import br.ufpr.inf.gres.sentinel.strategy.operation.Operation;
+import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.selection.SelectionOperation;
 import com.google.common.io.Files;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -32,6 +33,7 @@ public class GsonUtil {
                 .registerTypeAdapter(VariableLengthSolution.class, new VariableLengthSolutionGsonSerializer())
                 .registerTypeAdapter(VariableLengthSolution.class, new VariableLengthSolutionGsonDeserializer(trainingArgs))
                 .registerTypeAdapter(Operation.class, new OperationSerializer())
+                .registerTypeAdapter(SelectionOperation.class, new OperationSerializer())
                 .setPrettyPrinting()
                 .create();
     }

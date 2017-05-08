@@ -2,7 +2,6 @@ package br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm;
 
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.operators.duplicate.DuplicateOperator;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.operators.prune.PruneOperator;
-import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.problem.AbstractVariableLengthProblem;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.representation.VariableLengthSolution;
 import java.util.List;
 import org.uma.jmetal.algorithm.multiobjective.nsgaii.NSGAII;
@@ -10,6 +9,7 @@ import org.uma.jmetal.operator.CrossoverOperator;
 import org.uma.jmetal.operator.MutationOperator;
 import org.uma.jmetal.operator.SelectionOperator;
 import org.uma.jmetal.util.evaluator.SolutionListEvaluator;
+import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.problem.VariableLengthProblem;
 
 /**
  * @author Giovani Guizzo
@@ -32,7 +32,7 @@ public class GrammaticalEvolutionAlgorithm<T> extends NSGAII<VariableLengthSolut
      * @param selectionOperator
      * @param evaluator
      */
-    public GrammaticalEvolutionAlgorithm(AbstractVariableLengthProblem<T> problem,
+    public GrammaticalEvolutionAlgorithm(VariableLengthProblem<T> problem,
             int maxEvaluations,
             int populationSize,
             DuplicateOperator<VariableLengthSolution<T>> duplicateOperator,

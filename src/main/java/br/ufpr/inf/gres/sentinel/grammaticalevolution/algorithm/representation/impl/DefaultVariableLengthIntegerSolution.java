@@ -1,7 +1,7 @@
 package br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.representation.impl;
 
-import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.problem.AbstractVariableLengthIntegerProblem;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.representation.VariableLengthSolution;
+import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.problem.VariableLengthIntegerProblem;
 
 /**
  * @author Giovani Guizzo
@@ -13,7 +13,7 @@ public class DefaultVariableLengthIntegerSolution extends VariableLengthSolution
      *
      * @param problem
      */
-    public DefaultVariableLengthIntegerSolution(AbstractVariableLengthIntegerProblem problem) {
+    public DefaultVariableLengthIntegerSolution(VariableLengthIntegerProblem problem) {
         super(problem);
 
         int numberOfVariables = randomGenerator.nextInt(problem.getMinLength(), problem.getMaxLength());

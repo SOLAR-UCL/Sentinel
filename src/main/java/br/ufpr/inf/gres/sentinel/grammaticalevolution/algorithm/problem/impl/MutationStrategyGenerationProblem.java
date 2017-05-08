@@ -2,7 +2,6 @@ package br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.problem.impl;
 
 import br.ufpr.inf.gres.sentinel.base.mutation.Mutant;
 import br.ufpr.inf.gres.sentinel.base.mutation.Program;
-import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.problem.AbstractVariableLengthIntegerProblem;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.representation.VariableLengthSolution;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.representation.impl.DefaultVariableLengthIntegerSolution;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.iterator.CountingIterator;
@@ -18,11 +17,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import org.apache.commons.collections4.list.SetUniqueList;
+import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.problem.VariableLengthIntegerProblem;
 
 /**
  * @author Giovani Guizzo
  */
-public class MutationStrategyGenerationProblem implements AbstractVariableLengthIntegerProblem {
+public class MutationStrategyGenerationProblem implements VariableLengthIntegerProblem {
 
     private final StrategyMapper strategyMapper;
     private final int numberOfStrategyRuns;
@@ -101,24 +101,8 @@ public class MutationStrategyGenerationProblem implements AbstractVariableLength
     public void evaluate(VariableLengthSolution<Integer> solution) {
         System.out.println("Evaluation: " + (++evaluationCount));
         try {
-
             setWorst(solution);
 
-            solution.clearVariables();
-            solution.addAllVariables(Lists.newArrayList(166,
-                    63,
-                    90,
-                    1,
-                    119,
-                    60,
-                    136,
-                    140,
-                    71,
-                    170,
-                    155,
-                    81,
-                    37,
-                    39));
             Strategy strategy = createStrategy(solution);
 
             Program tempProgram = IntegrationFacade.getProgramUnderTest();
