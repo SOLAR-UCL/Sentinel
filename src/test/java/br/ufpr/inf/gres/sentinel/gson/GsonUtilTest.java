@@ -1,11 +1,17 @@
 package br.ufpr.inf.gres.sentinel.gson;
 
-import br.ufpr.inf.gres.sentinel.gson.ResultWrapper;
-import br.ufpr.inf.gres.sentinel.gson.GsonUtil;
+import br.ufpr.inf.gres.sentinel.base.mutation.Operator;
+import br.ufpr.inf.gres.sentinel.strategy.operation.impl.group.impl.operator.GroupOperatorsByType;
+import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.selection.GroupSelectionOperation;
+import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.selection.SelectionOperation;
+import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.type.impl.SequentialSelection;
+import br.ufpr.inf.gres.sentinel.strategy.operation.impl.sort.impl.QuantityInGroupComparator;
+import com.google.common.collect.Lists;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -23,6 +29,7 @@ public class GsonUtilTest {
     @Test
     public void testSerialize() throws IOException {
         Assert.assertEquals("{\n"
+                + "  \"runNumber\": 0,\n"
                 + "  \"executionTimeInMillis\": 0\n"
                 + "}", gson.toJson(new ResultWrapper()));
     }
@@ -33,13 +40,45 @@ public class GsonUtilTest {
                 .setExecutionTimeInMillis(10)
                 .setGrammarFile("testGrammar")
                 .setResult(new ArrayList<>())
-                .setSession("testSession");
+                .setSession("testSession")
+                .setRunNumber(12)
+                .setObjectiveFunctions(Lists.newArrayList("Test", "Test2"));
         Assert.assertEquals("{\n"
                 + "  \"session\": \"testSession\",\n"
+                + "  \"runNumber\": 12,\n"
                 + "  \"grammarFile\": \"testGrammar\",\n"
                 + "  \"executionTimeInMillis\": 10,\n"
+                + "  \"objectiveFunctions\": [\n"
+                + "    \"Test\",\n"
+                + "    \"Test2\"\n"
+                + "  ],\n"
                 + "  \"result\": []\n"
                 + "}", gson.toJson(resultWrapper));
+    }
+
+    @Test
+    @Ignore
+    public void testSerialize3() throws IOException {
+        SelectionOperation<Operator> selectionOp = new SelectionOperation<>();
+        selectionOp.setSelectionType(new SequentialSelection());
+        selectionOp.setSorter(null);
+        selectionOp.setQuantity(1);
+
+        GroupSelectionOperation<Operator> groupOp = new GroupSelectionOperation<>();
+        groupOp.setSelectionOperation(selectionOp);
+        groupOp.setGroupingFunction(new GroupOperatorsByType());
+        groupOp.setSelectionType(new SequentialSelection());
+        groupOp.setSorter(new QuantityInGroupComparator());
+        groupOp.setQuantity(1);
+
+        GroupSelectionOperation<Operator> groupOp2 = new GroupSelectionOperation<>();
+        groupOp2.setSelectionOperation(groupOp);
+        groupOp2.setGroupingFunction(new GroupOperatorsByType());
+        groupOp2.setSelectionType(new SequentialSelection());
+        groupOp2.setSorter(new QuantityInGroupComparator());
+        groupOp2.setQuantity(1);
+
+//        Assert.assertEquals("", gson.getGson().toJson(groupOp2));
     }
 
     @Test

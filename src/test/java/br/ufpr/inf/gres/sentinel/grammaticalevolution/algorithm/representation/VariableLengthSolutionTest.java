@@ -1,5 +1,6 @@
 package br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.representation;
 
+import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.problem.fitness.ObjectiveFunction;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.problem.impl.MutationStrategyGenerationProblem;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.GrammarFiles;
 import com.google.common.collect.Iterables;
@@ -36,7 +37,8 @@ public class VariableLengthSolutionTest {
                 10,
                 2,
                 1,
-                null);
+                null,
+                Lists.newArrayList(ObjectiveFunction.AVERAGE_CPU_TIME, ObjectiveFunction.AVERAGE_SCORE));
     }
 
     @AfterClass

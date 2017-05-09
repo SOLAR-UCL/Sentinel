@@ -2,22 +2,25 @@ package br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.problem.impl;
 
 import br.ufpr.inf.gres.sentinel.base.mutation.Mutant;
 import br.ufpr.inf.gres.sentinel.base.mutation.Program;
+import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.problem.VariableLengthIntegerProblem;
+import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.problem.fitness.ObjectiveFunction;
+import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.problem.fitness.ObjectiveFunctionFactory;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.representation.VariableLengthSolution;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.representation.impl.DefaultVariableLengthIntegerSolution;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.iterator.CountingIterator;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.StrategyMapper;
 import br.ufpr.inf.gres.sentinel.integration.IntegrationFacade;
 import br.ufpr.inf.gres.sentinel.strategy.Strategy;
+import com.google.common.base.Stopwatch;
+import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadMXBean;
-import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import org.apache.commons.collections4.list.SetUniqueList;
-import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.problem.VariableLengthIntegerProblem;
 
 /**
  * @author Giovani Guizzo
@@ -33,8 +36,9 @@ public class MutationStrategyGenerationProblem implements VariableLengthIntegerP
     private int maxLength;
     private int maxWraps;
     private int evaluationCount;
-    private int numberOfObjectives;
     private int numberOfConstraints;
+    private final List<ObjectiveFunction> objectiveFunctions;
+    private final List<ObjectiveFunction> objectivesToStoreAsAttribute;
 
     public MutationStrategyGenerationProblem(String grammarFile,
             int minLength,
@@ -43,7 +47,8 @@ public class MutationStrategyGenerationProblem implements VariableLengthIntegerP
             int upperVariableBound,
             int maxWraps,
             int numberOfStrategyRuns,
-            List<Program> testPrograms) throws IOException {
+            List<Program> testPrograms,
+            List<String> objectiveFunctions) throws IOException {
         this.strategyMapper = new StrategyMapper(grammarFile);
         this.lowerVariableBound = lowerVariableBound;
         this.upperVariableBound = upperVariableBound;
@@ -53,8 +58,18 @@ public class MutationStrategyGenerationProblem implements VariableLengthIntegerP
         this.numberOfStrategyRuns = numberOfStrategyRuns;
         this.testPrograms = testPrograms;
         this.evaluationCount = 0;
-        this.numberOfObjectives = 2;
         this.numberOfConstraints = 0;
+        this.objectiveFunctions = Collections.unmodifiableList(ObjectiveFunctionFactory.createObjectiveFunctions(objectiveFunctions));
+        this.objectivesToStoreAsAttribute = ObjectiveFunctionFactory.createAllObjectiveFunctions();
+        this.objectivesToStoreAsAttribute.removeAll(this.objectiveFunctions);
+    }
+
+    public int getMaxWraps() {
+        return maxWraps;
+    }
+
+    public List<ObjectiveFunction> getObjectiveFunctions() {
+        return objectiveFunctions;
     }
 
     @Override
@@ -84,7 +99,7 @@ public class MutationStrategyGenerationProblem implements VariableLengthIntegerP
 
     @Override
     public int getNumberOfObjectives() {
-        return numberOfObjectives;
+        return objectiveFunctions.size();
     }
 
     @Override
@@ -102,76 +117,72 @@ public class MutationStrategyGenerationProblem implements VariableLengthIntegerP
         System.out.println("Evaluation: " + (++evaluationCount));
         try {
             setWorst(solution);
-
             Strategy strategy = createStrategy(solution);
 
-            Program tempProgram = IntegrationFacade.getProgramUnderTest();
+            ArrayListMultimap<Program, Long> nanoTimes = ArrayListMultimap.create();
+            ArrayListMultimap<Program, Long> nanoCPUTimes = ArrayListMultimap.create();
+            ArrayListMultimap<Program, Collection<Mutant>> allMutants = ArrayListMultimap.create();
+
             IntegrationFacade integrationFacade = IntegrationFacade.getIntegrationFacade();
-            double numberOfMutants = 0;
-            double score = 0;
-            double elapsedNano = 0;
-            programFor:
             for (Program testProgram : testPrograms) {
                 IntegrationFacade.setProgramUnderTest(testProgram);
-                integrationFacade.initializeForProgram(testProgram, numberOfStrategyRuns * 10);
+                integrationFacade.initializeConventionalStrategy(testProgram, numberOfStrategyRuns * 10);
                 for (int i = 0; i < numberOfStrategyRuns; i++) {
+                    Stopwatch stopWatch = Stopwatch.createStarted();
                     ThreadMXBean threadBean = ManagementFactory.getThreadMXBean();
                     long currentThreadCpuTime = threadBean.getCurrentThreadCpuTime();
                     List<Mutant> mutants = strategy.run();
                     integrationFacade.executeMutants(mutants);
                     currentThreadCpuTime = threadBean.getCurrentThreadCpuTime() - currentThreadCpuTime;
-                    if (mutants.isEmpty()) {
-                        numberOfMutants = 0;
-                        break programFor;
-                    }
-                    // Summing the elapsed time
-                    long conventionalMutationTime = integrationFacade.getConventionalMutationTime(testProgram, TimeUnit.NANOSECONDS);
-                    elapsedNano
-                            += (double) currentThreadCpuTime
-                            / (double) (conventionalMutationTime == 0 ? 1 : conventionalMutationTime);
-                    // Summing the number of mutants
-                    numberOfMutants
-                            += (double) mutants.size() / (double) integrationFacade.getConventionalQuantityOfMutants(testProgram);
-                    // Summing the score
-                    score += integrationFacade.getRelativeMutationScore(testProgram,
-                            mutants.stream()
-                                    .map(Mutant::getKillingTestCases)
-                                    .reduce((testCases, testCases2) -> SetUniqueList
-                                    .setUniqueList(Lists.newArrayList(
-                                            Iterables.concat(testCases,
-                                                    testCases2))))
-                                    .orElse(SetUniqueList.setUniqueList(new ArrayList<>())));
+                    stopWatch.stop();
+
+                    nanoTimes.put(testProgram, stopWatch.elapsed(TimeUnit.NANOSECONDS));
+                    nanoCPUTimes.put(testProgram, currentThreadCpuTime);
+                    allMutants.put(testProgram, mutants);
                 }
             }
-            IntegrationFacade.setProgramUnderTest(tempProgram);
+            solution.setAttribute("Strategy", strategy);
+            solution.setAttribute("Evaluation Found", evaluationCount);
 
-            if (numberOfMutants > 0) {
-                // Normalizing
-                int normalizationFactor = testPrograms.size() * numberOfStrategyRuns;
-                elapsedNano /= normalizationFactor;
-                numberOfMutants /= normalizationFactor;
-                score /= normalizationFactor;
+            solution.setAttribute("CPUTimes", nanoCPUTimes);
+            solution.setAttribute("ConventionalCPUTimes", integrationFacade.getConventionalExecutionCPUTimes());
 
-                solution.setObjective(0, elapsedNano);
-                System.out.println("Time: " + elapsedNano);
-                solution.setObjective(1, score * -1);
-                solution.setAttribute("Quantity", numberOfMutants);
-                solution.setAttribute("Evaluation", evaluationCount);
-            } else {
-                setWorst(solution);
-            }
+            solution.setAttribute("Times", nanoTimes);
+            solution.setAttribute("ConventionalTimes", integrationFacade.getConventionalExecutionTimes());
+
+            solution.setAttribute("Mutants", allMutants);
+            solution.setAttribute("ConventionalMutants", integrationFacade.getConventionalMutants());
+
+            computeObjectiveValues(solution);
         } catch (Exception ex) {
+            // Invalid strategy. Probably discarded due to maximum wraps.
             System.out.println("Exception! Solution: " + solution.getVariablesCopy());
             System.out.println(ex.getMessage());
-            // Invalid strategy. Probably discarded due to maximum wraps.
-            setWorst(solution);
         }
     }
 
     private void setWorst(VariableLengthSolution<Integer> solution) {
-        solution.setObjective(0, Double.MAX_VALUE);
-        solution.setObjective(1, Double.MAX_VALUE);
-        solution.setAttribute("Quantity", Double.MAX_VALUE);
+        for (int i = 0; i < objectiveFunctions.size(); i++) {
+            ObjectiveFunction objectiveFunction = objectiveFunctions.get(i);
+            Double worstValue = objectiveFunction.getWorstValue();
+            solution.setAttribute(objectiveFunction.getName(), worstValue);
+            solution.setObjective(i, worstValue);
+        }
+        for (ObjectiveFunction objectiveFunction : objectivesToStoreAsAttribute) {
+            solution.setAttribute(objectiveFunction.getName(), objectiveFunction.getWorstValue());
+        }
+    }
+
+    private void computeObjectiveValues(VariableLengthSolution<Integer> solution) {
+        for (int i = 0; i < objectiveFunctions.size(); i++) {
+            ObjectiveFunction objectiveFunction = objectiveFunctions.get(i);
+            Double objectiveValue = objectiveFunction.computeFitness(solution);
+            solution.setAttribute(objectiveFunction.getName(), objectiveValue);
+            solution.setObjective(i, objectiveValue);
+        }
+        for (ObjectiveFunction objectiveFunction : objectivesToStoreAsAttribute) {
+            solution.setAttribute(objectiveFunction.getName(), objectiveFunction.computeFitness(solution));
+        }
     }
 
     private Strategy createStrategy(VariableLengthSolution<Integer> solution) {
@@ -179,9 +190,8 @@ public class MutationStrategyGenerationProblem implements VariableLengthIntegerP
         CountingIterator<Integer> variablesIterator
                 = new CountingIterator<>(Iterables.limit(Iterables.cycle(variables), variables.size() * (maxWraps + 1)).iterator());
         Strategy strategy = strategyMapper.interpret(variablesIterator);
-        solution.setAttribute("Strategy", strategy);
         solution.setAttribute("Consumed Items Count", variablesIterator.getCount());
-        return (Strategy) strategy;
+        return strategy;
     }
 
     @Override

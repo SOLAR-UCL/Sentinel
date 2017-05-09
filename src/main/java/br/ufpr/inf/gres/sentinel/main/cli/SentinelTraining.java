@@ -45,7 +45,9 @@ public class SentinelTraining {
                 .setExecutionTimeInMillis(timeMillis)
                 .setResult(resultSolutions)
                 .setGrammarFile(trainingArgs.grammarFilePath)
-                .setSession(trainingArgs.session);
+                .setSession(trainingArgs.session)
+                .setObjectiveFunctions(trainingArgs.objectiveFunctions)
+                .setRunNumber(trainingArgs.runNumber);
 
         File outputFile = new File(trainingArgs.workingDirectory
                 + File.separator
@@ -53,7 +55,7 @@ public class SentinelTraining {
                 + File.separator
                 + trainingArgs.session
                 + File.separator
-                + trainingArgs.outputFile);
+                + "result_" + trainingArgs.runNumber + ".json");
         Files.createParentDirs(outputFile);
         GsonUtil gson = new GsonUtil();
         Files.write(gson.toJson(result), outputFile, Charset.defaultCharset());
@@ -96,7 +98,8 @@ public class SentinelTraining {
                         trainingArgs.upperVariableBound,
                         trainingArgs.maxWraps,
                         trainingArgs.numberOfTrainingRuns,
-                        trainingPrograms);
+                        trainingPrograms,
+                        trainingArgs.objectiveFunctions);
         return problem;
     }
 

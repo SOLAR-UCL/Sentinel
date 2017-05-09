@@ -1,5 +1,7 @@
 package br.ufpr.inf.gres.sentinel.gson;
 
+import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.problem.fitness.ObjectiveFunction;
+import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.problem.fitness.ObjectiveFunctionFactory;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.problem.impl.MutationStrategyGenerationProblem;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.representation.VariableLengthSolution;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.representation.impl.DefaultVariableLengthIntegerSolution;
@@ -8,6 +10,7 @@ import br.ufpr.inf.gres.sentinel.main.cli.args.TrainingArgs;
 import com.google.gson.*;
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.util.List;
 
 public class VariableLengthSolutionGsonDeserializer implements JsonDeserializer<VariableLengthSolution<Integer>> {
 
@@ -40,14 +43,18 @@ public class VariableLengthSolutionGsonDeserializer implements JsonDeserializer<
             }
         }
 
-        JsonElement quantity = jsonObject.get("quantity");
-        if (quantity != null) {
-            solution.setAttribute("Quantity", quantity.getAsDouble());
+        List<ObjectiveFunction> objectiveFunctions = ObjectiveFunctionFactory.createAllObjectiveFunctions();
+        for (ObjectiveFunction objectiveFunction : objectiveFunctions) {
+            solution.setAttribute(objectiveFunction.getName(), json);
+            JsonElement objective = jsonObject.get(objectiveFunction.getName());
+            if (objective != null) {
+                solution.setAttribute(objectiveFunction.getName(), objective.getAsDouble());
+            }
         }
 
         JsonElement evaluation = jsonObject.get("evaluation");
         if (evaluation != null) {
-            solution.setAttribute("Evaluation", evaluation.getAsInt());
+            solution.setAttribute("Evaluation Found", evaluation.getAsInt());
         }
 
         JsonElement consumedItemsCount = jsonObject.get("consumedItemsCount");

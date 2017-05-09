@@ -1,5 +1,6 @@
 package br.ufpr.inf.gres.sentinel.gson;
 
+import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.problem.fitness.ObjectiveFunction;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.problem.impl.MutationStrategyGenerationProblem;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.representation.VariableLengthSolution;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.GrammarFiles;
@@ -39,7 +40,8 @@ public class VariableLengthSolutionGsonDeserializerTest {
                 179,
                 10,
                 5,
-                Lists.newArrayList(facade.instantiateProgram("br.ufpr.inf.gres.TriTyp")));
+                Lists.newArrayList(facade.instantiateProgram("br.ufpr.inf.gres.TriTyp")),
+                Lists.newArrayList(ObjectiveFunction.AVERAGE_CPU_TIME, ObjectiveFunction.AVERAGE_SCORE));
     }
 
     @AfterClass
@@ -53,14 +55,17 @@ public class VariableLengthSolutionGsonDeserializerTest {
                 .registerTypeAdapter(VariableLengthSolution.class, new VariableLengthSolutionGsonDeserializer())
                 .create();
 
-        VariableLengthSolution<Integer> solution = gson.fromJson("{\"objectives\":[1000.0,2000.0],\"quantity\":3000,\"consumedItemsCount\":2,\"evaluation\":100,\"variables\":[0,2,1,0,0,1,9,3],\"strategy\":{\"firstOperation\":{\"name\":\"TestOperation\",\"successor\":{\"name\":\"TestOperation2\",\"successor\":{\"name\":\"New Branch\",\"successor\":{\"name\":\"TestOperation3\"},\"secondSuccessor\":{\"name\":\"New Branch\",\"successor\":{\"name\":\"New Branch\",\"successor\":{\"name\":\"TestOperation5\"},\"secondSuccessor\":{\"name\":\"TestOperation6\"}},\"secondSuccessor\":{\"name\":\"TestOperation4\"}}}}}}}", VariableLengthSolution.class);
+        VariableLengthSolution<Integer> solution = gson.fromJson("{\"" + ObjectiveFunction.AVERAGE_CPU_TIME + "\":10.0,\"" + ObjectiveFunction.AVERAGE_QUANTITY + "\":10.0,\"" + ObjectiveFunction.AVERAGE_SCORE + "\":10.0,\"objectives\":[1000.0,2000.0],\"consumedItemsCount\":2,\"evaluation\":100,\"variables\":[0,2,1,0,0,1,9,3],\"strategy\":{\"firstOperation\":{\"name\":\"TestOperation\",\"successor\":{\"name\":\"TestOperation2\",\"successor\":{\"name\":\"New Branch\",\"successor\":{\"name\":\"TestOperation3\"},\"secondSuccessor\":{\"name\":\"New Branch\",\"successor\":{\"name\":\"New Branch\",\"successor\":{\"name\":\"TestOperation5\"},\"secondSuccessor\":{\"name\":\"TestOperation6\"}},\"secondSuccessor\":{\"name\":\"TestOperation4\"}}}}}}}", VariableLengthSolution.class);
 
         Assert.assertArrayEquals(new Object[]{0, 2, 1, 0, 0, 1, 9, 3}, solution.getVariablesCopy().toArray());
         Assert.assertEquals(1000, solution.getObjective(0), 0.00001);
         Assert.assertEquals(2000, solution.getObjective(1), 0.00001);
-        Assert.assertEquals(3000, (double) solution.getAttribute("Quantity"), 0.00001);
-        Assert.assertEquals(100, (int) solution.getAttribute("Evaluation"));
+        Assert.assertEquals(100, (int) solution.getAttribute("Evaluation Found"));
         Assert.assertEquals(2, (int) solution.getAttribute("Consumed Items Count"));
+        Assert.assertEquals(10D, (double) solution.getAttribute(ObjectiveFunction.AVERAGE_CPU_TIME), 0.0001);
+        Assert.assertEquals(10D, (double) solution.getAttribute(ObjectiveFunction.AVERAGE_QUANTITY), 0.0001);
+        Assert.assertEquals(10D, (double) solution.getAttribute(ObjectiveFunction.AVERAGE_SCORE), 0.0001);
+
     }
 
 }

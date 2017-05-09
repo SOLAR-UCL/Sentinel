@@ -17,7 +17,7 @@ public class SentinelTest {
     public void testSentinel() throws Exception {
         String[] args = new String[]{"train", "--maxEvaluations", "1", "--populationSize", "1", "--trainingRuns", "1"};
         Sentinel.main(args);
-        File result = new File("training/result.json");
+        File result = new File("training/Experiment/result_1.json");
         Assert.assertTrue(result.exists());
         Assert.assertTrue(result.length() > 0);
     }

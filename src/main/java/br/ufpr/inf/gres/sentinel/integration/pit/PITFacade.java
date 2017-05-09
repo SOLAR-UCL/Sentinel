@@ -239,7 +239,7 @@ public class PITFacade extends IntegrationFacade {
     private ReportOptions createDefaultReportOptions() {
         ReportOptions reportOptions = new ReportOptions();
         String absolutePath = new File(trainingDircetory).getAbsolutePath();
-        reportOptions.setReportDir(absolutePath + File.separator + "result");
+        reportOptions.setReportDir(absolutePath);
         reportOptions.setGroupConfig(new TestGroupConfig());
         reportOptions.setSourceDirs(Lists.newArrayList(new File(absolutePath)));
         reportOptions.setCodePaths(Lists.newArrayList(absolutePath));

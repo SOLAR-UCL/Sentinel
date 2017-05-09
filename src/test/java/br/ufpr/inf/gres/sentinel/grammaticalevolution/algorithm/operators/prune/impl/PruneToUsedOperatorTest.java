@@ -1,5 +1,6 @@
 package br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.operators.prune.impl;
 
+import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.problem.fitness.ObjectiveFunction;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.problem.impl.MutationStrategyGenerationProblem;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.representation.VariableLengthSolution;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.GrammarFiles;
@@ -27,7 +28,8 @@ public class PruneToUsedOperatorTest {
                 10,
                 2,
                 1,
-                null);
+                null,
+                Lists.newArrayList(ObjectiveFunction.AVERAGE_CPU_TIME, ObjectiveFunction.AVERAGE_SCORE));
     }
 
     @Test

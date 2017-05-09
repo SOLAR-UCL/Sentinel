@@ -10,8 +10,10 @@ import java.util.List;
 public class ResultWrapper {
 
     private String session;
+    private int runNumber;
     private String grammarFile;
     private long executionTimeInMillis;
+    private List<String> objectiveFunctions;
     private List<VariableLengthSolution<Integer>> result;
 
     public long getExecutionTimeInMillis() {
@@ -47,6 +49,24 @@ public class ResultWrapper {
 
     public ResultWrapper setGrammarFile(String grammarFile) {
         this.grammarFile = grammarFile;
+        return this;
+    }
+
+    public int getRunNumber() {
+        return runNumber;
+    }
+
+    public ResultWrapper setRunNumber(int runNumber) {
+        this.runNumber = runNumber;
+        return this;
+    }
+
+    public List<String> getObjectiveFunctions() {
+        return objectiveFunctions;
+    }
+
+    public ResultWrapper setObjectiveFunctions(List<String> objectiveFunctions) {
+        this.objectiveFunctions = objectiveFunctions;
         return this;
     }
 

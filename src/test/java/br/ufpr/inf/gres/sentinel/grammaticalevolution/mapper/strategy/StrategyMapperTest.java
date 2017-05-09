@@ -3,10 +3,9 @@ package br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy;
 import br.ufpr.inf.gres.sentinel.base.mutation.Mutant;
 import br.ufpr.inf.gres.sentinel.base.mutation.Program;
 import br.ufpr.inf.gres.sentinel.base.solution.Solution;
-import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.AbstractGrammarMapperTest;
 import br.ufpr.inf.gres.sentinel.integration.IntegrationFacade;
 import br.ufpr.inf.gres.sentinel.integration.IntegrationFacadeTest;
-import br.ufpr.inf.gres.sentinel.integration.hg4hom.HG4HOMFacade;
+import br.ufpr.inf.gres.sentinel.integration.pit.PITFacade;
 import br.ufpr.inf.gres.sentinel.strategy.Strategy;
 import br.ufpr.inf.gres.sentinel.strategy.operation.Operation;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.defaults.AddAllOperatorsOperation;
@@ -17,17 +16,12 @@ import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.operation.impl.S
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.selection.SelectionOperation;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.type.impl.SequentialSelection;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.sort.impl.operator.OperatorTypeComparator;
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
-import org.junit.BeforeClass;
-import org.junit.Ignore;
-import org.junit.Test;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 import static org.junit.Assert.*;
 
@@ -36,137 +30,106 @@ import static org.junit.Assert.*;
  */
 public class StrategyMapperTest {
 
-	private static StrategyMapper DEFAULT_MAPPER;
+    public StrategyMapperTest() {
+    }
 
-	public StrategyMapperTest() {
-	}
+    @BeforeClass
+    public static void setUpClass() {
+        IntegrationFacade.setIntegrationFacade(new IntegrationFacadeTest.IntegrationFacadeStub());
+    }
 
-	@BeforeClass
-	public static void setUpClass() {
-		try {
-			IntegrationFacade.setIntegrationFacade(new IntegrationFacadeTest.IntegrationFacadeStub());
-			DEFAULT_MAPPER = new StrategyMapper(GrammarFiles.getDefaultGrammarPath());
-		} catch (IOException ex) {
-			Logger.getLogger(AbstractGrammarMapperTest.class.getName()).log(Level.SEVERE, null, ex);
-		}
-	}
+    @Test
+    public void testHookInterpret() {
+        StrategyMapper strategyMapper = new StrategyMapper();
+        Strategy strategy = strategyMapper.interpret(Lists.newArrayList(1, 2, 3, 4, 5, 6));
+        assertNotNull(strategy);
+    }
 
-	@Test
-	public void testHookInterpret() {
-		StrategyMapper strategyMapper = new StrategyMapper();
-		Strategy strategy = strategyMapper.interpret(Lists.newArrayList(1, 2, 3, 4, 5, 6));
-		assertNotNull(strategy);
-	}
+    @Test
+    public void testCreate() throws IOException {
+        StrategyMapper strategyMapper = new StrategyMapper(new File(GrammarFiles.getDefaultGrammarPath()));
+        Strategy strategy = strategyMapper.interpret(Lists.newArrayList(3));
+        assertNotNull(strategy);
+    }
 
-	@Test
-	public void testCreate() throws IOException {
-		StrategyMapper strategyMapper = new StrategyMapper(new File(GrammarFiles.getDefaultGrammarPath()));
-		Strategy strategy = strategyMapper.interpret(Lists.newArrayList(3));
-		assertNotNull(strategy);
-	}
+    @Test
+    public void testCreate2() throws IOException {
+        StrategyMapper strategyMapper = new StrategyMapper(new File(GrammarFiles.getDefaultGrammarPath()));
+        Strategy strategy
+                = strategyMapper.interpret(Lists.newArrayList(0, 2, 1, 0, 0, 0, 0, 0, 9, 1, 0, 1, 0, 0, 1, 0, 3, 1, 2));
+        assertNotNull(strategy);
+        assertEquals("1.All Operators - 2.Execute Operators - 3.Select Mutants - 4.Store Mutants", strategy.toString());
 
-	@Test
-	public void testCreate2() throws IOException {
-		StrategyMapper strategyMapper = new StrategyMapper(new File(GrammarFiles.getDefaultGrammarPath()));
-		Strategy
-				strategy =
-				strategyMapper.interpret(Lists.newArrayList(0, 2, 1, 0, 0, 0, 0, 0, 9, 1, 0, 1, 0, 0, 1, 0, 3, 1, 2));
-		assertNotNull(strategy);
-		assertEquals("1.All Operators - 2.Execute Operators - 3.Select Mutants - 4.Store Mutants", strategy.toString());
+        Operation<Solution, List<Mutant>> operation = strategy.getFirstOperation();
+        assertTrue(operation instanceof AddAllOperatorsOperation);
 
-		Operation<Solution, List<Mutant>> operation = strategy.getFirstOperation();
-		assertTrue(operation instanceof AddAllOperatorsOperation);
+        assertTrue(operation.getSuccessor() instanceof ExecuteOperatorsOperation);
 
-		assertTrue(operation.getSuccessor() instanceof ExecuteOperatorsOperation);
+        ExecuteOperatorsOperation execute = (ExecuteOperatorsOperation) operation.getSuccessor();
+        assertTrue(execute.getExecutionType() instanceof ConventionalExecution);
+        assertTrue(execute.getSelection() instanceof SelectionOperation);
+        assertEquals(1.0, execute.getSelection().getPercentage(), 0.01D);
+        assertTrue(execute.getSelection().getSelectionType() instanceof SequentialSelection);
+        assertTrue(execute.getSelection().getSorter() instanceof OperatorTypeComparator);
+        assertFalse(execute.getSelection().getSorter().isReversed());
 
-		ExecuteOperatorsOperation execute = (ExecuteOperatorsOperation) operation.getSuccessor();
-		assertTrue(execute.getExecutionType() instanceof ConventionalExecution);
-		assertTrue(execute.getSelection() instanceof SelectionOperation);
-		assertEquals(1.0, execute.getSelection().getPercentage(), 0.01D);
-		assertTrue(execute.getSelection().getSelectionType() instanceof SequentialSelection);
-		assertTrue(execute.getSelection().getSorter() instanceof OperatorTypeComparator);
-		assertFalse(execute.getSelection().getSorter().isReversed());
+        assertTrue(execute.getSuccessor() instanceof SelectMutantsOperation);
 
-		assertTrue(execute.getSuccessor() instanceof SelectMutantsOperation);
+        SelectMutantsOperation mutantsOperation = (SelectMutantsOperation) execute.getSuccessor();
+        assertTrue(mutantsOperation.getSelection() instanceof SelectionOperation);
+        assertEquals(0.1D, mutantsOperation.getSelection().getPercentage(), 0.01D);
+        assertTrue(mutantsOperation.getSelection().getSelectionType() instanceof SequentialSelection);
+        assertNull(mutantsOperation.getSelection().getSorter());
 
-		SelectMutantsOperation mutantsOperation = (SelectMutantsOperation) execute.getSuccessor();
-		assertTrue(mutantsOperation.getSelection() instanceof SelectionOperation);
-		assertEquals(0.1D, mutantsOperation.getSelection().getPercentage(), 0.01D);
-		assertTrue(mutantsOperation.getSelection().getSelectionType() instanceof SequentialSelection);
-		assertNull(mutantsOperation.getSelection().getSorter());
+        assertTrue(mutantsOperation.getSuccessor() instanceof StoreMutantsOperation);
 
-		assertTrue(mutantsOperation.getSuccessor() instanceof StoreMutantsOperation);
+        StoreMutantsOperation store = (StoreMutantsOperation) mutantsOperation.getSuccessor();
+        assertNull(store.getSuccessor());
+    }
 
-		StoreMutantsOperation store = (StoreMutantsOperation) mutantsOperation.getSuccessor();
-		assertNull(store.getSuccessor());
-	}
+    @Test
+    public void testCreate3() throws IOException {
+        Program programUnderTest
+                = new Program("br.ufpr.inf.gres.TriTyp",
+                        new File("src/test/resources/testfiles/TriTyp/src/br/ufpr/inf/gres/TriTyp.java"));
+        PITFacade facade = new PITFacade(System.getProperty("user.dir") + File.separator + "training");
+        IntegrationFacade.setIntegrationFacade(facade);
+        IntegrationFacade.setProgramUnderTest(programUnderTest);
 
-	@Test
-	@Ignore
-	public void testCreate3() throws IOException {
-		Program
-				programUnderTest =
-				new Program("br.ufpr.inf.gres.TriTyp",
-							new File("src/test/resources/testfiles/TriTyp/src/br/ufpr/inf/gres/TriTyp.java"));
-		HG4HOMFacade facade = new HG4HOMFacade(System.getProperty("user.dir") + File.separator + "training");
-		IntegrationFacade.setIntegrationFacade(facade);
-		IntegrationFacade.setProgramUnderTest(programUnderTest);
+        StrategyMapper strategyMapper = new StrategyMapper(new File(GrammarFiles.getDefaultGrammarPath()));
+        Strategy strategy
+                = strategyMapper.interpret(Lists.newArrayList(0, 2, 1, 0, 0, 0, 0, 0, 9, 1, 0, 1, 0, 0, 1, 0, 3, 1, 2));
+        assertNotNull(strategy);
+        assertEquals("1.All Operators - 2.Execute Operators - 3.Select Mutants - 4.Store Mutants", strategy.toString());
 
-		StrategyMapper strategyMapper = new StrategyMapper(new File(GrammarFiles.getDefaultGrammarPath()));
-		Strategy
-				strategy =
-				strategyMapper.interpret(Lists.newArrayList(0, 2, 1, 0, 0, 0, 0, 0, 9, 1, 0, 1, 0, 0, 1, 0, 3, 1, 2));
-		assertNotNull(strategy);
-		assertEquals("1.All Operators - 2.Execute Operators - 3.Select Mutants - 4.Store Mutants", strategy.toString());
+        Operation<Solution, List<Mutant>> operation = strategy.getFirstOperation();
+        assertTrue(operation instanceof AddAllOperatorsOperation);
 
-		Operation<Solution, List<Mutant>> operation = strategy.getFirstOperation();
-		assertTrue(operation instanceof AddAllOperatorsOperation);
+        assertTrue(operation.getSuccessor() instanceof ExecuteOperatorsOperation);
 
-		assertTrue(operation.getSuccessor() instanceof ExecuteOperatorsOperation);
+        ExecuteOperatorsOperation execute = (ExecuteOperatorsOperation) operation.getSuccessor();
+        assertTrue(execute.getExecutionType() instanceof ConventionalExecution);
+        assertTrue(execute.getSelection() instanceof SelectionOperation);
+        assertEquals(1.0, execute.getSelection().getPercentage(), 0.01D);
+        assertTrue(execute.getSelection().getSelectionType() instanceof SequentialSelection);
+        assertTrue(execute.getSelection().getSorter() instanceof OperatorTypeComparator);
+        assertFalse(execute.getSelection().getSorter().isReversed());
 
-		ExecuteOperatorsOperation execute = (ExecuteOperatorsOperation) operation.getSuccessor();
-		assertTrue(execute.getExecutionType() instanceof ConventionalExecution);
-		assertTrue(execute.getSelection() instanceof SelectionOperation);
-		assertEquals(1.0, execute.getSelection().getPercentage(), 0.01D);
-		assertTrue(execute.getSelection().getSelectionType() instanceof SequentialSelection);
-		assertTrue(execute.getSelection().getSorter() instanceof OperatorTypeComparator);
-		assertFalse(execute.getSelection().getSorter().isReversed());
+        assertTrue(execute.getSuccessor() instanceof SelectMutantsOperation);
 
-		assertTrue(execute.getSuccessor() instanceof SelectMutantsOperation);
+        SelectMutantsOperation mutantsOperation = (SelectMutantsOperation) execute.getSuccessor();
+        assertTrue(mutantsOperation.getSelection() instanceof SelectionOperation);
+        assertEquals(0.1D, mutantsOperation.getSelection().getPercentage(), 0.01D);
+        assertTrue(mutantsOperation.getSelection().getSelectionType() instanceof SequentialSelection);
+        assertNull(mutantsOperation.getSelection().getSorter());
 
-		SelectMutantsOperation mutantsOperation = (SelectMutantsOperation) execute.getSuccessor();
-		assertTrue(mutantsOperation.getSelection() instanceof SelectionOperation);
-		assertEquals(0.1D, mutantsOperation.getSelection().getPercentage(), 0.01D);
-		assertTrue(mutantsOperation.getSelection().getSelectionType() instanceof SequentialSelection);
-		assertNull(mutantsOperation.getSelection().getSorter());
+        assertTrue(mutantsOperation.getSuccessor() instanceof StoreMutantsOperation);
 
-		assertTrue(mutantsOperation.getSuccessor() instanceof StoreMutantsOperation);
+        StoreMutantsOperation store = (StoreMutantsOperation) mutantsOperation.getSuccessor();
+        assertNull(store.getSuccessor());
 
-		StoreMutantsOperation store = (StoreMutantsOperation) mutantsOperation.getSuccessor();
-		assertNull(store.getSuccessor());
-
-		List<Mutant> result = strategy.run();
-		assertFalse(result.isEmpty());
-		setUpClass();
-	}
-
-	@Test
-	@Ignore
-	public void testCreate4() throws Exception {
-		Program
-				programUnderTest =
-				new Program("br.ufpr.inf.gres.TriTyp",
-							new File("src/test/resources/testfiles/TriTyp/src/br/ufpr/inf/gres/TriTyp.java"));
-		HG4HOMFacade facade = new HG4HOMFacade(System.getProperty("user.dir") + File.separator + "training");
-		IntegrationFacade.setIntegrationFacade(facade);
-		IntegrationFacade.setProgramUnderTest(programUnderTest);
-
-		StrategyMapper strategyMapper = new StrategyMapper(new File(GrammarFiles.getDefaultGrammarPath()));
-		List<Integer>
-				solution =
-				Lists.newArrayList(28, 132, 4, 100, 154, 79, 144, 133, 3, 112, 150, 145, 77, 13, 176, 3, 112, 150, 145);
-		Strategy strategy = strategyMapper.interpret(Iterables.limit(Iterables.cycle(solution), 10));
-		assertNotNull(strategy);
-
-	}
+        List<Mutant> result = strategy.run();
+        assertFalse(result.isEmpty());
+        setUpClass();
+    }
 }

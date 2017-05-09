@@ -1,5 +1,7 @@
 package br.ufpr.inf.gres.sentinel.main.cli.args;
 
+import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.problem.fitness.ObjectiveFunction;
+import br.ufpr.inf.gres.sentinel.integration.IntegrationFacadeFactory;
 import br.ufpr.inf.gres.sentinel.main.cli.converter.SeparatorConverter;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
@@ -16,10 +18,8 @@ public class TrainingArgs {
     @Parameter(names = {"--help", "-h"}, description = "Shows this message.")
     public boolean help = false;
 
-    @Parameter(names = {
-        "--facade", "--integrationFacade", "--tool", "--mutationTool", "-m"
-    },
-            description = "The tool used to effectively generate the mutants. Available options: \"PIT\", \"muJava\", \"HG4HOM\" (same as muJava).")
+    @Parameter(names = {"--facade", "--integrationFacade", "--tool", "--mutationTool", "-m"},
+            description = "The tool used to effectively generate the mutants. Available options: " + IntegrationFacadeFactory.PIT + ".")
     public String facade = "PIT";
 
     @Parameter(names = {"--workingDirectory", "-w"},
@@ -32,9 +32,7 @@ public class TrainingArgs {
             converter = SeparatorConverter.class)
     public String trainingDirectory = "training";
 
-    @Parameter(names = {
-        "--grammar", "--grammarFile", "-g"
-    },
+    @Parameter(names = {"--grammar", "--grammarFile", "-g"},
             description = "The grammar file path (relative to the working directory) used to interpret the strategies.",
             converter = SeparatorConverter.class)
     public String grammarFilePath = "grammars/default_grammar_no_homs.bnf";
@@ -43,6 +41,11 @@ public class TrainingArgs {
             description = "The names of the training programs to generate strategies. Sentinel will search for the programs in /path/to/training/directory/ according to the tool used for the mutant generation.",
             variableArity = true)
     public List<String> trainingPrograms = Lists.newArrayList("br.ufpr.inf.gres.TriTyp");
+
+    @Parameter(names = {"--objectiveFunctions", "-of"},
+            description = "The objective functions used to evolve the strategies. Available options are: " + ObjectiveFunction.AVERAGE_CPU_TIME + ", " + ObjectiveFunction.AVERAGE_SCORE + ", " + ObjectiveFunction.AVERAGE_QUANTITY + ".",
+            variableArity = true)
+    public List<String> objectiveFunctions = Lists.newArrayList(ObjectiveFunction.AVERAGE_CPU_TIME, ObjectiveFunction.AVERAGE_SCORE);
 
     @Parameter(names = "--minLength", description = "Minimum length for the chromosome.")
     public Integer minLength = 15;
@@ -81,12 +84,12 @@ public class TrainingArgs {
     @Parameter(names = "--mutationProbability", description = "Mutation probability.")
     public Double mutationProbability = 0.01D;
 
-    @Parameter(names = {"--outputFile", "-o"}, description = "Output file containing the training results. File is outputed to training directory.")
-    public String outputFile = "result.json";
-
     @Parameter(names = "--session",
             description = "Session name for the results. This is used later for analysis. Results from the same session are used to compute the overall quality of the algorithm used in this session. If no session is provided, then all the results are outputed to the training directory.",
             converter = SeparatorConverter.class)
-    public String session = "";
+    public String session = "Experiment";
 
+    @Parameter(names = "--runNumber",
+            description = "The number of the independent run being executed in a same session.")
+    public int runNumber = 1;
 }

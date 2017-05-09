@@ -1,5 +1,7 @@
 package br.ufpr.inf.gres.sentinel.gson;
 
+import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.problem.fitness.ObjectiveFunction;
+import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.problem.fitness.ObjectiveFunctionFactory;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.problem.impl.MutationStrategyGenerationProblem;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.representation.VariableLengthSolution;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.representation.impl.DefaultVariableLengthIntegerSolution;
@@ -14,6 +16,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import org.junit.*;
 
 /**
@@ -40,7 +43,8 @@ public class VariableLengthSolutionGsonSerializerTest {
                 179,
                 10,
                 5,
-                Lists.newArrayList(facade.instantiateProgram("br.ufpr.inf.gres.TriTyp")));
+                Lists.newArrayList(facade.instantiateProgram("br.ufpr.inf.gres.TriTyp")),
+                Lists.newArrayList(ObjectiveFunction.AVERAGE_CPU_TIME, ObjectiveFunction.AVERAGE_SCORE));
     }
 
     @AfterClass
@@ -56,16 +60,20 @@ public class VariableLengthSolutionGsonSerializerTest {
         solution.setObjective(0, 1000);
         solution.setObjective(1, 2000);
         solution.setAttribute("Strategy", new Strategy(OperationTest.getComplexTestOperationChain()));
-        solution.setAttribute("Quantity", 3000);
-        solution.setAttribute("Evaluation", 100);
+        solution.setAttribute("Evaluation Found", 100);
         solution.setAttribute("Consumed Items Count", 2);
+
+        List<ObjectiveFunction> objectiveFunctions = ObjectiveFunctionFactory.createAllObjectiveFunctions();
+        for (ObjectiveFunction objectiveFunction : objectiveFunctions) {
+            solution.setAttribute(objectiveFunction.getName(), 10.0);
+        }
 
         Gson gson = new GsonBuilder()
                 .registerTypeAdapter(DefaultVariableLengthIntegerSolution.class, new VariableLengthSolutionGsonSerializer())
                 .registerTypeAdapter(Operation.class, new OperationSerializer())
                 .create();
         String result = gson.toJson(solution);
-        Assert.assertEquals("{\"objectives\":[1000.0,2000.0],\"quantity\":3000,\"evaluation\":100,\"consumedItemsCount\":2,\"variables\":[0,2,1,0,0,1,9,3],\"strategy\":{\"firstOperation\":{\"name\":\"TestOperation\",\"successor\":{\"name\":\"TestOperation2\",\"successor\":{\"name\":\"New Branch\",\"successor\":{\"name\":\"TestOperation3\"},\"secondSuccessor\":{\"name\":\"New Branch\",\"successor\":{\"name\":\"New Branch\",\"successor\":{\"name\":\"TestOperation5\"},\"secondSuccessor\":{\"name\":\"TestOperation6\"}},\"secondSuccessor\":{\"name\":\"TestOperation4\"}}}}}}}", result);
+        Assert.assertEquals("{\"objectives\":[1000.0,2000.0],\"" + ObjectiveFunction.AVERAGE_CPU_TIME + "\":10.0,\"" + ObjectiveFunction.AVERAGE_QUANTITY + "\":10.0,\"" + ObjectiveFunction.AVERAGE_SCORE + "\":10.0,\"evaluation\":100,\"consumedItemsCount\":2,\"variables\":[0,2,1,0,0,1,9,3],\"strategy\":{\"firstOperation\":{\"name\":\"TestOperation\",\"successor\":{\"name\":\"TestOperation2\",\"successor\":{\"name\":\"New Branch\",\"successor\":{\"name\":\"TestOperation3\"},\"secondSuccessor\":{\"name\":\"New Branch\",\"successor\":{\"name\":\"New Branch\",\"successor\":{\"name\":\"TestOperation5\"},\"secondSuccessor\":{\"name\":\"TestOperation6\"}},\"secondSuccessor\":{\"name\":\"TestOperation4\"}}}}}}}", result);
     }
 
     @Test

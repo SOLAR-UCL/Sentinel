@@ -4,13 +4,12 @@ import br.ufpr.inf.gres.sentinel.base.mutation.Mutant;
 import br.ufpr.inf.gres.sentinel.base.mutation.Operator;
 import br.ufpr.inf.gres.sentinel.base.mutation.Program;
 import br.ufpr.inf.gres.sentinel.base.mutation.TestCase;
-import br.ufpr.inf.gres.sentinel.integration.hg4hom.HG4HOMFacade;
+import br.ufpr.inf.gres.sentinel.integration.pit.PITFacade;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -25,10 +24,10 @@ public class IntegrationFacadeTest {
 
     @Test
     public void test() {
-        IntegrationFacade muJava = new HG4HOMFacade("");
+        IntegrationFacade muJava = new PITFacade("");
         IntegrationFacade.setIntegrationFacade(muJava);
         assertNotNull(IntegrationFacade.getIntegrationFacade());
-        assertTrue(IntegrationFacade.getIntegrationFacade() instanceof HG4HOMFacade);
+        assertTrue(IntegrationFacade.getIntegrationFacade() instanceof PITFacade);
     }
 
     @Test
@@ -43,38 +42,24 @@ public class IntegrationFacadeTest {
         IntegrationFacadeStub facade = new IntegrationFacadeStub();
         Program program1 = new Program("Test", null);
         Program program2 = new Program("Test2", null);
-        long time = facade.getConventionalMutationTime(program1, TimeUnit.NANOSECONDS);
-        assertTrue(time >= 0);
-        assertEquals(time, facade.getConventionalMutationTime(program1, TimeUnit.NANOSECONDS));
-        time = facade.getConventionalMutationTime(program2, TimeUnit.NANOSECONDS);
-        assertTrue(time >= 0);
+        facade.initializeConventionalStrategy(program1, 5);
+        List<Long> times = facade.getConventionalExecutionCPUTimes().get(program1);
+        assertNotNull(times);
+        assertFalse(times.isEmpty());
+        facade.initializeConventionalStrategy(program2, 5);
+        times = facade.getConventionalExecutionCPUTimes().get(program2);
+        assertNotNull(times);
+        assertTrue(!times.isEmpty());
         facade = new IntegrationFacadeStub();
-        assertEquals(16, facade.getConventionalQuantityOfMutants(program1));
-        assertEquals(16, facade.getConventionalQuantityOfMutants(program2));
+        facade.initializeConventionalStrategy(program1, 5);
+        facade.initializeConventionalStrategy(program2, 5);
+        assertEquals(16, facade.getConventionalMutants().get(program1).size());
+        assertEquals(16, facade.getConventionalMutants().get(program2).size());
         facade = new IntegrationFacadeStub();
-        assertEquals(0.5, facade.getConventionalMutationScore(program1), 0.001);
-        assertEquals(0.5, facade.getConventionalMutationScore(program2), 0.001);
-
-        facade = new IntegrationFacadeStub();
-        TestCase testCase1 = new TestCase("Test1");
-        TestCase testCase2 = new TestCase("Test2");
-        TestCase testCase3 = new TestCase("Test3");
-
-        ArrayList<TestCase> testCases = Lists.newArrayList(testCase1, testCase2, testCase1);
-        assertEquals(1.0, facade.getRelativeMutationScore(program1, testCases), 0.000001);
-        assertEquals(1.0, facade.getRelativeMutationScore(program2, testCases), 0.000001);
-
-        testCases = Lists.newArrayList(testCase1);
-        assertEquals(0.5, facade.getRelativeMutationScore(program1, testCases), 0.000001);
-        assertEquals(0.5, facade.getRelativeMutationScore(program2, testCases), 0.000001);
-
-        testCases = Lists.newArrayList(testCase2);
-        assertEquals(0.5, facade.getRelativeMutationScore(program1, testCases), 0.000001);
-        assertEquals(0.5, facade.getRelativeMutationScore(program2, testCases), 0.000001);
-
-        testCases = Lists.newArrayList(testCase3);
-        assertEquals(0.0, facade.getRelativeMutationScore(program1, testCases), 0.000001);
-        assertEquals(0.0, facade.getRelativeMutationScore(program2, testCases), 0.000001);
+        facade.initializeConventionalStrategy(program1, 5);
+        facade.initializeConventionalStrategy(program2, 5);
+        assertEquals(8, facade.getConventionalMutants().get(program1).stream().filter(mutant -> mutant.isDead()).count());
+        assertEquals(8, facade.getConventionalMutants().get(program2).stream().filter(mutant -> mutant.isDead()).count());
     }
 
     public static class IntegrationFacadeStub extends IntegrationFacade {

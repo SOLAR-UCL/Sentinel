@@ -5,11 +5,12 @@ import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.operators.crosso
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.operators.duplicate.impl.SimpleDuplicateOperator;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.operators.mutation.impl.SimpleRandomVariableMutation;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.operators.prune.impl.PruneToMinimumOperator;
+import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.problem.fitness.ObjectiveFunction;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.problem.impl.MutationStrategyGenerationProblem;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.representation.VariableLengthSolution;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.GrammarFiles;
 import br.ufpr.inf.gres.sentinel.integration.IntegrationFacade;
-import br.ufpr.inf.gres.sentinel.integration.hg4hom.HG4HOMFacade;
+import br.ufpr.inf.gres.sentinel.integration.pit.PITFacade;
 import com.google.common.collect.Lists;
 import java.io.File;
 import java.io.IOException;
@@ -32,7 +33,7 @@ public class GrammaticalEvolutionAlgorithmTest {
 
     @BeforeClass
     public static void setUpClass() throws IOException {
-        IntegrationFacade.setIntegrationFacade(new HG4HOMFacade(System.getProperty("user.dir")
+        IntegrationFacade.setIntegrationFacade(new PITFacade(System.getProperty("user.dir")
                 + File.separator
                 + "src/test/resources/testfiles"));
 
@@ -97,7 +98,8 @@ public class GrammaticalEvolutionAlgorithmTest {
                     upperVariableBound,
                     maxWraps,
                     numberOfStrategyRuns,
-                    testPrograms);
+                    testPrograms,
+                    Lists.newArrayList(ObjectiveFunction.AVERAGE_CPU_TIME, ObjectiveFunction.AVERAGE_SCORE));
         }
 
         @Override

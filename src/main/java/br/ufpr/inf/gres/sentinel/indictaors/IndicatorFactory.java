@@ -20,8 +20,9 @@ public class IndicatorFactory {
                 return new PISAHypervolume(referenceFront);
             case IGD:
                 return new InvertedGenerationalDistance(referenceFront);
+            default:
+                throw new IllegalArgumentException("Unknown or unsuported indicator: " + indicatorName);
         }
-        return null;
     }
 
 }

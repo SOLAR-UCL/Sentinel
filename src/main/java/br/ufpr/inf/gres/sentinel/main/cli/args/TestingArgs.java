@@ -1,5 +1,6 @@
 package br.ufpr.inf.gres.sentinel.main.cli.args;
 
+import br.ufpr.inf.gres.sentinel.integration.IntegrationFacadeFactory;
 import br.ufpr.inf.gres.sentinel.main.cli.converter.SeparatorConverter;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
@@ -17,7 +18,7 @@ public class TestingArgs {
     @Parameter(names = {
         "--facade", "--integrationFacade", "--tool", "--mutationTool", "-m"
     },
-            description = "The tool used to effectively generate the mutants. Available options: \"PIT\", \"muJava\", \"HG4HOM\" (same as muJava).")
+            description = "The tool used to effectively generate the mutants. Available options: " + IntegrationFacadeFactory.PIT + ".")
     public String facade = "PIT";
 
     @Parameter(names = {"--workingDirectory", "-w"},
