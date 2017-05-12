@@ -91,24 +91,22 @@ public class SentinelAnalysis {
     }
 
     private static void printNonDominatedParetoFront(ListMultimap<String, ResultWrapper> resultsFromJson, File outputDirectory, AnalysisArgs analysisArgs) throws IOException {
-        List<VariableLengthSolution<Integer>> allSolutions = getNonDominatedSolutions(resultsFromJson.values());
+        List<VariableLengthSolution<Integer>> nonDominatedSolutions = getNonDominatedSolutions(resultsFromJson.values());
         if (analysisArgs.printIntermediateFiles) {
             try (FileWriter writer = new FileWriter(outputDirectory.getPath() + File.separator + "ND.txt")) {
-                for (VariableLengthSolution<Integer> resultSolution : allSolutions) {
-                    writer.write(resultSolution.getObjective(0) + " " + resultSolution.getObjective(1) + " " + resultSolution.getAttribute("Quantity") + "\n");
+                for (VariableLengthSolution<Integer> resultSolution : nonDominatedSolutions) {
+                    writer.write(resultSolution.getObjective(0) + " " + resultSolution.getObjective(1) + "\n");
                 }
             }
 
             try (FileWriter writer = new FileWriter(outputDirectory.getPath() + File.separator + "FUN_ALL_RUNS.txt")) {
                 for (VariableLengthSolution<Integer> resultSolution : getSolutions(resultsFromJson.values())) {
-                    writer.write(resultSolution.getObjective(0) + " " + resultSolution.getObjective(1) + " " + resultSolution.getAttribute("Quantity") + "\n");
+                    writer.write(resultSolution.getObjective(0) + " " + resultSolution.getObjective(1) + "\n");
                 }
             }
         }
-        XYSeries plotSeries = createNonDominatedSeries("Non-Dominated Solutions", allSolutions);
+        XYSeries plotSeries = createNonDominatedSeries("Non-Dominated Solutions", nonDominatedSolutions);
         printScatterPlot(new XYSeriesCollection(plotSeries), new File(outputDirectory.getPath() + File.separator + "ND.png"), analysisArgs);
-//            printChart(new XYSeriesCollection(plotSeries), new File(outputDirectory.getPath() + File.separator + "ND_TQ.png"), analysisArgs);
-//            printChart(new XYSeriesCollection(plotSeries), new File(outputDirectory.getPath() + File.separator + "ND_SQ.png"), analysisArgs);
     }
 
     private static void printOtherFronts(ListMultimap<String, ResultWrapper> resultsFromJson, File outputDirectory, AnalysisArgs analysisArgs) throws IOException {
@@ -127,7 +125,7 @@ public class SentinelAnalysis {
             if (analysisArgs.printIntermediateFiles) {
                 try (FileWriter writer = new FileWriter(outputSession + "FUN.txt")) {
                     for (VariableLengthSolution<Integer> resultSolution : result) {
-                        writer.write(resultSolution.getObjective(0) + " " + resultSolution.getObjective(1) + " " + resultSolution.getAttribute("Quantity") + "\n");
+                        writer.write(resultSolution.getObjective(0) + " " + resultSolution.getObjective(1) + "\n");
                     }
                 }
             }
@@ -135,28 +133,21 @@ public class SentinelAnalysis {
             allFrontsPlot.addSeries(sessionSeries);
 
             XYSeriesCollection runsSeries = new XYSeriesCollection();
-            runsSeries.addSeries(nonDominatedSeries);
-            for (int i = 0; i < allResults.size(); i++) {
-                ResultWrapper runResult = allResults.get(i);
+            for (ResultWrapper runResult : allResults) {
                 List<VariableLengthSolution<Integer>> resultSolutions = runResult.getResult();
                 if (analysisArgs.printIntermediateFiles) {
-                    try (FileWriter writer = new FileWriter(outputSession + "FUN_" + (i + 1) + ".txt")) {
-//                    new SolutionListOutput(resultSolutions).printObjectivesToFile(outputSession + "FUN_" + (i + 1) + ".txt");
+                    try (FileWriter writer = new FileWriter(outputSession + "FUN_" + runResult.getRunNumber() + ".txt")) {
                         for (VariableLengthSolution<Integer> resultSolution : resultSolutions) {
-                            writer.write(resultSolution.getObjective(0) + " " + resultSolution.getObjective(1) + " " + resultSolution.getAttribute("Quantity") + "\n");
+                            writer.write(resultSolution.getObjective(0) + " " + resultSolution.getObjective(1) + "\n");
                         }
                     }
                 }
-                XYSeries runSeries = createNonDominatedSeries(key + " " + (i + 1), resultSolutions);
+                XYSeries runSeries = createNonDominatedSeries(key + " " + runResult.getRunNumber(), resultSolutions);
                 runsSeries.addSeries(runSeries);
             }
             printScatterPlot(runsSeries, new File(outputSession + "FUN.png"), analysisArgs);
-//            printChart(runsSeries, new File(outputSession + "FUN_TQ.png"), analysisArgs);
-//            printChart(runsSeries, new File(outputSession + "FUN_SQ.png"), analysisArgs);
         }
         printScatterPlot(allFrontsPlot, new File(outputDirectory.getPath() + File.separator + "FUN_ALL.png"), analysisArgs);
-//        printChart(allFrontsPlot, new File(outputDirectory.getPath() + File.separator + "FUN_ALL_TQ.png"), analysisArgs);
-//        printChart(allFrontsPlot, new File(outputDirectory.getPath() + File.separator + "FUN_ALL_SQ.png"), analysisArgs);
     }
 
     private static void computeQualityIndicators(ListMultimap<String, ResultWrapper> resultsFromJson, File outputDirectory, AnalysisArgs analysisArgs) throws IOException {
@@ -229,14 +220,12 @@ public class SentinelAnalysis {
         XYSeries nonDominatedSeries = new XYSeries(title);
         for (VariableLengthSolution<Integer> nonDominatedSolution : nonDominatedSolutions) {
             nonDominatedSeries.add(nonDominatedSolution.getObjective(0), nonDominatedSolution.getObjective(1));
-//            nonDominatedSeries.add(nonDominatedSolution.getObjective(0), (double) nonDominatedSolution.getAttribute("Quantity"));
-//            nonDominatedSeries.add((double) nonDominatedSolution.getAttribute("Quantity"), nonDominatedSolution.getObjective(1));
         }
         return nonDominatedSeries;
     }
 
     private static void printScatterPlot(XYSeriesCollection plotData, File outputFile, AnalysisArgs analysisArgs) throws IOException {
-        JFreeChart scatterPlot = ChartFactory.createScatterPlot(null, "Time", "Score", plotData, PlotOrientation.VERTICAL, true, false, false);
+        JFreeChart scatterPlot = ChartFactory.createScatterPlot(null, analysisArgs.axisLabels.get(0), analysisArgs.axisLabels.get(1), plotData, PlotOrientation.VERTICAL, true, false, false);
         printChart(scatterPlot, outputFile, analysisArgs);
     }
 

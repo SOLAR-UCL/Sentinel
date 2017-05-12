@@ -42,7 +42,7 @@ public class SentinelTest {
 
     @Test
     public void testSentinelAnalysis() throws Exception {
-        String[] args = new String[]{"analyse", "--plotWidth", "1366", "--plotHeight", "768", "--inputDirectory", "analysis/GE", "--outputDirectory", "analysis/GE"};
+        String[] args = new String[]{"analyse", "--plotWidth", "1366", "--plotHeight", "768", "--axisLabels", "Quantity", "Score"};
         Sentinel.main(args);
     }
 
