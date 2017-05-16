@@ -2,6 +2,8 @@ package br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.problem.impl;
 
 import br.ufpr.inf.gres.sentinel.base.mutation.Program;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.problem.fitness.ObjectiveFunction;
+import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.problem.fitness.impl.AverageCPUTime;
+import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.problem.fitness.impl.AverageScore;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.representation.VariableLengthSolution;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.GrammarFiles;
 import br.ufpr.inf.gres.sentinel.integration.IntegrationFacade;
@@ -61,7 +63,7 @@ public class MutationStrategyGenerationProblemTest {
 
     @Test
     public void getObjectives() throws Exception {
-        assertArrayEquals(new Object[]{ObjectiveFunction.AVERAGE_CPU_TIME, ObjectiveFunction.AVERAGE_SCORE}, problem.getObjectiveFunctions().toArray());
+        assertArrayEquals(new Object[]{new AverageCPUTime<>(), new AverageScore<>()}, problem.getObjectiveFunctions().toArray());
     }
 
     @Test

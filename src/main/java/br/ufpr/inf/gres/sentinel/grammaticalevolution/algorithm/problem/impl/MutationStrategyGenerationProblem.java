@@ -124,6 +124,9 @@ public class MutationStrategyGenerationProblem implements VariableLengthIntegerP
             ArrayListMultimap<Program, Collection<Mutant>> allMutants = ArrayListMultimap.create();
 
             IntegrationFacade integrationFacade = IntegrationFacade.getIntegrationFacade();
+
+            boolean isValid = true;
+            evaluationFor:
             for (Program testProgram : testPrograms) {
                 IntegrationFacade.setProgramUnderTest(testProgram);
                 integrationFacade.initializeConventionalStrategy(testProgram, numberOfStrategyRuns * 10);
@@ -136,24 +139,32 @@ public class MutationStrategyGenerationProblem implements VariableLengthIntegerP
                     currentThreadCpuTime = threadBean.getCurrentThreadCpuTime() - currentThreadCpuTime;
                     stopWatch.stop();
 
+                    if (mutants.isEmpty()) {
+                        isValid = false;
+                        break evaluationFor;
+                    }
+
                     nanoTimes.put(testProgram, stopWatch.elapsed(TimeUnit.NANOSECONDS));
                     nanoCPUTimes.put(testProgram, currentThreadCpuTime);
                     allMutants.put(testProgram, mutants);
                 }
             }
+
             solution.setAttribute("Strategy", strategy);
             solution.setAttribute("Evaluation Found", evaluationCount);
 
-            solution.setAttribute("CPUTimes", nanoCPUTimes);
-            solution.setAttribute("ConventionalCPUTimes", integrationFacade.getConventionalExecutionCPUTimes());
+            if (isValid) {
+                solution.setAttribute("CPUTimes", nanoCPUTimes);
+                solution.setAttribute("ConventionalCPUTimes", integrationFacade.getConventionalExecutionCPUTimes());
 
-            solution.setAttribute("Times", nanoTimes);
-            solution.setAttribute("ConventionalTimes", integrationFacade.getConventionalExecutionTimes());
+                solution.setAttribute("Times", nanoTimes);
+                solution.setAttribute("ConventionalTimes", integrationFacade.getConventionalExecutionTimes());
 
-            solution.setAttribute("Mutants", allMutants);
-            solution.setAttribute("ConventionalMutants", integrationFacade.getConventionalMutants());
+                solution.setAttribute("Mutants", allMutants);
+                solution.setAttribute("ConventionalMutants", integrationFacade.getConventionalMutants());
 
-            computeObjectiveValues(solution);
+                computeObjectiveValues(solution);
+            }
         } catch (Exception ex) {
             // Invalid strategy. Probably discarded due to maximum wraps.
             System.out.println("Exception! Solution: " + solution.getVariablesCopy());
