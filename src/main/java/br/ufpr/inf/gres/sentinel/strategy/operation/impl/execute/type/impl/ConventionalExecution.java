@@ -12,15 +12,27 @@ import java.util.List;
  */
 public class ConventionalExecution extends OperatorExecutionType {
 
+    /**
+     *
+     */
     public ConventionalExecution() {
         super(TerminalRuleType.CONVENTIONAL + " Execution");
     }
 
+    /**
+     *
+     * @param input
+     * @return
+     */
     @Override
     public List<Mutant> doOperation(List<Operator> input) {
         return IntegrationFacade.getIntegrationFacade().executeOperators(input);
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public boolean isSpecific() {
         return false;

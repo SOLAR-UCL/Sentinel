@@ -8,23 +8,31 @@ import java.io.File;
  */
 public class GrammarFiles {
 
+    /**
+     *
+     */
     public static final String DEFAULT_GRAMMAR = "default";
+
+    /**
+     *
+     */
     public static final String DEFAULT_GRAMMAR_NO_HOMS = "default_no_homs";
 
     private static String WORKING_DIRECTORY = System.getProperty("user.dir");
 
-    public static String getWorkingDirectory() {
-        return WORKING_DIRECTORY;
-    }
-
-    public static void setWorkingDirectory(String workingDirectory) {
-        WORKING_DIRECTORY = CharMatcher.anyOf("\\/").replaceFrom(workingDirectory, File.separator);
-    }
-
+    /**
+     *
+     * @return
+     */
     public static String getDefaultGrammarPath() {
         return getGrammarPath(GrammarFiles.DEFAULT_GRAMMAR);
     }
 
+    /**
+     *
+     * @param grammarName
+     * @return
+     */
     public static String getGrammarPath(String grammarName) {
         String directory = WORKING_DIRECTORY + File.separator + "grammars" + File.separator;
         switch (grammarName.toLowerCase()) {
@@ -37,7 +45,28 @@ public class GrammarFiles {
         }
     }
 
+    /**
+     *
+     * @param grammarFileName
+     * @return
+     */
     public static String getGrammarPathFromWorkingDirectory(String grammarFileName) {
         return WORKING_DIRECTORY + File.separator + grammarFileName;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public static String getWorkingDirectory() {
+        return WORKING_DIRECTORY;
+    }
+
+    /**
+     *
+     * @param workingDirectory
+     */
+    public static void setWorkingDirectory(String workingDirectory) {
+        WORKING_DIRECTORY = CharMatcher.anyOf("\\/").replaceFrom(workingDirectory, File.separator);
     }
 }

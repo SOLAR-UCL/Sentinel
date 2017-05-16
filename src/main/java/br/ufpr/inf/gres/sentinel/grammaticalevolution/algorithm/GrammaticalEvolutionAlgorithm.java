@@ -2,6 +2,7 @@ package br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm;
 
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.operators.duplicate.DuplicateOperator;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.operators.prune.PruneOperator;
+import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.problem.VariableLengthProblem;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.representation.VariableLengthSolution;
 import java.util.List;
 import org.uma.jmetal.algorithm.multiobjective.nsgaii.NSGAII;
@@ -9,15 +10,15 @@ import org.uma.jmetal.operator.CrossoverOperator;
 import org.uma.jmetal.operator.MutationOperator;
 import org.uma.jmetal.operator.SelectionOperator;
 import org.uma.jmetal.util.evaluator.SolutionListEvaluator;
-import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.problem.VariableLengthProblem;
 
 /**
  * @author Giovani Guizzo
+ * @param <T>
  */
 public class GrammaticalEvolutionAlgorithm<T> extends NSGAII<VariableLengthSolution<T>> {
 
-    private final PruneOperator<VariableLengthSolution<T>> pruneOperator;
     private final DuplicateOperator<VariableLengthSolution<T>> duplicateOperator;
+    private final PruneOperator<VariableLengthSolution<T>> pruneOperator;
 
     /**
      * Constructor
@@ -54,14 +55,24 @@ public class GrammaticalEvolutionAlgorithm<T> extends NSGAII<VariableLengthSolut
 
     private List<VariableLengthSolution<T>> duplicate(List<VariableLengthSolution<T>> population) {
         for (VariableLengthSolution<T> solution : population) {
-            duplicateOperator.execute(solution);
+            this.duplicateOperator.execute(solution);
         }
         return population;
     }
 
+    @Override
+    public String getDescription() {
+        return "Multi-Objective Grammatical Evolution Algorithm based on NSGA-II";
+    }
+
+    @Override
+    public String getName() {
+        return "GE-NSGA-II";
+    }
+
     private List<VariableLengthSolution<T>> prune(List<VariableLengthSolution<T>> population) {
         for (VariableLengthSolution<T> solution : population) {
-            pruneOperator.execute(solution);
+            this.pruneOperator.execute(solution);
         }
         return population;
     }
@@ -81,16 +92,6 @@ public class GrammaticalEvolutionAlgorithm<T> extends NSGAII<VariableLengthSolut
             this.setPopulation(this.replacement(this.getPopulation(), offspringPopulation));
             this.updateProgress();
         }
-    }
-
-    @Override
-    public String getName() {
-        return "GE-NSGA-II";
-    }
-
-    @Override
-    public String getDescription() {
-        return "Multi-Objective Grammatical Evolution Algorithm based on NSGA-II";
     }
 
 }

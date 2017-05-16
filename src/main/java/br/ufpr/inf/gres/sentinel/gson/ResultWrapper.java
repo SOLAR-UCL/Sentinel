@@ -1,6 +1,7 @@
 package br.ufpr.inf.gres.sentinel.gson;
 
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.representation.VariableLengthSolution;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -16,57 +17,111 @@ public class ResultWrapper {
     private List<String> objectiveFunctions;
     private List<VariableLengthSolution<Integer>> result;
 
+    /**
+     *
+     * @return
+     */
     public long getExecutionTimeInMillis() {
-        return executionTimeInMillis;
+        return this.executionTimeInMillis;
     }
 
+    /**
+     *
+     * @return
+     */
+    public String getGrammarFile() {
+        return this.grammarFile;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public List<String> getObjectiveFunctions() {
+        return Collections.unmodifiableList(objectiveFunctions);
+    }
+
+    /**
+     *
+     * @return
+     */
+    public List<VariableLengthSolution<Integer>> getResult() {
+        return Collections.unmodifiableList(result);
+    }
+
+    /**
+     *
+     * @return
+     */
+    public int getRunNumber() {
+        return this.runNumber;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public String getSession() {
+        return this.session;
+    }
+
+    /**
+     *
+     * @param executionTimeInMillis
+     * @return
+     */
     public ResultWrapper setExecutionTimeInMillis(long executionTimeInMillis) {
         this.executionTimeInMillis = executionTimeInMillis;
         return this;
     }
 
-    public List<VariableLengthSolution<Integer>> getResult() {
-        return result;
-    }
-
-    public ResultWrapper setResult(List<VariableLengthSolution<Integer>> result) {
-        this.result = result;
-        return this;
-    }
-
-    public String getSession() {
-        return session;
-    }
-
-    public ResultWrapper setSession(String session) {
-        this.session = session;
-        return this;
-    }
-
-    public String getGrammarFile() {
-        return grammarFile;
-    }
-
+    /**
+     *
+     * @param grammarFile
+     * @return
+     */
     public ResultWrapper setGrammarFile(String grammarFile) {
         this.grammarFile = grammarFile;
         return this;
     }
 
-    public int getRunNumber() {
-        return runNumber;
+    /**
+     *
+     * @param objectiveFunctions
+     * @return
+     */
+    public ResultWrapper setObjectiveFunctions(List<String> objectiveFunctions) {
+        this.objectiveFunctions = objectiveFunctions;
+        return this;
     }
 
+    /**
+     *
+     * @param result
+     * @return
+     */
+    public ResultWrapper setResult(List<VariableLengthSolution<Integer>> result) {
+        this.result = result;
+        return this;
+    }
+
+    /**
+     *
+     * @param runNumber
+     * @return
+     */
     public ResultWrapper setRunNumber(int runNumber) {
         this.runNumber = runNumber;
         return this;
     }
 
-    public List<String> getObjectiveFunctions() {
-        return objectiveFunctions;
-    }
-
-    public ResultWrapper setObjectiveFunctions(List<String> objectiveFunctions) {
-        this.objectiveFunctions = objectiveFunctions;
+    /**
+     *
+     * @param session
+     * @return
+     */
+    public ResultWrapper setSession(String session) {
+        this.session = session;
         return this;
     }
 

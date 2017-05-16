@@ -10,7 +10,6 @@ import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.selection.GroupS
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.type.SelectionType;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.sort.AbstractSorterOperation;
 import com.google.common.base.Preconditions;
-
 import java.util.Iterator;
 
 /**
@@ -18,39 +17,49 @@ import java.util.Iterator;
  */
 public class GroupSelectionTypeFactory implements Factory<Option> {
 
-	private GroupSelectionTypeFactory() {
-	}
+    /**
+     *
+     * @return
+     */
+    public static GroupSelectionTypeFactory getInstance() {
+        return SingletonHolder.INSTANCE;
+    }
 
-	public static GroupSelectionTypeFactory getInstance() {
-		return SingletonHolder.INSTANCE;
-	}
+    private GroupSelectionTypeFactory() {
+    }
 
-	@Override
-	public Operation createOperation(Option node, Iterator<Integer> integerIterator) {
-		Iterator<Rule> rules = node.getRules().iterator();
+    /**
+     *
+     * @param node
+     * @param integerIterator
+     * @return
+     */
+    @Override
+    public Operation createOperation(Option node, Iterator<Integer> integerIterator) {
+        Iterator<Rule> rules = node.getRules().iterator();
 
-		Preconditions.checkArgument(rules.hasNext(), "Malformed grammar option: " + node.toString());
-		Rule rule = rules.next();
-		GroupSelectionOperation mainOperation = new GroupSelectionOperation();
-		mainOperation.setGroupingFunction((AbstractGroupingOperation) FactoryFlyweight.getNonTerminalFactory()
-																					  .createOperation(rule, integerIterator));
+        Preconditions.checkArgument(rules.hasNext(), "Malformed grammar option: " + node.toString());
+        Rule rule = rules.next();
+        GroupSelectionOperation mainOperation = new GroupSelectionOperation();
+        mainOperation.setGroupingFunction((AbstractGroupingOperation) FactoryFlyweight.getNonTerminalFactory()
+                .createOperation(rule, integerIterator));
 
-		Preconditions.checkArgument(rules.hasNext(), "Malformed grammar option: " + node.toString());
-		rule = rules.next();
-		mainOperation.setSelectionType((SelectionType) FactoryFlyweight.getNonTerminalFactory()
-																	   .createOperation(rule, integerIterator));
+        Preconditions.checkArgument(rules.hasNext(), "Malformed grammar option: " + node.toString());
+        rule = rules.next();
+        mainOperation.setSelectionType((SelectionType) FactoryFlyweight.getNonTerminalFactory()
+                .createOperation(rule, integerIterator));
 
-		Preconditions.checkArgument(rules.hasNext(), "Malformed grammar option: " + node.toString());
-		rule = rules.next();
-		mainOperation.setSorter((AbstractSorterOperation) FactoryFlyweight.getNonTerminalFactory()
-																		  .createOperation(rule, integerIterator));
+        Preconditions.checkArgument(rules.hasNext(), "Malformed grammar option: " + node.toString());
+        rule = rules.next();
+        mainOperation.setSorter((AbstractSorterOperation) FactoryFlyweight.getNonTerminalFactory()
+                .createOperation(rule, integerIterator));
 
-		return mainOperation;
-	}
+        return mainOperation;
+    }
 
-	private static class SingletonHolder {
+    private static class SingletonHolder {
 
-		private static final GroupSelectionTypeFactory INSTANCE = new GroupSelectionTypeFactory();
-	}
+        private static final GroupSelectionTypeFactory INSTANCE = new GroupSelectionTypeFactory();
+    }
 
 }

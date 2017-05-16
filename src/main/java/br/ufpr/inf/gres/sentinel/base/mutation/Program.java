@@ -10,34 +10,85 @@ import java.util.Objects;
  */
 public class Program {
 
+    /**
+     *
+     */
     protected String fullName;
+
+    /**
+     *
+     */
     protected File sourceFile;
 
+    /**
+     *
+     * @param fullName
+     * @param sourceFile
+     */
     public Program(String fullName, File sourceFile) {
         this.fullName = fullName;
         this.sourceFile = sourceFile;
     }
 
+    /**
+     *
+     * @param program
+     */
     public Program(Program program) {
         this(program.fullName, program.sourceFile);
     }
 
-    public String getFullName() {
-        return fullName;
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (this.getClass() != obj.getClass()) {
+            return false;
+        }
+        final Program other = (Program) obj;
+        return Objects.equals(this.fullName, other.fullName);
     }
 
+    /**
+     *
+     * @return
+     */
+    public String getFullName() {
+        return this.fullName;
+    }
+
+    /**
+     *
+     * @param fullName
+     */
     public void setFullName(String fullName) {
         this.fullName = fullName;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getSimpleName() {
-        return Iterables.getLast(Splitter.on('.').splitToList(fullName));
+        return Iterables.getLast(Splitter.on('.').splitToList(this.fullName));
     }
 
+    /**
+     *
+     * @return
+     */
     public File getSourceFile() {
-        return sourceFile;
+        return this.sourceFile;
     }
 
+    /**
+     *
+     * @param sourceFile
+     */
     public void setSourceFile(File sourceFile) {
         this.sourceFile = sourceFile;
     }
@@ -50,23 +101,8 @@ public class Program {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Program other = (Program) obj;
-        return Objects.equals(this.fullName, other.fullName);
-    }
-
-    @Override
     public String toString() {
-        return fullName;
+        return this.fullName;
     }
 
 }

@@ -23,7 +23,34 @@ public class GsonUtilTest {
     public GsonUtil gson;
 
     public GsonUtilTest() throws IOException {
-        gson = new GsonUtil();
+        this.gson = new GsonUtil();
+    }
+
+    @Test
+    public void testDeserialize() throws IOException {
+        ResultWrapper fromJson = this.gson.fromJson("src"
+                + File.separator
+                + "test"
+                + File.separator
+                + "resources"
+                + File.separator
+                + "test.json");
+        Assert.assertEquals(3000, fromJson.getExecutionTimeInMillis());
+    }
+
+    @Test
+    public void testDeserialize2() throws IOException {
+        ResultWrapper fromJson = this.gson.fromJson("src"
+                + File.separator
+                + "test"
+                + File.separator
+                + "resources"
+                + File.separator
+                + "test2.json");
+        Assert.assertEquals(10, fromJson.getExecutionTimeInMillis());
+        Assert.assertEquals("testGrammar", fromJson.getGrammarFile());
+        Assert.assertEquals("testSession", fromJson.getSession());
+        Assert.assertArrayEquals(new Object[]{}, fromJson.getResult().toArray());
     }
 
     @Test
@@ -31,7 +58,7 @@ public class GsonUtilTest {
         Assert.assertEquals("{\n"
                 + "  \"runNumber\": 0,\n"
                 + "  \"executionTimeInMillis\": 0\n"
-                + "}", gson.toJson(new ResultWrapper()));
+                + "}", this.gson.toJson(new ResultWrapper()));
     }
 
     @Test
@@ -53,7 +80,7 @@ public class GsonUtilTest {
                 + "    \"Test2\"\n"
                 + "  ],\n"
                 + "  \"result\": []\n"
-                + "}", gson.toJson(resultWrapper));
+                + "}", this.gson.toJson(resultWrapper));
     }
 
     @Test
@@ -79,33 +106,6 @@ public class GsonUtilTest {
         groupOp2.setQuantity(1);
 
 //        Assert.assertEquals("", gson.getGson().toJson(groupOp2));
-    }
-
-    @Test
-    public void testDeserialize() throws IOException {
-        ResultWrapper fromJson = gson.fromJson("src"
-                + File.separator
-                + "test"
-                + File.separator
-                + "resources"
-                + File.separator
-                + "test.json");
-        Assert.assertEquals(3000, fromJson.getExecutionTimeInMillis());
-    }
-
-    @Test
-    public void testDeserialize2() throws IOException {
-        ResultWrapper fromJson = gson.fromJson("src"
-                + File.separator
-                + "test"
-                + File.separator
-                + "resources"
-                + File.separator
-                + "test2.json");
-        Assert.assertEquals(10, fromJson.getExecutionTimeInMillis());
-        Assert.assertEquals("testGrammar", fromJson.getGrammarFile());
-        Assert.assertEquals("testSession", fromJson.getSession());
-        Assert.assertArrayEquals(new Object[]{}, fromJson.getResult().toArray());
     }
 
 }

@@ -8,6 +8,7 @@ import org.uma.jmetal.util.pseudorandom.JMetalRandom;
 
 /**
  * @author Giovani Guizzo
+ * @param <T>
  */
 public class SinglePointVariableCrossover<T> implements CrossoverOperator<VariableLengthSolution<T>> {
 
@@ -16,15 +17,12 @@ public class SinglePointVariableCrossover<T> implements CrossoverOperator<Variab
 
     /**
      * Constructor
+     *
+     * @param crossoverProbability
      */
     public SinglePointVariableCrossover(double crossoverProbability) {
         this.crossoverProbability = crossoverProbability;
-        randomGenerator = JMetalRandom.getInstance();
-    }
-
-    @Override
-    public List<VariableLengthSolution<T>> execute(List<VariableLengthSolution<T>> solutions) {
-        return doCrossover(crossoverProbability, solutions.get(0), solutions.get(1));
+        this.randomGenerator = JMetalRandom.getInstance();
     }
 
     /**
@@ -43,7 +41,7 @@ public class SinglePointVariableCrossover<T> implements CrossoverOperator<Variab
 
         VariableLengthSolution<T> offspring2 = parent2.copy();
 
-        if (randomGenerator.nextDouble() < probability) {
+        if (this.randomGenerator.nextDouble() < probability) {
             offspring1.clearVariables();
             offspring2.clearVariables();
             // 1. Get the total number of bits
@@ -51,8 +49,8 @@ public class SinglePointVariableCrossover<T> implements CrossoverOperator<Variab
             int totalNumberOfGenesParent2 = parent2.getNumberOfVariables();
 
             // 2. Calculate the point to make the crossover
-            int crossoverPointParent1 = randomGenerator.nextInt(0, totalNumberOfGenesParent1 - 1);
-            int crossoverPointParent2 = randomGenerator.nextInt(0, totalNumberOfGenesParent2 - 1);
+            int crossoverPointParent1 = this.randomGenerator.nextInt(0, totalNumberOfGenesParent1 - 1);
+            int crossoverPointParent2 = this.randomGenerator.nextInt(0, totalNumberOfGenesParent2 - 1);
 
             for (int i = 0; i < crossoverPointParent1; i++) {
                 offspring1.addVariable(parent1.getVariableValue(i));
@@ -72,6 +70,11 @@ public class SinglePointVariableCrossover<T> implements CrossoverOperator<Variab
         offspring.add(offspring1);
         offspring.add(offspring2);
         return offspring;
+    }
+
+    @Override
+    public List<VariableLengthSolution<T>> execute(List<VariableLengthSolution<T>> solutions) {
+        return this.doCrossover(this.crossoverProbability, solutions.get(0), solutions.get(1));
     }
 
     @Override

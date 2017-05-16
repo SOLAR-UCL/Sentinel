@@ -17,7 +17,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Class for interpreting a grammar file into a structure of nodes for later parsing a vector of integers into a type T.
+ * Class for interpreting a grammar file into a structure of nodes for later
+ * parsing a vector of integers into a type T.
  *
  * @param <T> Type of result from parsing a vector
  *
@@ -26,19 +27,20 @@ import java.util.regex.Pattern;
 public abstract class AbstractGrammarMapper<T> {
 
     /**
-     * A regex to match BNF options. Group 1 is non-terminal, Group 2 is terminal.
+     * A regex to match BNF options. Group 1 is non-terminal, Group 2 is
+     * terminal.
      */
     private static final Pattern BNF_OPTION_PATTERN = Pattern.compile("((?<=<).+?(?=>))|((?<=\")(?:[\\S]+?.*?|)(?=\")|\\(|\\))");
     private static final int NON_TERMINAL_RULE_GROUP = 1;
     private static final int TERMINAL_RULE_GROUP = 2;
     /**
-     * Root node. The first node representing the result.
-     */
-    protected Rule rootNode;
-    /**
      * List of all non-terminal nodes found.
      */
     protected HashMap<String, Rule> nonTerminalNodes;
+    /**
+     * Root node. The first node representing the result.
+     */
+    protected Rule rootNode;
     /**
      * List of all terminal nodes found.
      */
@@ -51,7 +53,7 @@ public abstract class AbstractGrammarMapper<T> {
      */
     public AbstractGrammarMapper(String grammarFilePath) throws IOException {
         this();
-        loadGrammar(grammarFilePath);
+        this.loadGrammar(grammarFilePath);
     }
 
     /**
@@ -61,118 +63,14 @@ public abstract class AbstractGrammarMapper<T> {
      */
     public AbstractGrammarMapper(File grammarFile) throws IOException {
         this();
-        loadGrammar(grammarFile);
+        this.loadGrammar(grammarFile);
     }
 
+    /**
+     *
+     */
     public AbstractGrammarMapper() {
-        initialize();
-    }
-
-    /**
-     * Initializes the class, erasing all nodes.
-     */
-    private void initialize() {
-        this.nonTerminalNodes = new HashMap<>();
-        this.terminalNodes = new HashMap<>();
-        this.rootNode = null;
-    }
-
-    public Rule getRootNode() {
-        return rootNode;
-    }
-
-    /**
-     * Get or create a new rule object.
-     *
-     * @param ruleName The rule's fullName.
-     *
-     * @return The rule object.
-     */
-    public Rule getNonTerminalRule(String ruleName) {
-        return nonTerminalNodes.computeIfAbsent(ruleName, Rule::new);
-    }
-
-    /**
-     * Get or create a new rule object.
-     *
-     * @param ruleName The rule's fullName.
-     *
-     * @return The rule object.
-     */
-    public Rule getTerminalRule(String ruleName) {
-        return terminalNodes.computeIfAbsent(ruleName, Rule::new);
-    }
-
-    /**
-     * Loads a grammar in memory, interpreting it into an Rule-Options structure.
-     *
-     * @param grammarFilePath The grammar file's path.
-     *
-     * @return If the grammar was successfully loaded.
-     *
-     * @throws IOException If the file is not found, corrupted, or contains an erroneous grammar syntax.
-     */
-    public final boolean loadGrammar(String grammarFilePath) throws IOException {
-        return loadGrammar(new File(grammarFilePath));
-    }
-
-    /**
-     * Loads a grammar in memory, interpreting it into an Rule-Options structure.
-     *
-     * @param grammarFile The grammar file.
-     *
-     * @return If the grammar was successfully loaded.
-     *
-     * @throws IOException If the file is not found, corrupted, or contains an erroneous grammar syntax.
-     */
-    public final boolean loadGrammar(File grammarFile) throws IOException {
-
-        try {
-            // Initialize nodes
-            initialize();
-            // Read grammar file
-            List<String> lines = Files.readLines(grammarFile, Charset.defaultCharset());
-            // Start interpreting the file
-            for (String line : lines) {
-                line = line.trim();
-                // If it is a grammar line
-                if (!line.startsWith("#") && line.contains("::=")) {
-                    // Ignore any comment after the rule and expression
-                    line = Splitter.on("#").trimResults().splitToList(line).get(0);
-                    // Split into rule and expressions
-                    List<String> lineSplit = Splitter.on("::=").trimResults().splitToList(line);
-                    // Get rule fullName
-                    String ruleName = lineSplit.get(0);
-                    ruleName = CharMatcher.anyOf("<>").removeFrom(ruleName);
-                    if (!ruleName.isEmpty()) {
-                        // Get or create the node of this rule
-                        Rule rule = getNonTerminalRule(ruleName);
-                        // Update the root node if it is null
-                        rootNode = MoreObjects.firstNonNull(rootNode, rule);
-                        // Get the whole expression containing all options
-                        String fullExpression = lineSplit.get(1);
-                        // Split into expression options
-                        List<String> options = Splitter.on("|")
-                                .trimResults()
-                                .omitEmptyStrings()
-                                .splitToList(fullExpression);
-                        // Iterate over all options building an option object for each
-                        for (String optionString : options) {
-                            Option option = buildOption(optionString);
-                            rule.addOption(option);
-                        }
-                    }
-                }
-            }
-        } catch (IOException ex) {
-            throw new IOException("File is not a file or does not exist.", ex);
-        } catch (ArrayIndexOutOfBoundsException ex) {
-            throw new IllegalArgumentException("The grammar file contains a syntax error.", ex);
-        }
-        if (rootNode == null) {
-            throw new IllegalArgumentException("I could not find any grammar in the file.");
-        }
-        return true;
+        this.initialize();
     }
 
     /**
@@ -198,10 +96,10 @@ public abstract class AbstractGrammarMapper<T> {
             Rule rule = null;
             switch (ruleGroup) {
                 case NON_TERMINAL_RULE_GROUP:
-                    rule = getNonTerminalRule(foundRule);
+                    rule = this.getNonTerminalRule(foundRule);
                     break;
                 case TERMINAL_RULE_GROUP:
-                    rule = getTerminalRule(foundRule);
+                    rule = this.getTerminalRule(foundRule);
                     break;
             }
             // Add rule to the option.
@@ -215,25 +113,33 @@ public abstract class AbstractGrammarMapper<T> {
     }
 
     /**
-     * Interprets an integer vector using the loaded grammar.
+     * Get or create a new rule object.
      *
-     * @param integerIterable The integer vector.
+     * @param ruleName The rule's fullName.
      *
-     * @return The built object.
+     * @return The rule object.
      */
-    public T interpret(Iterable<Integer> integerIterable) {
-        return interpret(integerIterable.iterator());
+    public Rule getNonTerminalRule(String ruleName) {
+        return this.nonTerminalNodes.computeIfAbsent(ruleName, Rule::new);
     }
 
     /**
-     * Interprets an integer vector using the loaded grammar.
      *
-     * @param integerIterator The integer iterator.
-     *
-     * @return The built object.
+     * @return
      */
-    public T interpret(Iterator<Integer> integerIterator) {
-        return hookInterpret(Iterators.unmodifiableIterator(integerIterator));
+    public Rule getRootNode() {
+        return this.rootNode;
+    }
+
+    /**
+     * Get or create a new rule object.
+     *
+     * @param ruleName The rule's fullName.
+     *
+     * @return The rule object.
+     */
+    public Rule getTerminalRule(String ruleName) {
+        return this.terminalNodes.computeIfAbsent(ruleName, Rule::new);
     }
 
     /**
@@ -245,5 +151,111 @@ public abstract class AbstractGrammarMapper<T> {
      * @return The built object.
      */
     protected abstract T hookInterpret(Iterator<Integer> integerIterable);
+
+    /**
+     * Initializes the class, erasing all nodes.
+     */
+    private void initialize() {
+        this.nonTerminalNodes = new HashMap<>();
+        this.terminalNodes = new HashMap<>();
+        this.rootNode = null;
+    }
+
+    /**
+     * Interprets an integer vector using the loaded grammar.
+     *
+     * @param integerIterable The integer vector.
+     *
+     * @return The built object.
+     */
+    public T interpret(Iterable<Integer> integerIterable) {
+        return this.interpret(integerIterable.iterator());
+    }
+
+    /**
+     * Interprets an integer vector using the loaded grammar.
+     *
+     * @param integerIterator The integer iterator.
+     *
+     * @return The built object.
+     */
+    public T interpret(Iterator<Integer> integerIterator) {
+        return this.hookInterpret(Iterators.unmodifiableIterator(integerIterator));
+    }
+
+    /**
+     * Loads a grammar in memory, interpreting it into an Rule-Options
+     * structure.
+     *
+     * @param grammarFilePath The grammar file's path.
+     *
+     * @return If the grammar was successfully loaded.
+     *
+     * @throws IOException If the file is not found, corrupted, or contains an
+     * erroneous grammar syntax.
+     */
+    public final boolean loadGrammar(String grammarFilePath) throws IOException {
+        return this.loadGrammar(new File(grammarFilePath));
+    }
+
+    /**
+     * Loads a grammar in memory, interpreting it into an Rule-Options
+     * structure.
+     *
+     * @param grammarFile The grammar file.
+     *
+     * @return If the grammar was successfully loaded.
+     *
+     * @throws IOException If the file is not found, corrupted, or contains an
+     * erroneous grammar syntax.
+     */
+    public final boolean loadGrammar(File grammarFile) throws IOException {
+        try {
+            // Initialize nodes
+            this.initialize();
+            // Read grammar file
+            List<String> lines = Files.readLines(grammarFile, Charset.defaultCharset());
+            // Start interpreting the file
+            for (String line : lines) {
+                line = line.trim();
+                // If it is a grammar line
+                if (!line.startsWith("#") && line.contains("::=")) {
+                    // Ignore any comment after the rule and expression
+                    line = Splitter.on("#").trimResults().splitToList(line).get(0);
+                    // Split into rule and expressions
+                    List<String> lineSplit = Splitter.on("::=").trimResults().splitToList(line);
+                    // Get rule fullName
+                    String ruleName = lineSplit.get(0);
+                    ruleName = CharMatcher.anyOf("<>").removeFrom(ruleName);
+                    if (!ruleName.isEmpty()) {
+                        // Get or create the node of this rule
+                        Rule rule = this.getNonTerminalRule(ruleName);
+                        // Update the root node if it is null
+                        this.rootNode = MoreObjects.firstNonNull(this.rootNode, rule);
+                        // Get the whole expression containing all options
+                        String fullExpression = lineSplit.get(1);
+                        // Split into expression options
+                        List<String> options = Splitter.on("|")
+                                .trimResults()
+                                .omitEmptyStrings()
+                                .splitToList(fullExpression);
+                        // Iterate over all options building an option object for each
+                        for (String optionString : options) {
+                            Option option = this.buildOption(optionString);
+                            rule.addOption(option);
+                        }
+                    }
+                }
+            }
+        } catch (IOException ex) {
+            throw new IOException("File is not a file or does not exist.", ex);
+        } catch (ArrayIndexOutOfBoundsException ex) {
+            throw new IllegalArgumentException("The grammar file contains a syntax error.", ex);
+        }
+        if (this.rootNode == null) {
+            throw new IllegalArgumentException("I could not find any grammar in the file.");
+        }
+        return true;
+    }
 
 }

@@ -13,7 +13,6 @@ import br.ufpr.inf.gres.sentinel.strategy.operation.impl.group.impl.mutant.Group
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.group.impl.operator.GroupOperatorsByMutantQuantity;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.group.impl.operator.GroupOperatorsByType;
 import com.google.common.base.Preconditions;
-
 import java.util.Iterator;
 
 /**
@@ -21,51 +20,61 @@ import java.util.Iterator;
  */
 public class GroupingFactory implements Factory<Option> {
 
-	private GroupingFactory() {
-	}
+    /**
+     *
+     * @return
+     */
+    public static GroupingFactory getInstance() {
+        return SingletonHolder.INSTANCE;
+    }
 
-	public static GroupingFactory getInstance() {
-		return SingletonHolder.INSTANCE;
-	}
+    private GroupingFactory() {
+    }
 
-	@Override
-	public Operation createOperation(Option node, Iterator<Integer> integerIterator) {
-		Iterator<Rule> rules = node.getRules().iterator();
+    /**
+     *
+     * @param node
+     * @param integerIterator
+     * @return
+     */
+    @Override
+    public Operation createOperation(Option node, Iterator<Integer> integerIterator) {
+        Iterator<Rule> rules = node.getRules().iterator();
 
-		Preconditions.checkArgument(rules.hasNext(), "Malformed grammar option: " + node.toString());
-		Rule rule = rules.next();
-		rule = rule.getOption(integerIterator).getRules().get(0);
+        Preconditions.checkArgument(rules.hasNext(), "Malformed grammar option: " + node.toString());
+        Rule rule = rules.next();
+        rule = rule.getOption(integerIterator).getRules().get(0);
 
-		AbstractGroupingOperation mainOperation;
-		switch (rule.getName()) {
-			case TerminalRuleType.TYPE:
-				mainOperation = new GroupOperatorsByType();
-				break;
-			case TerminalRuleType.MUTANT_QUANTITY:
-				mainOperation = new GroupOperatorsByMutantQuantity();
-				break;
-			case TerminalRuleType.OPERATOR_TYPE:
-				mainOperation = new GroupMutantsByOperatorType();
-				break;
-			case TerminalRuleType.OPERATOR:
-				mainOperation = new GroupMutantsByOperator();
-				break;
-			case TerminalRuleType.FOM_OR_HOM:
-				mainOperation = new GroupMutantsByFOMOrHOM();
-				break;
-			case TerminalRuleType.ORDER:
-				mainOperation = new GroupMutantsByOrder();
-				break;
-			default:
-				throw new IllegalArgumentException("Malformed grammar option: " + node.toString());
-		}
+        AbstractGroupingOperation mainOperation;
+        switch (rule.getName()) {
+            case TerminalRuleType.TYPE:
+                mainOperation = new GroupOperatorsByType();
+                break;
+            case TerminalRuleType.MUTANT_QUANTITY:
+                mainOperation = new GroupOperatorsByMutantQuantity();
+                break;
+            case TerminalRuleType.OPERATOR_TYPE:
+                mainOperation = new GroupMutantsByOperatorType();
+                break;
+            case TerminalRuleType.OPERATOR:
+                mainOperation = new GroupMutantsByOperator();
+                break;
+            case TerminalRuleType.FOM_OR_HOM:
+                mainOperation = new GroupMutantsByFOMOrHOM();
+                break;
+            case TerminalRuleType.ORDER:
+                mainOperation = new GroupMutantsByOrder();
+                break;
+            default:
+                throw new IllegalArgumentException("Malformed grammar option: " + node.toString());
+        }
 
-		return mainOperation;
-	}
+        return mainOperation;
+    }
 
-	private static class SingletonHolder {
+    private static class SingletonHolder {
 
-		private static final GroupingFactory INSTANCE = new GroupingFactory();
-	}
+        private static final GroupingFactory INSTANCE = new GroupingFactory();
+    }
 
 }

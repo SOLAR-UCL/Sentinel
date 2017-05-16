@@ -14,14 +14,27 @@ import java.util.Iterator;
  */
 public class StrategyMapper extends AbstractGrammarMapper<Strategy> {
 
+    /**
+     *
+     */
     public StrategyMapper() {
         super();
     }
 
+    /**
+     *
+     * @param grammarFilePath
+     * @throws IOException
+     */
     public StrategyMapper(String grammarFilePath) throws IOException {
         super(grammarFilePath);
     }
 
+    /**
+     *
+     * @param grammarFile
+     * @throws IOException
+     */
     public StrategyMapper(File grammarFile) throws IOException {
         super(grammarFile);
     }
@@ -29,9 +42,9 @@ public class StrategyMapper extends AbstractGrammarMapper<Strategy> {
     @Override
     protected Strategy hookInterpret(Iterator<Integer> integerIterable) {
         Strategy strategy = new Strategy();
-        if (rootNode != null) {
+        if (this.rootNode != null) {
             strategy.setFirstOperation(FactoryFlyweight.getNonTerminalFactory()
-                    .createOperation(rootNode, integerIterable));
+                    .createOperation(this.rootNode, integerIterable));
         }
         return strategy;
     }

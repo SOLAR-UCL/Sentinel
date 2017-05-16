@@ -10,15 +10,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class FactoryFlyweight {
 
-    public static Factory getFactory(String name) {
-        checkNotNull(name, "Unidentified grammar rule.");
-        return FactoryFlyweightHolder.FLYWEIGHT.computeIfAbsent(name, FactoryFlyweight::createNew);
-    }
-
-    public static NonTerminalFactory getNonTerminalFactory() {
-        return (NonTerminalFactory) getFactory(NonTerminalRuleType.UNKNOWN_NON_TERMINAL);
-    }
-
     private static Factory createNew(String name) throws RuntimeException {
         switch (name) {
             // Defaults
@@ -62,6 +53,24 @@ public class FactoryFlyweight {
             default:
                 throw new IllegalArgumentException("Unidentified grammar rule: " + name);
         }
+    }
+
+    /**
+     *
+     * @param name
+     * @return
+     */
+    public static Factory getFactory(String name) {
+        checkNotNull(name, "Unidentified grammar rule.");
+        return FactoryFlyweightHolder.FLYWEIGHT.computeIfAbsent(name, FactoryFlyweight::createNew);
+    }
+
+    /**
+     *
+     * @return
+     */
+    public static NonTerminalFactory getNonTerminalFactory() {
+        return (NonTerminalFactory) getFactory(NonTerminalRuleType.UNKNOWN_NON_TERMINAL);
     }
 
     private static class FactoryFlyweightHolder {

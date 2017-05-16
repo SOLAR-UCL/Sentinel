@@ -23,6 +23,12 @@ public class SentinelTest {
     }
 
     @Test
+    public void testSentinelAnalysis() throws Exception {
+        String[] args = new String[]{"analyse", "--plotWidth", "1366", "--plotHeight", "768", "--axisLabels", "Time", "Score"};
+        Sentinel.main(args);
+    }
+
+    @Test
     public void testSentinelHelp() throws Exception {
         String[] args = new String[]{"unknownCommand"};
         Sentinel.main(args);
@@ -37,12 +43,6 @@ public class SentinelTest {
         Sentinel.main(args);
 
         args = new String[]{"train", "-h"};
-        Sentinel.main(args);
-    }
-
-    @Test
-    public void testSentinelAnalysis() throws Exception {
-        String[] args = new String[]{"analyse", "--plotWidth", "1366", "--plotHeight", "768", "--axisLabels", "Time", "Score"};
         Sentinel.main(args);
     }
 

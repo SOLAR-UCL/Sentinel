@@ -23,11 +23,6 @@ public class AverageScoreTest {
     }
 
     @Test
-    public void testGetName() {
-        assertEquals(ObjectiveFunction.AVERAGE_SCORE, new AverageScore().getName());
-    }
-
-    @Test
     public void testCompute() {
         Program program = new Program("Program1", new File("Program1"));
         PointSolution pointSolution = new PointSolution(1);
@@ -318,6 +313,11 @@ public class AverageScoreTest {
 
         AverageScore averageScore = new AverageScore();
         assertEquals(-0.6, averageScore.computeFitness(pointSolution), 0.1);
+    }
+
+    @Test
+    public void testGetName() {
+        assertEquals(ObjectiveFunction.AVERAGE_SCORE, new AverageScore().getName());
     }
 
 }

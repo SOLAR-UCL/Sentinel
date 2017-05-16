@@ -8,12 +8,17 @@ import org.uma.jmetal.util.pseudorandom.JMetalRandom;
 /**
  *
  * @author Giovani Guizzo
+ * @param <T>
  */
 public class PruneToUsedOperator<T> implements PruneOperator<VariableLengthSolution<T>> {
 
     private double probability;
     private JMetalRandom randomGenerator;
 
+    /**
+     *
+     * @param probability
+     */
     public PruneToUsedOperator(double probability) {
         this.probability = probability;
         this.randomGenerator = JMetalRandom.getInstance();
@@ -21,7 +26,7 @@ public class PruneToUsedOperator<T> implements PruneOperator<VariableLengthSolut
 
     @Override
     public VariableLengthSolution<T> execute(VariableLengthSolution<T> variableLengthSolution) {
-        if (randomGenerator.nextDouble() < probability) {
+        if (this.randomGenerator.nextDouble() < this.probability) {
             List<T> variables = variableLengthSolution.getVariablesCopy();
             Object attribute = variableLengthSolution.getAttribute("Consumed Items Count");
             if (attribute != null) {

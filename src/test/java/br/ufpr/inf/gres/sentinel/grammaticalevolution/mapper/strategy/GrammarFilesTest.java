@@ -14,14 +14,19 @@ public class GrammarFilesTest {
 
     private String workingDirectory;
 
+    @Test(expected = Exception.class)
+    public void getGrammarPath() throws Exception {
+        GrammarFiles.setWorkingDirectory("test");
+        String defaultGrammarPath = GrammarFiles.getGrammarPath(GrammarFiles.DEFAULT_GRAMMAR);
+        assertEquals("test" + File.separator + "grammars" + File.separator + "default_grammar.bnf", defaultGrammarPath);
+        defaultGrammarPath = GrammarFiles.getGrammarPath(GrammarFiles.DEFAULT_GRAMMAR_NO_HOMS);
+        assertEquals("test" + File.separator + "grammars" + File.separator + "default_grammar_no_homs.bnf", defaultGrammarPath);
+        GrammarFiles.getGrammarPath("Unknown");
+    }
+
     @Before
     public void setUp() {
         this.workingDirectory = GrammarFiles.getWorkingDirectory();
-    }
-
-    @After
-    public void tearDown() {
-        GrammarFiles.setWorkingDirectory(this.workingDirectory);
     }
 
     @Test
@@ -31,14 +36,9 @@ public class GrammarFilesTest {
         assertEquals("test" + File.separator + "grammars" + File.separator + "default_grammar.bnf", defaultGrammarPath);
     }
 
-    @Test(expected = Exception.class)
-    public void getGrammarPath() throws Exception {
-        GrammarFiles.setWorkingDirectory("test");
-        String defaultGrammarPath = GrammarFiles.getGrammarPath(GrammarFiles.DEFAULT_GRAMMAR);
-        assertEquals("test" + File.separator + "grammars" + File.separator + "default_grammar.bnf", defaultGrammarPath);
-        defaultGrammarPath = GrammarFiles.getGrammarPath(GrammarFiles.DEFAULT_GRAMMAR_NO_HOMS);
-        assertEquals("test" + File.separator + "grammars" + File.separator + "default_grammar_no_homs.bnf", defaultGrammarPath);
-        GrammarFiles.getGrammarPath("Unknown");
+    @After
+    public void tearDown() {
+        GrammarFiles.setWorkingDirectory(this.workingDirectory);
     }
 
     @Test

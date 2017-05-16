@@ -7,13 +7,19 @@ import org.uma.jmetal.util.pseudorandom.JMetalRandom;
 
 /**
  * @author Giovani Guizzo
+ * @param <T>
  */
 public class PruneToMinimumOperator<T> implements PruneOperator<VariableLengthSolution<T>> {
 
-    private double probability;
     private int minLength;
+    private double probability;
     private JMetalRandom randomGenerator;
 
+    /**
+     *
+     * @param probability
+     * @param minLength
+     */
     public PruneToMinimumOperator(double probability, int minLength) {
         this.probability = probability;
         this.minLength = minLength;
@@ -22,10 +28,10 @@ public class PruneToMinimumOperator<T> implements PruneOperator<VariableLengthSo
 
     @Override
     public VariableLengthSolution<T> execute(VariableLengthSolution<T> variableLengthSolution) {
-        if (randomGenerator.nextDouble() < probability) {
+        if (this.randomGenerator.nextDouble() < this.probability) {
             List<T> variables = variableLengthSolution.getVariablesCopy();
-            if (variables.size() > minLength) {
-                variables = variables.subList(0, minLength);
+            if (variables.size() > this.minLength) {
+                variables = variables.subList(0, this.minLength);
                 variableLengthSolution.clearVariables();
                 variableLengthSolution.addAllVariables(variables);
             }

@@ -20,71 +20,89 @@ public class GroupSelectionOperation<T> extends SelectionOperation<T> {
     private AbstractGroupingOperation<T> groupingFunction;
     private SelectionOperation<T> selectionOperation;
 
+    /**
+     *
+     */
     public GroupSelectionOperation() {
         super("Group Selection");
     }
 
-    public AbstractGroupingOperation<T> getGroupingFunction() {
-        return groupingFunction;
-    }
-
-    public void setGroupingFunction(AbstractGroupingOperation<T> groupingFunction) {
-        this.groupingFunction = groupingFunction;
-    }
-
-    public SelectionOperation getSelectionOperation() {
-        return selectionOperation;
-    }
-
-    public void setSelectionOperation(SelectionOperation selectionOperation) {
-        this.selectionOperation = selectionOperation;
-    }
-
+    /**
+     *
+     * @param input
+     * @return
+     */
     @Override
     public List<T> doOperation(List<T> input) {
-        checkNotNull(selectionType, "No group selection type defined for group selection!");
-        checkNotNull(groupingFunction, "No grouping function defined for group selection!");
-        checkNotNull(selectionOperation, "No operator selection type defined for group selection!");
-        checkArgument(percentage != 0D || quantity != 0,
-                "No quantity or percentage defined for group selection! "
-                + "Percentage: "
-                + percentage
-                + ". Quantity: "
-                + quantity
-                + ".");
-
+        checkNotNull(this.selectionType, "No group selection type defined for group selection!");
+        checkNotNull(this.groupingFunction, "No grouping function defined for group selection!");
+        checkNotNull(this.selectionOperation, "No operator selection type defined for group selection!");
+        checkArgument(this.percentage != 0D || this.quantity != 0, "No quantity or percentage defined for group selection! "
+                + "Percentage: " + this.percentage + ". Quantity: " + this.quantity + ".");
         List<T> result = SetUniqueList.setUniqueList(new ArrayList<>());
-        List<List<T>> groups = groupingFunction.doOperation(input);
-
+        List<List<T>> groups = this.groupingFunction.doOperation(input);
         if (groups.size() > 0) {
             int numberToSelect;
-            if (percentage != 0D) {
-                numberToSelect = DoubleMath.roundToInt(groups.size() * percentage, RoundingMode.CEILING);
+            if (this.percentage != 0D) {
+                numberToSelect = DoubleMath.roundToInt(groups.size() * this.percentage, RoundingMode.CEILING);
             } else {
-                numberToSelect = quantity;
+                numberToSelect = this.quantity;
             }
-
-            if (sorter != null) {
-                groups.sort(sorter);
+            if (this.sorter != null) {
+                groups.sort(this.sorter);
             }
-
-            groups = selectionType.selectItems(groups, numberToSelect);
-
+            groups = this.selectionType.selectItems(groups, numberToSelect);
             for (List<T> group : groups) {
-                result.addAll(selectionOperation.doOperation(group));
+                result.addAll(this.selectionOperation.doOperation(group));
             }
         }
         return result;
     }
 
+    /**
+     *
+     * @return
+     */
+    public AbstractGroupingOperation<T> getGroupingFunction() {
+        return this.groupingFunction;
+    }
+
+    /**
+     *
+     * @param groupingFunction
+     */
+    public void setGroupingFunction(AbstractGroupingOperation<T> groupingFunction) {
+        this.groupingFunction = groupingFunction;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public SelectionOperation getSelectionOperation() {
+        return this.selectionOperation;
+    }
+
+    /**
+     *
+     * @param selectionOperation
+     */
+    public void setSelectionOperation(SelectionOperation selectionOperation) {
+        this.selectionOperation = selectionOperation;
+    }
+
+    /**
+     *
+     * @return
+     */
     @Override
     public boolean isSpecific() {
         boolean isSpecific = super.isSpecific();
-        if (groupingFunction != null) {
-            isSpecific = isSpecific || groupingFunction.isSpecific();
+        if (this.groupingFunction != null) {
+            isSpecific = isSpecific || this.groupingFunction.isSpecific();
         }
-        if (selectionOperation != null) {
-            isSpecific = isSpecific || selectionOperation.isSpecific();
+        if (this.selectionOperation != null) {
+            isSpecific = isSpecific || this.selectionOperation.isSpecific();
         }
         return isSpecific;
     }

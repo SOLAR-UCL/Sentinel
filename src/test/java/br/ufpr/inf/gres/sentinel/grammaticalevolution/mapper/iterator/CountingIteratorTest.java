@@ -1,6 +1,5 @@
 package br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.iterator;
 
-import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.iterator.CountingIterator;
 import com.google.common.collect.Iterators;
 import org.junit.Assert;
 import org.junit.Test;

@@ -3,12 +3,13 @@ package br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.selection;
 import br.ufpr.inf.gres.sentinel.strategy.operation.Operation;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.type.SelectionType;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.sort.AbstractSorterOperation;
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.math.DoubleMath;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * @param <T>
@@ -17,89 +18,142 @@ import java.util.List;
  */
 public class SelectionOperation<T> extends Operation<List<T>, List<T>> {
 
-    protected SelectionType selectionType;
-    protected Integer quantity = 0;
+    /**
+     *
+     */
     protected Double percentage = 0D;
 
+    /**
+     *
+     */
+    protected Integer quantity = 0;
+    /**
+     *
+     */
+    protected SelectionType selectionType;
+
+    /**
+     *
+     */
     protected AbstractSorterOperation sorter;
 
+    /**
+     *
+     */
     public SelectionOperation() {
         super("Selection");
     }
 
+    /**
+     *
+     * @param name
+     */
     public SelectionOperation(String name) {
         super(name);
     }
 
-    public Integer getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(Integer quantity) {
-        this.quantity = quantity;
-    }
-
-    public Double getPercentage() {
-        return percentage;
-    }
-
-    public void setPercentage(Double percentage) {
-        this.percentage = percentage;
-    }
-
-    public SelectionType getSelectionType() {
-        return selectionType;
-    }
-
-    public void setSelectionType(SelectionType selectionType) {
-        this.selectionType = selectionType;
-    }
-
-    public AbstractSorterOperation getSorter() {
-        return sorter;
-    }
-
-    public void setSorter(AbstractSorterOperation sorter) {
-        this.sorter = sorter;
-    }
-
+    /**
+     *
+     * @param input
+     * @return
+     */
     @Override
     public List<T> doOperation(List<T> input) {
         if (input.size() > 0) {
-            checkNotNull(selectionType, "No selection type defined for selection!");
-            checkArgument(percentage != 0D || quantity != 0,
-                    "No quantity or percentage defined for selection! "
-                    + "Percentage: "
-                    + percentage
-                    + ". Quantity: "
-                    + quantity
-                    + ".");
-
+            checkNotNull(this.selectionType, "No selection type defined for selection!");
+            checkArgument(this.percentage != 0D || this.quantity != 0, "No quantity or percentage defined for selection! "
+                    + "Percentage: " + this.percentage + ". Quantity: " + this.quantity + ".");
             int numberToSelect;
-            if (percentage != 0D) {
-                numberToSelect = DoubleMath.roundToInt(input.size() * percentage, RoundingMode.DOWN);
+            if (this.percentage != 0D) {
+                numberToSelect = DoubleMath.roundToInt(input.size() * this.percentage, RoundingMode.DOWN);
             } else {
-                numberToSelect = quantity;
+                numberToSelect = this.quantity;
             }
-
-            if (sorter != null) {
-                input.sort(sorter);
+            if (this.sorter != null) {
+                input.sort(this.sorter);
             }
-
-            return selectionType.selectItems(input, numberToSelect);
+            return this.selectionType.selectItems(input, numberToSelect);
         } else {
             return new ArrayList<>();
         }
     }
 
+    /**
+     *
+     * @return
+     */
+    public Double getPercentage() {
+        return this.percentage;
+    }
+
+    /**
+     *
+     * @param percentage
+     */
+    public void setPercentage(Double percentage) {
+        this.percentage = percentage;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public Integer getQuantity() {
+        return this.quantity;
+    }
+
+    /**
+     *
+     * @param quantity
+     */
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public SelectionType getSelectionType() {
+        return this.selectionType;
+    }
+
+    /**
+     *
+     * @param selectionType
+     */
+    public void setSelectionType(SelectionType selectionType) {
+        this.selectionType = selectionType;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public AbstractSorterOperation getSorter() {
+        return this.sorter;
+    }
+
+    /**
+     *
+     * @param sorter
+     */
+    public void setSorter(AbstractSorterOperation sorter) {
+        this.sorter = sorter;
+    }
+
+    /**
+     *
+     * @return
+     */
     @Override
     public boolean isSpecific() {
         boolean isSpecific = false;
-        if (sorter != null) {
-            isSpecific = isSpecific || sorter.isSpecific();
+        if (this.sorter != null) {
+            isSpecific = isSpecific || this.sorter.isSpecific();
         }
-        if (selectionType != null) {
-            isSpecific = isSpecific || selectionType.isSpecific();
+        if (this.selectionType != null) {
+            isSpecific = isSpecific || this.selectionType.isSpecific();
         }
         return isSpecific;
     }

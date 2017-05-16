@@ -11,9 +11,22 @@ import org.uma.jmetal.util.front.Front;
  */
 public class IndicatorFactory {
 
+    /**
+     *
+     */
     public static final String HYPERVOLUME = "HYPERVOLUME";
+
+    /**
+     *
+     */
     public static final String IGD = "IGD";
 
+    /**
+     *
+     * @param indicatorName
+     * @param referenceFront
+     * @return
+     */
     public static GenericIndicator createIndicator(String indicatorName, Front referenceFront) {
         switch (indicatorName.toUpperCase()) {
             case HYPERVOLUME:

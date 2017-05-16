@@ -21,12 +21,21 @@ public class GsonUtil {
 
     private final Gson gson;
 
+    /**
+     *
+     * @throws IOException
+     */
     public GsonUtil() throws IOException {
         this(new TrainingArgs());
     }
 
+    /**
+     *
+     * @param trainingArgs
+     * @throws IOException
+     */
     public GsonUtil(TrainingArgs trainingArgs) throws IOException {
-        gson = new GsonBuilder()
+        this.gson = new GsonBuilder()
                 .registerTypeAdapter(DefaultVariableLengthIntegerSolution.class, new VariableLengthSolutionGsonSerializer())
                 .registerTypeAdapter(DefaultVariableLengthIntegerSolution.class, new VariableLengthSolutionGsonDeserializer(trainingArgs))
                 .registerTypeAdapter(VariableLengthSolution.class, new VariableLengthSolutionGsonSerializer())
@@ -36,22 +45,45 @@ public class GsonUtil {
                 .create();
     }
 
-    public String toJson(ResultWrapper result) {
-        return gson.toJson(result);
-    }
-
+    /**
+     *
+     * @param jsonFilePath
+     * @return
+     * @throws IOException
+     */
     public ResultWrapper fromJson(Path jsonFilePath) throws IOException {
         return this.fromJson(jsonFilePath.toFile());
     }
 
+    /**
+     *
+     * @param jsonFilePath
+     * @return
+     * @throws IOException
+     */
     public ResultWrapper fromJson(String jsonFilePath) throws IOException {
         return this.fromJson(new File(jsonFilePath));
     }
 
+    /**
+     *
+     * @param jsonFile
+     * @return
+     * @throws IOException
+     */
     public ResultWrapper fromJson(File jsonFile) throws IOException {
         try (BufferedReader reader = Files.newReader(jsonFile, Charset.defaultCharset())) {
-            return gson.fromJson(reader, ResultWrapper.class);
+            return this.gson.fromJson(reader, ResultWrapper.class);
         }
+    }
+
+    /**
+     *
+     * @param result
+     * @return
+     */
+    public String toJson(ResultWrapper result) {
+        return this.gson.toJson(result);
     }
 
 }

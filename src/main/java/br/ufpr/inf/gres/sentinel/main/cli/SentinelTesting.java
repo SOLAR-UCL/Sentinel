@@ -8,6 +8,11 @@ import br.ufpr.inf.gres.sentinel.main.cli.args.TestingArgs;
  */
 public class SentinelTesting {
 
+    /**
+     *
+     * @param testingArgs
+     * @param rawArgs
+     */
     public static void test(TestingArgs testingArgs, String[] rawArgs) {
 
     }

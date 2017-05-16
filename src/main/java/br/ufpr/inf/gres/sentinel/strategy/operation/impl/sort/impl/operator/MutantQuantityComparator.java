@@ -3,7 +3,6 @@ package br.ufpr.inf.gres.sentinel.strategy.operation.impl.sort.impl.operator;
 import br.ufpr.inf.gres.sentinel.base.mutation.Operator;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.TerminalRuleType;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.sort.AbstractSorterOperation;
-
 import java.util.function.Function;
 
 /**
@@ -11,17 +10,28 @@ import java.util.function.Function;
  */
 public class MutantQuantityComparator extends AbstractSorterOperation<Operator> {
 
-	public MutantQuantityComparator() {
-		super("Sort Operators by " + TerminalRuleType.MUTANT_QUANTITY);
-	}
+    /**
+     *
+     */
+    public MutantQuantityComparator() {
+        super("Sort Operators by " + TerminalRuleType.MUTANT_QUANTITY);
+    }
 
-	@Override
-	public boolean isSpecific() {
-		return false;
-	}
+    /**
+     *
+     * @return
+     */
+    @Override
+    public Function<Operator, Integer> createSortingFunction() {
+        return operator -> operator.getGeneratedMutants().size();
+    }
 
-	@Override
-	public Function<Operator, Integer> createSortingFunction() {
-		return operator -> operator.getGeneratedMutants().size();
-	}
+    /**
+     *
+     * @return
+     */
+    @Override
+    public boolean isSpecific() {
+        return false;
+    }
 }

@@ -13,21 +13,35 @@ public class MutantResultListenerImpl implements MutationResultListener {
 
     private ClassMutationResults results;
 
-    @Override
-    public void runStart() {
+    /**
+     *
+     * @return
+     */
+    public Collection<MutationResult> getResults() {
+        return this.results.getMutations();
     }
 
+    /**
+     *
+     * @param results
+     */
     @Override
     public void handleMutationResult(ClassMutationResults results) {
         this.results = results;
     }
 
+    /**
+     *
+     */
     @Override
     public void runEnd() {
     }
 
-    public Collection<MutationResult> getResults() {
-        return results.getMutations();
+    /**
+     *
+     */
+    @Override
+    public void runStart() {
     }
 
 }

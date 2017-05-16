@@ -12,7 +12,6 @@ import br.ufpr.inf.gres.sentinel.strategy.operation.impl.sort.impl.mutant.OrderC
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.sort.impl.operator.MutantQuantityComparator;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.sort.impl.operator.OperatorTypeComparator;
 import com.google.common.base.Preconditions;
-
 import java.util.Iterator;
 
 /**
@@ -20,57 +19,67 @@ import java.util.Iterator;
  */
 public class SortingFactory implements Factory<Option> {
 
-	private SortingFactory() {
-	}
+    /**
+     *
+     * @return
+     */
+    public static SortingFactory getInstance() {
+        return SingletonHolder.INSTANCE;
+    }
 
-	public static SortingFactory getInstance() {
-		return SingletonHolder.INSTANCE;
-	}
+    private SortingFactory() {
+    }
 
-	@Override
-	public Operation createOperation(Option node, Iterator<Integer> integerIterator) {
-		Iterator<Rule> rules = node.getRules().iterator();
-		Preconditions.checkArgument(rules.hasNext(), "Malformed grammar option: " + node.toString());
-		Rule rule = rules.next();
-		if (rule.getName().isEmpty()) {
-			return null;
-		}
+    /**
+     *
+     * @param node
+     * @param integerIterator
+     * @return
+     */
+    @Override
+    public Operation createOperation(Option node, Iterator<Integer> integerIterator) {
+        Iterator<Rule> rules = node.getRules().iterator();
+        Preconditions.checkArgument(rules.hasNext(), "Malformed grammar option: " + node.toString());
+        Rule rule = rules.next();
+        if (rule.getName().isEmpty()) {
+            return null;
+        }
 
-		rule = rule.getOption(integerIterator).getRules().get(0);
-		AbstractSorterOperation mainOperation;
-		switch (rule.getName()) {
-			case TerminalRuleType.TYPE:
-				mainOperation = new OperatorTypeComparator();
-				break;
-			case TerminalRuleType.MUTANT_QUANTITY:
-				mainOperation = new MutantQuantityComparator();
-				break;
-			case TerminalRuleType.OPERATOR_TYPE:
-				mainOperation = new MutantsOperatorTypeComparator();
-				break;
-			case TerminalRuleType.OPERATOR:
-				mainOperation = new MutantsOperatorComparator();
-				break;
-			case TerminalRuleType.FOM_OR_HOM:
-			case TerminalRuleType.ORDER:
-				mainOperation = new OrderComparator();
-				break;
-			default:
-				throw new IllegalArgumentException("Malformed grammar option: " + node.toString());
-		}
+        rule = rule.getOption(integerIterator).getRules().get(0);
+        AbstractSorterOperation mainOperation;
+        switch (rule.getName()) {
+            case TerminalRuleType.TYPE:
+                mainOperation = new OperatorTypeComparator();
+                break;
+            case TerminalRuleType.MUTANT_QUANTITY:
+                mainOperation = new MutantQuantityComparator();
+                break;
+            case TerminalRuleType.OPERATOR_TYPE:
+                mainOperation = new MutantsOperatorTypeComparator();
+                break;
+            case TerminalRuleType.OPERATOR:
+                mainOperation = new MutantsOperatorComparator();
+                break;
+            case TerminalRuleType.FOM_OR_HOM:
+            case TerminalRuleType.ORDER:
+                mainOperation = new OrderComparator();
+                break;
+            default:
+                throw new IllegalArgumentException("Malformed grammar option: " + node.toString());
+        }
 
-		Preconditions.checkArgument(rules.hasNext(), "Malformed grammar option: " + node.toString());
-		rule = rules.next().getOption(integerIterator).getRules().get(0);
-		if (rule.getName().equals(TerminalRuleType.DESCENDING)) {
-			mainOperation.setReversed(true);
-		}
+        Preconditions.checkArgument(rules.hasNext(), "Malformed grammar option: " + node.toString());
+        rule = rules.next().getOption(integerIterator).getRules().get(0);
+        if (rule.getName().equals(TerminalRuleType.DESCENDING)) {
+            mainOperation.setReversed(true);
+        }
 
-		return mainOperation;
-	}
+        return mainOperation;
+    }
 
-	private static class SingletonHolder {
+    private static class SingletonHolder {
 
-		private static final SortingFactory INSTANCE = new SortingFactory();
-	}
+        private static final SortingFactory INSTANCE = new SortingFactory();
+    }
 
 }

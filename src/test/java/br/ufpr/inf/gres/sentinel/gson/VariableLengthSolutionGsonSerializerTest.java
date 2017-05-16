@@ -25,9 +25,9 @@ import org.junit.*;
  */
 public class VariableLengthSolutionGsonSerializerTest {
 
-    private static MutationStrategyGenerationProblem problem;
     private static IntegrationFacade facade;
     private static IntegrationFacade oldFacade;
+    private static MutationStrategyGenerationProblem problem;
 
     @BeforeClass
     public static void setUpClass() throws IOException {

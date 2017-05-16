@@ -13,6 +13,11 @@ import com.beust.jcommander.JCommander;
  */
 public class Sentinel {
 
+    /**
+     *
+     * @param args
+     * @throws Exception
+     */
     public static void main(String[] args) throws Exception {
         MainArgs mainArgs = new MainArgs();
         TrainingArgs trainingArgs = new TrainingArgs();

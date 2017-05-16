@@ -10,6 +10,11 @@ import java.util.stream.Collectors;
  */
 public class MutantsFilter {
 
+    /**
+     *
+     * @param mutants
+     * @return
+     */
     public List<Mutant> getMinimalMutantSet(List<Mutant> mutants) {
         List<Mutant> reducedMutants = mutants.stream().filter(Mutant::isDead).collect(Collectors.toList());
         outerFor:

@@ -15,22 +15,19 @@ import java.util.stream.Collectors;
  */
 public class ObjectiveFunctionFactory {
 
-    public static List<String> getAllObjectiveFunctions() {
-        List<String> names = new ArrayList<>();
-        names.add(ObjectiveFunction.AVERAGE_CPU_TIME);
-        names.add(ObjectiveFunction.AVERAGE_QUANTITY);
-        names.add(ObjectiveFunction.AVERAGE_SCORE);
-        return names;
-    }
-
+    /**
+     *
+     * @return
+     */
     public static List<ObjectiveFunction> createAllObjectiveFunctions() {
         return getAllObjectiveFunctions().stream().map(ObjectiveFunctionFactory::createObjectiveFunction).collect(Collectors.toList());
     }
 
-    public static List<ObjectiveFunction> createObjectiveFunctions(List<String> names) {
-        return names.stream().map(ObjectiveFunctionFactory::createObjectiveFunction).collect(Collectors.toList());
-    }
-
+    /**
+     *
+     * @param name
+     * @return
+     */
     public static ObjectiveFunction createObjectiveFunction(String name) {
         switch (name.toLowerCase()) {
             case ObjectiveFunction.AVERAGE_CPU_TIME:
@@ -43,6 +40,27 @@ public class ObjectiveFunctionFactory {
                 throw new IllegalArgumentException("I could not find the objective function " + name + "!\n"
                         + "Available options are: " + Joiner.on(", ").join(Lists.newArrayList(ObjectiveFunction.AVERAGE_CPU_TIME, ObjectiveFunction.AVERAGE_QUANTITY, ObjectiveFunction.AVERAGE_SCORE)) + ".");
         }
+    }
+
+    /**
+     *
+     * @param names
+     * @return
+     */
+    public static List<ObjectiveFunction> createObjectiveFunctions(List<String> names) {
+        return names.stream().map(ObjectiveFunctionFactory::createObjectiveFunction).collect(Collectors.toList());
+    }
+
+    /**
+     *
+     * @return
+     */
+    public static List<String> getAllObjectiveFunctions() {
+        List<String> names = new ArrayList<>();
+        names.add(ObjectiveFunction.AVERAGE_CPU_TIME);
+        names.add(ObjectiveFunction.AVERAGE_QUANTITY);
+        names.add(ObjectiveFunction.AVERAGE_SCORE);
+        return names;
     }
 
 }

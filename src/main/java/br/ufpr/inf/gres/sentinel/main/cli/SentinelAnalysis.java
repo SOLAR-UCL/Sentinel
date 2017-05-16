@@ -41,6 +41,12 @@ import org.uma.jmetal.util.front.imp.ArrayFront;
  */
 public class SentinelAnalysis {
 
+    /**
+     *
+     * @param analysisArgs
+     * @param args
+     * @throws IOException
+     */
     public static void analyse(AnalysisArgs analysisArgs, String[] args) throws IOException {
         ListMultimap<String, ResultWrapper> resultsFromJson = getResultsFromJson(analysisArgs);
         if (!resultsFromJson.isEmpty()) {
@@ -54,6 +60,78 @@ public class SentinelAnalysis {
         }
     }
 
+    private static void computeQualityIndicators(ListMultimap<String, ResultWrapper> resultsFromJson, File outputDirectory, AnalysisArgs analysisArgs) throws IOException {
+        ArrayFront referenceFront = new ArrayFront(getNonDominatedSolutions(resultsFromJson.values()));
+        for (String indicatorName : analysisArgs.indicators) {
+            ListMultimap<String, Double> results = getIndicatorResults(resultsFromJson, indicatorName, referenceFront);
+            DefaultBoxAndWhiskerCategoryDataset dataset = new DefaultBoxAndWhiskerCategoryDataset();
+            for (String session : results.keySet()) {
+                List<Double> indicatorValues = results.get(session);
+                if (analysisArgs.printIntermediateFiles) {
+                    String outputSession = outputDirectory.getPath() + File.separator + session + File.separator;
+                    Files.createDirectories(Paths.get(outputSession));
+                    try (FileWriter writer = new FileWriter(outputSession + indicatorName.toUpperCase() + ".txt")) {
+                        for (Double doubleValue : indicatorValues) {
+                            writer.write(String.valueOf(doubleValue) + "\n");
+                        }
+                    }
+                }
+                dataset.add(indicatorValues, "", session);
+            }
+            printBoxPlot(dataset, indicatorName, new File(outputDirectory + File.separator + indicatorName + ".png"), analysisArgs);
+        }
+    }
+
+    /**
+     *
+     * @return
+     */
+    public static StandardChartTheme createChartTheme() {
+        StandardChartTheme theme = new StandardChartTheme("JFree/Shadow");
+        theme.setPlotBackgroundPaint(Color.WHITE);
+        theme.setDomainGridlinePaint(Color.GRAY);
+        theme.setRangeGridlinePaint(Color.GRAY);
+        return theme;
+    }
+
+    private static XYSeries createNonDominatedSeries(String title, List<VariableLengthSolution<Integer>> nonDominatedSolutions) {
+        XYSeries nonDominatedSeries = new XYSeries(title);
+        for (VariableLengthSolution<Integer> nonDominatedSolution : nonDominatedSolutions) {
+            nonDominatedSeries.add(nonDominatedSolution.getObjective(0), nonDominatedSolution.getObjective(1));
+        }
+        return nonDominatedSeries;
+    }
+
+    /**
+     *
+     * @param resultsFromJson
+     * @param indicatorName
+     * @param referenceFront
+     * @return
+     * @throws IOException
+     */
+    public static ListMultimap<String, Double> getIndicatorResults(ListMultimap<String, ResultWrapper> resultsFromJson, String indicatorName, Front referenceFront) throws IOException {
+        GenericIndicator<VariableLengthSolution<Integer>> indicator = IndicatorFactory.createIndicator(indicatorName, referenceFront);
+        ArrayListMultimap<String, Double> results = ArrayListMultimap.create();
+        for (String session : resultsFromJson.keySet()) {
+            for (ResultWrapper resultWrapper : resultsFromJson.get(session)) {
+                Double indicatorResult = indicator.evaluate(resultWrapper.getResult());
+                results.put(session, indicatorResult);
+            }
+        }
+        return results;
+    }
+
+    private static List<VariableLengthSolution<Integer>> getNonDominatedSolutions(Collection<ResultWrapper> resultsFromJson) {
+        return SolutionListUtils.getNondominatedSolutions(getSolutions(resultsFromJson));
+    }
+
+    /**
+     *
+     * @param analysisArgs
+     * @return
+     * @throws IOException
+     */
     public static ListMultimap<String, ResultWrapper> getResultsFromJson(AnalysisArgs analysisArgs) throws IOException {
         File inputDirectory = new File(analysisArgs.workingDirectory + File.separator + analysisArgs.inputDirectory);
         ListMultimap<String, ResultWrapper> results = ArrayListMultimap.create();
@@ -86,8 +164,49 @@ public class SentinelAnalysis {
         return allSolutions;
     }
 
-    private static List<VariableLengthSolution<Integer>> getNonDominatedSolutions(Collection<ResultWrapper> resultsFromJson) {
-        return SolutionListUtils.getNondominatedSolutions(getSolutions(resultsFromJson));
+    private static void printBoxPlot(DefaultBoxAndWhiskerCategoryDataset dataSet, String indicatorName, File outputFile, AnalysisArgs analysisArgs) throws IOException {
+        final CategoryAxis xAxis = new CategoryAxis(indicatorName);
+        xAxis.setLowerMargin(0.15);
+        xAxis.setUpperMargin(0.15);
+        xAxis.setCategoryMargin(0.25);
+
+        final NumberAxis yAxis = new NumberAxis("Value");
+        yAxis.setAutoRangeIncludesZero(false);
+
+        final BoxAndWhiskerRenderer renderer = new BoxAndWhiskerRenderer();
+        renderer.setFillBox(false);
+        renderer.setMeanVisible(false);
+        renderer.setMaximumBarWidth(0.1);
+        renderer.setUseOutlinePaintForWhiskers(true);
+        for (int i = 0; i < dataSet.getColumnCount(); i++) {
+            renderer.setSeriesPaint(i, Color.BLACK);
+            renderer.setSeriesOutlinePaint(i, Color.BLACK);
+            renderer.setSeriesFillPaint(i, Color.GRAY);
+        }
+
+        final CategoryPlot plot = new CategoryPlot(dataSet, xAxis, yAxis, renderer);
+
+        final JFreeChart chart = new JFreeChart(
+                null,
+                null,
+                plot,
+                false
+        );
+
+        printChart(chart, outputFile, analysisArgs);
+    }
+
+    /**
+     *
+     * @param plot
+     * @param outputFile
+     * @param analysisArgs
+     * @throws IOException
+     */
+    public static void printChart(JFreeChart plot, File outputFile, AnalysisArgs analysisArgs) throws IOException {
+        StandardChartTheme theme = createChartTheme();
+        theme.apply(plot);
+        ChartUtilities.saveChartAsPNG(new File(outputFile.getPath()), plot, analysisArgs.plotWidth, analysisArgs.plotHeight);
     }
 
     private static void printNonDominatedParetoFront(ListMultimap<String, ResultWrapper> resultsFromJson, File outputDirectory, AnalysisArgs analysisArgs) throws IOException {
@@ -150,97 +269,9 @@ public class SentinelAnalysis {
         printScatterPlot(allFrontsPlot, new File(outputDirectory.getPath() + File.separator + "FUN_ALL.png"), analysisArgs);
     }
 
-    private static void computeQualityIndicators(ListMultimap<String, ResultWrapper> resultsFromJson, File outputDirectory, AnalysisArgs analysisArgs) throws IOException {
-        ArrayFront referenceFront = new ArrayFront(getNonDominatedSolutions(resultsFromJson.values()));
-        for (String indicatorName : analysisArgs.indicators) {
-            ListMultimap<String, Double> results = getIndicatorResults(resultsFromJson, indicatorName, referenceFront);
-            DefaultBoxAndWhiskerCategoryDataset dataset = new DefaultBoxAndWhiskerCategoryDataset();
-            for (String session : results.keySet()) {
-                List<Double> indicatorValues = results.get(session);
-                if (analysisArgs.printIntermediateFiles) {
-                    String outputSession = outputDirectory.getPath() + File.separator + session + File.separator;
-                    Files.createDirectories(Paths.get(outputSession));
-                    try (FileWriter writer = new FileWriter(outputSession + indicatorName.toUpperCase() + ".txt")) {
-                        for (Double doubleValue : indicatorValues) {
-                            writer.write(String.valueOf(doubleValue) + "\n");
-                        }
-                    }
-                }
-                dataset.add(indicatorValues, "", session);
-            }
-            printBoxPlot(dataset, indicatorName, new File(outputDirectory + File.separator + indicatorName + ".png"), analysisArgs);
-        }
-    }
-
-    private static void printBoxPlot(DefaultBoxAndWhiskerCategoryDataset dataSet, String indicatorName, File outputFile, AnalysisArgs analysisArgs) throws IOException {
-        final CategoryAxis xAxis = new CategoryAxis(indicatorName);
-        xAxis.setLowerMargin(0.15);
-        xAxis.setUpperMargin(0.15);
-        xAxis.setCategoryMargin(0.25);
-
-        final NumberAxis yAxis = new NumberAxis("Value");
-        yAxis.setAutoRangeIncludesZero(false);
-
-        final BoxAndWhiskerRenderer renderer = new BoxAndWhiskerRenderer();
-        renderer.setFillBox(false);
-        renderer.setMeanVisible(false);
-        renderer.setMaximumBarWidth(0.1);
-        renderer.setUseOutlinePaintForWhiskers(true);
-        for (int i = 0; i < dataSet.getColumnCount(); i++) {
-            renderer.setSeriesPaint(i, Color.BLACK);
-            renderer.setSeriesOutlinePaint(i, Color.BLACK);
-            renderer.setSeriesFillPaint(i, Color.GRAY);
-        }
-
-        final CategoryPlot plot = new CategoryPlot(dataSet, xAxis, yAxis, renderer);
-
-        final JFreeChart chart = new JFreeChart(
-                null,
-                null,
-                plot,
-                false
-        );
-
-        printChart(chart, outputFile, analysisArgs);
-    }
-
-    public static ListMultimap<String, Double> getIndicatorResults(ListMultimap<String, ResultWrapper> resultsFromJson, String indicatorName, Front referenceFront) throws IOException {
-        GenericIndicator<VariableLengthSolution<Integer>> indicator = IndicatorFactory.createIndicator(indicatorName, referenceFront);
-        ArrayListMultimap<String, Double> results = ArrayListMultimap.create();
-        for (String session : resultsFromJson.keySet()) {
-            for (ResultWrapper resultWrapper : resultsFromJson.get(session)) {
-                Double indicatorResult = indicator.evaluate(resultWrapper.getResult());
-                results.put(session, indicatorResult);
-            }
-        }
-        return results;
-    }
-
-    private static XYSeries createNonDominatedSeries(String title, List<VariableLengthSolution<Integer>> nonDominatedSolutions) {
-        XYSeries nonDominatedSeries = new XYSeries(title);
-        for (VariableLengthSolution<Integer> nonDominatedSolution : nonDominatedSolutions) {
-            nonDominatedSeries.add(nonDominatedSolution.getObjective(0), nonDominatedSolution.getObjective(1));
-        }
-        return nonDominatedSeries;
-    }
-
     private static void printScatterPlot(XYSeriesCollection plotData, File outputFile, AnalysisArgs analysisArgs) throws IOException {
         JFreeChart scatterPlot = ChartFactory.createScatterPlot(null, analysisArgs.axisLabels.get(0), analysisArgs.axisLabels.get(1), plotData, PlotOrientation.VERTICAL, true, false, false);
         printChart(scatterPlot, outputFile, analysisArgs);
-    }
-
-    public static void printChart(JFreeChart plot, File outputFile, AnalysisArgs analysisArgs) throws IOException {
-        StandardChartTheme theme = createChartTheme();
-        theme.apply(plot);
-        ChartUtilities.saveChartAsPNG(new File(outputFile.getPath()), plot, analysisArgs.plotWidth, analysisArgs.plotHeight);
-    }
-
-    public static StandardChartTheme createChartTheme() {
-        StandardChartTheme theme = new StandardChartTheme("JFree/Shadow");
-        theme.setPlotBackgroundPaint(Color.WHITE);
-        theme.setDomainGridlinePaint(Color.GRAY);
-        theme.setRangeGridlinePaint(Color.GRAY);
-        return theme;
     }
 
 }

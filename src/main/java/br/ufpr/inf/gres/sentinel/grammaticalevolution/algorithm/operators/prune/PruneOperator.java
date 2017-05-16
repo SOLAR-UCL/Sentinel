@@ -5,6 +5,7 @@ import org.uma.jmetal.operator.Operator;
 
 /**
  * @author Giovani Guizzo
+ * @param <T>
  */
 public interface PruneOperator<T extends VariableLengthSolution<?>> extends Operator<T, T> {
 

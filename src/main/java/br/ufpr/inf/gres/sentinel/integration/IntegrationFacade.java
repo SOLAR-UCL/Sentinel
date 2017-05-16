@@ -20,91 +20,172 @@ public abstract class IntegrationFacade {
 
     private static IntegrationFacade FACADE_INSTANCE;
     private static Program PROGRAM_UNDER_TEST;
-    private final ArrayListMultimap<Program, Long> conventionalExecutionCPUTimes = ArrayListMultimap.create();
-    private final ArrayListMultimap<Program, Long> conventionalExecutionTimes = ArrayListMultimap.create();
-    private final ArrayListMultimap<Program, Mutant> conventionalMutants = ArrayListMultimap.create();
 
+    /**
+     *
+     * @return
+     */
     public static IntegrationFacade getIntegrationFacade() {
         return FACADE_INSTANCE;
     }
 
+    /**
+     *
+     * @param facade
+     */
     public static void setIntegrationFacade(IntegrationFacade facade) {
         FACADE_INSTANCE = facade;
     }
 
+    /**
+     *
+     * @return
+     */
     public static Program getProgramUnderTest() {
         return PROGRAM_UNDER_TEST;
     }
 
+    /**
+     *
+     * @param programUnderTest
+     */
     public static void setProgramUnderTest(Program programUnderTest) {
         IntegrationFacade.PROGRAM_UNDER_TEST = programUnderTest;
     }
+    private final ArrayListMultimap<Program, Long> conventionalExecutionCPUTimes = ArrayListMultimap.create();
+    private final ArrayListMultimap<Program, Long> conventionalExecutionTimes = ArrayListMultimap.create();
+    private final ArrayListMultimap<Program, Mutant> conventionalMutants = ArrayListMultimap.create();
 
+    /**
+     *
+     * @param mutantsToCombine
+     * @return
+     */
+    public abstract Mutant combineMutants(List<Mutant> mutantsToCombine);
+
+    /**
+     *
+     * @param mutantToExecute
+     */
+    public abstract void executeMutant(Mutant mutantToExecute);
+
+    /**
+     *
+     * @param mutantsToExecute
+     */
+    public abstract void executeMutants(List<Mutant> mutantsToExecute);
+
+    /**
+     *
+     * @param mutantsToExecute
+     */
+    public abstract void executeMutantsAgainstAllTestCases(List<Mutant> mutantsToExecute);
+
+    /**
+     *
+     * @param operator
+     * @return
+     */
+    public abstract List<Mutant> executeOperator(Operator operator);
+
+    /**
+     *
+     * @param operators
+     * @return
+     */
+    public abstract List<Mutant> executeOperators(List<Operator> operators);
+
+    /**
+     *
+     * @return
+     */
+    public abstract List<Operator> getAllOperators();
+
+    /**
+     *
+     * @return
+     */
+    public ListMultimap<Program, Long> getConventionalExecutionCPUTimes() {
+        return Multimaps.unmodifiableListMultimap(this.conventionalExecutionCPUTimes);
+    }
+
+    /**
+     *
+     * @return
+     */
+    public ListMultimap<Program, Long> getConventionalExecutionTimes() {
+        return Multimaps.unmodifiableListMultimap(this.conventionalExecutionTimes);
+    }
+
+    /**
+     *
+     * @return
+     */
+    public ListMultimap<Program, Mutant> getConventionalMutants() {
+        return Multimaps.unmodifiableListMultimap(this.conventionalMutants);
+    }
+
+    /**
+     *
+     * @param program
+     * @param repetitions
+     */
     public void initializeConventionalStrategy(Program program, int repetitions) {
-        if (!conventionalExecutionCPUTimes.containsKey(program)) {
-            runConventionalStrategy(program, 1);
-            conventionalExecutionCPUTimes.removeAll(program);
-            conventionalExecutionTimes.removeAll(program);
-            conventionalMutants.removeAll(program);
-            runConventionalStrategy(program, repetitions);
+        if (!this.conventionalExecutionCPUTimes.containsKey(program)) {
+            this.runConventionalStrategy(program, 1);
+            this.conventionalExecutionCPUTimes.removeAll(program);
+            this.conventionalExecutionTimes.removeAll(program);
+            this.conventionalMutants.removeAll(program);
+            this.runConventionalStrategy(program, repetitions);
         }
     }
 
+    /**
+     *
+     * @param programName
+     * @return
+     */
+    public abstract Program instantiateProgram(String programName);
+
+    /**
+     *
+     * @param programNames
+     * @return
+     */
+    public List<Program> instantiatePrograms(List<String> programNames) {
+        List<Program> programs = new ArrayList<>();
+        for (String programName : programNames) {
+            programs.add(this.instantiateProgram(programName));
+        }
+        return programs;
+    }
+
+    /**
+     *
+     * @param program
+     * @param repetitions
+     */
     protected void runConventionalStrategy(Program program, int repetitions) {
         IntegrationFacade.setProgramUnderTest(program);
-
         ThreadMXBean threadBean = ManagementFactory.getThreadMXBean();
         List<Mutant> allMutants = new ArrayList<>();
         for (int i = 0; i < repetitions; i++) {
             Stopwatch stopwatch = Stopwatch.createStarted();
             long currentThreadCpuTime = threadBean.getCurrentThreadCpuTime();
-            List<Operator> operators = getAllOperators();
-            allMutants = executeOperators(operators);
-            executeMutants(allMutants);
+            List<Operator> operators = this.getAllOperators();
+            allMutants = this.executeOperators(operators);
+            this.executeMutants(allMutants);
             currentThreadCpuTime = threadBean.getCurrentThreadCpuTime() - currentThreadCpuTime;
             stopwatch.stop();
-            conventionalExecutionCPUTimes.put(program, currentThreadCpuTime);
-            conventionalExecutionTimes.put(program, stopwatch.elapsed(TimeUnit.NANOSECONDS));
+            this.conventionalExecutionCPUTimes.put(program, currentThreadCpuTime);
+            this.conventionalExecutionTimes.put(program, stopwatch.elapsed(TimeUnit.NANOSECONDS));
         }
-        conventionalMutants.putAll(program, allMutants);
+        this.conventionalMutants.putAll(program, allMutants);
     }
 
-    public ListMultimap<Program, Long> getConventionalExecutionCPUTimes() {
-        return Multimaps.unmodifiableListMultimap(conventionalExecutionCPUTimes);
-    }
-
-    public ListMultimap<Program, Long> getConventionalExecutionTimes() {
-        return Multimaps.unmodifiableListMultimap(conventionalExecutionTimes);
-    }
-
-    public ListMultimap<Program, Mutant> getConventionalMutants() {
-        return Multimaps.unmodifiableListMultimap(conventionalMutants);
-    }
-
-    public List<Program> instantiatePrograms(List<String> programNames) {
-        List<Program> programs = new ArrayList<>();
-        for (String programName : programNames) {
-            programs.add(instantiateProgram(programName));
-        }
-        return programs;
-    }
-
-    public abstract Program instantiateProgram(String programName);
-
-    public abstract List<Operator> getAllOperators();
-
-    public abstract List<Mutant> executeOperator(Operator operator);
-
-    public abstract List<Mutant> executeOperators(List<Operator> operators);
-
-    public abstract Mutant combineMutants(List<Mutant> mutantsToCombine);
-
-    public abstract void executeMutant(Mutant mutantToExecute);
-
-    public abstract void executeMutants(List<Mutant> mutantsToExecute);
-
-    public abstract void executeMutantsAgainstAllTestCases(List<Mutant> mutantsToExecute);
-
+    /**
+     *
+     */
     public abstract void tearDown();
 
 }

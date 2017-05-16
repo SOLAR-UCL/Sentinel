@@ -214,6 +214,23 @@ public class GroupSelectionOperationTest {
     }
 
     @Test
+    public void testIsSpecific() {
+        SelectionOperation<Operator> selectionOp = new SelectionOperation<>();
+        selectionOp.setSelectionType(new SequentialSelection());
+        selectionOp.setSorter(null);
+        selectionOp.setQuantity(1);
+
+        GroupSelectionOperation<Operator> groupOp = new GroupSelectionOperation<>();
+        groupOp.setSelectionOperation(selectionOp);
+        groupOp.setGroupingFunction(new GroupOperatorsByType());
+        groupOp.setSelectionType(new SequentialSelection());
+        groupOp.setSorter(new QuantityInGroupComparator());
+        groupOp.setPercentage(1.0);
+
+        assertFalse(groupOp.isSpecific());
+    }
+
+    @Test
     public void testPercentage() {
         SelectionOperation<Operator> selectionOp = new SelectionOperation<>();
         selectionOp.setSelectionType(new SequentialSelection());
@@ -237,23 +254,6 @@ public class GroupSelectionOperationTest {
         assertEquals(operator3, result.get(0));
         assertEquals(operator4, result.get(1));
         assertEquals(operator1, result.get(2));
-    }
-
-    @Test
-    public void testIsSpecific() {
-        SelectionOperation<Operator> selectionOp = new SelectionOperation<>();
-        selectionOp.setSelectionType(new SequentialSelection());
-        selectionOp.setSorter(null);
-        selectionOp.setQuantity(1);
-
-        GroupSelectionOperation<Operator> groupOp = new GroupSelectionOperation<>();
-        groupOp.setSelectionOperation(selectionOp);
-        groupOp.setGroupingFunction(new GroupOperatorsByType());
-        groupOp.setSelectionType(new SequentialSelection());
-        groupOp.setSorter(new QuantityInGroupComparator());
-        groupOp.setPercentage(1.0);
-
-        assertFalse(groupOp.isSpecific());
     }
 
 }

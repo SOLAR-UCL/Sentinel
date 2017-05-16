@@ -8,13 +8,13 @@ import org.junit.Test;
  */
 public class NonTerminalFactoryTest {
 
-	public NonTerminalFactoryTest() {
-	}
+    public NonTerminalFactoryTest() {
+    }
 
-	@Test(expected = IllegalArgumentException.class)
-	public void testCreateOperation() {
-		NonTerminalFactory instance = NonTerminalFactory.getInstance();
-		instance.createOperation(new Rule("invalid"), null);
-	}
+    @Test(expected = IllegalArgumentException.class)
+    public void testCreateOperation() {
+        NonTerminalFactory instance = NonTerminalFactory.getInstance();
+        instance.createOperation(new Rule("invalid"), null);
+    }
 
 }

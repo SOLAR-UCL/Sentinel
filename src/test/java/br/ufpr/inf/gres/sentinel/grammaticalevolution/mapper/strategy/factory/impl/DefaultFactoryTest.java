@@ -11,87 +11,87 @@ import br.ufpr.inf.gres.sentinel.strategy.operation.impl.defaults.StoreMutantsOp
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.operation.impl.SelectMutantsOperation;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.operation.impl.SelectOperatorsOperation;
 import com.google.common.collect.Lists;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Giovani Guizzo
  */
 public class DefaultFactoryTest {
 
-	private static Rule testingRule;
+    private static Rule testingRule;
 
-	public DefaultFactoryTest() {
-	}
+    @BeforeClass
+    public static void setUpClass() {
+        try {
+            StrategyMapper strategyMapper = new StrategyMapper(GrammarFiles.getDefaultGrammarPath());
+            testingRule = strategyMapper.getNonTerminalRule(NonTerminalRuleType.DEFAULT_OPERATION);
+        } catch (IOException ex) {
+            Logger.getLogger(DefaultFactoryTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 
-	@BeforeClass
-	public static void setUpClass() {
-		try {
-			StrategyMapper strategyMapper = new StrategyMapper(GrammarFiles.getDefaultGrammarPath());
-			testingRule = strategyMapper.getNonTerminalRule(NonTerminalRuleType.DEFAULT_OPERATION);
-		} catch (IOException ex) {
-			Logger.getLogger(DefaultFactoryTest.class.getName()).log(Level.SEVERE, null, ex);
-		}
-	}
+    public DefaultFactoryTest() {
+    }
 
-	/**
-	 * Test Store Mutants creation
-	 */
-	@Test
-	public void testCreateOperation() {
-		Iterator<Integer> iterator = Lists.newArrayList(3).iterator();
-		Operation operation = FactoryFlyweight.getNonTerminalFactory().createOperation(testingRule, iterator);
-		assertNotNull(operation);
-		assertTrue(operation instanceof StoreMutantsOperation);
-	}
+    /**
+     * Test Store Mutants creation
+     */
+    @Test
+    public void testCreateOperation() {
+        Iterator<Integer> iterator = Lists.newArrayList(3).iterator();
+        Operation operation = FactoryFlyweight.getNonTerminalFactory().createOperation(testingRule, iterator);
+        assertNotNull(operation);
+        assertTrue(operation instanceof StoreMutantsOperation);
+    }
 
-	/**
-	 * Test New Branch creation
-	 */
-	@Test
-	public void testCreateOperation2() {
-		Iterator<Integer> iterator = Lists.newArrayList(2, 2, 3, 3, 3).iterator();
-		Operation operation = FactoryFlyweight.getNonTerminalFactory().createOperation(testingRule, iterator);
-		assertNotNull(operation);
+    /**
+     * Test New Branch creation
+     */
+    @Test
+    public void testCreateOperation2() {
+        Iterator<Integer> iterator = Lists.newArrayList(2, 2, 3, 3, 3).iterator();
+        Operation operation = FactoryFlyweight.getNonTerminalFactory().createOperation(testingRule, iterator);
+        assertNotNull(operation);
 
-		assertTrue(operation instanceof NewBranchOperation);
+        assertTrue(operation instanceof NewBranchOperation);
 
-		Operation successor = operation.getSuccessor();
-		Operation secondSuccessor = ((NewBranchOperation) operation).getSecondSuccessor();
+        Operation successor = operation.getSuccessor();
+        Operation secondSuccessor = ((NewBranchOperation) operation).getSecondSuccessor();
 
-		assertTrue(successor instanceof NewBranchOperation);
-		assertTrue(secondSuccessor instanceof StoreMutantsOperation);
+        assertTrue(successor instanceof NewBranchOperation);
+        assertTrue(secondSuccessor instanceof StoreMutantsOperation);
 
-		assertTrue(successor.getSuccessor() instanceof StoreMutantsOperation);
-		assertTrue(((NewBranchOperation) successor).getSecondSuccessor() instanceof StoreMutantsOperation);
-	}
+        assertTrue(successor.getSuccessor() instanceof StoreMutantsOperation);
+        assertTrue(((NewBranchOperation) successor).getSecondSuccessor() instanceof StoreMutantsOperation);
+    }
 
-	/**
-	 * Test Operators Operation creation
-	 */
-	@Test
-	public void testCreateOperation3() {
-		Iterator<Integer> iterator = Lists.newArrayList(0, 0, 0, 0, 0, 1, 0, 3).iterator();
-		Operation operation = FactoryFlyweight.getNonTerminalFactory().createOperation(testingRule, iterator);
-		assertNotNull(operation);
-		assertTrue(operation instanceof SelectOperatorsOperation);
-	}
+    /**
+     * Test Operators Operation creation
+     */
+    @Test
+    public void testCreateOperation3() {
+        Iterator<Integer> iterator = Lists.newArrayList(0, 0, 0, 0, 0, 1, 0, 3).iterator();
+        Operation operation = FactoryFlyweight.getNonTerminalFactory().createOperation(testingRule, iterator);
+        assertNotNull(operation);
+        assertTrue(operation instanceof SelectOperatorsOperation);
+    }
 
-	/**
-	 * Test Mutants Operation creation
-	 */
-	@Test
-	public void testCreateOperation4() {
-		Iterator<Integer> iterator = Lists.newArrayList(1, 0, 0, 0, 0, 1, 0, 3).iterator();
-		Operation operation = FactoryFlyweight.getNonTerminalFactory().createOperation(testingRule, iterator);
-		assertNotNull(operation);
-		assertTrue(operation instanceof SelectMutantsOperation);
-	}
+    /**
+     * Test Mutants Operation creation
+     */
+    @Test
+    public void testCreateOperation4() {
+        Iterator<Integer> iterator = Lists.newArrayList(1, 0, 0, 0, 0, 1, 0, 3).iterator();
+        Operation operation = FactoryFlyweight.getNonTerminalFactory().createOperation(testingRule, iterator);
+        assertNotNull(operation);
+        assertTrue(operation instanceof SelectMutantsOperation);
+    }
 }

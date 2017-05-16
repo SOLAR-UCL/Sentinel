@@ -23,21 +23,6 @@ public class IntegrationFacadeTest {
     }
 
     @Test
-    public void test() {
-        IntegrationFacade muJava = new PITFacade("");
-        IntegrationFacade.setIntegrationFacade(muJava);
-        assertNotNull(IntegrationFacade.getIntegrationFacade());
-        assertTrue(IntegrationFacade.getIntegrationFacade() instanceof PITFacade);
-    }
-
-    @Test
-    public void test1() {
-        IntegrationFacade.setProgramUnderTest(new Program("Test", null));
-        assertNotNull(IntegrationFacade.getProgramUnderTest());
-        assertEquals(IntegrationFacade.getProgramUnderTest(), new Program("Test", null));
-    }
-
-    @Test
     public void getConventionalStats() throws Exception {
         IntegrationFacadeStub facade = new IntegrationFacadeStub();
         Program program1 = new Program("Test", null);
@@ -62,27 +47,52 @@ public class IntegrationFacadeTest {
         assertEquals(8, facade.getConventionalMutants().get(program2).stream().filter(mutant -> mutant.isDead()).count());
     }
 
+    @Test
+    public void test() {
+        IntegrationFacade muJava = new PITFacade("");
+        IntegrationFacade.setIntegrationFacade(muJava);
+        assertNotNull(IntegrationFacade.getIntegrationFacade());
+        assertTrue(IntegrationFacade.getIntegrationFacade() instanceof PITFacade);
+    }
+
+    @Test
+    public void test1() {
+        IntegrationFacade.setProgramUnderTest(new Program("Test", null));
+        assertNotNull(IntegrationFacade.getProgramUnderTest());
+        assertEquals(IntegrationFacade.getProgramUnderTest(), new Program("Test", null));
+    }
+
     public static class IntegrationFacadeStub extends IntegrationFacade {
 
         public IntegrationFacadeStub() {
         }
 
         @Override
-        public List<Program> instantiatePrograms(List<String> programNames) {
-            return null;
+        public Mutant combineMutants(List<Mutant> mutantsToCombine) {
+            Mutant generatedMutant = new Mutant("", null, IntegrationFacade.getProgramUnderTest());
+            generatedMutant.setFullName(Joiner.on("_").join(mutantsToCombine));
+            return generatedMutant;
         }
 
         @Override
-        public Program instantiateProgram(String programName) {
-            return null;
+        public void executeMutant(Mutant mutantToExecute) {
+            this.executeMutants(Lists.newArrayList(mutantToExecute));
         }
 
         @Override
-        public List<Operator> getAllOperators() {
-            return Lists.newArrayList(new Operator("Operator1", "Type1"),
-                    new Operator("Operator2", "Type1"),
-                    new Operator("Operator3", "Type2"),
-                    new Operator("Operator4", "Type3"));
+        public void executeMutants(List<Mutant> mutantsToExecute) {
+            int size = mutantsToExecute.size();
+            for (int i = 0; i < size / 2; i++) {
+                Mutant mutant = mutantsToExecute.get(i);
+                TestCase testCase = new TestCase(i % 2 == 0 ? "Test1" : "Test2");
+                mutant.getKillingTestCases().add(testCase);
+                testCase.getKillingMutants().add(mutant);
+            }
+        }
+
+        @Override
+        public void executeMutantsAgainstAllTestCases(List<Mutant> mutantsToExecute) {
+            this.executeMutants(mutantsToExecute);
         }
 
         @Override
@@ -100,40 +110,30 @@ public class IntegrationFacadeTest {
         }
 
         @Override
-        public Mutant combineMutants(List<Mutant> mutantsToCombine) {
-            Mutant generatedMutant = new Mutant("", null, IntegrationFacade.getProgramUnderTest());
-            generatedMutant.setFullName(Joiner.on("_").join(mutantsToCombine));
-            return generatedMutant;
-        }
-
-        @Override
-        public void executeMutant(Mutant mutantToExecute) {
-            executeMutants(Lists.newArrayList(mutantToExecute));
-        }
-
-        @Override
-        public void executeMutants(List<Mutant> mutantsToExecute) {
-            int size = mutantsToExecute.size();
-            for (int i = 0; i < size / 2; i++) {
-                Mutant mutant = mutantsToExecute.get(i);
-                TestCase testCase = new TestCase(i % 2 == 0 ? "Test1" : "Test2");
-                mutant.getKillingTestCases().add(testCase);
-                testCase.getKillingMutants().add(mutant);
-            }
-        }
-
-        @Override
         public List<Mutant> executeOperators(List<Operator> operators) {
             List<Mutant> allMutants = new ArrayList<>();
             for (Operator operator : operators) {
-                allMutants.addAll(executeOperator(operator));
+                allMutants.addAll(this.executeOperator(operator));
             }
             return allMutants;
         }
 
         @Override
-        public void executeMutantsAgainstAllTestCases(List<Mutant> mutantsToExecute) {
-            executeMutants(mutantsToExecute);
+        public List<Operator> getAllOperators() {
+            return Lists.newArrayList(new Operator("Operator1", "Type1"),
+                    new Operator("Operator2", "Type1"),
+                    new Operator("Operator3", "Type2"),
+                    new Operator("Operator4", "Type3"));
+        }
+
+        @Override
+        public Program instantiateProgram(String programName) {
+            return null;
+        }
+
+        @Override
+        public List<Program> instantiatePrograms(List<String> programNames) {
+            return null;
         }
 
         @Override

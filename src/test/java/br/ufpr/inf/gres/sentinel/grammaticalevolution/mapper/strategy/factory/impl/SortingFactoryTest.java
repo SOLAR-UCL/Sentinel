@@ -15,13 +15,12 @@ import br.ufpr.inf.gres.sentinel.strategy.operation.impl.sort.impl.mutant.OrderC
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.sort.impl.operator.MutantQuantityComparator;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.sort.impl.operator.OperatorTypeComparator;
 import com.google.common.collect.Lists;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 import static org.junit.Assert.*;
 
@@ -30,105 +29,105 @@ import static org.junit.Assert.*;
  */
 public class SortingFactoryTest {
 
-	private static Rule testingRuleOperator;
-	private static Rule testingRuleMutant;
+    private static Rule testingRuleMutant;
+    private static Rule testingRuleOperator;
 
-	public SortingFactoryTest() {
-	}
+    @BeforeClass
+    public static void setUpClass() {
+        try {
+            StrategyMapper strategyMapper = new StrategyMapper(GrammarFiles.getDefaultGrammarPath());
+            testingRuleOperator = strategyMapper.getNonTerminalRule(NonTerminalRuleType.OPERATOR_SORTING);
+            testingRuleMutant = strategyMapper.getNonTerminalRule(NonTerminalRuleType.MUTANT_SORTING);
+        } catch (IOException ex) {
+            Logger.getLogger(SortingFactoryTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 
-	@BeforeClass
-	public static void setUpClass() {
-		try {
-			StrategyMapper strategyMapper = new StrategyMapper(GrammarFiles.getDefaultGrammarPath());
-			testingRuleOperator = strategyMapper.getNonTerminalRule(NonTerminalRuleType.OPERATOR_SORTING);
-			testingRuleMutant = strategyMapper.getNonTerminalRule(NonTerminalRuleType.MUTANT_SORTING);
-		} catch (IOException ex) {
-			Logger.getLogger(SortingFactoryTest.class.getName()).log(Level.SEVERE, null, ex);
-		}
-	}
+    public SortingFactoryTest() {
+    }
 
-	/**
-	 * Testing Sort by Type
-	 */
-	@Test
-	public void testCreateOperation() {
-		Iterator<Integer> iterator = Lists.newArrayList(0, 0, 0).iterator();
-		Operation operation = FactoryFlyweight.getNonTerminalFactory().createOperation(testingRuleOperator, iterator);
-		assertNotNull(operation);
-		assertTrue(operation instanceof OperatorTypeComparator);
-	}
+    @Test(expected = IllegalArgumentException.class)
+    public void testCreateInvalidOperation() {
+        Factory factory = SortingFactory.getInstance();
+        Iterator<Integer> iterator = Lists.newArrayList(0, 0, 0).iterator();
+        factory.createOperation(new Option(Lists.newArrayList(new Rule("Unknown", Lists.newArrayList(new Option(Lists.newArrayList(new Rule("Unknown"))))))), iterator);
+    }
 
-	/**
-	 * Testing Sort by Mutant Quantity
-	 */
-	@Test
-	public void testCreateOperation2() {
-		Iterator<Integer> iterator = Lists.newArrayList(0, 1, 0).iterator();
-		Operation operation = FactoryFlyweight.getNonTerminalFactory().createOperation(testingRuleOperator, iterator);
-		assertNotNull(operation);
-		assertTrue(operation instanceof MutantQuantityComparator);
-	}
+    /**
+     * Testing Sort by Type
+     */
+    @Test
+    public void testCreateOperation() {
+        Iterator<Integer> iterator = Lists.newArrayList(0, 0, 0).iterator();
+        Operation operation = FactoryFlyweight.getNonTerminalFactory().createOperation(testingRuleOperator, iterator);
+        assertNotNull(operation);
+        assertTrue(operation instanceof OperatorTypeComparator);
+    }
 
-	/**
-	 * Testing Reversed
-	 */
-	@Test
-	public void testCreateOperation3() {
-		Iterator<Integer> iterator = Lists.newArrayList(0, 1, 1).iterator();
-		AbstractSorterOperation operation = (AbstractSorterOperation) FactoryFlyweight.getNonTerminalFactory()
-																					  .createOperation(testingRuleOperator, iterator);
-		assertNotNull(operation);
-		assertTrue(operation instanceof AbstractSorterOperation);
-		assertTrue(operation.isReversed());
-	}
+    /**
+     * Testing Sort by Mutant Quantity
+     */
+    @Test
+    public void testCreateOperation2() {
+        Iterator<Integer> iterator = Lists.newArrayList(0, 1, 0).iterator();
+        Operation operation = FactoryFlyweight.getNonTerminalFactory().createOperation(testingRuleOperator, iterator);
+        assertNotNull(operation);
+        assertTrue(operation instanceof MutantQuantityComparator);
+    }
 
-	/**
-	 * Testing Reversed
-	 */
-	@Test
-	public void testCreateOperation4() {
-		Iterator<Integer> iterator = Lists.newArrayList(1).iterator();
-		Operation operation = FactoryFlyweight.getNonTerminalFactory().createOperation(testingRuleOperator, iterator);
-		assertNull(operation);
-	}
+    /**
+     * Testing Reversed
+     */
+    @Test
+    public void testCreateOperation3() {
+        Iterator<Integer> iterator = Lists.newArrayList(0, 1, 1).iterator();
+        AbstractSorterOperation operation = (AbstractSorterOperation) FactoryFlyweight.getNonTerminalFactory()
+                .createOperation(testingRuleOperator, iterator);
+        assertNotNull(operation);
+        assertTrue(operation instanceof AbstractSorterOperation);
+        assertTrue(operation.isReversed());
+    }
 
-	@Test
-	public void testCreateOperation5() {
-		Iterator<Integer> iterator = Lists.newArrayList(0, 0, 0).iterator();
-		Operation operation = FactoryFlyweight.getNonTerminalFactory().createOperation(testingRuleMutant, iterator);
-		assertNotNull(operation);
-		assertTrue(operation instanceof MutantsOperatorTypeComparator);
-	}
+    /**
+     * Testing Reversed
+     */
+    @Test
+    public void testCreateOperation4() {
+        Iterator<Integer> iterator = Lists.newArrayList(1).iterator();
+        Operation operation = FactoryFlyweight.getNonTerminalFactory().createOperation(testingRuleOperator, iterator);
+        assertNull(operation);
+    }
 
-	@Test
-	public void testCreateOperation6() {
-		Iterator<Integer> iterator = Lists.newArrayList(0, 1, 0).iterator();
-		Operation operation = FactoryFlyweight.getNonTerminalFactory().createOperation(testingRuleMutant, iterator);
-		assertNotNull(operation);
-		assertTrue(operation instanceof MutantsOperatorComparator);
-	}
+    @Test
+    public void testCreateOperation5() {
+        Iterator<Integer> iterator = Lists.newArrayList(0, 0, 0).iterator();
+        Operation operation = FactoryFlyweight.getNonTerminalFactory().createOperation(testingRuleMutant, iterator);
+        assertNotNull(operation);
+        assertTrue(operation instanceof MutantsOperatorTypeComparator);
+    }
 
-	@Test
-	public void testCreateOperation7() {
-		Iterator<Integer> iterator = Lists.newArrayList(0, 2, 0).iterator();
-		Operation operation = FactoryFlyweight.getNonTerminalFactory().createOperation(testingRuleMutant, iterator);
-		assertNotNull(operation);
-		assertTrue(operation instanceof OrderComparator);
-	}
+    @Test
+    public void testCreateOperation6() {
+        Iterator<Integer> iterator = Lists.newArrayList(0, 1, 0).iterator();
+        Operation operation = FactoryFlyweight.getNonTerminalFactory().createOperation(testingRuleMutant, iterator);
+        assertNotNull(operation);
+        assertTrue(operation instanceof MutantsOperatorComparator);
+    }
 
-	@Test
-	public void testCreateOperation8() {
-		Iterator<Integer> iterator = Lists.newArrayList(0, 3, 0).iterator();
-		Operation operation = FactoryFlyweight.getNonTerminalFactory().createOperation(testingRuleMutant, iterator);
-		assertNotNull(operation);
-		assertTrue(operation instanceof OrderComparator);
-	}
+    @Test
+    public void testCreateOperation7() {
+        Iterator<Integer> iterator = Lists.newArrayList(0, 2, 0).iterator();
+        Operation operation = FactoryFlyweight.getNonTerminalFactory().createOperation(testingRuleMutant, iterator);
+        assertNotNull(operation);
+        assertTrue(operation instanceof OrderComparator);
+    }
 
-	@Test(expected = IllegalArgumentException.class)
-	public void testCreateInvalidOperation() {
-		Factory factory = SortingFactory.getInstance();
-		Iterator<Integer> iterator = Lists.newArrayList(0, 0, 0).iterator();
-		factory.createOperation(new Option(Lists.newArrayList(new Rule("Unknown", Lists.newArrayList(new Option(Lists.newArrayList(new Rule("Unknown"))))))), iterator);
-	}
+    @Test
+    public void testCreateOperation8() {
+        Iterator<Integer> iterator = Lists.newArrayList(0, 3, 0).iterator();
+        Operation operation = FactoryFlyweight.getNonTerminalFactory().createOperation(testingRuleMutant, iterator);
+        assertNotNull(operation);
+        assertTrue(operation instanceof OrderComparator);
+    }
 
 }

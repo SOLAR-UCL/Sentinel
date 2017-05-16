@@ -18,7 +18,7 @@ public class ObjectiveFunctionTest {
     @Test
     public void testEquals() {
         AverageCPUTime averageCPUTime = new AverageCPUTime<>();
-        assertFalse(averageCPUTime.equals(null));
+        assertFalse(averageCPUTime == null);
         assertFalse(averageCPUTime.equals(new Object()));
         assertTrue(averageCPUTime.equals(averageCPUTime));
     }

@@ -14,7 +14,6 @@ import br.ufpr.inf.gres.sentinel.strategy.operation.impl.discard.impl.DiscardMut
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.operation.impl.SelectMutantsOperation;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.selection.SelectionOperation;
 import com.google.common.base.Preconditions;
-
 import java.util.Iterator;
 import java.util.List;
 
@@ -23,59 +22,69 @@ import java.util.List;
  */
 public class MutantOperationFactory implements Factory<Option> {
 
-	private MutantOperationFactory() {
-	}
+    /**
+     *
+     * @return
+     */
+    public static MutantOperationFactory getInstance() {
+        return SingletonHolder.INSTANCE;
+    }
 
-	public static MutantOperationFactory getInstance() {
-		return SingletonHolder.INSTANCE;
-	}
+    private MutantOperationFactory() {
+    }
 
-	@Override
-	public Operation createOperation(Option node, Iterator<Integer> integerIterator) {
-		Iterator<Rule> rules = node.getRules().iterator();
-		Preconditions.checkArgument(rules.hasNext(), "Malformed grammar option: " + node.toString());
-		Rule firstRule = rules.next();
-		Operation<Solution, List<Mutant>> mainOperation;
-		switch (firstRule.getName()) {
-			case TerminalRuleType.SELECT_MUTANTS: {
-				Preconditions.checkArgument(rules.hasNext(), "Malformed grammar option: " + node.toString());
-				Rule nextRule = rules.next();
-				SelectionOperation<Mutant> selectionOperation = (SelectionOperation<Mutant>) FactoryFlyweight.getNonTerminalFactory()
-																											 .createOperation(nextRule, integerIterator);
-				mainOperation = new SelectMutantsOperation(selectionOperation);
-				break;
-			}
-			case TerminalRuleType.DISCARD_MUTANTS: {
-				Preconditions.checkArgument(rules.hasNext(), "Malformed grammar option: " + node.toString());
-				Rule nextRule = rules.next();
-				SelectionOperation<Mutant> selectionOperation = (SelectionOperation<Mutant>) FactoryFlyweight.getNonTerminalFactory()
-																											 .createOperation(nextRule, integerIterator);
-				mainOperation = new DiscardMutantsOperation(selectionOperation);
-				break;
-			}
-			case TerminalRuleType.COMBINE_MUTANTS: {
-				Preconditions.checkArgument(rules.hasNext(), "Malformed grammar option: " + node.toString());
-				Rule nextRule = rules.next();
-				AbstractHOMGeneration generation = (AbstractHOMGeneration) FactoryFlyweight.getNonTerminalFactory()
-																						   .createOperation(nextRule, integerIterator);
+    /**
+     *
+     * @param node
+     * @param integerIterator
+     * @return
+     */
+    @Override
+    public Operation createOperation(Option node, Iterator<Integer> integerIterator) {
+        Iterator<Rule> rules = node.getRules().iterator();
+        Preconditions.checkArgument(rules.hasNext(), "Malformed grammar option: " + node.toString());
+        Rule firstRule = rules.next();
+        Operation<Solution, List<Mutant>> mainOperation;
+        switch (firstRule.getName()) {
+            case TerminalRuleType.SELECT_MUTANTS: {
+                Preconditions.checkArgument(rules.hasNext(), "Malformed grammar option: " + node.toString());
+                Rule nextRule = rules.next();
+                SelectionOperation<Mutant> selectionOperation = (SelectionOperation<Mutant>) FactoryFlyweight.getNonTerminalFactory()
+                        .createOperation(nextRule, integerIterator);
+                mainOperation = new SelectMutantsOperation(selectionOperation);
+                break;
+            }
+            case TerminalRuleType.DISCARD_MUTANTS: {
+                Preconditions.checkArgument(rules.hasNext(), "Malformed grammar option: " + node.toString());
+                Rule nextRule = rules.next();
+                SelectionOperation<Mutant> selectionOperation = (SelectionOperation<Mutant>) FactoryFlyweight.getNonTerminalFactory()
+                        .createOperation(nextRule, integerIterator);
+                mainOperation = new DiscardMutantsOperation(selectionOperation);
+                break;
+            }
+            case TerminalRuleType.COMBINE_MUTANTS: {
+                Preconditions.checkArgument(rules.hasNext(), "Malformed grammar option: " + node.toString());
+                Rule nextRule = rules.next();
+                AbstractHOMGeneration generation = (AbstractHOMGeneration) FactoryFlyweight.getNonTerminalFactory()
+                        .createOperation(nextRule, integerIterator);
 
-				Preconditions.checkArgument(rules.hasNext(), "Malformed grammar option: " + node.toString());
-				nextRule = rules.next();
-				SelectionOperation<Mutant> selectionOperation = (SelectionOperation<Mutant>) FactoryFlyweight.getNonTerminalFactory()
-																											 .createOperation(nextRule, integerIterator);
+                Preconditions.checkArgument(rules.hasNext(), "Malformed grammar option: " + node.toString());
+                nextRule = rules.next();
+                SelectionOperation<Mutant> selectionOperation = (SelectionOperation<Mutant>) FactoryFlyweight.getNonTerminalFactory()
+                        .createOperation(nextRule, integerIterator);
 
-				mainOperation = new CombineMutantsOperation(generation, selectionOperation);
-				break;
-			}
-			default:
-				throw new IllegalArgumentException("Malformed grammar option: " + node.toString());
-		}
-		return mainOperation;
-	}
+                mainOperation = new CombineMutantsOperation(generation, selectionOperation);
+                break;
+            }
+            default:
+                throw new IllegalArgumentException("Malformed grammar option: " + node.toString());
+        }
+        return mainOperation;
+    }
 
-	private static class SingletonHolder {
+    private static class SingletonHolder {
 
-		private static final MutantOperationFactory INSTANCE = new MutantOperationFactory();
-	}
+        private static final MutantOperationFactory INSTANCE = new MutantOperationFactory();
+    }
 
 }

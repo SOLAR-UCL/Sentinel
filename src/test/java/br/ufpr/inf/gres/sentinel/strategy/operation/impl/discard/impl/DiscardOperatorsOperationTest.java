@@ -28,13 +28,6 @@ public class DiscardOperatorsOperationTest {
     }
 
     @Test
-    public void testObtainList() {
-        Solution solution = new Solution();
-        DiscardOperatorsOperation operation = new DiscardOperatorsOperation();
-        assertEquals(solution.getOperators(), operation.obtainList(solution));
-    }
-
-    @Test
     public void testDoOperation() {
         Program program = new Program("Program1", new File("Program1"));
 
@@ -81,6 +74,13 @@ public class DiscardOperatorsOperationTest {
         assertEquals(2, solution.getMutants().size());
         assertEquals(mutant4, solution.getMutants().get(0));
         assertEquals(mutant5, solution.getMutants().get(1));
+    }
+
+    @Test
+    public void testObtainList() {
+        Solution solution = new Solution();
+        DiscardOperatorsOperation operation = new DiscardOperatorsOperation();
+        assertEquals(solution.getOperators(), operation.obtainList(solution));
     }
 
 }

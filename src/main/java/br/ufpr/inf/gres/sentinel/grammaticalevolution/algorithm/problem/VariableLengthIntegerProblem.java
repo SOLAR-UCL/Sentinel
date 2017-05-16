@@ -5,8 +5,16 @@ package br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.problem;
  */
 public interface VariableLengthIntegerProblem extends VariableLengthProblem<Integer> {
 
+    /**
+     *
+     * @return
+     */
     int getUpperVariableBound();
 
+    /**
+     *
+     * @return
+     */
     int getLowerVariableBound();
 
 }

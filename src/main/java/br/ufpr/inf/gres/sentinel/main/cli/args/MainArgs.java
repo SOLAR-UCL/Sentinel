@@ -7,6 +7,9 @@ import com.beust.jcommander.Parameter;
  */
 public class MainArgs {
 
+    /**
+     *
+     */
     @Parameter(names = {"--help", "-h"}, description = "Shows this message.")
     public boolean help = false;
 

@@ -41,43 +41,42 @@ public class EntryPointImpl {
 
     private HashMap<Program, CoverageDatabase> coverageData = new HashMap<>();
     private WriterFactory historyWriter;
-    private JavaAgent jac;
     private KnownLocationJavaAgentFinder ja;
+    private JavaAgent jac;
 
-    public MutationAnalysisUnit generateMutants(File baseDir, ReportOptions data,
-            SettingsFactory settings, Map<String, String> environmentVariables) throws IOException {
-        MutationCoverageImpl report = createMutationCoverageImpl(data, settings, environmentVariables, baseDir);
+    /**
+     *
+     */
+    public void close() {
+        if (this.jac != null) {
+            this.jac.close();
+        }
+        if (this.ja != null) {
+            this.ja.close();
+        }
+        if (this.historyWriter != null) {
+            this.historyWriter.close();
+        }
 
-        return report.createMutants();
-
-    }
-
-    public Collection<MutationResult> executeMutants(File baseDir, ReportOptions data,
-            SettingsFactory settings, Map<String, String> environmentVariables,
-            MutationAnalysisUnit unitsToExecute) throws IOException {
-        MutationCoverageImpl report = createMutationCoverageImpl(data, settings, environmentVariables, baseDir);
-
-        return report.runMutants(unitsToExecute);
     }
 
     private MutationCoverageImpl createMutationCoverageImpl(ReportOptions data, SettingsFactory settings, Map<String, String> environmentVariables, File baseDir) {
         final ClassPath cp = data.getClassPath();
         final Option<Reader> reader = data.createHistoryReader();
-        if (historyWriter == null) {
-            historyWriter = data.createHistoryWriter();
+        if (this.historyWriter == null) {
+            this.historyWriter = data.createHistoryWriter();
         }
-        if (jac == null) {
-            jac = new JarCreatingJarFinder(new ClassPathByteArraySource(cp));
+        if (this.jac == null) {
+            this.jac = new JarCreatingJarFinder(new ClassPathByteArraySource(cp));
         }
-        if (ja == null) {
-            ja = new KnownLocationJavaAgentFinder(jac.getJarLocation().value());
+        if (this.ja == null) {
+            this.ja = new KnownLocationJavaAgentFinder(this.jac.getJarLocation().value());
         }
         final ResultOutputStrategy reportOutput = settings.getOutputStrategy();
         final MutationResultListenerFactory reportFactory = settings
                 .createListener();
         final CoverageOptions coverageOptions = settings.createCoverageOptions();
-        final LaunchOptions launchOptions = new LaunchOptions(ja,
-                settings.getJavaExecutable(), data.getJvmArgs(), environmentVariables);
+        final LaunchOptions launchOptions = new LaunchOptions(this.ja, settings.getJavaExecutable(), data.getJvmArgs(), environmentVariables);
         final ProjectClassPaths cps = data.getMutationClassPaths();
         final CodeSource code = new CodeSource(cps, coverageOptions.getPitConfig()
                 .testClassIdentifier());
@@ -85,32 +84,52 @@ public class EntryPointImpl {
         final CoverageGenerator coverageDatabase = new DefaultCoverageGenerator(
                 baseDir, coverageOptions, launchOptions, code,
                 settings.createCoverageExporter(), timings, !data.isVerbose());
-        final HistoryStore history = new XStreamHistoryStore(historyWriter, reader);
+        final HistoryStore history = new XStreamHistoryStore(this.historyWriter, reader);
         final MutationStrategies strategies = new MutationStrategies(
                 settings.createEngine(), history, coverageDatabase, reportFactory,
                 reportOutput);
-        CoverageDatabase coverage = getCoverageData(coverageDatabase);
+        CoverageDatabase coverage = this.getCoverageData(coverageDatabase);
         final MutationCoverageImpl report = new MutationCoverageImpl(strategies, baseDir,
                 code, data, settings, timings, coverage);
         return report;
     }
 
-    private CoverageDatabase getCoverageData(final CoverageGenerator coverageDatabase) {
-        return coverageData.computeIfAbsent(IntegrationFacade.getProgramUnderTest(), (program) -> {
-            return coverageDatabase.calculateCoverage();
-        });
+    /**
+     *
+     * @param baseDir
+     * @param data
+     * @param settings
+     * @param environmentVariables
+     * @param unitsToExecute
+     * @return
+     * @throws IOException
+     */
+    public Collection<MutationResult> executeMutants(File baseDir, ReportOptions data,
+            SettingsFactory settings, Map<String, String> environmentVariables,
+            MutationAnalysisUnit unitsToExecute) throws IOException {
+        MutationCoverageImpl report = this.createMutationCoverageImpl(data, settings, environmentVariables, baseDir);
+
+        return report.runMutants(unitsToExecute);
     }
 
-    public void close() {
-        if (jac != null) {
-            jac.close();
-        }
-        if (ja != null) {
-            ja.close();
-        }
-        if (historyWriter != null) {
-            historyWriter.close();
-        }
+    /**
+     *
+     * @param baseDir
+     * @param data
+     * @param settings
+     * @param environmentVariables
+     * @return
+     * @throws IOException
+     */
+    public MutationAnalysisUnit generateMutants(File baseDir, ReportOptions data, SettingsFactory settings, Map<String, String> environmentVariables) throws IOException {
+        MutationCoverageImpl report = this.createMutationCoverageImpl(data, settings, environmentVariables, baseDir);
+        return report.createMutants();
+    }
+
+    private CoverageDatabase getCoverageData(final CoverageGenerator coverageDatabase) {
+        return this.coverageData.computeIfAbsent(IntegrationFacade.getProgramUnderTest(), (program) -> {
+            return coverageDatabase.calculateCoverage();
+        });
     }
 
 }

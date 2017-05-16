@@ -4,7 +4,6 @@ import br.ufpr.inf.gres.sentinel.base.mutation.Mutant;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.TerminalRuleType;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.group.AbstractGroupingOperation;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.sort.impl.mutant.OrderComparator;
-
 import java.util.function.Function;
 
 /**
@@ -12,21 +11,32 @@ import java.util.function.Function;
  */
 public class GroupMutantsByOrder extends AbstractGroupingOperation<Mutant> {
 
-	private OrderComparator delegate;
+    private OrderComparator delegate;
 
-	public GroupMutantsByOrder() {
-		super("Group Mutants by " + TerminalRuleType.ORDER);
-		delegate = new OrderComparator();
-	}
+    /**
+     *
+     */
+    public GroupMutantsByOrder() {
+        super("Group Mutants by " + TerminalRuleType.ORDER);
+        this.delegate = new OrderComparator();
+    }
 
-	@Override
-	public Function<Mutant, Integer> createGroupingFunction() {
-		return delegate.createSortingFunction();
-	}
+    /**
+     *
+     * @return
+     */
+    @Override
+    public Function<Mutant, Integer> createGroupingFunction() {
+        return this.delegate.createSortingFunction();
+    }
 
-	@Override
-	public boolean isSpecific() {
-		return delegate.isSpecific();
-	}
+    /**
+     *
+     * @return
+     */
+    @Override
+    public boolean isSpecific() {
+        return this.delegate.isSpecific();
+    }
 
 }

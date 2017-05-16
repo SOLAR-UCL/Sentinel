@@ -10,14 +10,15 @@ import org.uma.jmetal.solution.Solution;
 /**
  *
  * @author Giovani Guizzo
+ * @param <T>
  */
 public class AverageScore<T> extends ObjectiveFunction<T> {
 
-    @Override
-    public String getName() {
-        return AVERAGE_SCORE;
-    }
-
+    /**
+     *
+     * @param solution
+     * @return
+     */
     @Override
     public Double computeFitness(Solution<T> solution) {
         if (solution.getAttribute("ConventionalMutants") != null && solution.getAttribute("Mutants") != null) {
@@ -41,7 +42,16 @@ public class AverageScore<T> extends ObjectiveFunction<T> {
                 }
             }
         }
-        return getWorstValue();
+        return this.getWorstValue();
+    }
+
+    /**
+     *
+     * @return
+     */
+    @Override
+    public String getName() {
+        return AVERAGE_SCORE;
     }
 
 }

@@ -5,7 +5,7 @@ package br.ufpr.inf.gres.sentinel.strategy.operation.impl.execute.type;
  */
 public class OperatorExecutionTypeTest {
 
-	public OperatorExecutionTypeTest() {
-	}
+    public OperatorExecutionTypeTest() {
+    }
 
 }

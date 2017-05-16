@@ -4,7 +4,6 @@ import br.ufpr.inf.gres.sentinel.base.mutation.Mutant;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.TerminalRuleType;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.combine.generation.AbstractHOMGeneration;
 import com.google.common.collect.Lists;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,39 +12,60 @@ import java.util.List;
  */
 public class ConventionalGeneration extends AbstractHOMGeneration {
 
-	private SingleHOMGeneration singleHOMGeneration;
-	private int order;
+    private int order;
+    private SingleHOMGeneration singleHOMGeneration;
 
-	public ConventionalGeneration(int order) {
-		super(TerminalRuleType.CONVENTIONAL + " Generation");
-		this.order = order;
-		this.singleHOMGeneration = new SingleHOMGeneration();
-	}
+    /**
+     *
+     * @param order
+     */
+    public ConventionalGeneration(int order) {
+        super(TerminalRuleType.CONVENTIONAL + " Generation");
+        this.order = order;
+        this.singleHOMGeneration = new SingleHOMGeneration();
+    }
 
-	public int getOrder() {
-		return order;
-	}
+    /**
+     *
+     * @param input
+     * @return
+     */
+    @Override
+    public List<Mutant> doOperation(List<Mutant> input) {
+        List<Mutant> result = new ArrayList<>();
+        if (input.size() >= 2) {
+            List<List<Mutant>> partition = Lists.partition(input, this.order);
+            for (List<Mutant> mutantList : partition) {
+                if (mutantList.size() >= 2) {
+                    result.addAll(this.singleHOMGeneration.doOperation(mutantList));
+                }
+            }
+        }
+        return result;
+    }
 
-	public void setOrder(int order) {
-		this.order = order;
-	}
+    /**
+     *
+     * @return
+     */
+    public int getOrder() {
+        return this.order;
+    }
 
-	@Override
-	public List<Mutant> doOperation(List<Mutant> input) {
-		List<Mutant> result = new ArrayList<>();
-		if (input.size() >= 2) {
-			List<List<Mutant>> partition = Lists.partition(input, order);
-			for (List<Mutant> mutantList : partition) {
-				if (mutantList.size() >= 2) {
-					result.addAll(singleHOMGeneration.doOperation(mutantList));
-				}
-			}
-		}
-		return result;
-	}
+    /**
+     *
+     * @param order
+     */
+    public void setOrder(int order) {
+        this.order = order;
+    }
 
-	@Override
-	public boolean isSpecific() {
-		return false;
-	}
+    /**
+     *
+     * @return
+     */
+    @Override
+    public boolean isSpecific() {
+        return false;
+    }
 }

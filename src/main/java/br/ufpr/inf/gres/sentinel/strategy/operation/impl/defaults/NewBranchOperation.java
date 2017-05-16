@@ -15,31 +15,49 @@ public class NewBranchOperation extends Operation<Solution, List<Mutant>> {
 
     private Operation<Solution, List<Mutant>> secondSuccessor;
 
+    /**
+     *
+     */
     public NewBranchOperation() {
         super(TerminalRuleType.NEW_BRANCH);
     }
 
-    public Operation<Solution, List<Mutant>> getSecondSuccessor() {
-        return secondSuccessor;
-    }
-
-    public void setSecondSuccessor(Operation<Solution, List<Mutant>> secondSuccessor) {
-        this.secondSuccessor = secondSuccessor;
-    }
-
+    /**
+     *
+     * @param solution
+     * @return
+     */
     @Override
     public List<Mutant> doOperation(Solution solution) {
         Solution clonedSolution = new Solution(solution);
-
-        List<Mutant> result = next(solution);
+        List<Mutant> result = this.next(solution);
         SetUniqueList<Mutant> newList = SetUniqueList.setUniqueList(new ArrayList<>(result));
-
-        if (secondSuccessor != null) {
-            newList.addAll(secondSuccessor.doOperation(clonedSolution));
+        if (this.secondSuccessor != null) {
+            newList.addAll(this.secondSuccessor.doOperation(clonedSolution));
         }
         return newList;
     }
 
+    /**
+     *
+     * @return
+     */
+    public Operation<Solution, List<Mutant>> getSecondSuccessor() {
+        return this.secondSuccessor;
+    }
+
+    /**
+     *
+     * @param secondSuccessor
+     */
+    public void setSecondSuccessor(Operation<Solution, List<Mutant>> secondSuccessor) {
+        this.secondSuccessor = secondSuccessor;
+    }
+
+    /**
+     *
+     * @return
+     */
     @Override
     public boolean isSpecific() {
         return false;

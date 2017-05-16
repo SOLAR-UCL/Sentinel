@@ -23,89 +23,90 @@ import java.io.Serializable;
  */
 public class TriTyp implements Serializable {
 
-	public static final int EQUILATERO = 3;
-	public static final int ESCALENO = 1;
-	public static final int ISOSCELES = 2;
-	public static final int NO_TRIANGULO = 0;
+    public static final int EQUILATERO = 3;
+    public static final int ESCALENO = 1;
+    public static final int ISOSCELES = 2;
+    public static final int NO_TRIANGULO = 0;
 
-	private static final long serialVersionUID = 1L;
-	public int i, j, k;
-	public int tipo;
+    private static final long serialVersionUID = 1L;
+    public int i, j, k;
+    public int tipo;
 
-	public TriTyp() {
-	}
+    public TriTyp() {
+    }
 
-	public void setI(int v) throws IllegalArgumentException {
-		if (v <= 0) {
-			throw new IllegalArgumentException();
-		}
-		i = v;
-	}
+    public void setI(int v) throws IllegalArgumentException {
+        if (v <= 0) {
+            throw new IllegalArgumentException();
+        }
+        i = v;
+    }
 
-	public void setJ(int v) throws IllegalArgumentException {
-		if (v <= 0) {
-			throw new IllegalArgumentException();
-		}
-		j = v;
-	}
+    public void setJ(int v) throws IllegalArgumentException {
+        if (v <= 0) {
+            throw new IllegalArgumentException();
+        }
+        j = v;
+    }
 
-	public void setK(int v) throws IllegalArgumentException {
-		if (v <= 0) {
-			throw new IllegalArgumentException();
-		}
-		k = v;
-	}
+    public void setK(int v) throws IllegalArgumentException {
+        if (v <= 0) {
+            throw new IllegalArgumentException();
+        }
+        k = v;
+    }
 
-	/**
-	 * @return 1 if scalene; 2 if isosceles; 3 if equilateral; 0 if not a triangle
-	 */
-	public int getTipo() {
-		if (i == j) {
-			tipo = tipo + 1;
-		}
-		if (i == k) {
-			tipo = tipo + 2;
-		}
-		if (j == k) {
-			tipo = tipo + 3;
-		}
+    /**
+     * @return 1 if scalene; 2 if isosceles; 3 if equilateral; 0 if not a
+     * triangle
+     */
+    public int getTipo() {
+        if (i == j) {
+            tipo = tipo + 1;
+        }
+        if (i == k) {
+            tipo = tipo + 2;
+        }
+        if (j == k) {
+            tipo = tipo + 3;
+        }
 
-		if (i <= 0 || j <= 0 || k <= 0) {
-			tipo = TriTyp.NO_TRIANGULO;
-			return tipo;
-		}
+        if (i <= 0 || j <= 0 || k <= 0) {
+            tipo = TriTyp.NO_TRIANGULO;
+            return tipo;
+        }
 
-		if (tipo == 0) {
-			if (i + j <= k || j + k <= i || i + k <= j) {
-				tipo = TriTyp.NO_TRIANGULO;
-				return tipo;
-			} else {
-				tipo = TriTyp.ESCALENO;
-				return tipo;
-			}
-		}
-		if (tipo > 3) {
-			tipo = TriTyp.EQUILATERO;
-			return tipo;
-		} else {
-			if (tipo == 1 && i + j > k) {
-				tipo = TriTyp.ISOSCELES;
-				return tipo;
-			} else {
-				if (tipo == 2 && i + k > j) {
-					tipo = TriTyp.ISOSCELES;
-					return tipo;
-				} else {
-					if (tipo == 3 && j + k > i) {
-						tipo = TriTyp.ISOSCELES;
-						return tipo;
-					} else {
-						tipo = TriTyp.NO_TRIANGULO;
-						return tipo;
-					}
-				}
-			}
-		}
-	}
+        if (tipo == 0) {
+            if (i + j <= k || j + k <= i || i + k <= j) {
+                tipo = TriTyp.NO_TRIANGULO;
+                return tipo;
+            } else {
+                tipo = TriTyp.ESCALENO;
+                return tipo;
+            }
+        }
+        if (tipo > 3) {
+            tipo = TriTyp.EQUILATERO;
+            return tipo;
+        } else {
+            if (tipo == 1 && i + j > k) {
+                tipo = TriTyp.ISOSCELES;
+                return tipo;
+            } else {
+                if (tipo == 2 && i + k > j) {
+                    tipo = TriTyp.ISOSCELES;
+                    return tipo;
+                } else {
+                    if (tipo == 3 && j + k > i) {
+                        tipo = TriTyp.ISOSCELES;
+                        return tipo;
+                    } else {
+                        tipo = TriTyp.NO_TRIANGULO;
+                        return tipo;
+                    }
+                }
+            }
+        }
+    }
 
 }

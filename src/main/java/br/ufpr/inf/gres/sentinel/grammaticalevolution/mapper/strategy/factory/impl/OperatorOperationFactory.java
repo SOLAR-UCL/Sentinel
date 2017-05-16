@@ -23,13 +23,23 @@ import java.util.List;
  */
 public class OperatorOperationFactory implements Factory<Option> {
 
-    private OperatorOperationFactory() {
-    }
-
+    /**
+     *
+     * @return
+     */
     public static OperatorOperationFactory getInstance() {
         return SingletonHolder.INSTANCE;
     }
 
+    private OperatorOperationFactory() {
+    }
+
+    /**
+     *
+     * @param node
+     * @param integerIterator
+     * @return
+     */
     @Override
     public Operation createOperation(Option node, Iterator<Integer> integerIterator) {
         Iterator<Rule> rules = node.getRules().iterator();

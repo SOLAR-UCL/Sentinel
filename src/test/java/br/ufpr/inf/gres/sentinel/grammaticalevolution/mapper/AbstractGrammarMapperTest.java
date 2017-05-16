@@ -20,12 +20,9 @@ import static org.junit.Assert.*;
 public class AbstractGrammarMapperTest {
 
     private static String DEFAULT_GRAMMAR;
+    private static StubMapper DEFAULT_MAPPER;
     private static String TEST_GRAMMAR;
     private static String TEST_GRAMMAR_2;
-    private static StubMapper DEFAULT_MAPPER;
-
-    public AbstractGrammarMapperTest() {
-    }
 
     @BeforeClass
     public static void setUpClass() {
@@ -37,6 +34,9 @@ public class AbstractGrammarMapperTest {
         } catch (IOException ex) {
             Logger.getLogger(AbstractGrammarMapperTest.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    public AbstractGrammarMapperTest() {
     }
 
     @Test
@@ -94,97 +94,6 @@ public class AbstractGrammarMapperTest {
         assertNotNull(nodes.get(NonTerminalRuleType.ORDER));
         assertNotNull(nodes.get(NonTerminalRuleType.MUTANT_ATTRIBUTE));
         assertNotNull(nodes.get(NonTerminalRuleType.MUTANT_GROUP_ATTRIBUTE));
-    }
-
-    @Test
-    public void loadGrammarTest2() throws IOException {
-        HashMap<String, Rule> nodes = DEFAULT_MAPPER.nonTerminalNodes;
-        Rule node = nodes.get(NonTerminalRuleType.STRATEGY);
-        assertEquals(1, node.getOptions().size());
-        assertEquals(2, node.getOption(0).getRules().size());
-    }
-
-    @Test
-    public void loadGrammarTest3() throws IOException {
-        HashMap<String, Rule> nodes = DEFAULT_MAPPER.nonTerminalNodes;
-        Rule node = nodes.get(NonTerminalRuleType.DEFAULT_OPERATION);
-        assertEquals(4, node.getOptions().size());
-        assertEquals(2, node.getOption(0).getRules().size());
-        assertEquals(2, node.getOption(1).getRules().size());
-        assertEquals(3, node.getOption(2).getRules().size());
-        assertEquals(1, node.getOption(3).getRules().size());
-    }
-
-    @Test
-    public void loadGrammarTest4() throws IOException {
-        HashMap<String, Rule> nodes = DEFAULT_MAPPER.nonTerminalNodes;
-        Rule node = nodes.get(NonTerminalRuleType.SELECTION_TYPE);
-        assertEquals(3, node.getOptions().size());
-        assertEquals(1, node.getOption(0).getRules().size());
-        assertEquals(1, node.getOption(1).getRules().size());
-        assertEquals(1, node.getOption(2).getRules().size());
-    }
-
-    @Test
-    public void loadGrammarTest5() throws IOException {
-        HashMap<String, Rule> nodes = DEFAULT_MAPPER.nonTerminalNodes;
-        Rule node = nodes.get(NonTerminalRuleType.SORTING_DIRECTION);
-        assertEquals(2, node.getOptions().size());
-        assertEquals(1, node.getOption(0).getRules().size());
-        assertEquals(1, node.getOption(1).getRules().size());
-    }
-
-    @Test
-    public void loadGrammarTest6() throws IOException {
-        HashMap<String, Rule> nodes = DEFAULT_MAPPER.nonTerminalNodes;
-        Rule node = nodes.get(NonTerminalRuleType.QUANTITY);
-        assertEquals(10, node.getOptions().size());
-        assertEquals(1, node.getOption(0).getRules().size());
-        assertEquals(1, node.getOption(1).getRules().size());
-        assertEquals(1, node.getOption(2).getRules().size());
-        assertEquals(1, node.getOption(3).getRules().size());
-        assertEquals(1, node.getOption(4).getRules().size());
-        assertEquals(1, node.getOption(5).getRules().size());
-        assertEquals(1, node.getOption(6).getRules().size());
-        assertEquals(1, node.getOption(7).getRules().size());
-        assertEquals(1, node.getOption(8).getRules().size());
-        assertEquals(1, node.getOption(9).getRules().size());
-    }
-
-    @Test
-    public void loadGrammarTest7() throws IOException {
-        HashMap<String, Rule> nodes = DEFAULT_MAPPER.nonTerminalNodes;
-        Rule node = nodes.get(NonTerminalRuleType.PERCENTAGE);
-        assertEquals(10, node.getOptions().size());
-        assertEquals(1, node.getOption(0).getRules().size());
-        assertEquals(1, node.getOption(1).getRules().size());
-        assertEquals(1, node.getOption(2).getRules().size());
-        assertEquals(1, node.getOption(3).getRules().size());
-        assertEquals(1, node.getOption(4).getRules().size());
-        assertEquals(1, node.getOption(5).getRules().size());
-        assertEquals(1, node.getOption(6).getRules().size());
-        assertEquals(1, node.getOption(7).getRules().size());
-        assertEquals(1, node.getOption(8).getRules().size());
-        assertEquals(1, node.getOption(9).getRules().size());
-    }
-
-    @Test
-    public void loadGrammarTest8() throws IOException {
-        HashMap<String, Rule> nodes = DEFAULT_MAPPER.nonTerminalNodes;
-        Rule node = nodes.get(NonTerminalRuleType.OPERATOR_OPERATION);
-        assertEquals(3, node.getOptions().size());
-        assertEquals(2, node.getOption(0).getRules().size());
-        assertEquals(2, node.getOption(1).getRules().size());
-        assertEquals(3, node.getOption(2).getRules().size());
-    }
-
-    @Test
-    public void loadGrammarTest9() throws IOException {
-        HashMap<String, Rule> nodes = DEFAULT_MAPPER.nonTerminalNodes;
-        Rule node = nodes.get(NonTerminalRuleType.SELECT_OPERATORS);
-        assertEquals(2, node.getOptions().size());
-        assertEquals(2, node.getOption(0).getRules().size());
-        assertEquals(2, node.getOption(1).getRules().size());
     }
 
     @Test
@@ -254,6 +163,14 @@ public class AbstractGrammarMapperTest {
         Rule node = nodes.get(NonTerminalRuleType.OPERATOR_EXECUTION_TYPE);
         assertEquals(1, node.getOptions().size());
         assertEquals(1, node.getOption(0).getRules().size());
+    }
+
+    @Test
+    public void loadGrammarTest2() throws IOException {
+        HashMap<String, Rule> nodes = DEFAULT_MAPPER.nonTerminalNodes;
+        Rule node = nodes.get(NonTerminalRuleType.STRATEGY);
+        assertEquals(1, node.getOptions().size());
+        assertEquals(2, node.getOption(0).getRules().size());
     }
 
     @Test
@@ -338,6 +255,17 @@ public class AbstractGrammarMapperTest {
     }
 
     @Test
+    public void loadGrammarTest3() throws IOException {
+        HashMap<String, Rule> nodes = DEFAULT_MAPPER.nonTerminalNodes;
+        Rule node = nodes.get(NonTerminalRuleType.DEFAULT_OPERATION);
+        assertEquals(4, node.getOptions().size());
+        assertEquals(2, node.getOption(0).getRules().size());
+        assertEquals(2, node.getOption(1).getRules().size());
+        assertEquals(3, node.getOption(2).getRules().size());
+        assertEquals(1, node.getOption(3).getRules().size());
+    }
+
+    @Test
     public void loadGrammarTest30() throws IOException {
         HashMap<String, Rule> nodes = DEFAULT_MAPPER.nonTerminalNodes;
         Rule node = nodes.get(NonTerminalRuleType.HOM_GENERATION);
@@ -360,6 +288,78 @@ public class AbstractGrammarMapperTest {
         //		assertEquals(1, node.getOption(6).getRules().size());
         //		assertEquals(1, node.getOption(7).getRules().size());
         //		assertEquals(1, node.getOption(8).getRules().size());
+    }
+
+    @Test
+    public void loadGrammarTest4() throws IOException {
+        HashMap<String, Rule> nodes = DEFAULT_MAPPER.nonTerminalNodes;
+        Rule node = nodes.get(NonTerminalRuleType.SELECTION_TYPE);
+        assertEquals(3, node.getOptions().size());
+        assertEquals(1, node.getOption(0).getRules().size());
+        assertEquals(1, node.getOption(1).getRules().size());
+        assertEquals(1, node.getOption(2).getRules().size());
+    }
+
+    @Test
+    public void loadGrammarTest5() throws IOException {
+        HashMap<String, Rule> nodes = DEFAULT_MAPPER.nonTerminalNodes;
+        Rule node = nodes.get(NonTerminalRuleType.SORTING_DIRECTION);
+        assertEquals(2, node.getOptions().size());
+        assertEquals(1, node.getOption(0).getRules().size());
+        assertEquals(1, node.getOption(1).getRules().size());
+    }
+
+    @Test
+    public void loadGrammarTest6() throws IOException {
+        HashMap<String, Rule> nodes = DEFAULT_MAPPER.nonTerminalNodes;
+        Rule node = nodes.get(NonTerminalRuleType.QUANTITY);
+        assertEquals(10, node.getOptions().size());
+        assertEquals(1, node.getOption(0).getRules().size());
+        assertEquals(1, node.getOption(1).getRules().size());
+        assertEquals(1, node.getOption(2).getRules().size());
+        assertEquals(1, node.getOption(3).getRules().size());
+        assertEquals(1, node.getOption(4).getRules().size());
+        assertEquals(1, node.getOption(5).getRules().size());
+        assertEquals(1, node.getOption(6).getRules().size());
+        assertEquals(1, node.getOption(7).getRules().size());
+        assertEquals(1, node.getOption(8).getRules().size());
+        assertEquals(1, node.getOption(9).getRules().size());
+    }
+
+    @Test
+    public void loadGrammarTest7() throws IOException {
+        HashMap<String, Rule> nodes = DEFAULT_MAPPER.nonTerminalNodes;
+        Rule node = nodes.get(NonTerminalRuleType.PERCENTAGE);
+        assertEquals(10, node.getOptions().size());
+        assertEquals(1, node.getOption(0).getRules().size());
+        assertEquals(1, node.getOption(1).getRules().size());
+        assertEquals(1, node.getOption(2).getRules().size());
+        assertEquals(1, node.getOption(3).getRules().size());
+        assertEquals(1, node.getOption(4).getRules().size());
+        assertEquals(1, node.getOption(5).getRules().size());
+        assertEquals(1, node.getOption(6).getRules().size());
+        assertEquals(1, node.getOption(7).getRules().size());
+        assertEquals(1, node.getOption(8).getRules().size());
+        assertEquals(1, node.getOption(9).getRules().size());
+    }
+
+    @Test
+    public void loadGrammarTest8() throws IOException {
+        HashMap<String, Rule> nodes = DEFAULT_MAPPER.nonTerminalNodes;
+        Rule node = nodes.get(NonTerminalRuleType.OPERATOR_OPERATION);
+        assertEquals(3, node.getOptions().size());
+        assertEquals(2, node.getOption(0).getRules().size());
+        assertEquals(2, node.getOption(1).getRules().size());
+        assertEquals(3, node.getOption(2).getRules().size());
+    }
+
+    @Test
+    public void loadGrammarTest9() throws IOException {
+        HashMap<String, Rule> nodes = DEFAULT_MAPPER.nonTerminalNodes;
+        Rule node = nodes.get(NonTerminalRuleType.SELECT_OPERATORS);
+        assertEquals(2, node.getOptions().size());
+        assertEquals(2, node.getOption(0).getRules().size());
+        assertEquals(2, node.getOption(1).getRules().size());
     }
 
     @Test(expected = IllegalArgumentException.class)

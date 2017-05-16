@@ -29,14 +29,88 @@ import org.uma.jmetal.util.evaluator.impl.SequentialSolutionListEvaluator;
  */
 public class SentinelTraining {
 
-    public static void train(TrainingArgs trainingArgs, String[] rawArgs) throws Exception {
-        IntegrationFacade facade = buildFacade(trainingArgs);
-        MutationStrategyGenerationProblem problem = buildProblem(facade, trainingArgs);
-        GrammaticalEvolutionAlgorithm<Integer> algorithm = buildAlgorithm(problem, trainingArgs);
-        long timeMillis = runAlgorithm(algorithm);
-        storeResults(algorithm, timeMillis, trainingArgs);
+    /**
+     *
+     * @param problem
+     * @param trainingArgs
+     * @return
+     */
+    public static GrammaticalEvolutionAlgorithm<Integer> buildAlgorithm(MutationStrategyGenerationProblem problem, TrainingArgs trainingArgs) {
+        GrammaticalEvolutionAlgorithm<Integer> algorithm
+                = new GrammaticalEvolutionAlgorithm<>(problem,
+                        trainingArgs.maxEvaluations,
+                        trainingArgs.populationSize,
+                        new SimpleDuplicateOperator<>(trainingArgs.duplicateProbability,
+                                trainingArgs.maxLength),
+                        new PruneToUsedOperator<>(trainingArgs.pruneProbability),
+                        new SinglePointVariableCrossover<>(trainingArgs.crossoverProbability),
+                        new SimpleRandomVariableMutation(trainingArgs.mutationProbability,
+                                trainingArgs.lowerVariableBound,
+                                trainingArgs.upperVariableBound),
+                        new BinaryTournamentSelection<>(new RankingAndCrowdingDistanceComparator<>()),
+                        new SequentialSolutionListEvaluator<>());
+        return algorithm;
     }
 
+    /**
+     *
+     * @param trainingArgs
+     * @return
+     */
+    public static IntegrationFacade buildFacade(TrainingArgs trainingArgs) {
+        IntegrationFacade facade
+                = IntegrationFacadeFactory.createIntegrationFacade(trainingArgs.facade,
+                        trainingArgs.workingDirectory
+                        + File.separator
+                        + trainingArgs.trainingDirectory);
+        IntegrationFacade.setIntegrationFacade(facade);
+        return facade;
+    }
+
+    /**
+     *
+     * @param facade
+     * @param trainingArgs
+     * @return
+     * @throws IOException
+     */
+    public static MutationStrategyGenerationProblem buildProblem(IntegrationFacade facade, TrainingArgs trainingArgs) throws IOException {
+        List<Program> trainingPrograms = facade.instantiatePrograms(trainingArgs.trainingPrograms);
+        String grammarPath = trainingArgs.workingDirectory
+                + File.separator
+                + trainingArgs.grammarFilePath;
+        MutationStrategyGenerationProblem problem
+                = new MutationStrategyGenerationProblem(grammarPath,
+                        trainingArgs.minLength,
+                        trainingArgs.maxLength,
+                        trainingArgs.lowerVariableBound,
+                        trainingArgs.upperVariableBound,
+                        trainingArgs.maxWraps,
+                        trainingArgs.numberOfTrainingRuns,
+                        trainingPrograms,
+                        trainingArgs.objectiveFunctions);
+        return problem;
+    }
+
+    /**
+     *
+     * @param algorithm
+     * @return
+     */
+    public static long runAlgorithm(GrammaticalEvolutionAlgorithm<Integer> algorithm) {
+        long timeMillis = System.currentTimeMillis();
+        algorithm.run();
+        timeMillis = System.currentTimeMillis() - timeMillis;
+        return timeMillis;
+    }
+
+    /**
+     *
+     * @param algorithm
+     * @param timeMillis
+     * @param trainingArgs
+     * @throws IOException
+     */
     public static void storeResults(GrammaticalEvolutionAlgorithm<Integer> algorithm, long timeMillis, TrainingArgs trainingArgs) throws IOException {
         List<VariableLengthSolution<Integer>> resultSolutions = algorithm.getResult();
         resultSolutions.sort(Comparator.comparingDouble(o -> o.getObjective(1)));
@@ -61,56 +135,18 @@ public class SentinelTraining {
         Files.write(gson.toJson(result), outputFile, Charset.defaultCharset());
     }
 
-    public static long runAlgorithm(GrammaticalEvolutionAlgorithm<Integer> algorithm) {
-        long timeMillis = System.currentTimeMillis();
-        algorithm.run();
-        timeMillis = System.currentTimeMillis() - timeMillis;
-        return timeMillis;
-    }
-
-    public static GrammaticalEvolutionAlgorithm<Integer> buildAlgorithm(MutationStrategyGenerationProblem problem, TrainingArgs trainingArgs) {
-        GrammaticalEvolutionAlgorithm<Integer> algorithm
-                = new GrammaticalEvolutionAlgorithm<>(problem,
-                        trainingArgs.maxEvaluations,
-                        trainingArgs.populationSize,
-                        new SimpleDuplicateOperator<>(trainingArgs.duplicateProbability,
-                                trainingArgs.maxLength),
-                        new PruneToUsedOperator<>(trainingArgs.pruneProbability),
-                        new SinglePointVariableCrossover<>(trainingArgs.crossoverProbability),
-                        new SimpleRandomVariableMutation(trainingArgs.mutationProbability,
-                                trainingArgs.lowerVariableBound,
-                                trainingArgs.upperVariableBound),
-                        new BinaryTournamentSelection<>(new RankingAndCrowdingDistanceComparator<>()),
-                        new SequentialSolutionListEvaluator<>());
-        return algorithm;
-    }
-
-    public static MutationStrategyGenerationProblem buildProblem(IntegrationFacade facade, TrainingArgs trainingArgs) throws IOException {
-        List<Program> trainingPrograms = facade.instantiatePrograms(trainingArgs.trainingPrograms);
-        String grammarPath = trainingArgs.workingDirectory
-                + File.separator
-                + trainingArgs.grammarFilePath;
-        MutationStrategyGenerationProblem problem
-                = new MutationStrategyGenerationProblem(grammarPath,
-                        trainingArgs.minLength,
-                        trainingArgs.maxLength,
-                        trainingArgs.lowerVariableBound,
-                        trainingArgs.upperVariableBound,
-                        trainingArgs.maxWraps,
-                        trainingArgs.numberOfTrainingRuns,
-                        trainingPrograms,
-                        trainingArgs.objectiveFunctions);
-        return problem;
-    }
-
-    public static IntegrationFacade buildFacade(TrainingArgs trainingArgs) {
-        IntegrationFacade facade
-                = IntegrationFacadeFactory.createIntegrationFacade(trainingArgs.facade,
-                        trainingArgs.workingDirectory
-                        + File.separator
-                        + trainingArgs.trainingDirectory);
-        IntegrationFacade.setIntegrationFacade(facade);
-        return facade;
+    /**
+     *
+     * @param trainingArgs
+     * @param rawArgs
+     * @throws Exception
+     */
+    public static void train(TrainingArgs trainingArgs, String[] rawArgs) throws Exception {
+        IntegrationFacade facade = buildFacade(trainingArgs);
+        MutationStrategyGenerationProblem problem = buildProblem(facade, trainingArgs);
+        GrammaticalEvolutionAlgorithm<Integer> algorithm = buildAlgorithm(problem, trainingArgs);
+        long timeMillis = runAlgorithm(algorithm);
+        storeResults(algorithm, timeMillis, trainingArgs);
     }
 
 }

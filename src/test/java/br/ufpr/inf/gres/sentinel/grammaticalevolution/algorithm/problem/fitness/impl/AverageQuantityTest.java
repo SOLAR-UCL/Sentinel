@@ -23,11 +23,6 @@ public class AverageQuantityTest {
     }
 
     @Test
-    public void testGetName() {
-        assertEquals(ObjectiveFunction.AVERAGE_QUANTITY, new AverageQuantity().getName());
-    }
-
-    @Test
     public void testCompute() {
         Program program = new Program("Program1", new File("Program1"));
         PointSolution pointSolution = new PointSolution(1);
@@ -112,6 +107,11 @@ public class AverageQuantityTest {
 
         AverageQuantity averageQuantity = new AverageQuantity();
         assertEquals(averageQuantity.getWorstValue(), averageQuantity.computeFitness(pointSolution), 0.01);
+    }
+
+    @Test
+    public void testGetName() {
+        assertEquals(ObjectiveFunction.AVERAGE_QUANTITY, new AverageQuantity().getName());
     }
 
 }

@@ -19,20 +19,6 @@ public class AbstractDiscardOperationTest {
     }
 
     @Test
-    public void testGetAndSetSelection() {
-        SelectionOperation<Operator> selectionOp = new SelectionOperation<>();
-        AbstractDiscardOperation operation = new AbstractDiscardOperationStub();
-        operation.setSelection(selectionOp);
-        assertEquals(selectionOp, operation.getSelection());
-    }
-
-    @Test
-    public void testIsSpecific() {
-        AbstractDiscardOperation operation = new AbstractDiscardOperationStub();
-        assertFalse(operation.isSpecific());
-    }
-
-    @Test
     public void testDoOperation() {
         SelectionOperation<Operator> selectionOp = new SelectionOperation<>();
         selectionOp.setSelectionType(new SequentialSelection());
@@ -52,6 +38,20 @@ public class AbstractDiscardOperationTest {
 
         assertEquals(1, solution.getOperators().size());
         assertEquals(operator2, solution.getOperators().get(0));
+    }
+
+    @Test
+    public void testGetAndSetSelection() {
+        SelectionOperation<Operator> selectionOp = new SelectionOperation<>();
+        AbstractDiscardOperation operation = new AbstractDiscardOperationStub();
+        operation.setSelection(selectionOp);
+        assertEquals(selectionOp, operation.getSelection());
+    }
+
+    @Test
+    public void testIsSpecific() {
+        AbstractDiscardOperation operation = new AbstractDiscardOperationStub();
+        assertFalse(operation.isSpecific());
     }
 
     public static class AbstractDiscardOperationStub extends AbstractDiscardOperation<Operator> {

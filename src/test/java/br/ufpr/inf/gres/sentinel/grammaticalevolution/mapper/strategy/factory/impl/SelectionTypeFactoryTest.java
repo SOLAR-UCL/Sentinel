@@ -12,74 +12,74 @@ import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.type.impl.LastTo
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.type.impl.RandomSelection;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.type.impl.SequentialSelection;
 import com.google.common.collect.Lists;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Giovani Guizzo
  */
 public class SelectionTypeFactoryTest {
 
-	private static Rule testingRule;
+    private static Rule testingRule;
 
-	public SelectionTypeFactoryTest() {
-	}
+    @BeforeClass
+    public static void setUpClass() {
+        try {
+            StrategyMapper strategyMapper = new StrategyMapper(GrammarFiles.getDefaultGrammarPath());
+            testingRule = strategyMapper.getNonTerminalRule(NonTerminalRuleType.SELECTION_TYPE);
+        } catch (IOException ex) {
+            Logger.getLogger(SelectionTypeFactoryTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 
-	@BeforeClass
-	public static void setUpClass() {
-		try {
-			StrategyMapper strategyMapper = new StrategyMapper(GrammarFiles.getDefaultGrammarPath());
-			testingRule = strategyMapper.getNonTerminalRule(NonTerminalRuleType.SELECTION_TYPE);
-		} catch (IOException ex) {
-			Logger.getLogger(SelectionTypeFactoryTest.class.getName()).log(Level.SEVERE, null, ex);
-		}
-	}
+    public SelectionTypeFactoryTest() {
+    }
 
-	/**
-	 * Testing Sequential
-	 */
-	@Test
-	public void testCreateOperation() {
-		Iterator<Integer> iterator = Lists.newArrayList(0).iterator();
-		Operation operation = FactoryFlyweight.getNonTerminalFactory().createOperation(testingRule, iterator);
-		assertNotNull(operation);
-		assertTrue(operation instanceof SequentialSelection);
-	}
+    @Test(expected = IllegalArgumentException.class)
+    public void testCreateInvalidOperation() {
+        Factory factory = SelectionTypeFactory.getInstance();
+        Iterator<Integer> iterator = Lists.newArrayList(0).iterator();
+        factory.createOperation(new Option(Lists.newArrayList(new Rule("Unknown"))), iterator);
+    }
 
-	/**
-	 * Testing Random
-	 */
-	@Test
-	public void testCreateOperation2() {
-		Iterator<Integer> iterator = Lists.newArrayList(1).iterator();
-		Operation operation = FactoryFlyweight.getNonTerminalFactory().createOperation(testingRule, iterator);
-		assertNotNull(operation);
-		assertTrue(operation instanceof RandomSelection);
-	}
+    /**
+     * Testing Sequential
+     */
+    @Test
+    public void testCreateOperation() {
+        Iterator<Integer> iterator = Lists.newArrayList(0).iterator();
+        Operation operation = FactoryFlyweight.getNonTerminalFactory().createOperation(testingRule, iterator);
+        assertNotNull(operation);
+        assertTrue(operation instanceof SequentialSelection);
+    }
 
-	/**
-	 * Testing LastToFirst
-	 */
-	@Test
-	public void testCreateOperation3() {
-		Iterator<Integer> iterator = Lists.newArrayList(2).iterator();
-		Operation operation = FactoryFlyweight.getNonTerminalFactory().createOperation(testingRule, iterator);
-		assertNotNull(operation);
-		assertTrue(operation instanceof LastToFirstSelection);
-	}
+    /**
+     * Testing Random
+     */
+    @Test
+    public void testCreateOperation2() {
+        Iterator<Integer> iterator = Lists.newArrayList(1).iterator();
+        Operation operation = FactoryFlyweight.getNonTerminalFactory().createOperation(testingRule, iterator);
+        assertNotNull(operation);
+        assertTrue(operation instanceof RandomSelection);
+    }
 
-	@Test(expected = IllegalArgumentException.class)
-	public void testCreateInvalidOperation() {
-		Factory factory = SelectionTypeFactory.getInstance();
-		Iterator<Integer> iterator = Lists.newArrayList(0).iterator();
-		factory.createOperation(new Option(Lists.newArrayList(new Rule("Unknown"))), iterator);
-	}
+    /**
+     * Testing LastToFirst
+     */
+    @Test
+    public void testCreateOperation3() {
+        Iterator<Integer> iterator = Lists.newArrayList(2).iterator();
+        Operation operation = FactoryFlyweight.getNonTerminalFactory().createOperation(testingRule, iterator);
+        assertNotNull(operation);
+        assertTrue(operation instanceof LastToFirstSelection);
+    }
 
 }

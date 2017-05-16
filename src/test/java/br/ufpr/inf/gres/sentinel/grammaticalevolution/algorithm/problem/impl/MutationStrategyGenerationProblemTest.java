@@ -25,60 +25,9 @@ public class MutationStrategyGenerationProblemTest {
 
     private static MutationStrategyGenerationProblem problem;
 
-    @Before
-    public void setUp() throws Exception {
-        problem = new MutationStrategyGenerationProblem(GrammarFiles.getDefaultGrammarPath(),
-                10,
-                15,
-                1,
-                10,
-                0,
-                5,
-                Lists.newArrayList(new Program("Test1", null),
-                        new Program("Test2", null)),
-                Lists.newArrayList(ObjectiveFunction.AVERAGE_CPU_TIME, ObjectiveFunction.AVERAGE_SCORE));
-    }
-
     @Test
-    public void getUpperAndLowerVariableBound() throws Exception {
-        assertEquals(1, problem.getLowerVariableBound());
-        assertEquals(10, problem.getUpperVariableBound());
-    }
-
-    @Test
-    public void getMaxAndMinLength() throws Exception {
-        assertEquals(10, problem.getMinLength());
-        assertEquals(15, problem.getMaxLength());
-    }
-
-    @Test
-    public void getNumberOfVariables() throws Exception {
-        assertEquals(10, problem.getNumberOfVariables());
-    }
-
-    @Test
-    public void getMaxWraps() throws Exception {
-        assertEquals(0, problem.getMaxWraps());
-    }
-
-    @Test
-    public void getObjectives() throws Exception {
-        assertArrayEquals(new Object[]{new AverageCPUTime<>(), new AverageScore<>()}, problem.getObjectiveFunctions().toArray());
-    }
-
-    @Test
-    public void getNumberOfObjectives() throws Exception {
-        assertEquals(2, problem.getNumberOfObjectives());
-    }
-
-    @Test
-    public void getNumberOfConstraints() throws Exception {
-        assertEquals(0, problem.getNumberOfConstraints());
-    }
-
-    @Test
-    public void getName() throws Exception {
-        assertEquals("Mutation Strategy Generation Problem", problem.getName());
+    public void createSolution() throws Exception {
+        VariableLengthSolution<Integer> solution = problem.createSolution();
     }
 
     @Test
@@ -212,8 +161,59 @@ public class MutationStrategyGenerationProblemTest {
     }
 
     @Test
-    public void createSolution() throws Exception {
-        VariableLengthSolution<Integer> solution = problem.createSolution();
+    public void getMaxAndMinLength() throws Exception {
+        assertEquals(10, problem.getMinLength());
+        assertEquals(15, problem.getMaxLength());
+    }
+
+    @Test
+    public void getMaxWraps() throws Exception {
+        assertEquals(0, problem.getMaxWraps());
+    }
+
+    @Test
+    public void getName() throws Exception {
+        assertEquals("Mutation Strategy Generation Problem", problem.getName());
+    }
+
+    @Test
+    public void getNumberOfConstraints() throws Exception {
+        assertEquals(0, problem.getNumberOfConstraints());
+    }
+
+    @Test
+    public void getNumberOfObjectives() throws Exception {
+        assertEquals(2, problem.getNumberOfObjectives());
+    }
+
+    @Test
+    public void getNumberOfVariables() throws Exception {
+        assertEquals(10, problem.getNumberOfVariables());
+    }
+
+    @Test
+    public void getObjectives() throws Exception {
+        assertArrayEquals(new Object[]{new AverageCPUTime<>(), new AverageScore<>()}, problem.getObjectiveFunctions().toArray());
+    }
+
+    @Test
+    public void getUpperAndLowerVariableBound() throws Exception {
+        assertEquals(1, problem.getLowerVariableBound());
+        assertEquals(10, problem.getUpperVariableBound());
+    }
+
+    @Before
+    public void setUp() throws Exception {
+        problem = new MutationStrategyGenerationProblem(GrammarFiles.getDefaultGrammarPath(),
+                10,
+                15,
+                1,
+                10,
+                0,
+                5,
+                Lists.newArrayList(new Program("Test1", null),
+                        new Program("Test2", null)),
+                Lists.newArrayList(ObjectiveFunction.AVERAGE_CPU_TIME, ObjectiveFunction.AVERAGE_SCORE));
     }
 
 }

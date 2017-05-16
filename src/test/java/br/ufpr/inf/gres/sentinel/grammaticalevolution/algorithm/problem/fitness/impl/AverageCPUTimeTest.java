@@ -20,11 +20,6 @@ public class AverageCPUTimeTest {
     }
 
     @Test
-    public void testGetName() {
-        assertEquals(ObjectiveFunction.AVERAGE_CPU_TIME, new AverageCPUTime().getName());
-    }
-
-    @Test
     public void testCompute() {
         Program program = new Program("Program1", new File("Program1"));
         PointSolution pointSolution = new PointSolution(1);
@@ -114,6 +109,11 @@ public class AverageCPUTimeTest {
 
         AverageCPUTime averageCPUTime = new AverageCPUTime();
         assertEquals(averageCPUTime.getWorstValue(), averageCPUTime.computeFitness(pointSolution), 0.01);
+    }
+
+    @Test
+    public void testGetName() {
+        assertEquals(ObjectiveFunction.AVERAGE_CPU_TIME, new AverageCPUTime().getName());
     }
 
 }

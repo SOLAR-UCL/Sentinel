@@ -33,46 +33,42 @@ public class PITFacadeTest {
         facade.tearDown();
     }
 
-    @Test
-    public void testGetAllOperators() {
-        List<Operator> allOperators = facade.getAllOperators();
-        assertNotNull(allOperators);
-        assertEquals(17, allOperators.size());
-    }
-
     @Test(expected = Exception.class)
     public void testCombineMutants() {
         facade.combineMutants(new ArrayList<>());
     }
 
     @Test
-    public void testInstantiateProgram() {
-        Program program = facade.instantiateProgram("test.test.Program");
-        assertNotNull(program);
-        assertEquals(System.getProperty("user.dir")
-                + File.separator
-                + "training"
-                + File.separator
-                + "test"
-                + File.separator
-                + "test"
-                + File.separator
-                + "Program.java", program.getSourceFile().getAbsolutePath());
+    public void testExecuteMutant() {
+        IntegrationFacade.setIntegrationFacade(facade);
+        IntegrationFacade.setProgramUnderTest(programUnderTest);
+
+        List<Mutant> mutants = facade.executeOperators(facade.getAllOperators());
+        assertNotNull(mutants);
+
+        facade.executeMutant(mutants.get(0));
+        assertTrue(mutants.get(0).isDead());
+
+        facade.executeMutant(mutants.get(1));
+        assertTrue(mutants.get(1).isDead());
+
+        facade.executeMutant(mutants.get(2));
+        assertTrue(mutants.get(2).isDead());
+
+        facade.executeMutant(null);
     }
 
     @Test
-    public void testInstantiateProgram2() {
-        Program program = facade.instantiateProgram("test.test.Program" + File.separator + "Program2.java");
-        assertNotNull(program);
-        assertEquals(System.getProperty("user.dir")
-                + File.separator
-                + "training"
-                + File.separator
-                + "test"
-                + File.separator
-                + "test"
-                + File.separator
-                + "Program" + File.separator + "Program2.java", program.getSourceFile().getAbsolutePath());
+    public void testExecuteMutants() {
+        IntegrationFacade.setIntegrationFacade(facade);
+        IntegrationFacade.setProgramUnderTest(programUnderTest);
+
+        List<Mutant> mutants = facade.executeOperators(facade.getAllOperators());
+        assertNotNull(mutants);
+
+        facade.executeMutants(mutants);
+        assertEquals(119, mutants.stream().filter(Mutant::isDead).count());
+        assertEquals(3, mutants.stream().filter(Mutant::isAlive).count());
     }
 
     @Test
@@ -156,36 +152,40 @@ public class PITFacadeTest {
     }
 
     @Test
-    public void testExecuteMutant() {
-        IntegrationFacade.setIntegrationFacade(facade);
-        IntegrationFacade.setProgramUnderTest(programUnderTest);
-
-        List<Mutant> mutants = facade.executeOperators(facade.getAllOperators());
-        assertNotNull(mutants);
-
-        facade.executeMutant(mutants.get(0));
-        assertTrue(mutants.get(0).isDead());
-
-        facade.executeMutant(mutants.get(1));
-        assertTrue(mutants.get(1).isDead());
-
-        facade.executeMutant(mutants.get(2));
-        assertTrue(mutants.get(2).isDead());
-
-        facade.executeMutant(null);
+    public void testGetAllOperators() {
+        List<Operator> allOperators = facade.getAllOperators();
+        assertNotNull(allOperators);
+        assertEquals(17, allOperators.size());
     }
 
     @Test
-    public void testExecuteMutants() {
-        IntegrationFacade.setIntegrationFacade(facade);
-        IntegrationFacade.setProgramUnderTest(programUnderTest);
+    public void testInstantiateProgram() {
+        Program program = facade.instantiateProgram("test.test.Program");
+        assertNotNull(program);
+        assertEquals(System.getProperty("user.dir")
+                + File.separator
+                + "training"
+                + File.separator
+                + "test"
+                + File.separator
+                + "test"
+                + File.separator
+                + "Program.java", program.getSourceFile().getAbsolutePath());
+    }
 
-        List<Mutant> mutants = facade.executeOperators(facade.getAllOperators());
-        assertNotNull(mutants);
-
-        facade.executeMutants(mutants);
-        assertEquals(119, mutants.stream().filter(Mutant::isDead).count());
-        assertEquals(3, mutants.stream().filter(Mutant::isAlive).count());
+    @Test
+    public void testInstantiateProgram2() {
+        Program program = facade.instantiateProgram("test.test.Program" + File.separator + "Program2.java");
+        assertNotNull(program);
+        assertEquals(System.getProperty("user.dir")
+                + File.separator
+                + "training"
+                + File.separator
+                + "test"
+                + File.separator
+                + "test"
+                + File.separator
+                + "Program" + File.separator + "Program2.java", program.getSourceFile().getAbsolutePath());
     }
 
 }

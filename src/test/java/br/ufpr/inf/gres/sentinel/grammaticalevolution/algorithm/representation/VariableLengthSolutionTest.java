@@ -24,8 +24,8 @@ import static org.junit.Assert.*;
  */
 public class VariableLengthSolutionTest {
 
-    private static JMetalRandom randomGenerator;
     private static MutationStrategyGenerationProblem problem;
+    private static JMetalRandom randomGenerator;
 
     @BeforeClass
     public static void setUpClass() throws IOException {
@@ -44,23 +44,6 @@ public class VariableLengthSolutionTest {
     @AfterClass
     public static void tearDownClass() {
         randomGenerator.setRandomGenerator(new JavaRandomGenerator());
-    }
-
-    @Before
-    public void setUp() {
-        randomGenerator.setRandomGenerator(new PseudoRandomGeneratorStub(Iterables.cycle(10,
-                1,
-                2,
-                3,
-                4,
-                5,
-                6,
-                7,
-                8,
-                9,
-                10,
-                0,
-                10).iterator()));
     }
 
     @Test
@@ -109,6 +92,23 @@ public class VariableLengthSolutionTest {
         assertNotEquals(solution.getAttribute("Test"), copy.getAttribute("Test"));
     }
 
+    @Before
+    public void setUp() {
+        randomGenerator.setRandomGenerator(new PseudoRandomGeneratorStub(Iterables.cycle(10,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                0,
+                10).iterator()));
+    }
+
     public static class PseudoRandomGeneratorStub implements PseudoRandomGenerator {
 
         private Iterator<Integer> integerValues;
@@ -118,18 +118,8 @@ public class VariableLengthSolutionTest {
         }
 
         @Override
-        public int nextInt(int lowerBound, int upperBound) {
-            return integerValues.next();
-        }
-
-        @Override
-        public double nextDouble(double lowerBound, double upperBound) {
-            return 0;
-        }
-
-        @Override
-        public double nextDouble() {
-            return 0;
+        public String getName() {
+            return null;
         }
 
         @Override
@@ -143,8 +133,18 @@ public class VariableLengthSolutionTest {
         }
 
         @Override
-        public String getName() {
-            return null;
+        public double nextDouble(double lowerBound, double upperBound) {
+            return 0;
+        }
+
+        @Override
+        public double nextDouble() {
+            return 0;
+        }
+
+        @Override
+        public int nextInt(int lowerBound, int upperBound) {
+            return this.integerValues.next();
         }
     }
 }

@@ -14,10 +14,18 @@ import java.util.List;
  */
 public class SingleHOMGeneration extends AbstractHOMGeneration {
 
+    /**
+     *
+     */
     public SingleHOMGeneration() {
         super(TerminalRuleType.SINGLE_HOM + " Generation");
     }
 
+    /**
+     *
+     * @param input
+     * @return
+     */
     @Override
     public List<Mutant> doOperation(List<Mutant> input) {
         if (input.size() >= 2) {
@@ -36,6 +44,10 @@ public class SingleHOMGeneration extends AbstractHOMGeneration {
         return new ArrayList<>();
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public boolean isSpecific() {
         return false;

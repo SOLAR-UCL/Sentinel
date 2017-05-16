@@ -1,6 +1,5 @@
 package br.ufpr.inf.gres.sentinel.util.subsuming;
 
-import br.ufpr.inf.gres.sentinel.util.subsuming.MutantsFilter;
 import br.ufpr.inf.gres.sentinel.base.mutation.Mutant;
 import br.ufpr.inf.gres.sentinel.base.mutation.TestCase;
 import com.google.common.collect.Lists;

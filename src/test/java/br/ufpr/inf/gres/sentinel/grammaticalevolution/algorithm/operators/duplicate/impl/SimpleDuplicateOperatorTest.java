@@ -22,8 +22,8 @@ import static org.junit.Assert.assertEquals;
  */
 public class SimpleDuplicateOperatorTest {
 
-    private static JMetalRandom randomGenerator;
     private static MutationStrategyGenerationProblem problem;
+    private static JMetalRandom randomGenerator;
 
     @BeforeClass
     public static void setUpClass() throws IOException {

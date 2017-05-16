@@ -8,6 +8,11 @@ import com.google.gson.*;
 import java.lang.reflect.Type;
 import java.util.List;
 
+/**
+ *
+ * @author Giovani Guizzo
+ * @param <T>
+ */
 public class VariableLengthSolutionGsonSerializer<T extends Number> implements JsonSerializer<VariableLengthSolution<T>> {
 
     @Override

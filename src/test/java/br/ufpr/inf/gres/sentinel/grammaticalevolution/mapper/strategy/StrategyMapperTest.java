@@ -30,19 +30,12 @@ import static org.junit.Assert.*;
  */
 public class StrategyMapperTest {
 
-    public StrategyMapperTest() {
-    }
-
     @BeforeClass
     public static void setUpClass() {
         IntegrationFacade.setIntegrationFacade(new IntegrationFacadeTest.IntegrationFacadeStub());
     }
 
-    @Test
-    public void testHookInterpret() {
-        StrategyMapper strategyMapper = new StrategyMapper();
-        Strategy strategy = strategyMapper.interpret(Lists.newArrayList(1, 2, 3, 4, 5, 6));
-        assertNotNull(strategy);
+    public StrategyMapperTest() {
     }
 
     @Test
@@ -131,5 +124,12 @@ public class StrategyMapperTest {
         List<Mutant> result = strategy.run();
         assertFalse(result.isEmpty());
         setUpClass();
+    }
+
+    @Test
+    public void testHookInterpret() {
+        StrategyMapper strategyMapper = new StrategyMapper();
+        Strategy strategy = strategyMapper.interpret(Lists.newArrayList(1, 2, 3, 4, 5, 6));
+        assertNotNull(strategy);
     }
 }

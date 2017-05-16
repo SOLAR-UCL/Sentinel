@@ -6,15 +6,29 @@ import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.Fa
 import br.ufpr.inf.gres.sentinel.strategy.operation.Operation;
 import java.util.Iterator;
 
+/**
+ *
+ * @author Giovani Guizzo
+ */
 public class NonTerminalFactory implements Factory<Rule> {
 
-    private NonTerminalFactory() {
-    }
-
+    /**
+     *
+     * @return
+     */
     public static NonTerminalFactory getInstance() {
         return SingletonHolder.INSTANCE;
     }
 
+    private NonTerminalFactory() {
+    }
+
+    /**
+     *
+     * @param rule
+     * @param integerIterator
+     * @return
+     */
     @Override
     public Operation createOperation(Rule rule, Iterator<Integer> integerIterator) {
         Factory factory = FactoryFlyweight.getFactory(rule.getName());

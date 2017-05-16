@@ -6,7 +6,6 @@ import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.Te
 import br.ufpr.inf.gres.sentinel.strategy.operation.Operation;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.combine.generation.AbstractHOMGeneration;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.selection.SelectionOperation;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,54 +16,87 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class CombineMutantsOperation extends Operation<Solution, List<Mutant>> {
 
-	private SelectionOperation<Mutant> selection;
-	private AbstractHOMGeneration generation;
+    private AbstractHOMGeneration generation;
+    private SelectionOperation<Mutant> selection;
 
-	public CombineMutantsOperation() {
-		super(TerminalRuleType.COMBINE_MUTANTS);
-	}
+    /**
+     *
+     */
+    public CombineMutantsOperation() {
+        super(TerminalRuleType.COMBINE_MUTANTS);
+    }
 
-	public CombineMutantsOperation(AbstractHOMGeneration generation, SelectionOperation<Mutant> selection) {
-		super(TerminalRuleType.COMBINE_MUTANTS);
-		this.generation = generation;
-		this.selection = selection;
-	}
+    /**
+     *
+     * @param generation
+     * @param selection
+     */
+    public CombineMutantsOperation(AbstractHOMGeneration generation, SelectionOperation<Mutant> selection) {
+        super(TerminalRuleType.COMBINE_MUTANTS);
+        this.generation = generation;
+        this.selection = selection;
+    }
 
-	public SelectionOperation<Mutant> getSelection() {
-		return selection;
-	}
+    /**
+     *
+     * @param input
+     * @return
+     */
+    @Override
+    public List<Mutant> doOperation(Solution input) {
+        checkNotNull(this.selection, "No selection operation!");
+        checkNotNull(this.generation, "No HOM generation operation!");
+        List<Mutant> mutantsToCombine = this.selection.doOperation(new ArrayList<>(input.getMutants()));
+        List<Mutant> generatedHoms = this.generation.doOperation(mutantsToCombine);
+        input.getMutants().addAll(generatedHoms);
+        return this.next(input);
+    }
 
-	public void setSelection(SelectionOperation<Mutant> selection) {
-		this.selection = selection;
-	}
+    /**
+     *
+     * @return
+     */
+    public AbstractHOMGeneration getGeneration() {
+        return this.generation;
+    }
 
-	public AbstractHOMGeneration getGeneration() {
-		return generation;
-	}
+    /**
+     *
+     * @param generation
+     */
+    public void setGeneration(AbstractHOMGeneration generation) {
+        this.generation = generation;
+    }
 
-	public void setGeneration(AbstractHOMGeneration generation) {
-		this.generation = generation;
-	}
+    /**
+     *
+     * @return
+     */
+    public SelectionOperation<Mutant> getSelection() {
+        return this.selection;
+    }
 
-	@Override
-	public List<Mutant> doOperation(Solution input) {
-		checkNotNull(selection, "No selection operation!");
-		checkNotNull(generation, "No HOM generation operation!");
-		List<Mutant> mutantsToCombine = selection.doOperation(new ArrayList<>(input.getMutants()));
-		List<Mutant> generatedHoms = generation.doOperation(mutantsToCombine);
-		input.getMutants().addAll(generatedHoms);
-		return next(input);
-	}
+    /**
+     *
+     * @param selection
+     */
+    public void setSelection(SelectionOperation<Mutant> selection) {
+        this.selection = selection;
+    }
 
-	@Override
-	public boolean isSpecific() {
-		boolean isSpecific = false;
-		if (selection != null) {
-			isSpecific = selection.isSpecific();
-		}
-		if (generation != null) {
-			isSpecific = isSpecific || generation.isSpecific();
-		}
-		return isSpecific;
-	}
+    /**
+     *
+     * @return
+     */
+    @Override
+    public boolean isSpecific() {
+        boolean isSpecific = false;
+        if (this.selection != null) {
+            isSpecific = this.selection.isSpecific();
+        }
+        if (this.generation != null) {
+            isSpecific = isSpecific || this.generation.isSpecific();
+        }
+        return isSpecific;
+    }
 }

@@ -28,8 +28,8 @@ import static org.junit.Assert.assertEquals;
  */
 public class GrammaticalEvolutionAlgorithmTest {
 
-    private static ProblemStub problem;
     private static GrammaticalEvolutionAlgorithm<Integer> algorithm;
+    private static ProblemStub problem;
 
     @BeforeClass
     public static void setUpClass() throws IOException {
@@ -65,10 +65,8 @@ public class GrammaticalEvolutionAlgorithmTest {
     }
 
     @Test
-    public void run() throws Exception {
-        algorithm.run();
-        List<VariableLengthSolution<Integer>> result = algorithm.getResult();
-        assertEquals(50, result.size());
+    public void getDescription() throws Exception {
+        assertEquals("Multi-Objective Grammatical Evolution Algorithm based on NSGA-II", algorithm.getDescription());
     }
 
     @Test
@@ -77,8 +75,10 @@ public class GrammaticalEvolutionAlgorithmTest {
     }
 
     @Test
-    public void getDescription() throws Exception {
-        assertEquals("Multi-Objective Grammatical Evolution Algorithm based on NSGA-II", algorithm.getDescription());
+    public void run() throws Exception {
+        algorithm.run();
+        List<VariableLengthSolution<Integer>> result = algorithm.getResult();
+        assertEquals(50, result.size());
     }
 
     public static class ProblemStub extends MutationStrategyGenerationProblem {

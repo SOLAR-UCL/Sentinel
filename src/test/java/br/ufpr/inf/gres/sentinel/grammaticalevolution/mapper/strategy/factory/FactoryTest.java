@@ -5,7 +5,7 @@ package br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory;
  */
 public class FactoryTest {
 
-	public FactoryTest() {
-	}
+    public FactoryTest() {
+    }
 
 }

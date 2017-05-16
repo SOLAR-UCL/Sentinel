@@ -36,24 +36,34 @@ import org.pitest.mutationtest.tooling.MutationStrategies;
 import org.pitest.util.Timings;
 
 /**
- * Shamelessly copied the content of MutationCoverage and changed its behavior because of private access variables.
+ * Shamelessly copied the content of MutationCoverage and changed its behavior
+ * because of private access variables.
  *
  * @author Giovani Guizzo
  */
 public class MutationCoverageImpl {
 
     private static final int MB = 1024 * 1024;
+    private final File baseDir;
 
+    private final CodeSource code;
+    private final CoverageDatabase coverageData;
     private final ReportOptions data;
-
+    private MutantResultListenerImpl listener = new MutantResultListenerImpl();
+    private final SettingsFactory settings;
     private final MutationStrategies strategies;
     private final Timings timings;
-    private final CodeSource code;
-    private final File baseDir;
-    private final SettingsFactory settings;
-    private final CoverageDatabase coverageData;
-    private MutantResultListenerImpl listener = new MutantResultListenerImpl();
 
+    /**
+     *
+     * @param strategies
+     * @param baseDir
+     * @param code
+     * @param data
+     * @param settings
+     * @param timings
+     * @param coverageData
+     */
     public MutationCoverageImpl(final MutationStrategies strategies,
             final File baseDir, final CodeSource code, final ReportOptions data,
             final SettingsFactory settings, final Timings timings,
@@ -65,46 +75,14 @@ public class MutationCoverageImpl {
         this.code = code;
         this.baseDir = baseDir;
         this.coverageData = coverageData;
-        verifyBuildSuitableForMutationTesting();
-        checkExcludedRunners();
-        history().initialize();
+        this.verifyBuildSuitableForMutationTesting();
+        this.checkExcludedRunners();
+        this.history().initialize();
     }
 
-    public MutationAnalysisUnit createMutants() {
-        MutationEngine engine = this.strategies.factory().createEngine(
-                this.data.isMutateStaticInitializers(),
-                Prelude.or(this.data.getExcludedMethods()),
-                this.data.getLoggingClasses(), this.data.getMutators(),
-                this.data.isDetectInlinedCode());
-
-        this.timings.registerStart(Timings.Stage.BUILD_MUTATION_TESTS);
-        final List<MutationAnalysisUnit> tus = buildMutationTests(coverageData, engine);
-        this.timings.registerEnd(Timings.Stage.BUILD_MUTATION_TESTS);
-        return Iterables.getFirst(tus, null);
-    }
-
-    public Collection<MutationResult> runMutants(MutationAnalysisUnit unit) throws IOException {
-        try {
-            checkMutationsFound(unit);
-            recordClassPath(coverageData);
-
-            MutationEngine engine = this.strategies.factory().createEngine(
-                    this.data.isMutateStaticInitializers(),
-                    Prelude.or(this.data.getExcludedMethods()),
-                    this.data.getLoggingClasses(), this.data.getMutators(),
-                    this.data.isDetectInlinedCode());
-
-            final List<MutationResultListener> config = Lists.newArrayList(listener);
-
-            final MutationAnalysisExecutor mae = new MutationAnalysisExecutor(
-                    numberOfThreads(), config);
-            this.timings.registerStart(Timings.Stage.RUN_MUTATION_TESTS);
-            mae.run(Lists.newArrayList(unit));
-            this.timings.registerEnd(Timings.Stage.RUN_MUTATION_TESTS);
-        } catch (SecurityException | IllegalArgumentException ex) {
-            Logger.getLogger(MutationCoverageImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return listener.getResults();
+    private List<MutationAnalysisUnit> buildMutationTests(final CoverageDatabase coverageData, final MutationEngine engine) {
+        MutationTestBuilder builder = this.getBuilder(engine, coverageData);
+        return builder.createMutationTestUnits(this.code.getCodeUnderTestNames());
     }
 
     private void checkExcludedRunners() {
@@ -120,15 +98,30 @@ public class MutationCoverageImpl {
         }
     }
 
-    private int numberOfThreads() {
-        return Math.max(1, this.data.getNumberOfThreads());
+    private void checkMutationsFound(final MutationAnalysisUnit tus) {
+        if (tus == null && this.data.shouldFailWhenNoMutations()) {
+            throw new PitHelpError(Help.NO_MUTATIONS_FOUND);
+        }
     }
 
-    private void recordClassPath(final CoverageDatabase coverageData) {
-        final Set<ClassName> allClassNames = getAllClassesAndTests(coverageData);
-        final Collection<HierarchicalClassId> ids = FCollection.map(
-                this.code.getClassInfo(allClassNames), ClassInfo.toFullClassId());
-        history().recordClassPath(ids, coverageData);
+    private CoverageGenerator coverage() {
+        return this.strategies.coverage();
+    }
+
+    /**
+     *
+     * @return
+     */
+    public MutationAnalysisUnit createMutants() {
+        MutationEngine engine = this.strategies.factory().createEngine(
+                this.data.isMutateStaticInitializers(),
+                Prelude.or(this.data.getExcludedMethods()),
+                this.data.getLoggingClasses(), this.data.getMutators(),
+                this.data.isDetectInlinedCode());
+        this.timings.registerStart(Timings.Stage.BUILD_MUTATION_TESTS);
+        final List<MutationAnalysisUnit> tus = this.buildMutationTests(this.coverageData, engine);
+        this.timings.registerEnd(Timings.Stage.BUILD_MUTATION_TESTS);
+        return Iterables.getFirst(tus, null);
     }
 
     private Set<ClassName> getAllClassesAndTests(
@@ -142,29 +135,23 @@ public class MutationCoverageImpl {
         return names;
     }
 
-    private void verifyBuildSuitableForMutationTesting() {
-        this.strategies.buildVerifier().verify(this.code);
-    }
-
-    private List<MutationAnalysisUnit> buildMutationTests(
-            final CoverageDatabase coverageData, final MutationEngine engine) {
-
-        MutationTestBuilder builder = getBuilder(engine, coverageData);
-
-        return builder.createMutationTestUnits(this.code.getCodeUnderTestNames());
-    }
-
+    /**
+     *
+     * @param engine
+     * @param coverageData1
+     * @return
+     */
     public MutationTestBuilder getBuilder(final MutationEngine engine, final CoverageDatabase coverageData1) {
-        final MutationConfig mutationConfig = new MutationConfig(engine, coverage()
+        final MutationConfig mutationConfig = new MutationConfig(engine, this.coverage()
                 .getLaunchOptions());
         ClassByteArraySource bas = new ClassPathByteArraySource(
                 this.data.getClassPath());
         TestPrioritiser testPrioritiser = this.settings.getTestPrioritiser().makeTestPrioritiser(this.data.getFreeFormProperties(), this.code, coverageData1);
         final MutationSource source = new MutationSource(mutationConfig,
-                makeFilter().createFilter(this.data.getFreeFormProperties(), this.code,
+                this.makeFilter().createFilter(this.data.getFreeFormProperties(), this.code,
                         this.data.getMaxMutationsPerClass()), testPrioritiser, bas);
-        final MutationAnalyser analyser = new IncrementalAnalyser(new DefaultCodeHistory(this.code, history()), coverageData1);
-        final WorkerFactory wf = new WorkerFactory(this.baseDir, coverage()
+        final MutationAnalyser analyser = new IncrementalAnalyser(new DefaultCodeHistory(this.code, this.history()), coverageData1);
+        final WorkerFactory wf = new WorkerFactory(this.baseDir, this.coverage()
                 .getConfiguration(), mutationConfig,
                 new PercentAndConstantTimeoutStrategy(this.data.getTimeoutFactor(),
                         this.data.getTimeoutConstant()), this.data.isVerbose(), this.data
@@ -177,22 +164,53 @@ public class MutationCoverageImpl {
         return builder;
     }
 
+    private HistoryStore history() {
+        return this.strategies.history();
+    }
+
     private MutationFilterFactory makeFilter() {
         return this.settings.createMutationFilter();
     }
 
-    private void checkMutationsFound(final MutationAnalysisUnit tus) {
-        if (tus == null && this.data.shouldFailWhenNoMutations()) {
-            throw new PitHelpError(Help.NO_MUTATIONS_FOUND);
+    private int numberOfThreads() {
+        return Math.max(1, this.data.getNumberOfThreads());
+    }
+
+    private void recordClassPath(final CoverageDatabase coverageData) {
+        final Set<ClassName> allClassNames = this.getAllClassesAndTests(coverageData);
+        final Collection<HierarchicalClassId> ids = FCollection.map(
+                this.code.getClassInfo(allClassNames), ClassInfo.toFullClassId());
+        this.history().recordClassPath(ids, coverageData);
+    }
+
+    /**
+     *
+     * @param unit
+     * @return
+     * @throws IOException
+     */
+    public Collection<MutationResult> runMutants(MutationAnalysisUnit unit) throws IOException {
+        try {
+            this.checkMutationsFound(unit);
+            this.recordClassPath(this.coverageData);
+            MutationEngine engine = this.strategies.factory().createEngine(
+                    this.data.isMutateStaticInitializers(),
+                    Prelude.or(this.data.getExcludedMethods()),
+                    this.data.getLoggingClasses(), this.data.getMutators(),
+                    this.data.isDetectInlinedCode());
+            final List<MutationResultListener> config = Lists.newArrayList(this.listener);
+            final MutationAnalysisExecutor mae = new MutationAnalysisExecutor(this.numberOfThreads(), config);
+            this.timings.registerStart(Timings.Stage.RUN_MUTATION_TESTS);
+            mae.run(Lists.newArrayList(unit));
+            this.timings.registerEnd(Timings.Stage.RUN_MUTATION_TESTS);
+        } catch (SecurityException | IllegalArgumentException ex) {
+            Logger.getLogger(MutationCoverageImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
+        return this.listener.getResults();
     }
 
-    private CoverageGenerator coverage() {
-        return this.strategies.coverage();
-    }
-
-    private HistoryStore history() {
-        return this.strategies.history();
+    private void verifyBuildSuitableForMutationTesting() {
+        this.strategies.buildVerifier().verify(this.code);
     }
 
 }

@@ -9,14 +9,15 @@ import org.uma.jmetal.solution.Solution;
 /**
  *
  * @author Giovani Guizzo
+ * @param <T>
  */
 public class AverageCPUTime<T> extends ObjectiveFunction<T> {
 
-    @Override
-    public String getName() {
-        return AVERAGE_CPU_TIME;
-    }
-
+    /**
+     *
+     * @param solution
+     * @return
+     */
     @Override
     public Double computeFitness(Solution<T> solution) {
         if (solution.getAttribute("CPUTimes") != null && solution.getAttribute("ConventionalCPUTimes") != null) {
@@ -42,7 +43,16 @@ public class AverageCPUTime<T> extends ObjectiveFunction<T> {
                 }
             }
         }
-        return getWorstValue();
+        return this.getWorstValue();
+    }
+
+    /**
+     *
+     * @return
+     */
+    @Override
+    public String getName() {
+        return AVERAGE_CPU_TIME;
     }
 
 }

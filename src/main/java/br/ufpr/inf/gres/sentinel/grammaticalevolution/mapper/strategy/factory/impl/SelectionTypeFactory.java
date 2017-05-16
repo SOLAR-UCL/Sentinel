@@ -10,7 +10,6 @@ import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.type.impl.LastTo
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.type.impl.RandomSelection;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.type.impl.SequentialSelection;
 import com.google.common.base.Preconditions;
-
 import java.util.Iterator;
 
 /**
@@ -18,38 +17,48 @@ import java.util.Iterator;
  */
 public class SelectionTypeFactory implements Factory<Option> {
 
-	private SelectionTypeFactory() {
-	}
+    /**
+     *
+     * @return
+     */
+    public static SelectionTypeFactory getInstance() {
+        return SingletonHolder.INSTANCE;
+    }
 
-	public static SelectionTypeFactory getInstance() {
-		return SingletonHolder.INSTANCE;
-	}
+    private SelectionTypeFactory() {
+    }
 
-	@Override
-	public Operation createOperation(Option node, Iterator<Integer> integerIterator) {
-		Iterator<Rule> rules = node.getRules().iterator();
-		Preconditions.checkArgument(rules.hasNext(), "Malformed grammar option: " + node.toString());
-		Rule rule = rules.next();
-		SelectionType mainOperation;
-		switch (rule.getName()) {
-			case TerminalRuleType.RANDOM:
-				mainOperation = new RandomSelection<>();
-				break;
-			case TerminalRuleType.LAST_TO_FIRST:
-				mainOperation = new LastToFirstSelection<>();
-				break;
-			case TerminalRuleType.SEQUENTIAL:
-				mainOperation = new SequentialSelection<>();
-				break;
-			default:
-				throw new IllegalArgumentException("Malformed grammar option: " + node.toString());
-		}
-		return mainOperation;
-	}
+    /**
+     *
+     * @param node
+     * @param integerIterator
+     * @return
+     */
+    @Override
+    public Operation createOperation(Option node, Iterator<Integer> integerIterator) {
+        Iterator<Rule> rules = node.getRules().iterator();
+        Preconditions.checkArgument(rules.hasNext(), "Malformed grammar option: " + node.toString());
+        Rule rule = rules.next();
+        SelectionType mainOperation;
+        switch (rule.getName()) {
+            case TerminalRuleType.RANDOM:
+                mainOperation = new RandomSelection<>();
+                break;
+            case TerminalRuleType.LAST_TO_FIRST:
+                mainOperation = new LastToFirstSelection<>();
+                break;
+            case TerminalRuleType.SEQUENTIAL:
+                mainOperation = new SequentialSelection<>();
+                break;
+            default:
+                throw new IllegalArgumentException("Malformed grammar option: " + node.toString());
+        }
+        return mainOperation;
+    }
 
-	private static class SingletonHolder {
+    private static class SingletonHolder {
 
-		private static final SelectionTypeFactory INSTANCE = new SelectionTypeFactory();
-	}
+        private static final SelectionTypeFactory INSTANCE = new SelectionTypeFactory();
+    }
 
 }

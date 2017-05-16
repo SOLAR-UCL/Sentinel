@@ -4,25 +4,24 @@ import br.ufpr.inf.gres.sentinel.base.mutation.Operator;
 import br.ufpr.inf.gres.sentinel.integration.IntegrationFacade;
 import br.ufpr.inf.gres.sentinel.integration.IntegrationFacadeTest.IntegrationFacadeStub;
 import com.google.common.collect.Lists;
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author Giovani Guizzo
  */
 public class ConventionalExecutionTest {
 
-    public ConventionalExecutionTest() {
-    }
-
     @BeforeClass
     public static void setUpClass() {
         IntegrationFacade.setIntegrationFacade(new IntegrationFacadeStub());
+    }
+
+    public ConventionalExecutionTest() {
     }
 
     @Test

@@ -27,19 +27,32 @@ import java.util.concurrent.TimeUnit;
  */
 public class MutationStrategyGenerationProblem implements VariableLengthIntegerProblem {
 
-    private final StrategyMapper strategyMapper;
-    private final int numberOfStrategyRuns;
-    private final List<Program> testPrograms;
+    private int evaluationCount;
     private int lowerVariableBound;
-    private int upperVariableBound;
-    private int minLength;
     private int maxLength;
     private int maxWraps;
-    private int evaluationCount;
+    private int minLength;
     private int numberOfConstraints;
+    private final int numberOfStrategyRuns;
     private final List<ObjectiveFunction> objectiveFunctions;
     private final List<ObjectiveFunction> objectivesToStoreAsAttribute;
+    private final StrategyMapper strategyMapper;
+    private final List<Program> testPrograms;
+    private int upperVariableBound;
 
+    /**
+     *
+     * @param grammarFile
+     * @param minLength
+     * @param maxLength
+     * @param lowerVariableBound
+     * @param upperVariableBound
+     * @param maxWraps
+     * @param numberOfStrategyRuns
+     * @param testPrograms
+     * @param objectiveFunctions
+     * @throws IOException
+     */
     public MutationStrategyGenerationProblem(String grammarFile,
             int minLength,
             int maxLength,
@@ -64,73 +77,55 @@ public class MutationStrategyGenerationProblem implements VariableLengthIntegerP
         this.objectivesToStoreAsAttribute.removeAll(this.objectiveFunctions);
     }
 
-    public int getMaxWraps() {
-        return maxWraps;
+    private void computeObjectiveValues(VariableLengthSolution<Integer> solution) {
+        for (int i = 0; i < this.objectiveFunctions.size(); i++) {
+            ObjectiveFunction objectiveFunction = this.objectiveFunctions.get(i);
+            Double objectiveValue = objectiveFunction.computeFitness(solution);
+            solution.setAttribute(objectiveFunction.getName(), objectiveValue);
+            solution.setObjective(i, objectiveValue);
+        }
+        for (ObjectiveFunction objectiveFunction : this.objectivesToStoreAsAttribute) {
+            solution.setAttribute(objectiveFunction.getName(), objectiveFunction.computeFitness(solution));
+        }
     }
 
-    public List<ObjectiveFunction> getObjectiveFunctions() {
-        return objectiveFunctions;
-    }
-
+    /**
+     *
+     * @return
+     */
     @Override
-    public int getUpperVariableBound() {
-        return upperVariableBound;
+    public VariableLengthSolution<Integer> createSolution() {
+        return new DefaultVariableLengthIntegerSolution(this);
     }
 
-    @Override
-    public int getLowerVariableBound() {
-        return lowerVariableBound;
+    private Strategy createStrategy(VariableLengthSolution<Integer> solution) {
+        List<Integer> variables = solution.getVariablesCopy();
+        CountingIterator<Integer> variablesIterator = new CountingIterator<>(Iterables.limit(Iterables.cycle(variables), variables.size() * (this.maxWraps + 1)).iterator());
+        Strategy strategy = this.strategyMapper.interpret(variablesIterator);
+        solution.setAttribute("Consumed Items Count", variablesIterator.getCount());
+        return strategy;
     }
 
-    @Override
-    public int getMaxLength() {
-        return maxLength;
-    }
-
-    @Override
-    public int getMinLength() {
-        return minLength;
-    }
-
-    @Override
-    public int getNumberOfVariables() {
-        return minLength;
-    }
-
-    @Override
-    public int getNumberOfObjectives() {
-        return objectiveFunctions.size();
-    }
-
-    @Override
-    public int getNumberOfConstraints() {
-        return numberOfConstraints;
-    }
-
-    @Override
-    public String getName() {
-        return "Mutation Strategy Generation Problem";
-    }
-
+    /**
+     *
+     * @param solution
+     */
     @Override
     public void evaluate(VariableLengthSolution<Integer> solution) {
-        System.out.println("Evaluation: " + (++evaluationCount));
+        System.out.println("Evaluation: " + (++this.evaluationCount));
         try {
-            setWorst(solution);
-            Strategy strategy = createStrategy(solution);
-
+            this.setWorst(solution);
+            Strategy strategy = this.createStrategy(solution);
             ArrayListMultimap<Program, Long> nanoTimes = ArrayListMultimap.create();
             ArrayListMultimap<Program, Long> nanoCPUTimes = ArrayListMultimap.create();
             ArrayListMultimap<Program, Collection<Mutant>> allMutants = ArrayListMultimap.create();
-
             IntegrationFacade integrationFacade = IntegrationFacade.getIntegrationFacade();
-
             boolean isValid = true;
             evaluationFor:
-            for (Program testProgram : testPrograms) {
+            for (Program testProgram : this.testPrograms) {
                 IntegrationFacade.setProgramUnderTest(testProgram);
-                integrationFacade.initializeConventionalStrategy(testProgram, numberOfStrategyRuns * 10);
-                for (int i = 0; i < numberOfStrategyRuns; i++) {
+                integrationFacade.initializeConventionalStrategy(testProgram, this.numberOfStrategyRuns * 10);
+                for (int i = 0; i < this.numberOfStrategyRuns; i++) {
                     Stopwatch stopWatch = Stopwatch.createStarted();
                     ThreadMXBean threadBean = ManagementFactory.getThreadMXBean();
                     long currentThreadCpuTime = threadBean.getCurrentThreadCpuTime();
@@ -149,21 +144,16 @@ public class MutationStrategyGenerationProblem implements VariableLengthIntegerP
                     allMutants.put(testProgram, mutants);
                 }
             }
-
             solution.setAttribute("Strategy", strategy);
-            solution.setAttribute("Evaluation Found", evaluationCount);
-
+            solution.setAttribute("Evaluation Found", this.evaluationCount);
             if (isValid) {
                 solution.setAttribute("CPUTimes", nanoCPUTimes);
                 solution.setAttribute("ConventionalCPUTimes", integrationFacade.getConventionalExecutionCPUTimes());
-
                 solution.setAttribute("Times", nanoTimes);
                 solution.setAttribute("ConventionalTimes", integrationFacade.getConventionalExecutionTimes());
-
                 solution.setAttribute("Mutants", allMutants);
                 solution.setAttribute("ConventionalMutants", integrationFacade.getConventionalMutants());
-
-                computeObjectiveValues(solution);
+                this.computeObjectiveValues(solution);
             }
         } catch (Exception ex) {
             // Invalid strategy. Probably discarded due to maximum wraps.
@@ -172,42 +162,104 @@ public class MutationStrategyGenerationProblem implements VariableLengthIntegerP
         }
     }
 
+    /**
+     *
+     * @return
+     */
+    @Override
+    public int getLowerVariableBound() {
+        return this.lowerVariableBound;
+    }
+
+    /**
+     *
+     * @return
+     */
+    @Override
+    public int getMaxLength() {
+        return this.maxLength;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public int getMaxWraps() {
+        return this.maxWraps;
+    }
+
+    /**
+     *
+     * @return
+     */
+    @Override
+    public int getMinLength() {
+        return this.minLength;
+    }
+
+    /**
+     *
+     * @return
+     */
+    @Override
+    public String getName() {
+        return "Mutation Strategy Generation Problem";
+    }
+
+    /**
+     *
+     * @return
+     */
+    @Override
+    public int getNumberOfConstraints() {
+        return this.numberOfConstraints;
+    }
+
+    /**
+     *
+     * @return
+     */
+    @Override
+    public int getNumberOfObjectives() {
+        return this.objectiveFunctions.size();
+    }
+
+    /**
+     *
+     * @return
+     */
+    @Override
+    public int getNumberOfVariables() {
+        return this.minLength;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public List<ObjectiveFunction> getObjectiveFunctions() {
+        return Collections.unmodifiableList(objectiveFunctions);
+    }
+
+    /**
+     *
+     * @return
+     */
+    @Override
+    public int getUpperVariableBound() {
+        return this.upperVariableBound;
+    }
+
     private void setWorst(VariableLengthSolution<Integer> solution) {
-        for (int i = 0; i < objectiveFunctions.size(); i++) {
-            ObjectiveFunction objectiveFunction = objectiveFunctions.get(i);
+        for (int i = 0; i < this.objectiveFunctions.size(); i++) {
+            ObjectiveFunction objectiveFunction = this.objectiveFunctions.get(i);
             Double worstValue = objectiveFunction.getWorstValue();
             solution.setAttribute(objectiveFunction.getName(), worstValue);
             solution.setObjective(i, worstValue);
         }
-        for (ObjectiveFunction objectiveFunction : objectivesToStoreAsAttribute) {
+        for (ObjectiveFunction objectiveFunction : this.objectivesToStoreAsAttribute) {
             solution.setAttribute(objectiveFunction.getName(), objectiveFunction.getWorstValue());
         }
-    }
-
-    private void computeObjectiveValues(VariableLengthSolution<Integer> solution) {
-        for (int i = 0; i < objectiveFunctions.size(); i++) {
-            ObjectiveFunction objectiveFunction = objectiveFunctions.get(i);
-            Double objectiveValue = objectiveFunction.computeFitness(solution);
-            solution.setAttribute(objectiveFunction.getName(), objectiveValue);
-            solution.setObjective(i, objectiveValue);
-        }
-        for (ObjectiveFunction objectiveFunction : objectivesToStoreAsAttribute) {
-            solution.setAttribute(objectiveFunction.getName(), objectiveFunction.computeFitness(solution));
-        }
-    }
-
-    private Strategy createStrategy(VariableLengthSolution<Integer> solution) {
-        List<Integer> variables = solution.getVariablesCopy();
-        CountingIterator<Integer> variablesIterator
-                = new CountingIterator<>(Iterables.limit(Iterables.cycle(variables), variables.size() * (maxWraps + 1)).iterator());
-        Strategy strategy = strategyMapper.interpret(variablesIterator);
-        solution.setAttribute("Consumed Items Count", variablesIterator.getCount());
-        return strategy;
-    }
-
-    @Override
-    public VariableLengthSolution<Integer> createSolution() {
-        return new DefaultVariableLengthIntegerSolution(this);
     }
 
 }

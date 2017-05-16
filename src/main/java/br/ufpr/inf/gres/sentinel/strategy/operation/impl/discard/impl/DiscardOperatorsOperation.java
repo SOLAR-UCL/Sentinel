@@ -17,27 +17,32 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class DiscardOperatorsOperation extends AbstractDiscardOperation<Operator> {
 
+    /**
+     *
+     */
     public DiscardOperatorsOperation() {
         super(TerminalRuleType.DISCARD_OPERATORS);
     }
 
+    /**
+     *
+     * @param selection
+     */
     public DiscardOperatorsOperation(SelectionOperation<Operator> selection) {
         super(TerminalRuleType.DISCARD_OPERATORS, selection);
     }
 
-    @Override
-    protected List<Operator> obtainList(Solution solution) {
-        return solution.getOperators();
-    }
-
+    /**
+     *
+     * @param solution
+     * @return
+     */
     @Override
     public List<Mutant> doOperation(Solution solution) {
-        checkNotNull(selection, "No selection operation!");
-
-        List<Operator> listToDiscard = obtainList(solution);
-        listToDiscard = selection.doOperation(new ArrayList<>(listToDiscard));
+        checkNotNull(this.selection, "No selection operation!");
+        List<Operator> listToDiscard = this.obtainList(solution);
+        listToDiscard = this.selection.doOperation(new ArrayList<>(listToDiscard));
         solution.getOperators().removeAll(listToDiscard);
-
         SetUniqueList<Mutant> mutantsToRemove = listToDiscard.stream()
                 .map(Operator::getGeneratedMutants)
                 .reduce((mutants1, mutants2) -> {
@@ -48,8 +53,17 @@ public class DiscardOperatorsOperation extends AbstractDiscardOperation<Operator
                 })
                 .orElse(SetUniqueList.setUniqueList(new ArrayList<>()));
         solution.getMutants().removeAll(mutantsToRemove);
+        return this.next(solution);
+    }
 
-        return next(solution);
+    /**
+     *
+     * @param solution
+     * @return
+     */
+    @Override
+    protected List<Operator> obtainList(Solution solution) {
+        return solution.getOperators();
     }
 
 }

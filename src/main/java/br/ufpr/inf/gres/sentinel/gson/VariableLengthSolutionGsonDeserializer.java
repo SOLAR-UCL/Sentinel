@@ -12,22 +12,35 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.List;
 
+/**
+ *
+ * @author Giovani Guizzo
+ */
 public class VariableLengthSolutionGsonDeserializer implements JsonDeserializer<VariableLengthSolution<Integer>> {
 
     private final MutationStrategyGenerationProblem problem;
 
+    /**
+     *
+     * @throws IOException
+     */
     public VariableLengthSolutionGsonDeserializer() throws IOException {
         TrainingArgs trainingArgs = new TrainingArgs();
-        problem = SentinelTraining.buildProblem(SentinelTraining.buildFacade(trainingArgs), trainingArgs);
+        this.problem = SentinelTraining.buildProblem(SentinelTraining.buildFacade(trainingArgs), trainingArgs);
     }
 
+    /**
+     *
+     * @param trainingArgs
+     * @throws IOException
+     */
     public VariableLengthSolutionGsonDeserializer(TrainingArgs trainingArgs) throws IOException {
-        problem = SentinelTraining.buildProblem(SentinelTraining.buildFacade(trainingArgs), trainingArgs);
+        this.problem = SentinelTraining.buildProblem(SentinelTraining.buildFacade(trainingArgs), trainingArgs);
     }
 
     @Override
     public VariableLengthSolution<Integer> deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-        DefaultVariableLengthIntegerSolution solution = new DefaultVariableLengthIntegerSolution(problem);
+        DefaultVariableLengthIntegerSolution solution = new DefaultVariableLengthIntegerSolution(this.problem);
 
         JsonObject jsonObject = json.getAsJsonObject();
         JsonArray objectives = jsonObject.get("objectives").getAsJsonArray();

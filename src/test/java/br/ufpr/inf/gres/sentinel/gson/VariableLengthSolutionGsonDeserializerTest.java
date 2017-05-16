@@ -22,9 +22,9 @@ import org.junit.Test;
  */
 public class VariableLengthSolutionGsonDeserializerTest {
 
-    private static MutationStrategyGenerationProblem problem;
     private static IntegrationFacade facade;
     private static IntegrationFacade oldFacade;
+    private static MutationStrategyGenerationProblem problem;
 
     @BeforeClass
     public static void setUpClass() throws IOException {

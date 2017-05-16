@@ -7,8 +7,17 @@ import br.ufpr.inf.gres.sentinel.integration.pit.PITFacade;
  */
 public class IntegrationFacadeFactory {
 
+    /**
+     *
+     */
     public static final String PIT = "PIT";
 
+    /**
+     *
+     * @param name
+     * @param trainingDirectory
+     * @return
+     */
     public static IntegrationFacade createIntegrationFacade(String name, String trainingDirectory) {
         IntegrationFacade facade;
         switch (name.toUpperCase()) {
