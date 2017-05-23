@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 import org.junit.AfterClass;
+import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -16,8 +17,6 @@ import org.uma.jmetal.solution.Solution;
 import org.uma.jmetal.util.pseudorandom.JMetalRandom;
 import org.uma.jmetal.util.pseudorandom.PseudoRandomGenerator;
 import org.uma.jmetal.util.pseudorandom.impl.JavaRandomGenerator;
-
-import static org.junit.Assert.*;
 
 /**
  * @author Giovani Guizzo
@@ -36,6 +35,7 @@ public class VariableLengthSolutionTest {
                 1,
                 10,
                 2,
+                1,
                 1,
                 null,
                 Lists.newArrayList(ObjectiveFunction.AVERAGE_CPU_TIME, ObjectiveFunction.AVERAGE_SCORE));

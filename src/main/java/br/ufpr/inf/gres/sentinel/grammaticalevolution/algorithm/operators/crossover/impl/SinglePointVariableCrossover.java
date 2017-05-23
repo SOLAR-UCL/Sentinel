@@ -14,15 +14,17 @@ public class SinglePointVariableCrossover<T> implements CrossoverOperator<Variab
 
     private double crossoverProbability;
     private JMetalRandom randomGenerator;
+    private int maxLength;
 
     /**
      * Constructor
      *
      * @param crossoverProbability
      */
-    public SinglePointVariableCrossover(double crossoverProbability) {
+    public SinglePointVariableCrossover(double crossoverProbability, int maxLength) {
         this.crossoverProbability = crossoverProbability;
         this.randomGenerator = JMetalRandom.getInstance();
+        this.maxLength = maxLength;
     }
 
     /**
@@ -63,6 +65,18 @@ public class SinglePointVariableCrossover<T> implements CrossoverOperator<Variab
             }
             for (int i = crossoverPointParent2; i < totalNumberOfGenesParent2; i++) {
                 offspring1.addVariable(parent2.getVariableValue(i));
+            }
+
+            if (offspring1.getNumberOfVariables() > maxLength) {
+                List<T> newVariables = offspring1.getVariablesCopy().subList(0, maxLength);
+                offspring1.clearVariables();
+                offspring1.addAllVariables(newVariables);
+            }
+
+            if (offspring2.getNumberOfVariables() > maxLength) {
+                List<T> newVariables = offspring2.getVariablesCopy().subList(0, maxLength);
+                offspring2.clearVariables();
+                offspring2.addAllVariables(newVariables);
             }
         }
 

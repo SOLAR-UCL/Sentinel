@@ -15,14 +15,14 @@ public class IntegrationFacadeFactory {
     /**
      *
      * @param name
-     * @param trainingDirectory
+     * @param inputDirectory
      * @return
      */
-    public static IntegrationFacade createIntegrationFacade(String name, String trainingDirectory) {
+    public static IntegrationFacade createIntegrationFacade(String name, String inputDirectory) {
         IntegrationFacade facade;
         switch (name.toUpperCase()) {
             case PIT:
-                facade = new PITFacade(trainingDirectory);
+                facade = new PITFacade(inputDirectory);
                 break;
             default:
                 throw new IllegalArgumentException("Mutation tool " + name + " not found!");

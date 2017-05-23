@@ -35,6 +35,7 @@ public class Sentinel {
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
             commander.usage();
+            return;
         }
 
         if (mainArgs.help) {

@@ -2,6 +2,7 @@ package br.ufpr.inf.gres.sentinel.main.cli;
 
 import java.io.File;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -15,7 +16,7 @@ public class SentinelTest {
 
     @Test
     public void testSentinel() throws Exception {
-        String[] args = new String[]{"train", "--maxEvaluations", "1", "--populationSize", "1", "--trainingRuns", "1"};
+        String[] args = new String[]{"train", "--maxEvaluations", "1", "--populationSize", "1", "--trainingRuns", "1", "--conventionalStrategyMultiplier", "1"};
         Sentinel.main(args);
         File result = new File("training/Experiment/result_1.json");
         Assert.assertTrue(result.exists());
@@ -23,8 +24,16 @@ public class SentinelTest {
     }
 
     @Test
+    @Ignore
     public void testSentinelAnalysis() throws Exception {
         String[] args = new String[]{"analyse", "--plotWidth", "1366", "--plotHeight", "768", "--axisLabels", "Time", "Score"};
+        Sentinel.main(args);
+    }
+
+    @Test
+    @Ignore
+    public void testSentinelTest() throws Exception {
+        String[] args = new String[]{"test", "--numberOfTestingRuns", "1"};
         Sentinel.main(args);
     }
 

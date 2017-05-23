@@ -48,7 +48,8 @@ public class SentinelAnalysis {
      * @throws IOException
      */
     public static void analyse(AnalysisArgs analysisArgs, String[] args) throws IOException {
-        ListMultimap<String, ResultWrapper> resultsFromJson = getResultsFromJson(analysisArgs);
+        GsonUtil util = new GsonUtil();
+        ListMultimap<String, ResultWrapper> resultsFromJson = util.getResultsFromJsonFiles(analysisArgs.workingDirectory + File.separator + analysisArgs.inputDirectory, analysisArgs.inputFilesGlob);
         if (!resultsFromJson.isEmpty()) {
             File outputDirectory = new File(analysisArgs.workingDirectory + File.separator + analysisArgs.outputDirectory);
             outputDirectory.mkdirs();
@@ -82,11 +83,7 @@ public class SentinelAnalysis {
         }
     }
 
-    /**
-     *
-     * @return
-     */
-    public static StandardChartTheme createChartTheme() {
+    private static StandardChartTheme createChartTheme() {
         StandardChartTheme theme = new StandardChartTheme("JFree/Shadow");
         theme.setPlotBackgroundPaint(Color.WHITE);
         theme.setDomainGridlinePaint(Color.GRAY);
@@ -102,15 +99,7 @@ public class SentinelAnalysis {
         return nonDominatedSeries;
     }
 
-    /**
-     *
-     * @param resultsFromJson
-     * @param indicatorName
-     * @param referenceFront
-     * @return
-     * @throws IOException
-     */
-    public static ListMultimap<String, Double> getIndicatorResults(ListMultimap<String, ResultWrapper> resultsFromJson, String indicatorName, Front referenceFront) throws IOException {
+    private static ListMultimap<String, Double> getIndicatorResults(ListMultimap<String, ResultWrapper> resultsFromJson, String indicatorName, Front referenceFront) throws IOException {
         GenericIndicator<VariableLengthSolution<Integer>> indicator = IndicatorFactory.createIndicator(indicatorName, referenceFront);
         ArrayListMultimap<String, Double> results = ArrayListMultimap.create();
         for (String session : resultsFromJson.keySet()) {
@@ -124,30 +113,6 @@ public class SentinelAnalysis {
 
     private static List<VariableLengthSolution<Integer>> getNonDominatedSolutions(Collection<ResultWrapper> resultsFromJson) {
         return SolutionListUtils.getNondominatedSolutions(getSolutions(resultsFromJson));
-    }
-
-    /**
-     *
-     * @param analysisArgs
-     * @return
-     * @throws IOException
-     */
-    public static ListMultimap<String, ResultWrapper> getResultsFromJson(AnalysisArgs analysisArgs) throws IOException {
-        File inputDirectory = new File(analysisArgs.workingDirectory + File.separator + analysisArgs.inputDirectory);
-        ListMultimap<String, ResultWrapper> results = ArrayListMultimap.create();
-
-        GsonUtil gson = new GsonUtil();
-        PathMatcher matcher = FileSystems.getDefault().getPathMatcher("glob:" + analysisArgs.inputFilesGlob);
-        try (Stream<Path> jsonFiles = Files.walk(inputDirectory.toPath()).filter(matcher::matches)) {
-            jsonFiles.forEach((jsonFile) -> {
-                try {
-                    ResultWrapper result = gson.fromJson(jsonFile);
-                    results.put(result.getSession().isEmpty() ? "EMPTY_SESSION" : result.getSession(), result);
-                } catch (Exception ex) {
-                }
-            });
-        }
-        return results;
     }
 
     private static List<VariableLengthSolution<Integer>> getSolutions(Collection<ResultWrapper> resultsFromJson) {

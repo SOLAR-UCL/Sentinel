@@ -10,12 +10,11 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import java.io.IOException;
 import org.junit.AfterClass;
+import static org.junit.Assert.assertEquals;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.uma.jmetal.util.pseudorandom.JMetalRandom;
 import org.uma.jmetal.util.pseudorandom.impl.JavaRandomGenerator;
-
-import static org.junit.Assert.assertEquals;
 
 /**
  * @author Giovani Guizzo
@@ -34,6 +33,7 @@ public class SimpleDuplicateOperatorTest {
                 1,
                 10,
                 2,
+                1,
                 1,
                 null,
                 Lists.newArrayList(ObjectiveFunction.AVERAGE_CPU_TIME, ObjectiveFunction.AVERAGE_SCORE));
@@ -115,7 +115,7 @@ public class SimpleDuplicateOperatorTest {
                 10,
                 10,
                 1,
-                10, 2, 1, null,
+                10, 2, 1, 1, null,
                 Lists.newArrayList(ObjectiveFunction.AVERAGE_CPU_TIME, ObjectiveFunction.AVERAGE_SCORE)));
         SimpleDuplicateOperator<Integer> duplicateOperator = new SimpleDuplicateOperator<>(1.0, 10);
         solution = duplicateOperator.execute(solution);

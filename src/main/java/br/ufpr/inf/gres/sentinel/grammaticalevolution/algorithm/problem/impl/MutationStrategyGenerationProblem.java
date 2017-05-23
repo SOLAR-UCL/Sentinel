@@ -39,6 +39,7 @@ public class MutationStrategyGenerationProblem implements VariableLengthIntegerP
     private final StrategyMapper strategyMapper;
     private final List<Program> testPrograms;
     private int upperVariableBound;
+    private final int conventionalStrategyRunMultiplier;
 
     /**
      *
@@ -60,6 +61,7 @@ public class MutationStrategyGenerationProblem implements VariableLengthIntegerP
             int upperVariableBound,
             int maxWraps,
             int numberOfStrategyRuns,
+            int conventionalStrategyRunMultiplier,
             List<Program> testPrograms,
             List<String> objectiveFunctions) throws IOException {
         this.strategyMapper = new StrategyMapper(grammarFile);
@@ -75,6 +77,7 @@ public class MutationStrategyGenerationProblem implements VariableLengthIntegerP
         this.objectiveFunctions = Collections.unmodifiableList(ObjectiveFunctionFactory.createObjectiveFunctions(objectiveFunctions));
         this.objectivesToStoreAsAttribute = ObjectiveFunctionFactory.createAllObjectiveFunctions();
         this.objectivesToStoreAsAttribute.removeAll(this.objectiveFunctions);
+        this.conventionalStrategyRunMultiplier = conventionalStrategyRunMultiplier;
     }
 
     private void computeObjectiveValues(VariableLengthSolution<Integer> solution) {
@@ -124,7 +127,7 @@ public class MutationStrategyGenerationProblem implements VariableLengthIntegerP
             evaluationFor:
             for (Program testProgram : this.testPrograms) {
                 IntegrationFacade.setProgramUnderTest(testProgram);
-                integrationFacade.initializeConventionalStrategy(testProgram, this.numberOfStrategyRuns * 10);
+                integrationFacade.initializeConventionalStrategy(testProgram, this.numberOfStrategyRuns * this.conventionalStrategyRunMultiplier);
                 for (int i = 0; i < this.numberOfStrategyRuns; i++) {
                     Stopwatch stopWatch = Stopwatch.createStarted();
                     ThreadMXBean threadBean = ManagementFactory.getThreadMXBean();
@@ -155,6 +158,52 @@ public class MutationStrategyGenerationProblem implements VariableLengthIntegerP
                 solution.setAttribute("ConventionalMutants", integrationFacade.getConventionalMutants());
                 this.computeObjectiveValues(solution);
             }
+        } catch (Exception ex) {
+            // Invalid strategy. Probably discarded due to maximum wraps.
+            System.out.println("Exception! Solution: " + solution.getVariablesCopy());
+            System.out.println(ex.getMessage());
+        }
+    }
+
+    /**
+     *
+     * @param solution
+     */
+    public void evaluateNoConstraints(VariableLengthSolution<Integer> solution) {
+        System.out.println("Evaluation: " + (++this.evaluationCount));
+        try {
+            this.setWorst(solution);
+            Strategy strategy = this.createStrategy(solution);
+            ArrayListMultimap<Program, Long> nanoTimes = ArrayListMultimap.create();
+            ArrayListMultimap<Program, Long> nanoCPUTimes = ArrayListMultimap.create();
+            ArrayListMultimap<Program, Collection<Mutant>> allMutants = ArrayListMultimap.create();
+            IntegrationFacade integrationFacade = IntegrationFacade.getIntegrationFacade();
+            for (Program testProgram : this.testPrograms) {
+                IntegrationFacade.setProgramUnderTest(testProgram);
+                integrationFacade.initializeConventionalStrategy(testProgram, this.numberOfStrategyRuns * this.conventionalStrategyRunMultiplier);
+                for (int i = 0; i < this.numberOfStrategyRuns; i++) {
+                    Stopwatch stopWatch = Stopwatch.createStarted();
+                    ThreadMXBean threadBean = ManagementFactory.getThreadMXBean();
+                    long currentThreadCpuTime = threadBean.getCurrentThreadCpuTime();
+                    List<Mutant> mutants = strategy.run();
+                    integrationFacade.executeMutants(mutants);
+                    currentThreadCpuTime = threadBean.getCurrentThreadCpuTime() - currentThreadCpuTime;
+                    stopWatch.stop();
+
+                    nanoTimes.put(testProgram, stopWatch.elapsed(TimeUnit.NANOSECONDS));
+                    nanoCPUTimes.put(testProgram, currentThreadCpuTime);
+                    allMutants.put(testProgram, mutants);
+                }
+            }
+            solution.setAttribute("Strategy", strategy);
+            solution.setAttribute("Evaluation Found", this.evaluationCount);
+            solution.setAttribute("CPUTimes", nanoCPUTimes);
+            solution.setAttribute("ConventionalCPUTimes", integrationFacade.getConventionalExecutionCPUTimes());
+            solution.setAttribute("Times", nanoTimes);
+            solution.setAttribute("ConventionalTimes", integrationFacade.getConventionalExecutionTimes());
+            solution.setAttribute("Mutants", allMutants);
+            solution.setAttribute("ConventionalMutants", integrationFacade.getConventionalMutants());
+            this.computeObjectiveValues(solution);
         } catch (Exception ex) {
             // Invalid strategy. Probably discarded due to maximum wraps.
             System.out.println("Exception! Solution: " + solution.getVariablesCopy());

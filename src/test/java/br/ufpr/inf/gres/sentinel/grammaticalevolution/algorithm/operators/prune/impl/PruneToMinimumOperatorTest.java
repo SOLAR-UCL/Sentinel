@@ -6,10 +6,9 @@ import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.representation.V
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.GrammarFiles;
 import com.google.common.collect.Lists;
 import java.io.IOException;
+import static org.junit.Assert.assertEquals;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
 
 /**
  * @author Giovani Guizzo
@@ -26,6 +25,7 @@ public class PruneToMinimumOperatorTest {
                 1,
                 10,
                 2,
+                1,
                 1,
                 null,
                 Lists.newArrayList(ObjectiveFunction.AVERAGE_CPU_TIME, ObjectiveFunction.AVERAGE_SCORE));

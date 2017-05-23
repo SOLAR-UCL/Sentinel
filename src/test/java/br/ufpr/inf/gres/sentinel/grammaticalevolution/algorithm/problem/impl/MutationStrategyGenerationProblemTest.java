@@ -12,11 +12,10 @@ import br.ufpr.inf.gres.sentinel.integration.IntegrationFacadeTest;
 import br.ufpr.inf.gres.sentinel.integration.pit.PITFacade;
 import com.google.common.collect.Lists;
 import java.io.File;
+import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-
-import static org.junit.Assert.*;
 
 /**
  * @author Giovani Guizzo
@@ -83,6 +82,7 @@ public class MutationStrategyGenerationProblemTest {
                 179,
                 0,
                 1,
+                1,
                 Lists.newArrayList(programUnderTest),
                 Lists.newArrayList(ObjectiveFunction.AVERAGE_CPU_TIME, ObjectiveFunction.AVERAGE_SCORE));
 
@@ -133,6 +133,7 @@ public class MutationStrategyGenerationProblemTest {
                 1,
                 179,
                 10,
+                1,
                 1,
                 Lists.newArrayList(programUnderTest),
                 Lists.newArrayList(ObjectiveFunction.AVERAGE_CPU_TIME, ObjectiveFunction.AVERAGE_SCORE));
@@ -211,6 +212,7 @@ public class MutationStrategyGenerationProblemTest {
                 10,
                 0,
                 5,
+                1,
                 Lists.newArrayList(new Program("Test1", null),
                         new Program("Test2", null)),
                 Lists.newArrayList(ObjectiveFunction.AVERAGE_CPU_TIME, ObjectiveFunction.AVERAGE_SCORE));

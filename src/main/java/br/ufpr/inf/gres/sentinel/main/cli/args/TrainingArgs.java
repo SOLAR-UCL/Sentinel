@@ -84,6 +84,14 @@ public class TrainingArgs {
     @Parameter(names = "--trainingRuns",
             description = "Number of training runs for each training program in each training evaluation.")
     public Integer numberOfTrainingRuns = 5;
+
+    /**
+     *
+     */
+    @Parameter(names = {"--conventionalStrategyMultiplier", "--multiplier"},
+            description = "Multiplier for the number of training runs for the conventional strategy execution. The conventional strategy will be executed (numberOfTrainingRuns * conventionalStrategyRunMultiplier) times.")
+    public Integer conventionalStrategyMultiplier = 10;
+
     /**
      *
      */
@@ -114,21 +122,30 @@ public class TrainingArgs {
      *
      */
     @Parameter(names = "--session",
-            description = "Session name for the results. This is used later for analysis. Results from the same session are used to compute the overall quality of the algorithm used in this session. If no session is provided, then all the results are outputed to the training directory.",
+            description = "Session name for the results. This is used later for analysis. Results from the same session are used to compute the overall quality of the algorithm used in this session. If no session is provided, then all the results are outputed to the output directory.",
             converter = SeparatorConverter.class)
     public String session = "Experiment";
     /**
      *
      */
-    @Parameter(names = {"--trainingDirectory", "-td"},
-            description = "The directory (relative to the working directory) in which the training programs are located and where the training will be executed.",
+    @Parameter(names = {"--outputDirectory", "-od"},
+            description = "The directory (relative to the working directory) in which the training results will be outputed.",
             converter = SeparatorConverter.class)
-    public String trainingDirectory = "training";
+    public String outputDirectory = "training";
+
+    /**
+     *
+     */
+    @Parameter(names = {"--inputDirectory", "-id"},
+            description = "The directory (relative to the working directory) in which the programs for the training are located.",
+            converter = SeparatorConverter.class)
+    public String inputDirectory = "training";
+
     /**
      *
      */
     @Parameter(names = {"--trainingPrograms", "-tp"},
-            description = "The names of the training programs to generate strategies. Sentinel will search for the programs in /path/to/training/directory/ according to the tool used for the mutant generation.",
+            description = "The names of the training programs to generate strategies. Sentinel will search for the programs in /path/to/input/directory/ according to the tool used for the mutant generation.",
             variableArity = true)
     public List<String> trainingPrograms = Lists.newArrayList("br.ufpr.inf.gres.TriTyp");
     /**

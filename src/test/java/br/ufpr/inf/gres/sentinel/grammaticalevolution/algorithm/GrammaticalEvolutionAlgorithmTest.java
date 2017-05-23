@@ -15,13 +15,12 @@ import com.google.common.collect.Lists;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import static org.junit.Assert.assertEquals;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.uma.jmetal.operator.impl.selection.BinaryTournamentSelection;
 import org.uma.jmetal.util.comparator.RankingAndCrowdingDistanceComparator;
 import org.uma.jmetal.util.evaluator.impl.SequentialSolutionListEvaluator;
-
-import static org.junit.Assert.assertEquals;
 
 /**
  * @author Giovani Guizzo
@@ -58,7 +57,7 @@ public class GrammaticalEvolutionAlgorithmTest {
                         50,
                         new SimpleDuplicateOperator<>(0.1, 100),
                         new PruneToMinimumOperator<>(0.1, 10),
-                        new SinglePointVariableCrossover<>(1.0),
+                        new SinglePointVariableCrossover<>(1.0, 100),
                         new SimpleRandomVariableMutation(0.01, 0, 179),
                         new BinaryTournamentSelection<>(new RankingAndCrowdingDistanceComparator<>()),
                         new SequentialSolutionListEvaluator<>());
@@ -98,6 +97,7 @@ public class GrammaticalEvolutionAlgorithmTest {
                     upperVariableBound,
                     maxWraps,
                     numberOfStrategyRuns,
+                    1,
                     testPrograms,
                     Lists.newArrayList(ObjectiveFunction.AVERAGE_CPU_TIME, ObjectiveFunction.AVERAGE_SCORE));
         }

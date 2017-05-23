@@ -112,14 +112,14 @@ public class PITFacade extends IntegrationFacade {
     private final HashMap<Program, HashMap<Mutant, MutationDetails>> generatedMutants = new HashMap<>();
     private final HashMap<Program, MutationTestUnit> mutationUnits = new HashMap<>();
 
-    private final String trainingDircetory;
+    private final String inputDirectory;
 
     /**
      *
-     * @param trainingDircetory
+     * @param inputDirectory
      */
-    public PITFacade(String trainingDircetory) {
-        this.trainingDircetory = trainingDircetory;
+    public PITFacade(String inputDirectory) {
+        this.inputDirectory = inputDirectory;
     }
 
     /**
@@ -134,7 +134,7 @@ public class PITFacade extends IntegrationFacade {
 
     private ReportOptions createDefaultReportOptions() {
         ReportOptions reportOptions = new ReportOptions();
-        String absolutePath = new File(this.trainingDircetory).getAbsolutePath();
+        String absolutePath = new File(this.inputDirectory).getAbsolutePath();
         reportOptions.setReportDir(absolutePath);
         reportOptions.setGroupConfig(new TestGroupConfig());
         reportOptions.setSourceDirs(Lists.newArrayList(new File(absolutePath)));
@@ -187,7 +187,7 @@ public class PITFacade extends IntegrationFacade {
                         fieldValue.add(description);
                     }
                     EntryPointImpl entryPoint = this.getOrCreateEntryPoint();
-                    Collection<MutationResult> result = entryPoint.executeMutants(new File(this.trainingDircetory), reportOptions, new SettingsFactory(reportOptions, plugins), new HashMap<>(), unit);
+                    Collection<MutationResult> result = entryPoint.executeMutants(new File(this.inputDirectory), reportOptions, new SettingsFactory(reportOptions, plugins), new HashMap<>(), unit);
 
                     for (Mutant mutant : mutantsToExecute) {
                         MutationDetails description = descriptions.get(mutant);
@@ -243,7 +243,7 @@ public class PITFacade extends IntegrationFacade {
             try {
                 final Program programUnderTest = IntegrationFacade.getProgramUnderTest();
                 EntryPointImpl entryPoint = this.getOrCreateEntryPoint();
-                MutationAnalysisUnit unit = entryPoint.generateMutants(new File(this.trainingDircetory), reportOptions, new SettingsFactory(reportOptions, plugins), new HashMap<>());
+                MutationAnalysisUnit unit = entryPoint.generateMutants(new File(this.inputDirectory), reportOptions, new SettingsFactory(reportOptions, plugins), new HashMap<>());
                 if (unit != null) {
                     if (unit instanceof MutationTestUnit) {
                         MutationTestUnit testUnit = (MutationTestUnit) unit;
@@ -300,7 +300,7 @@ public class PITFacade extends IntegrationFacade {
     public Program instantiateProgram(String programName) {
         String replace = programName.replace(".java", "");
         replace = CharMatcher.anyOf("\\/.").replaceFrom(replace, File.separator);
-        return new Program(programName, new File(this.trainingDircetory + File.separator + replace + ".java"));
+        return new Program(programName, new File(this.inputDirectory + File.separator + replace + ".java"));
         //TODO
     }
 

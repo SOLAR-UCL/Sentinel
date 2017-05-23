@@ -43,6 +43,7 @@ public class VariableLengthSolutionGsonSerializerTest {
                 179,
                 10,
                 5,
+                1,
                 Lists.newArrayList(facade.instantiateProgram("br.ufpr.inf.gres.TriTyp")),
                 Lists.newArrayList(ObjectiveFunction.AVERAGE_CPU_TIME, ObjectiveFunction.AVERAGE_SCORE));
     }

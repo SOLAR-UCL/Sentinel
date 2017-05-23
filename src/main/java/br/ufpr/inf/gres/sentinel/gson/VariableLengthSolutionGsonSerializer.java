@@ -32,6 +32,12 @@ public class VariableLengthSolutionGsonSerializer<T extends Number> implements J
 
         jsonSolution.add("evaluation", context.serialize(src.getAttribute("Evaluation Found")));
         jsonSolution.add("consumedItemsCount", context.serialize(src.getAttribute("Consumed Items Count")));
+
+        JsonElement strategyName = context.serialize(src.getAttribute("Name"));
+        if (strategyName != null) {
+            jsonSolution.add("name", strategyName);
+        }
+
         jsonSolution.add("variables", context.serialize(src.getVariablesCopy()));
         jsonSolution.add("strategy", context.serialize(src.getAttribute("Strategy"), Strategy.class));
         return jsonSolution;

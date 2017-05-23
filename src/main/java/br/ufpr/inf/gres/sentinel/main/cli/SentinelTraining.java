@@ -31,11 +31,19 @@ public class SentinelTraining {
 
     /**
      *
-     * @param problem
      * @param trainingArgs
-     * @return
+     * @param rawArgs
+     * @throws Exception
      */
-    public static GrammaticalEvolutionAlgorithm<Integer> buildAlgorithm(MutationStrategyGenerationProblem problem, TrainingArgs trainingArgs) {
+    public static void train(TrainingArgs trainingArgs, String[] rawArgs) throws Exception {
+        IntegrationFacade facade = buildFacade(trainingArgs);
+        MutationStrategyGenerationProblem problem = buildProblem(facade, trainingArgs);
+        GrammaticalEvolutionAlgorithm<Integer> algorithm = buildAlgorithm(problem, trainingArgs);
+        long timeMillis = runAlgorithm(algorithm);
+        storeResults(algorithm, timeMillis, trainingArgs);
+    }
+
+    private static GrammaticalEvolutionAlgorithm<Integer> buildAlgorithm(MutationStrategyGenerationProblem problem, TrainingArgs trainingArgs) {
         GrammaticalEvolutionAlgorithm<Integer> algorithm
                 = new GrammaticalEvolutionAlgorithm<>(problem,
                         trainingArgs.maxEvaluations,
@@ -43,7 +51,7 @@ public class SentinelTraining {
                         new SimpleDuplicateOperator<>(trainingArgs.duplicateProbability,
                                 trainingArgs.maxLength),
                         new PruneToUsedOperator<>(trainingArgs.pruneProbability),
-                        new SinglePointVariableCrossover<>(trainingArgs.crossoverProbability),
+                        new SinglePointVariableCrossover<>(trainingArgs.crossoverProbability, trainingArgs.maxLength),
                         new SimpleRandomVariableMutation(trainingArgs.mutationProbability,
                                 trainingArgs.lowerVariableBound,
                                 trainingArgs.upperVariableBound),
@@ -52,28 +60,16 @@ public class SentinelTraining {
         return algorithm;
     }
 
-    /**
-     *
-     * @param trainingArgs
-     * @return
-     */
     public static IntegrationFacade buildFacade(TrainingArgs trainingArgs) {
         IntegrationFacade facade
                 = IntegrationFacadeFactory.createIntegrationFacade(trainingArgs.facade,
                         trainingArgs.workingDirectory
                         + File.separator
-                        + trainingArgs.trainingDirectory);
+                        + trainingArgs.inputDirectory);
         IntegrationFacade.setIntegrationFacade(facade);
         return facade;
     }
 
-    /**
-     *
-     * @param facade
-     * @param trainingArgs
-     * @return
-     * @throws IOException
-     */
     public static MutationStrategyGenerationProblem buildProblem(IntegrationFacade facade, TrainingArgs trainingArgs) throws IOException {
         List<Program> trainingPrograms = facade.instantiatePrograms(trainingArgs.trainingPrograms);
         String grammarPath = trainingArgs.workingDirectory
@@ -87,31 +83,20 @@ public class SentinelTraining {
                         trainingArgs.upperVariableBound,
                         trainingArgs.maxWraps,
                         trainingArgs.numberOfTrainingRuns,
+                        trainingArgs.conventionalStrategyMultiplier,
                         trainingPrograms,
                         trainingArgs.objectiveFunctions);
         return problem;
     }
 
-    /**
-     *
-     * @param algorithm
-     * @return
-     */
-    public static long runAlgorithm(GrammaticalEvolutionAlgorithm<Integer> algorithm) {
+    private static long runAlgorithm(GrammaticalEvolutionAlgorithm<Integer> algorithm) {
         long timeMillis = System.currentTimeMillis();
         algorithm.run();
         timeMillis = System.currentTimeMillis() - timeMillis;
         return timeMillis;
     }
 
-    /**
-     *
-     * @param algorithm
-     * @param timeMillis
-     * @param trainingArgs
-     * @throws IOException
-     */
-    public static void storeResults(GrammaticalEvolutionAlgorithm<Integer> algorithm, long timeMillis, TrainingArgs trainingArgs) throws IOException {
+    private static void storeResults(GrammaticalEvolutionAlgorithm<Integer> algorithm, long timeMillis, TrainingArgs trainingArgs) throws IOException {
         List<VariableLengthSolution<Integer>> resultSolutions = algorithm.getResult();
         resultSolutions.sort(Comparator.comparingDouble(o -> o.getObjective(1)));
 
@@ -125,28 +110,14 @@ public class SentinelTraining {
 
         File outputFile = new File(trainingArgs.workingDirectory
                 + File.separator
-                + trainingArgs.trainingDirectory
+                + trainingArgs.outputDirectory
                 + File.separator
                 + trainingArgs.session
                 + File.separator
                 + "result_" + trainingArgs.runNumber + ".json");
         Files.createParentDirs(outputFile);
-        GsonUtil gson = new GsonUtil();
+        GsonUtil gson = new GsonUtil(trainingArgs);
         Files.write(gson.toJson(result), outputFile, Charset.defaultCharset());
-    }
-
-    /**
-     *
-     * @param trainingArgs
-     * @param rawArgs
-     * @throws Exception
-     */
-    public static void train(TrainingArgs trainingArgs, String[] rawArgs) throws Exception {
-        IntegrationFacade facade = buildFacade(trainingArgs);
-        MutationStrategyGenerationProblem problem = buildProblem(facade, trainingArgs);
-        GrammaticalEvolutionAlgorithm<Integer> algorithm = buildAlgorithm(problem, trainingArgs);
-        long timeMillis = runAlgorithm(algorithm);
-        storeResults(algorithm, timeMillis, trainingArgs);
     }
 
 }
