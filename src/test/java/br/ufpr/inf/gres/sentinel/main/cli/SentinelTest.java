@@ -21,12 +21,20 @@ public class SentinelTest {
         File result = new File("training/Experiment/result_1.json");
         Assert.assertTrue(result.exists());
         Assert.assertTrue(result.length() > 0);
+        result.delete();
+        result.getParentFile().delete();
     }
 
     @Test
     @Ignore
     public void testSentinelAnalysis() throws Exception {
-        String[] args = new String[]{"analyse", "--plotWidth", "1366", "--plotHeight", "768", "--axisLabels", "Time", "Score"};
+        String[] args = new String[]{"analyse",
+            "--plotWidth", "1366",
+            "--plotHeight", "768",
+            "--axisLabels", "Time", "Score",
+            "--inputDirectory", "testing",
+            "--outputDirectory", "testinganalysis",
+            "--printDominatedSolutions"};
         Sentinel.main(args);
     }
 

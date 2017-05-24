@@ -4,6 +4,7 @@ import br.ufpr.inf.gres.sentinel.base.mutation.Program;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.problem.fitness.ObjectiveFunction;
 import com.google.common.collect.Multimap;
 import java.util.Collection;
+import java.util.Set;
 import org.uma.jmetal.solution.Solution;
 
 /**
@@ -23,25 +24,24 @@ public class AverageCPUTime<T> extends ObjectiveFunction<T> {
         if (solution.getAttribute("CPUTimes") != null && solution.getAttribute("ConventionalCPUTimes") != null) {
             Multimap<Program, Long> allConventionalCpuTimes = (Multimap<Program, Long>) solution.getAttribute("ConventionalCPUTimes");
             Multimap<Program, Long> allCpuTimes = (Multimap<Program, Long>) solution.getAttribute("CPUTimes");
-            if (!allCpuTimes.isEmpty()) {
-                for (Program program : allCpuTimes.keySet()) {
-                    Collection<Long> conventionalCpuTimes = allConventionalCpuTimes.get(program);
-                    Collection<Long> cpuTimes = allCpuTimes.get(program);
-                    if (!cpuTimes.isEmpty() && cpuTimes.stream().noneMatch(time -> time.equals(0L))) {
-                        double cpuTime = cpuTimes.stream()
-                                .mapToLong(Long::longValue)
-                                .average()
-                                .getAsDouble();
+            double cpuSum = 0.0;
+            Set<Program> allPrograms = allConventionalCpuTimes.keySet();
+            for (Program program : allPrograms) {
+                Collection<Long> conventionalCpuTimes = allConventionalCpuTimes.get(program);
+                Collection<Long> cpuTimes = allCpuTimes.get(program);
+                double cpuTime = cpuTimes.stream()
+                        .mapToLong(Long::longValue)
+                        .average()
+                        .orElse(0.0);
 
-                        double conventionalCpuTime = conventionalCpuTimes.stream()
-                                .mapToLong(Long::longValue)
-                                .average()
-                                .getAsDouble();
+                double conventionalCpuTime = conventionalCpuTimes.stream()
+                        .mapToLong(Long::longValue)
+                        .average()
+                        .getAsDouble();
 
-                        return cpuTime / conventionalCpuTime;
-                    }
-                }
+                cpuSum += cpuTime / (conventionalCpuTime == 0 ? 1 : conventionalCpuTime);
             }
+            return cpuSum / allPrograms.size();
         }
         return this.getWorstValue();
     }

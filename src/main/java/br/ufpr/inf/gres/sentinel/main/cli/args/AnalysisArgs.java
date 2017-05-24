@@ -77,6 +77,14 @@ public class AnalysisArgs {
     @Parameter(names = "--printIntermediateFiles",
             description = "A boolean argument to determine if Sentinel should print intermediate files, such as text files representing Pareto fronts.")
     public boolean printIntermediateFiles = false;
+
+    /**
+     *
+     */
+    @Parameter(names = "--printDominatedSolutions",
+            description = "A boolean argument to determine if Sentinel should print dominated solutions information.")
+    public boolean printDominatedSolutions = false;
+
     /**
      *
      */

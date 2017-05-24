@@ -77,7 +77,7 @@ public class AverageQuantityTest {
         pointSolution.setAttribute("ConventionalMutants", conventionalMutants);
 
         AverageQuantity averageQuantity = new AverageQuantity();
-        assertEquals(averageQuantity.getWorstValue(), averageQuantity.computeFitness(pointSolution), 0.01);
+        assertEquals(0.0, averageQuantity.computeFitness(pointSolution), 0.01);
     }
 
     @Test
@@ -98,7 +98,7 @@ public class AverageQuantityTest {
         pointSolution.setAttribute("ConventionalMutants", conventionalMutants);
 
         AverageQuantity averageQuantity = new AverageQuantity();
-        assertEquals(averageQuantity.getWorstValue(), averageQuantity.computeFitness(pointSolution), 0.01);
+        assertEquals(0.0, averageQuantity.computeFitness(pointSolution), 0.01);
     }
 
     @Test
@@ -107,6 +107,44 @@ public class AverageQuantityTest {
 
         AverageQuantity averageQuantity = new AverageQuantity();
         assertEquals(averageQuantity.getWorstValue(), averageQuantity.computeFitness(pointSolution), 0.01);
+    }
+
+    @Test
+    public void testCompute5() {
+        Program program = new Program("Program1", new File("Program1"));
+        Program program2 = new Program("Program2", new File("Program2"));
+        PointSolution pointSolution = new PointSolution(1);
+
+        ArrayListMultimap<Program, Collection<Mutant>> mutants = ArrayListMultimap.create();
+        mutants.put(program, Lists.newArrayList(
+                new Mutant("Mutant1", new File("Mutant1"), new Program("Program1", new File("Program1"))),
+                new Mutant("Mutant2", new File("Mutant1"), new Program("Program1", new File("Program1"))),
+                new Mutant("Mutant3", new File("Mutant1"), new Program("Program1", new File("Program1"))),
+                new Mutant("Mutant4", new File("Mutant1"), new Program("Program1", new File("Program1"))),
+                new Mutant("Mutant5", new File("Mutant1"), new Program("Program1", new File("Program1")))));
+
+        mutants.put(program2, Lists.newArrayList(
+                new Mutant("Mutant1", new File("Mutant1"), new Program("Program2", new File("Program2")))));
+        pointSolution.setAttribute("Mutants", mutants);
+
+        ArrayListMultimap<Program, Mutant> conventionalMutants = ArrayListMultimap.create();
+        conventionalMutants.putAll(program, Lists.newArrayList(
+                new Mutant("Mutant1", new File("Mutant1"), new Program("Program1", new File("Program1"))),
+                new Mutant("Mutant2", new File("Mutant1"), new Program("Program1", new File("Program1"))),
+                new Mutant("Mutant3", new File("Mutant1"), new Program("Program1", new File("Program1"))),
+                new Mutant("Mutant4", new File("Mutant1"), new Program("Program1", new File("Program1"))),
+                new Mutant("Mutant5", new File("Mutant1"), new Program("Program1", new File("Program1")))));
+
+        conventionalMutants.putAll(program2, Lists.newArrayList(
+                new Mutant("Mutant1", new File("Mutant1"), new Program("Program2", new File("Program2"))),
+                new Mutant("Mutant2", new File("Mutant1"), new Program("Program2", new File("Program2"))),
+                new Mutant("Mutant3", new File("Mutant1"), new Program("Program2", new File("Program2"))),
+                new Mutant("Mutant4", new File("Mutant1"), new Program("Program2", new File("Program2"))),
+                new Mutant("Mutant5", new File("Mutant1"), new Program("Program2", new File("Program2")))));
+        pointSolution.setAttribute("ConventionalMutants", conventionalMutants);
+
+        AverageQuantity averageQuantity = new AverageQuantity();
+        assertEquals(0.6, averageQuantity.computeFitness(pointSolution), 0.01);
     }
 
     @Test

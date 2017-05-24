@@ -67,7 +67,7 @@ public class AverageCPUTimeTest {
         pointSolution.setAttribute("ConventionalCPUTimes", conventionalCPUTimes);
 
         AverageCPUTime averageCPUTime = new AverageCPUTime();
-        assertEquals(averageCPUTime.getWorstValue(), averageCPUTime.computeFitness(pointSolution), 0.01);
+        assertEquals(0.05, averageCPUTime.computeFitness(pointSolution), 0.01);
     }
 
     @Test
@@ -108,7 +108,27 @@ public class AverageCPUTimeTest {
         pointSolution.setAttribute("ConventionalCPUTimes", conventionalCPUTimes);
 
         AverageCPUTime averageCPUTime = new AverageCPUTime();
-        assertEquals(averageCPUTime.getWorstValue(), averageCPUTime.computeFitness(pointSolution), 0.01);
+        assertEquals(0.0, averageCPUTime.computeFitness(pointSolution), 0.01);
+    }
+
+    @Test
+    public void testCompute7() {
+        Program program = new Program("Program1", new File("Program1"));
+        Program program2 = new Program("Program2", new File("Program2"));
+        PointSolution pointSolution = new PointSolution(1);
+
+        ArrayListMultimap<Program, Long> cpuTimes = ArrayListMultimap.create();
+        cpuTimes.putAll(program, Lists.newArrayList(100L, 100L, 100L, 100L));
+        cpuTimes.putAll(program2, Lists.newArrayList(50000L));
+        pointSolution.setAttribute("CPUTimes", cpuTimes);
+
+        ArrayListMultimap<Program, Long> conventionalCPUTimes = ArrayListMultimap.create();
+        conventionalCPUTimes.putAll(program, Lists.newArrayList(100L, 100L, 100L, 100L));
+        conventionalCPUTimes.putAll(program2, Lists.newArrayList(100000L, 100000L, 100000L, 100000L));
+        pointSolution.setAttribute("ConventionalCPUTimes", conventionalCPUTimes);
+
+        AverageCPUTime averageCPUTime = new AverageCPUTime();
+        assertEquals(0.75, averageCPUTime.computeFitness(pointSolution), 0.01);
     }
 
     @Test

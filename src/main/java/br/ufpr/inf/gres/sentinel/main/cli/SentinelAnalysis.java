@@ -11,7 +11,8 @@ import java.awt.Color;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -195,13 +196,16 @@ public class SentinelAnalysis {
 
     private static void printOtherFronts(ListMultimap<String, ResultWrapper> resultsFromJson, File outputDirectory, AnalysisArgs analysisArgs) throws IOException {
         XYSeriesCollection allFrontsPlot = new XYSeriesCollection();
-        List<VariableLengthSolution<Integer>> nonDominatedSolutions = getNonDominatedSolutions(resultsFromJson.values());
-        XYSeries nonDominatedSeries = createNonDominatedSeries("Non-Dominated Solutions", nonDominatedSolutions);
-        allFrontsPlot.addSeries(nonDominatedSeries);
 
         for (String key : resultsFromJson.keySet()) {
             List<ResultWrapper> allResults = resultsFromJson.get(key);
-            List<VariableLengthSolution<Integer>> result = getNonDominatedSolutions(allResults);
+            List<VariableLengthSolution<Integer>> result;
+
+            if (analysisArgs.printDominatedSolutions) {
+                result = getSolutions(allResults);
+            } else {
+                result = getNonDominatedSolutions(allResults);
+            }
 
             String outputSession = outputDirectory.getPath() + File.separator + key + File.separator;
             Files.createDirectories(Paths.get(outputSession));
@@ -218,7 +222,14 @@ public class SentinelAnalysis {
 
             XYSeriesCollection runsSeries = new XYSeriesCollection();
             for (ResultWrapper runResult : allResults) {
-                List<VariableLengthSolution<Integer>> resultSolutions = runResult.getResult();
+                List<VariableLengthSolution<Integer>> resultSolutions;
+
+                if (analysisArgs.printDominatedSolutions) {
+                    resultSolutions = runResult.getResult();
+                } else {
+                    resultSolutions = SolutionListUtils.getNondominatedSolutions(runResult.getResult());
+                }
+
                 if (analysisArgs.printIntermediateFiles) {
                     try (FileWriter writer = new FileWriter(outputSession + "FUN_" + runResult.getRunNumber() + ".txt")) {
                         for (VariableLengthSolution<Integer> resultSolution : resultSolutions) {
