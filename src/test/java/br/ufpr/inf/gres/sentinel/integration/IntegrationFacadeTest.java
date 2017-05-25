@@ -49,8 +49,8 @@ public class IntegrationFacadeTest {
 
     @Test
     public void test() {
-        IntegrationFacade muJava = new PITFacade("");
-        IntegrationFacade.setIntegrationFacade(muJava);
+        IntegrationFacade facade = new PITFacade("");
+        IntegrationFacade.setIntegrationFacade(facade);
         assertNotNull(IntegrationFacade.getIntegrationFacade());
         assertTrue(IntegrationFacade.getIntegrationFacade() instanceof PITFacade);
     }
