@@ -16,7 +16,11 @@ public class SentinelTest {
 
     @Test
     public void testSentinel() throws Exception {
-        String[] args = new String[]{"train", "--maxEvaluations", "1", "--populationSize", "1", "--trainingRuns", "1", "--conventionalStrategyMultiplier", "1"};
+        String[] args = new String[]{"train",
+            "--maxEvaluations", "1",
+            "--populationSize", "1",
+            "--trainingRuns", "1",
+            "--conventionalStrategyMultiplier", "1"};
         Sentinel.main(args);
         File result = new File("training/Experiment/result_1.json");
         Assert.assertTrue(result.exists());
@@ -41,7 +45,8 @@ public class SentinelTest {
     @Test
     @Ignore
     public void testSentinelTest() throws Exception {
-        String[] args = new String[]{"test", "--numberOfTestingRuns", "1"};
+        String[] args = new String[]{"test",
+            "--numberOfTestingRuns", "1"};
         Sentinel.main(args);
     }
 

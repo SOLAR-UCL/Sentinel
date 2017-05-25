@@ -59,7 +59,7 @@ public class RandomSelectionTest {
         List<Integer> input = Lists.newArrayList(1, 2, 3, 4, 5, 6);
         RandomSelection<Integer> operation = new RandomSelection<>();
         List<Integer> result = operation.selectItems(input, 7);
-        assertEquals(7, result.size());
+        assertEquals(6, result.size());
     }
 
     @Test
@@ -67,10 +67,8 @@ public class RandomSelectionTest {
         List<Integer> input = Lists.newArrayList(1);
         RandomSelection<Integer> operation = new RandomSelection<>();
         List<Integer> result = operation.selectItems(input, 3);
-        assertEquals(3, result.size());
+        assertEquals(1, result.size());
         assertEquals(1, (int) result.get(0));
-        assertEquals(1, (int) result.get(1));
-        assertEquals(1, (int) result.get(2));
     }
 
     @Test
