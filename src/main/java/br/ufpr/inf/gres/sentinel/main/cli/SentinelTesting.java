@@ -48,6 +48,7 @@ public class SentinelTesting {
         if (!resultsFromJson.isEmpty()) {
             runTest(problem, nonDominatedSolutions, testingArgs);
         }
+        facade.tearDown();
     }
 
     private static void runTest(MutationStrategyGenerationProblem problem, List<VariableLengthSolution<Integer>> nonDominatedSolutions, TestingArgs testingArgs) throws IOException {
