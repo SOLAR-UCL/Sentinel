@@ -137,17 +137,26 @@ public class PITFacade extends IntegrationFacade {
         String absolutePath = new File(this.inputDirectory).getAbsolutePath();
         reportOptions.setReportDir(absolutePath);
         reportOptions.setGroupConfig(new TestGroupConfig());
-        reportOptions.setSourceDirs(Lists.newArrayList(new File(absolutePath)));
-        reportOptions.setCodePaths(Lists.newArrayList(absolutePath));
-        reportOptions.setTargetClasses(Lists.newArrayList(new Glob(IntegrationFacade.getProgramUnderTest().getFullName())));
-        reportOptions.setTargetTests(Lists.newArrayList(new Glob(IntegrationFacade.getProgramUnderTest().getFullName() + "Test")));
+
+        reportOptions.setSourceDirs(Lists.newArrayList(new File(absolutePath + "\\src\\main\\java")));
+        reportOptions.setCodePaths(Lists.newArrayList(absolutePath + "\\src\\main\\java"));
+
+        reportOptions.setTargetClasses(Lists.newArrayList(new Glob("org.joda.time.DateTime")));
+
+        reportOptions.setTargetTests(Lists.newArrayList(new Glob("**TestAllPackages")));
+
         reportOptions.setClassPathElements(Lists.newArrayList(ClassPath.getClassPathElementsAsPaths()));
-        reportOptions.getClassPathElements().add(absolutePath);
+        reportOptions.getClassPathElements().add("C:\\Users\\Giovani\\.m2\\repository\\org\\joda\\joda-convert\\1.2\\joda-convert-1.2.jar");
+        reportOptions.getClassPathElements().add(absolutePath + "\\target\\classes");
+        reportOptions.getClassPathElements().add(absolutePath + "\\target\\test-classes");
+
         reportOptions.setMutateStaticInitializers(true);
         reportOptions.setDetectInlinedCode(true);
         reportOptions.setShouldCreateTimestampedReports(false);
         reportOptions.setIncludeLaunchClasspath(true);
-        reportOptions.setVerbose(false);
+        reportOptions.setVerbose(true);
+
+        reportOptions.addChildJVMArgs(Lists.newArrayList("-Xdebug", "-Xrunjdwp:transport=dt_socket,address=127.0.0.1:8888"));
         return reportOptions;
     }
 
@@ -298,9 +307,9 @@ public class PITFacade extends IntegrationFacade {
      */
     @Override
     public Program instantiateProgram(String programName) {
-        String replace = programName.replace(".java", "");
+        String replace = programName.replaceAll(".java$", "");
         replace = CharMatcher.anyOf("\\/.").replaceFrom(replace, File.separator);
-        return new Program(programName, new File(this.inputDirectory + File.separator + replace + ".java"));
+        return new Program(programName, new File(this.inputDirectory + File.separator + replace));
         //TODO
     }
 

@@ -8,10 +8,10 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.AfterClass;
+import static org.junit.Assert.*;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import static org.junit.Assert.*;
+import org.pitest.mutationtest.commandline.MutationCoverageReport;
 
 /**
  *
@@ -36,6 +36,30 @@ public class PITFacadeTest {
     @Test(expected = Exception.class)
     public void testCombineMutants() {
         facade.combineMutants(new ArrayList<>());
+    }
+
+    @Test
+    public void testNewExecution() {
+//        PITFacade facade = new PITFacade("C:\\Users\\Giovani\\NetBeansProjects\\joda-time");
+//        Program programUnderTest = facade.instantiateProgram("joda");
+//        IntegrationFacade.setIntegrationFacade(facade);
+//        IntegrationFacade.setProgramUnderTest(programUnderTest);
+//
+//        List<Mutant> mutants = facade.executeOperators(facade.getAllOperators());
+//        facade.executeMutants(mutants);
+
+//        System.out.println("Size: " + mutants.size());
+//        System.out.println("Dead: " + mutants.stream().filter(Mutant::isDead).count());
+//        System.out.println("Alive: " + mutants.stream().filter(Mutant::isAlive).count());
+//
+        MutationCoverageReport.main(new String[]{"--targetClasses", "org.joda.time.*",
+            "--targetTests", "**TestAllPackages",
+            "--sourceDirs", "C:\\Users\\Giovani\\NetBeansProjects\\joda-time\\src\\main\\java",
+            "--reportDir", "./",
+            "--outputFormats", "CSV",
+            "--classPath", "C:\\Users\\Giovani\\.m2\\repository\\org\\joda\\joda-convert\\1.2\\joda-convert-1.2.jar,"
+            + "C:\\Users\\Giovani\\NetBeansProjects\\joda-time\\target\\classes,"
+            + "C:\\Users\\Giovani\\NetBeansProjects\\joda-time\\target\\test-classes"});
     }
 
     @Test
