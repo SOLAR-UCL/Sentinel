@@ -138,17 +138,19 @@ public class PITFacade extends IntegrationFacade {
         reportOptions.setReportDir(absolutePath);
         reportOptions.setGroupConfig(new TestGroupConfig());
 
-        reportOptions.setSourceDirs(Lists.newArrayList(new File(absolutePath + "\\src\\main\\java")));
-        reportOptions.setCodePaths(Lists.newArrayList(absolutePath + "\\src\\main\\java"));
+//        reportOptions.setSourceDirs(Lists.newArrayList(new File(absolutePath)));
+//        reportOptions.setCodePaths(Lists.newArrayList(absolutePath));
+        reportOptions.setSourceDirs(Lists.newArrayList(new File("..\\joda-time\\src\\main\\java")));
+        reportOptions.setCodePaths(Lists.newArrayList("..\\joda-time\\src\\main\\java"));
 
-        reportOptions.setTargetClasses(Lists.newArrayList(new Glob("org.joda.time.DateTime")));
+        reportOptions.setTargetClasses(Lists.newArrayList(new Glob("org.joda.time.*")));
 
         reportOptions.setTargetTests(Lists.newArrayList(new Glob("**TestAllPackages")));
 
         reportOptions.setClassPathElements(Lists.newArrayList(ClassPath.getClassPathElementsAsPaths()));
-        reportOptions.getClassPathElements().add("C:\\Users\\Giovani\\.m2\\repository\\org\\joda\\joda-convert\\1.2\\joda-convert-1.2.jar");
-        reportOptions.getClassPathElements().add(absolutePath + "\\target\\classes");
-        reportOptions.getClassPathElements().add(absolutePath + "\\target\\test-classes");
+        reportOptions.getClassPathElements().add("..\\joda-time\\target\\joda-time-2.9.9-jar-with-dependencies.jar");
+        reportOptions.getClassPathElements().add("..\\joda-time\\target\\classes");
+        reportOptions.getClassPathElements().add("..\\joda-time\\target\\test-classes");
 
         reportOptions.setMutateStaticInitializers(true);
         reportOptions.setDetectInlinedCode(true);
@@ -156,7 +158,6 @@ public class PITFacade extends IntegrationFacade {
         reportOptions.setIncludeLaunchClasspath(true);
         reportOptions.setVerbose(true);
 
-        reportOptions.addChildJVMArgs(Lists.newArrayList("-Xdebug", "-Xrunjdwp:transport=dt_socket,address=127.0.0.1:8888"));
         return reportOptions;
     }
 
@@ -252,7 +253,7 @@ public class PITFacade extends IntegrationFacade {
             try {
                 final Program programUnderTest = IntegrationFacade.getProgramUnderTest();
                 EntryPointImpl entryPoint = this.getOrCreateEntryPoint();
-                MutationAnalysisUnit unit = entryPoint.generateMutants(new File(this.inputDirectory), reportOptions, new SettingsFactory(reportOptions, plugins), new HashMap<>());
+                MutationAnalysisUnit unit = entryPoint.generateMutants(new File(this.inputDirectory), reportOptions, new SettingsFactory(reportOptions, plugins), System.getenv());
                 if (unit != null) {
                     if (unit instanceof MutationTestUnit) {
                         MutationTestUnit testUnit = (MutationTestUnit) unit;
