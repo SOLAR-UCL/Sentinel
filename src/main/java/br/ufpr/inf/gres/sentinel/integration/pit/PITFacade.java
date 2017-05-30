@@ -5,7 +5,9 @@ import br.ufpr.inf.gres.sentinel.base.mutation.Operator;
 import br.ufpr.inf.gres.sentinel.base.mutation.Program;
 import br.ufpr.inf.gres.sentinel.base.mutation.TestCase;
 import br.ufpr.inf.gres.sentinel.integration.IntegrationFacade;
-import com.google.common.base.CharMatcher;
+import com.google.common.base.Joiner;
+import com.google.common.base.Preconditions;
+import com.google.common.base.Splitter;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import java.io.File;
@@ -14,21 +16,25 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
-import org.pitest.classpath.ClassPath;
 import org.pitest.mutationtest.MutationResult;
 import org.pitest.mutationtest.build.MutationAnalysisUnit;
 import org.pitest.mutationtest.build.MutationTestUnit;
+import org.pitest.mutationtest.commandline.OptionsParser;
+import org.pitest.mutationtest.commandline.ParseResult;
+import org.pitest.mutationtest.commandline.PluginFilter;
 import org.pitest.mutationtest.config.PluginServices;
 import org.pitest.mutationtest.config.ReportOptions;
 import org.pitest.mutationtest.config.SettingsFactory;
 import org.pitest.mutationtest.engine.MutationDetails;
 import org.pitest.mutationtest.engine.gregor.mutators.*;
-import org.pitest.testapi.TestGroupConfig;
-import org.pitest.util.Glob;
 
 /**
  *
@@ -110,7 +116,7 @@ public class PITFacade extends IntegrationFacade {
     }
     private final HashMap<Program, EntryPointImpl> entryPoints = new HashMap<>();
     private final HashMap<Program, HashMap<Mutant, MutationDetails>> generatedMutants = new HashMap<>();
-    private final HashMap<Program, MutationTestUnit> mutationUnits = new HashMap<>();
+    private final HashMap<Program, HashMap<MutationTestUnit, Set<Mutant>>> unitToMutants = new HashMap<>();
 
     private final String inputDirectory;
 
@@ -132,35 +138,6 @@ public class PITFacade extends IntegrationFacade {
         throw new UnsupportedOperationException("Sorry, PIT test is not adapted to work with HOMs. Please, select a grammar file without HOMs.");
     }
 
-    private ReportOptions createDefaultReportOptions() {
-        ReportOptions reportOptions = new ReportOptions();
-        String absolutePath = new File(this.inputDirectory).getAbsolutePath();
-        reportOptions.setReportDir(absolutePath);
-        reportOptions.setGroupConfig(new TestGroupConfig());
-
-//        reportOptions.setSourceDirs(Lists.newArrayList(new File(absolutePath)));
-//        reportOptions.setCodePaths(Lists.newArrayList(absolutePath));
-        reportOptions.setSourceDirs(Lists.newArrayList(new File("..\\joda-time\\src\\main\\java")));
-        reportOptions.setCodePaths(Lists.newArrayList("..\\joda-time\\src\\main\\java"));
-
-        reportOptions.setTargetClasses(Lists.newArrayList(new Glob("org.joda.time.*")));
-
-        reportOptions.setTargetTests(Lists.newArrayList(new Glob("**TestAllPackages")));
-
-        reportOptions.setClassPathElements(Lists.newArrayList(ClassPath.getClassPathElementsAsPaths()));
-        reportOptions.getClassPathElements().add("..\\joda-time\\target\\joda-time-2.9.9-jar-with-dependencies.jar");
-        reportOptions.getClassPathElements().add("..\\joda-time\\target\\classes");
-        reportOptions.getClassPathElements().add("..\\joda-time\\target\\test-classes");
-
-        reportOptions.setMutateStaticInitializers(true);
-        reportOptions.setDetectInlinedCode(true);
-        reportOptions.setShouldCreateTimestampedReports(false);
-        reportOptions.setIncludeLaunchClasspath(true);
-        reportOptions.setVerbose(true);
-
-        return reportOptions;
-    }
-
     /**
      *
      * @param mutantToExecute
@@ -172,6 +149,34 @@ public class PITFacade extends IntegrationFacade {
         }
     }
 
+    private ReportOptions createDefaultReportOptions(PluginServices plugins, Program programUnderTest) {
+        String trainingDir = new File(this.inputDirectory).getAbsolutePath();
+
+        List<String> programClassPath = (List<String>) programUnderTest.getAttribute("classPath");
+
+        String[] args = new String[]{
+            "--targetClasses", (String) programUnderTest.getAttribute("targetClassesGlob"),
+            "--targetTests", (String) programUnderTest.getAttribute("targetTestsGlob"),
+            "--sourceDirs", programUnderTest.getSourceFile().getAbsolutePath(),
+            "--reportDir", trainingDir,
+            //"--threads", "14",
+            "--outputFormats", "CSV",
+            "--classPath", Joiner.on(",").join(programClassPath)
+        };
+
+        final OptionsParser parser = new OptionsParser(new PluginFilter(plugins));
+        final ParseResult pr = parser.parse(args);
+        final ReportOptions reportOptions = pr.getOptions();
+
+        reportOptions.setMutateStaticInitializers(true);
+        reportOptions.setDetectInlinedCode(true);
+        reportOptions.setShouldCreateTimestampedReports(false);
+        reportOptions.setIncludeLaunchClasspath(true);
+        reportOptions.setVerbose(false);
+
+        return reportOptions;
+    }
+
     /**
      *
      * @param mutantsToExecute
@@ -181,23 +186,33 @@ public class PITFacade extends IntegrationFacade {
         if (mutantsToExecute != null && !mutantsToExecute.isEmpty()) {
             PluginServices plugins = PluginServices.makeForContextLoader();
 
-            ReportOptions reportOptions = this.createDefaultReportOptions();
+            final Program programUnderTest = IntegrationFacade.getProgramUnderTest();
+            ReportOptions reportOptions = this.createDefaultReportOptions(plugins, programUnderTest);
 
             try {
-                final Program programUnderTest = IntegrationFacade.getProgramUnderTest();
-                MutationTestUnit unit = this.mutationUnits.get(programUnderTest);
-                if (unit != null) {
-                    Field field = unit.getClass().getDeclaredField("availableMutations");
-                    field.setAccessible(true);
-                    Collection<MutationDetails> fieldValue = (Collection<MutationDetails>) field.get(unit);
-                    fieldValue.clear();
-                    HashMap<Mutant, MutationDetails> descriptions = this.generatedMutants.get(programUnderTest);
-                    for (Mutant mutant : mutantsToExecute) {
-                        MutationDetails description = descriptions.get(mutant);
-                        fieldValue.add(description);
+                HashMap<Mutant, MutationDetails> descriptions = this.generatedMutants.get(programUnderTest);
+                HashMap<MutationTestUnit, Set<Mutant>> allUnitsMutants = unitToMutants.get(programUnderTest);
+                if (allUnitsMutants != null || allUnitsMutants.isEmpty()) {
+                    for (Map.Entry<MutationTestUnit, Set<Mutant>> unitEntry : allUnitsMutants.entrySet()) {
+                        MutationTestUnit unit = unitEntry.getKey();
+                        Set<Mutant> unitMutants = unitEntry.getValue();
+
+                        Field field = unit.getClass().getDeclaredField("availableMutations");
+                        field.setAccessible(true);
+                        Collection<MutationDetails> fieldValue = (Collection<MutationDetails>) field.get(unit);
+                        fieldValue.clear();
+
+                        for (Mutant mutant : mutantsToExecute) {
+                            if (unitMutants.contains(mutant)) {
+                                MutationDetails description = descriptions.get(mutant);
+                                fieldValue.add(description);
+                            }
+                        }
+
+                        field.set(unit, fieldValue);
                     }
                     EntryPointImpl entryPoint = this.getOrCreateEntryPoint();
-                    Collection<MutationResult> result = entryPoint.executeMutants(new File(this.inputDirectory), reportOptions, new SettingsFactory(reportOptions, plugins), new HashMap<>(), unit);
+                    Collection<MutationResult> result = entryPoint.executeMutants(null, reportOptions, new SettingsFactory(reportOptions, plugins), new HashMap<>(), new ArrayList<>(allUnitsMutants.keySet()));
 
                     for (Mutant mutant : mutantsToExecute) {
                         MutationDetails description = descriptions.get(mutant);
@@ -246,17 +261,20 @@ public class PITFacade extends IntegrationFacade {
     @Override
     public List<Mutant> executeOperators(List<Operator> operators) {
         List<Mutant> mutants = new ArrayList<>();
+        final Program programUnderTest = IntegrationFacade.getProgramUnderTest();
         if (operators != null && !operators.isEmpty()) {
-            PluginServices plugins = PluginServices.makeForContextLoader();
-            ReportOptions reportOptions = this.createDefaultReportOptions();
+            final PluginServices plugins = PluginServices.makeForContextLoader();
+            ReportOptions reportOptions = this.createDefaultReportOptions(plugins, programUnderTest);
             reportOptions.setMutators(operators.stream().map(Operator::getName).collect(Collectors.toList()));
             try {
-                final Program programUnderTest = IntegrationFacade.getProgramUnderTest();
                 EntryPointImpl entryPoint = this.getOrCreateEntryPoint();
-                MutationAnalysisUnit unit = entryPoint.generateMutants(new File(this.inputDirectory), reportOptions, new SettingsFactory(reportOptions, plugins), System.getenv());
-                if (unit != null) {
+                List<MutationAnalysisUnit> units = entryPoint.generateMutants(null, reportOptions, new SettingsFactory(reportOptions, plugins), new HashMap<>());
+
+                HashMap<MutationTestUnit, Set<Mutant>> unitToMutant = this.unitToMutants.computeIfAbsent(programUnderTest, t -> new HashMap<>());
+                for (MutationAnalysisUnit unit : units) {
                     if (unit instanceof MutationTestUnit) {
                         MutationTestUnit testUnit = (MutationTestUnit) unit;
+                        Set<Mutant> unitMutants = unitToMutant.computeIfAbsent(testUnit, t -> new HashSet<>());
                         Field field = testUnit.getClass().getDeclaredField("availableMutations");
                         field.setAccessible(true);
                         Collection<MutationDetails> fieldValue = (Collection<MutationDetails>) field.get(testUnit);
@@ -266,11 +284,13 @@ public class PITFacade extends IntegrationFacade {
                             Operator operator = Iterables.find(operators, (tempOperator) -> tempOperator.equals(mappedOperator));
                             mutant.getOperators().add(operator);
                             operator.getGeneratedMutants().add(mutant);
-                            HashMap<Mutant, MutationDetails> programMutants = this.generatedMutants.computeIfAbsent(programUnderTest, (t) -> new HashMap<>());
+
+                            HashMap<Mutant, MutationDetails> programMutants = this.generatedMutants.computeIfAbsent(programUnderTest, t -> new HashMap<>());
                             programMutants.putIfAbsent(mutant, mutationDetails);
+
+                            unitMutants.add(mutant);
                             return mutant;
                         }).collect(Collectors.toList()));
-                        this.mutationUnits.putIfAbsent(programUnderTest, testUnit);
                     } else {
                         throw new IllegalArgumentException("This should not be happening!");
                     }
@@ -303,15 +323,37 @@ public class PITFacade extends IntegrationFacade {
 
     /**
      *
-     * @param programName
+     * @param programString
      * @return
      */
     @Override
-    public Program instantiateProgram(String programName) {
-        String replace = programName.replaceAll(".java$", "");
-        replace = CharMatcher.anyOf("\\/.").replaceFrom(replace, File.separator);
-        return new Program(programName, new File(this.inputDirectory + File.separator + replace));
-        //TODO
+    public Program instantiateProgram(String programString) {
+        String errorMessage = "Something went wrong with the following program String: " + programString + ". It appears that it does not have enough information for the mutation testing. If you need more help, please reffer to the '-h' argument.";
+
+        Iterator<String> split = Splitter.on(";").trimResults().split(programString).iterator();
+
+        Preconditions.checkArgument(split.hasNext(), errorMessage);
+        String name = split.next();
+
+        Preconditions.checkArgument(split.hasNext(), errorMessage);
+        String sourceDir = split.next();
+
+        Preconditions.checkArgument(split.hasNext(), errorMessage);
+        String targetClassesGlob = split.next();
+
+        Preconditions.checkArgument(split.hasNext(), errorMessage);
+        String targetTestsGlob = split.next();
+
+        List<String> classPath = new ArrayList<>();
+        while (split.hasNext()) {
+            classPath.add(this.inputDirectory + File.separator + split.next());
+        }
+
+        final Program program = new Program(name, this.inputDirectory + File.separator + sourceDir);
+        program.putAttribute("targetClassesGlob", targetClassesGlob);
+        program.putAttribute("targetTestsGlob", targetTestsGlob);
+        program.putAttribute("classPath", classPath);
+        return program;
     }
 
     /**
@@ -323,7 +365,7 @@ public class PITFacade extends IntegrationFacade {
             entry.close();
         }
         this.entryPoints.clear();
-        this.mutationUnits.clear();
+        this.unitToMutants.clear();
         this.generatedMutants.clear();
     }
 

@@ -1,6 +1,5 @@
 package br.ufpr.inf.gres.sentinel.integration.pit;
 
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import java.io.File;
 import java.io.IOException;
@@ -10,6 +9,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import org.pitest.classinfo.ClassByteArraySource;
 import org.pitest.classinfo.ClassInfo;
 import org.pitest.classinfo.ClassName;
@@ -36,8 +36,7 @@ import org.pitest.mutationtest.tooling.MutationStrategies;
 import org.pitest.util.Timings;
 
 /**
- * Shamelessly copied the content of MutationCoverage and changed its behavior
- * because of private access variables.
+ * Shamelessly copied the content of MutationCoverage and changed its behavior because of private access variables.
  *
  * @author Giovani Guizzo
  */
@@ -49,7 +48,6 @@ public class MutationCoverageImpl {
     private final CodeSource code;
     private final CoverageDatabase coverageData;
     private final ReportOptions data;
-    private MutantResultListenerImpl listener = new MutantResultListenerImpl();
     private final SettingsFactory settings;
     private final MutationStrategies strategies;
     private final Timings timings;
@@ -98,8 +96,8 @@ public class MutationCoverageImpl {
         }
     }
 
-    private void checkMutationsFound(final MutationAnalysisUnit tus) {
-        if (tus == null && this.data.shouldFailWhenNoMutations()) {
+    private void checkMutationsFound(final List<MutationTestUnit> tus) {
+        if ((tus == null || tus.isEmpty()) && this.data.shouldFailWhenNoMutations()) {
             throw new PitHelpError(Help.NO_MUTATIONS_FOUND);
         }
     }
@@ -112,7 +110,7 @@ public class MutationCoverageImpl {
      *
      * @return
      */
-    public MutationAnalysisUnit createMutants() {
+    public List<MutationAnalysisUnit> createMutants() {
         MutationEngine engine = this.strategies.factory().createEngine(
                 this.data.isMutateStaticInitializers(),
                 Prelude.or(this.data.getExcludedMethods()),
@@ -121,7 +119,7 @@ public class MutationCoverageImpl {
         this.timings.registerStart(Timings.Stage.BUILD_MUTATION_TESTS);
         final List<MutationAnalysisUnit> tus = this.buildMutationTests(this.coverageData, engine);
         this.timings.registerEnd(Timings.Stage.BUILD_MUTATION_TESTS);
-        return Iterables.getFirst(tus, null);
+        return tus;
     }
 
     private Set<ClassName> getAllClassesAndTests(
@@ -185,28 +183,29 @@ public class MutationCoverageImpl {
 
     /**
      *
-     * @param unit
+     * @param units
      * @return
      * @throws IOException
      */
-    public Collection<MutationResult> runMutants(MutationAnalysisUnit unit) throws IOException {
+    public Collection<MutationResult> runMutants(List<MutationTestUnit> units) throws IOException {
+        final MutantResultListenerImpl listener = new MutantResultListenerImpl();
         try {
-            this.checkMutationsFound(unit);
+            this.checkMutationsFound(units);
             this.recordClassPath(this.coverageData);
             MutationEngine engine = this.strategies.factory().createEngine(
                     this.data.isMutateStaticInitializers(),
                     Prelude.or(this.data.getExcludedMethods()),
                     this.data.getLoggingClasses(), this.data.getMutators(),
                     this.data.isDetectInlinedCode());
-            final List<MutationResultListener> config = Lists.newArrayList(this.listener);
+            final List<MutationResultListener> config = Lists.newArrayList(listener);
             final MutationAnalysisExecutor mae = new MutationAnalysisExecutor(this.numberOfThreads(), config);
             this.timings.registerStart(Timings.Stage.RUN_MUTATION_TESTS);
-            mae.run(Lists.newArrayList(unit));
+            mae.run(units.stream().map(unit -> (MutationAnalysisUnit) unit).collect(Collectors.toList()));
             this.timings.registerEnd(Timings.Stage.RUN_MUTATION_TESTS);
         } catch (SecurityException | IllegalArgumentException ex) {
             Logger.getLogger(MutationCoverageImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return this.listener.getResults();
+        return listener.getResults();
     }
 
     private void verifyBuildSuitableForMutationTesting() {

@@ -4,9 +4,8 @@ import br.ufpr.inf.gres.sentinel.integration.IntegrationFacade;
 import java.io.File;
 import java.util.ArrayList;
 import org.apache.commons.collections4.list.SetUniqueList;
-import org.junit.Test;
-
 import static org.junit.Assert.*;
+import org.junit.Test;
 
 /**
  * @author Giovani Guizzo
@@ -63,7 +62,7 @@ public class MutantTest {
     @Test
     public void testEquals4() {
         Mutant instance = new Mutant("Mutant1", null, IntegrationFacade.getProgramUnderTest());
-        Mutant instance2 = new Mutant("Mutant1", null, new Program("Program2", null));
+        Mutant instance2 = new Mutant("Mutant1", null, new Program("Program2", ""));
         assertNotEquals(instance, instance2);
     }
 
@@ -110,8 +109,8 @@ public class MutantTest {
     @Test
     public void testGetAndSetName() {
         Mutant instance = new Mutant("Mutant1", null, IntegrationFacade.getProgramUnderTest());
-        instance.setFullName("MutantTest");
-        String result = instance.getFullName();
+        instance.setName("MutantTest");
+        String result = instance.getName();
         assertEquals("MutantTest", result);
     }
 
@@ -127,9 +126,9 @@ public class MutantTest {
     @Test
     public void testGetAndSetOriginalProgram() {
         Mutant instance = new Mutant("Mutant1", null, IntegrationFacade.getProgramUnderTest());
-        instance.setOriginalProgram(new Program("ProgramTest", null));
+        instance.setOriginalProgram(new Program("ProgramTest", ""));
         Program result = instance.getOriginalProgram();
-        assertEquals(new Program("ProgramTest", null), result);
+        assertEquals(new Program("ProgramTest", ""), result);
     }
 
     @Test
@@ -144,7 +143,7 @@ public class MutantTest {
     @Test
     public void testHashCode2() {
         Mutant instance = new Mutant("Mutant1", null, IntegrationFacade.getProgramUnderTest());
-        Mutant instance2 = new Mutant("Mutant1", null, new Program("Program2", null));
+        Mutant instance2 = new Mutant("Mutant1", null, new Program("Program2", ""));
         int result = instance.hashCode();
         int result2 = instance2.hashCode();
         assertNotEquals(result, result2);

@@ -4,14 +4,16 @@ import br.ufpr.inf.gres.sentinel.base.mutation.Mutant;
 import br.ufpr.inf.gres.sentinel.base.mutation.Operator;
 import br.ufpr.inf.gres.sentinel.base.mutation.Program;
 import br.ufpr.inf.gres.sentinel.integration.IntegrationFacade;
+import com.google.common.base.Stopwatch;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
 import static org.junit.Assert.*;
+import org.junit.BeforeClass;
+import org.junit.Ignore;
+import org.junit.Test;
 
 /**
  *
@@ -25,7 +27,7 @@ public class PITFacadeTest {
     @BeforeClass
     public static void setUpClass() {
         facade = new PITFacade(System.getProperty("user.dir") + File.separator + "training");
-        programUnderTest = new Program("br.ufpr.inf.gres.TriTyp", new File("training/src/br/ufpr/inf/gres/TriTyp.java"));
+        programUnderTest = facade.instantiateProgram("Triangle;;br.ufpr.inf.gres.TriTyp*;br.ufpr.inf.gres.TriTypTest*;");
     }
 
     @AfterClass
@@ -39,27 +41,22 @@ public class PITFacadeTest {
     }
 
     @Test
-    public void testNewExecution() {
-        PITFacade facade = new PITFacade("..\\joda-time\\target\\classes");
-        Program programUnderTest = facade.instantiateProgram("joda");
+    @Ignore
+    public void testJodaExecution() {
+        PITFacade facade = new PITFacade("training");
+        Program programUnderTest = facade.instantiateProgram("Joda-Time;joda/sources;org.joda.time.*;**TestAllPackages;joda/joda-time-2.9.9-jar-with-dependencies.jar;joda/classes;joda/test-classes");
         IntegrationFacade.setIntegrationFacade(facade);
         IntegrationFacade.setProgramUnderTest(programUnderTest);
 
+        Stopwatch stopwatch = Stopwatch.createStarted();
         List<Mutant> mutants = facade.executeOperators(facade.getAllOperators());
         facade.executeMutants(mutants);
-//
-//        System.out.println("Size: " + mutants.size());
-//        System.out.println("Dead: " + mutants.stream().filter(Mutant::isDead).count());
-//        System.out.println("Alive: " + mutants.stream().filter(Mutant::isAlive).count());
-//
-//        MutationCoverageReport.main(new String[]{"--targetClasses", "org.joda.time.*",
-//            "--targetTests", "**TestAllPackages",
-//            "--sourceDirs", "C:\\Users\\Giovani Guizzo\\NetBeansProjects\\joda-time\\src\\main\\java",
-//            "--reportDir", "./",
-//            "--outputFormats", "CSV",
-//            "--classPath", "C:\\Users\\Giovani Guizzo\\NetBeansProjects\\joda-time\\target\\joda-time-2.9.9-jar-with-dependencies.jar,"
-//            + "C:\\Users\\Giovani Guizzo\\NetBeansProjects\\joda-time\\target\\classes,"
-//            + "C:\\Users\\Giovani Guizzo\\NetBeansProjects\\joda-time\\target\\test-classes"});
+        stopwatch.stop();
+
+        System.out.println("Time: " + stopwatch.elapsed(TimeUnit.MINUTES) + "m" + (stopwatch.elapsed(TimeUnit.SECONDS) % 60) + "s");
+        System.out.println("Size: " + mutants.size());
+        System.out.println("Dead: " + mutants.stream().filter(Mutant::isDead).count());
+        System.out.println("Alive: " + mutants.stream().filter(Mutant::isAlive).count());
     }
 
     @Test
@@ -152,7 +149,7 @@ public class PITFacadeTest {
         assertTrue(mutants.stream().allMatch(Mutant::isAlive));
     }
 
-    @Test
+    @Test(expected = Exception.class)
     public void testExecuteOperators4() {
         IntegrationFacade.setIntegrationFacade(facade);
         IntegrationFacade.setProgramUnderTest(programUnderTest);
@@ -164,18 +161,6 @@ public class PITFacadeTest {
     }
 
     @Test
-    public void testExecuteOperators5() {
-        IntegrationFacade.setIntegrationFacade(facade);
-        IntegrationFacade.setProgramUnderTest(programUnderTest);
-
-        List<Mutant> mutants = facade.executeOperators(facade.getAllOperators());
-        assertNotNull(mutants);
-        assertFalse(mutants.isEmpty());
-        IntegrationFacade.setProgramUnderTest(new Program("unknown.Program", new File("unknown" + File.separator + "Program.java")));
-        facade.executeMutants(mutants);
-    }
-
-    @Test
     public void testGetAllOperators() {
         List<Operator> allOperators = facade.getAllOperators();
         assertNotNull(allOperators);
@@ -184,32 +169,29 @@ public class PITFacadeTest {
 
     @Test
     public void testInstantiateProgram() {
-        Program program = facade.instantiateProgram("test.test.Program");
+        Program program = facade.instantiateProgram("Triangle;;br.ufpr.inf.gres.TriTyp*;br.ufpr.inf.gres.TriTypTest*;./training;./testing");
         assertNotNull(program);
-        assertEquals(System.getProperty("user.dir")
-                + File.separator
-                + "training"
-                + File.separator
-                + "test"
-                + File.separator
-                + "test"
-                + File.separator
-                + "Program.java", program.getSourceFile().getAbsolutePath());
+        assertEquals("Triangle", program.getName());
+        assertEquals(System.getProperty("user.dir") + File.separator + "training", program.getSourceFile().getAbsolutePath());
+        assertEquals("br.ufpr.inf.gres.TriTyp*", program.getAttribute("targetClassesGlob"));
+        assertEquals("br.ufpr.inf.gres.TriTypTest*", program.getAttribute("targetTestsGlob"));
+        assertArrayEquals(new Object[]{System.getProperty("user.dir") + File.separator + "training" + File.separator + "./training", System.getProperty("user.dir") + File.separator + "training" + File.separator + "./testing"}, ((List) program.getAttribute("classPath")).toArray());
     }
 
     @Test
     public void testInstantiateProgram2() {
-        Program program = facade.instantiateProgram("test.test.Program" + File.separator + "Program2.java");
+        Program program = facade.instantiateProgram("Triangle;;br.ufpr.inf.gres.TriTyp*;br.ufpr.inf.gres.TriTypTest*");
         assertNotNull(program);
-        assertEquals(System.getProperty("user.dir")
-                + File.separator
-                + "training"
-                + File.separator
-                + "test"
-                + File.separator
-                + "test"
-                + File.separator
-                + "Program" + File.separator + "Program2.java", program.getSourceFile().getAbsolutePath());
+        assertEquals("Triangle", program.getName());
+        assertEquals(System.getProperty("user.dir") + File.separator + "training", program.getSourceFile().getAbsolutePath());
+        assertEquals("br.ufpr.inf.gres.TriTyp*", program.getAttribute("targetClassesGlob"));
+        assertEquals("br.ufpr.inf.gres.TriTypTest*", program.getAttribute("targetTestsGlob"));
+        assertTrue(((List) program.getAttribute("classPath")).isEmpty());
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testInstantiateProgram3() {
+        Program program = facade.instantiateProgram("Triangle;;br.ufpr.inf.gres.TriTyp*");
     }
 
 }

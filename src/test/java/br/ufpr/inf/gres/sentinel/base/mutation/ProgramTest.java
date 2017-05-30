@@ -1,10 +1,11 @@
 package br.ufpr.inf.gres.sentinel.base.mutation;
 
 import java.io.File;
-import org.junit.Test;
-
+import java.util.HashMap;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertTrue;
+import org.junit.Test;
 
 /**
  * @author Giovani Guizzo
@@ -12,18 +13,6 @@ import static org.junit.Assert.assertNotEquals;
 public class ProgramTest {
 
     public ProgramTest() {
-    }
-
-    @Test
-    public void getSimpleName() throws Exception {
-        Program instance = new Program("test.test.Program1", new File("Test"));
-        assertEquals("Program1", instance.getSimpleName());
-    }
-
-    @Test
-    public void getSimpleName2() throws Exception {
-        Program instance = new Program("Program1", new File("Test"));
-        assertEquals("Program1", instance.getSimpleName());
     }
 
     @Test
@@ -36,34 +25,34 @@ public class ProgramTest {
 
     @Test
     public void testEquals() {
-        Program instance = new Program("Program1", null);
+        Program instance = new Program("Program1", "");
         assertEquals(instance, instance);
     }
 
     @Test
     public void testEquals2() {
-        Program instance = new Program("Program1", null);
-        Program instance2 = new Program("Program1", null);
+        Program instance = new Program("Program1", "");
+        Program instance2 = new Program("Program1", "");
         assertEquals(instance, instance2);
     }
 
     @Test
     public void testEquals3() {
-        Program instance = new Program("Program1", null);
-        Program instance2 = new Program("Program2", null);
+        Program instance = new Program("Program1", "");
+        Program instance2 = new Program("Program2", "");
         assertNotEquals(instance, instance2);
     }
 
     @Test
     public void testEquals4() {
-        Program instance = new Program("Program1", null);
+        Program instance = new Program("Program1", "");
         Program instance2 = null;
         assertNotEquals(instance, instance2);
     }
 
     @Test
     public void testEquals5() {
-        Program instance = new Program("Program1", null);
+        Program instance = new Program("Program1", "");
         Object instance2 = new Object();
         assertNotEquals(instance, instance2);
     }
@@ -79,15 +68,15 @@ public class ProgramTest {
     @Test
     public void testGetAndSetNameFullName() {
         Program instance = new Program("Program1", new File("Test"));
-        instance.setFullName("ProgramTest");
-        String result = instance.getFullName();
+        instance.setName("ProgramTest");
+        String result = instance.getName();
         assertEquals("ProgramTest", result);
     }
 
     @Test
     public void testHashCode() {
-        Program instance = new Program("Program1", null);
-        Program instance2 = new Program("Program2", null);
+        Program instance = new Program("Program1", "");
+        Program instance2 = new Program("Program2", "");
         int result = instance.hashCode();
         int result2 = instance2.hashCode();
         assertNotEquals(result, result2);
@@ -95,8 +84,8 @@ public class ProgramTest {
 
     @Test
     public void testHashCode2() {
-        Program instance = new Program("Program1", null);
-        Program instance2 = new Program("Program1", null);
+        Program instance = new Program("Program1", "");
+        Program instance2 = new Program("Program1", "");
         int result = instance.hashCode();
         int result2 = instance2.hashCode();
         assertEquals(result, result2);
@@ -104,7 +93,7 @@ public class ProgramTest {
 
     @Test
     public void testHashCode3() {
-        Program instance = new Program("Program1", null);
+        Program instance = new Program("Program1", "");
         int result = instance.hashCode();
         int result2 = instance.hashCode();
         assertEquals(result, result2);
@@ -114,6 +103,19 @@ public class ProgramTest {
     public void testToString() {
         Program instance = new Program("Program1", new File("Test"));
         assertEquals("Program1", instance.toString());
+    }
+
+    @Test
+    public void testAttributes() {
+        Program instance = new Program("Program1", new File("Test"));
+        instance.putAttribute("TestAttribute", "TestValue");
+        assertEquals("TestValue", instance.getAttribute("TestAttribute"));
+        assertEquals("TestValue", instance.getAttributes().get("TestAttribute"));
+        instance.removeAttribute("TestAttribute");
+        assertTrue(instance.getAttributes().isEmpty());
+        HashMap<String, Object> map = new HashMap<>();
+        instance.setAttributes(map);
+        assertEquals(map, instance.getAttributes());
     }
 
 }

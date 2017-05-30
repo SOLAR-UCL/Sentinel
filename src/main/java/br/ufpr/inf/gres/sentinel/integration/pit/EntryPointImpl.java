@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.Reader;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.pitest.classpath.ClassPath;
 import org.pitest.classpath.ClassPathByteArraySource;
@@ -21,6 +22,7 @@ import org.pitest.mutationtest.HistoryStore;
 import org.pitest.mutationtest.MutationResult;
 import org.pitest.mutationtest.MutationResultListenerFactory;
 import org.pitest.mutationtest.build.MutationAnalysisUnit;
+import org.pitest.mutationtest.build.MutationTestUnit;
 import org.pitest.mutationtest.config.ReportOptions;
 import org.pitest.mutationtest.config.SettingsFactory;
 import org.pitest.mutationtest.incremental.WriterFactory;
@@ -62,7 +64,11 @@ public class EntryPointImpl {
 
     private MutationCoverageImpl createMutationCoverageImpl(ReportOptions data, SettingsFactory settings, Map<String, String> environmentVariables, File baseDir) {
         final ClassPath cp = data.getClassPath();
+
         final Option<Reader> reader = data.createHistoryReader();
+
+        // workaround for apparent java 1.5 JVM bug . . . might not play nicely
+        // with distributed testing
         if (this.historyWriter == null) {
             this.historyWriter = data.createHistoryWriter();
         }
@@ -72,18 +78,25 @@ public class EntryPointImpl {
         if (this.ja == null) {
             this.ja = new KnownLocationJavaAgentFinder(this.jac.getJarLocation().value());
         }
+
         final ResultOutputStrategy reportOutput = settings.getOutputStrategy();
+
         final MutationResultListenerFactory reportFactory = settings
                 .createListener();
+
         final CoverageOptions coverageOptions = settings.createCoverageOptions();
-        final LaunchOptions launchOptions = new LaunchOptions(this.ja, settings.getJavaExecutable(), data.getJvmArgs(), environmentVariables);
+        final LaunchOptions launchOptions = new LaunchOptions(ja,
+                settings.getJavaExecutable(), data.getJvmArgs(), environmentVariables);
         final ProjectClassPaths cps = data.getMutationClassPaths();
+
         final CodeSource code = new CodeSource(cps, coverageOptions.getPitConfig()
                 .testClassIdentifier());
+
         final Timings timings = new Timings();
         final CoverageGenerator coverageDatabase = new DefaultCoverageGenerator(
                 baseDir, coverageOptions, launchOptions, code,
                 settings.createCoverageExporter(), timings, !data.isVerbose());
+
         final HistoryStore history = new XStreamHistoryStore(this.historyWriter, reader);
         final MutationStrategies strategies = new MutationStrategies(
                 settings.createEngine(), history, coverageDatabase, reportFactory,
@@ -106,7 +119,7 @@ public class EntryPointImpl {
      */
     public Collection<MutationResult> executeMutants(File baseDir, ReportOptions data,
             SettingsFactory settings, Map<String, String> environmentVariables,
-            MutationAnalysisUnit unitsToExecute) throws IOException {
+            List<MutationTestUnit> unitsToExecute) throws IOException {
         MutationCoverageImpl report = this.createMutationCoverageImpl(data, settings, environmentVariables, baseDir);
 
         return report.runMutants(unitsToExecute);
@@ -121,7 +134,7 @@ public class EntryPointImpl {
      * @return
      * @throws IOException
      */
-    public MutationAnalysisUnit generateMutants(File baseDir, ReportOptions data, SettingsFactory settings, Map<String, String> environmentVariables) throws IOException {
+    public List<MutationAnalysisUnit> generateMutants(File baseDir, ReportOptions data, SettingsFactory settings, Map<String, String> environmentVariables) throws IOException {
         MutationCoverageImpl report = this.createMutationCoverageImpl(data, settings, environmentVariables, baseDir);
         return report.createMutants();
     }

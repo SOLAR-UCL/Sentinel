@@ -76,7 +76,7 @@ public class StrategyTest {
         Strategy strategy = strategyMapper.interpret(Lists.newArrayList(0, 2, 1, 0, 0, 0, 0, 1, 9, 1, 0, 1, 0, 0, 1, 0, 3, 1, 2));
         List<Mutant> result = strategy.run();
         assertEquals(1, result.size());
-        assertEquals("Operator4_1", result.get(0).getFullName());
+        assertEquals("Operator4_1", result.get(0).getName());
     }
 
     @Test

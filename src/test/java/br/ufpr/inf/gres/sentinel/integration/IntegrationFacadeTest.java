@@ -10,9 +10,8 @@ import com.google.common.collect.Lists;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import org.junit.Test;
-
 import static org.junit.Assert.*;
+import org.junit.Test;
 
 /**
  * @author Giovani Guizzo
@@ -25,8 +24,8 @@ public class IntegrationFacadeTest {
     @Test
     public void getConventionalStats() throws Exception {
         IntegrationFacadeStub facade = new IntegrationFacadeStub();
-        Program program1 = new Program("Test", null);
-        Program program2 = new Program("Test2", null);
+        Program program1 = new Program("Test", "");
+        Program program2 = new Program("Test2", "");
         facade.initializeConventionalStrategy(program1, 5);
         List<Long> times = facade.getConventionalExecutionCPUTimes().get(program1);
         assertNotNull(times);
@@ -57,9 +56,9 @@ public class IntegrationFacadeTest {
 
     @Test
     public void test1() {
-        IntegrationFacade.setProgramUnderTest(new Program("Test", null));
+        IntegrationFacade.setProgramUnderTest(new Program("Test", ""));
         assertNotNull(IntegrationFacade.getProgramUnderTest());
-        assertEquals(IntegrationFacade.getProgramUnderTest(), new Program("Test", null));
+        assertEquals(IntegrationFacade.getProgramUnderTest(), new Program("Test", ""));
     }
 
     public static class IntegrationFacadeStub extends IntegrationFacade {
@@ -70,7 +69,7 @@ public class IntegrationFacadeTest {
         @Override
         public Mutant combineMutants(List<Mutant> mutantsToCombine) {
             Mutant generatedMutant = new Mutant("", null, IntegrationFacade.getProgramUnderTest());
-            generatedMutant.setFullName(Joiner.on("_").join(mutantsToCombine));
+            generatedMutant.setName(Joiner.on("_").join(mutantsToCombine));
             return generatedMutant;
         }
 

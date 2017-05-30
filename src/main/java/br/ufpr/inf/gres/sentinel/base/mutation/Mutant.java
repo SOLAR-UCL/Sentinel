@@ -65,7 +65,7 @@ public class Mutant extends Program {
      * @param mutant the mutant to be copied
      */
     public Mutant(Mutant mutant) {
-        this(mutant.fullName, mutant.sourceFile, mutant.originalProgram);
+        this(mutant.name, mutant.sourceFile, mutant.originalProgram);
         this.equivalent = mutant.equivalent;
         this.constituentMutants.addAll(mutant.constituentMutants);
         this.killingTestCases.addAll(mutant.killingTestCases);
@@ -84,7 +84,7 @@ public class Mutant extends Program {
             return false;
         }
         final Mutant other = (Mutant) obj;
-        return Objects.equals(this.originalProgram, other.originalProgram) && Objects.equals(this.fullName, other.fullName);
+        return Objects.equals(this.originalProgram, other.originalProgram) && Objects.equals(this.name, other.name);
     }
 
     /**
@@ -194,7 +194,7 @@ public class Mutant extends Program {
     public int hashCode() {
         int hash = 7;
         hash = 11 * hash + Objects.hashCode(this.originalProgram);
-        hash = 11 * hash + Objects.hashCode(this.fullName);
+        hash = 11 * hash + Objects.hashCode(this.name);
         return hash;
     }
 
@@ -261,6 +261,6 @@ public class Mutant extends Program {
 
     @Override
     public String toString() {
-        return this.fullName;
+        return this.name;
     }
 }

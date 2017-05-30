@@ -40,7 +40,7 @@ public class SingleHOMGenerationTest {
         Mutant hom = mutants.get(0);
 
         assertNotNull(hom);
-        assertEquals("Mutant1_Mutant2", hom.getFullName());
+        assertEquals("Mutant1_Mutant2", hom.getName());
         assertArrayEquals(new Mutant[]{mutant1, mutant2}, hom.getConstituentMutants().toArray());
         assertArrayEquals(new Operator[]{operator1, operator2}, hom.getOperators().toArray());
         assertEquals(2, hom.getOrder());

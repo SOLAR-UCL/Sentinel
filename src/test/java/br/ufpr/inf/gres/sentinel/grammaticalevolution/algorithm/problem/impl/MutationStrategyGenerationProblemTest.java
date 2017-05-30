@@ -24,6 +24,21 @@ public class MutationStrategyGenerationProblemTest {
 
     private static MutationStrategyGenerationProblem problem;
 
+    @Before
+    public void setUp() throws Exception {
+        problem = new MutationStrategyGenerationProblem(GrammarFiles.getDefaultGrammarPath(),
+                10,
+                15,
+                1,
+                10,
+                0,
+                5,
+                1,
+                Lists.newArrayList(new Program("Test1", ""),
+                        new Program("Test2", "")),
+                Lists.newArrayList(ObjectiveFunction.AVERAGE_CPU_TIME, ObjectiveFunction.AVERAGE_SCORE));
+    }
+
     @Test
     public void createSolution() throws Exception {
         VariableLengthSolution<Integer> solution = problem.createSolution();
@@ -74,7 +89,9 @@ public class MutationStrategyGenerationProblemTest {
     @Test
     @Ignore
     public void evaluate3() throws Exception {
-        Program programUnderTest = new Program("br.ufpr.inf.gres.TriTyp", new File("training/src/br/ufpr/inf/gres/TriTyp.java"));
+        PITFacade facade = new PITFacade(System.getProperty("user.dir") + File.separator + "training");
+
+        Program programUnderTest = facade.instantiateProgram("Triangle;;br.ufpr.inf.gres.TriTyp*;br.ufpr.inf.gres.TriTypTest*;");
         problem = new MutationStrategyGenerationProblem(GrammarFiles.getDefaultGrammarPath(),
                 15,
                 100,
@@ -85,8 +102,6 @@ public class MutationStrategyGenerationProblemTest {
                 1,
                 Lists.newArrayList(programUnderTest),
                 Lists.newArrayList(ObjectiveFunction.AVERAGE_CPU_TIME, ObjectiveFunction.AVERAGE_SCORE));
-
-        PITFacade facade = new PITFacade(System.getProperty("user.dir") + File.separator + "training");
 
         IntegrationFacade.setIntegrationFacade(facade);
         IntegrationFacade.setProgramUnderTest(programUnderTest);
@@ -123,9 +138,9 @@ public class MutationStrategyGenerationProblemTest {
     @Test
     @Ignore
     public void evaluate5() throws Exception {
-        Program programUnderTest = new Program("br.ufpr.inf.gres.TriTyp", new File("training/br/ufpr/inf/gres/TriTyp.java"));
-        IntegrationFacade.setProgramUnderTest(programUnderTest);
         IntegrationFacade facade = IntegrationFacadeFactory.createIntegrationFacade("PIT", System.getProperty("user.dir") + File.separator + "training");
+        Program programUnderTest = facade.instantiateProgram("Triangle;;br.ufpr.inf.gres.TriTyp*;br.ufpr.inf.gres.TriTypTest*;");
+        IntegrationFacade.setProgramUnderTest(programUnderTest);
         IntegrationFacade.setIntegrationFacade(facade);
         problem = new MutationStrategyGenerationProblem(GrammarFiles.getGrammarPath(GrammarFiles.DEFAULT_GRAMMAR_NO_HOMS),
                 10,
@@ -201,21 +216,6 @@ public class MutationStrategyGenerationProblemTest {
     public void getUpperAndLowerVariableBound() throws Exception {
         assertEquals(1, problem.getLowerVariableBound());
         assertEquals(10, problem.getUpperVariableBound());
-    }
-
-    @Before
-    public void setUp() throws Exception {
-        problem = new MutationStrategyGenerationProblem(GrammarFiles.getDefaultGrammarPath(),
-                10,
-                15,
-                1,
-                10,
-                0,
-                5,
-                1,
-                Lists.newArrayList(new Program("Test1", null),
-                        new Program("Test2", null)),
-                Lists.newArrayList(ObjectiveFunction.AVERAGE_CPU_TIME, ObjectiveFunction.AVERAGE_SCORE));
     }
 
 }

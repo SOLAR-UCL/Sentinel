@@ -178,6 +178,7 @@ nbproject/
 ### Sentinel Specific ###
 training/result
 training/output
+training/joda
 lib/.index/
 /training/compile_output
 /analysis*

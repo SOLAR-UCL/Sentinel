@@ -20,10 +20,9 @@ import com.google.common.collect.Lists;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import static org.junit.Assert.*;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import static org.junit.Assert.*;
 
 /**
  * @author Giovani Guizzo
@@ -82,10 +81,8 @@ public class StrategyMapperTest {
 
     @Test
     public void testCreate3() throws IOException {
-        Program programUnderTest
-                = new Program("br.ufpr.inf.gres.TriTyp",
-                        new File("src/test/resources/testfiles/TriTyp/src/br/ufpr/inf/gres/TriTyp.java"));
         PITFacade facade = new PITFacade(System.getProperty("user.dir") + File.separator + "training");
+        Program programUnderTest = facade.instantiateProgram("Triangle;;br.ufpr.inf.gres.TriTyp*;br.ufpr.inf.gres.TriTypTest*;");
         IntegrationFacade.setIntegrationFacade(facade);
         IntegrationFacade.setProgramUnderTest(programUnderTest);
 

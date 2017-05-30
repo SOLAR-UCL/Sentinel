@@ -43,8 +43,8 @@ public class ConventionalGenerationTest {
         List<Mutant> resultingHoms = operation.doOperation(mutants);
 
         assertEquals(2, resultingHoms.size());
-        assertEquals("Mutant1_Mutant2", resultingHoms.get(0).getFullName());
-        assertEquals("Mutant3_Mutant4", resultingHoms.get(1).getFullName());
+        assertEquals("Mutant1_Mutant2", resultingHoms.get(0).getName());
+        assertEquals("Mutant3_Mutant4", resultingHoms.get(1).getName());
     }
 
     @Test
@@ -67,7 +67,7 @@ public class ConventionalGenerationTest {
         List<Mutant> resultingHoms = operation.doOperation(mutants);
 
         assertEquals(1, resultingHoms.size());
-        assertEquals("Mutant1_Mutant2_Mutant3", resultingHoms.get(0).getFullName());
+        assertEquals("Mutant1_Mutant2_Mutant3", resultingHoms.get(0).getName());
     }
 
     @Test
@@ -92,8 +92,8 @@ public class ConventionalGenerationTest {
         List<Mutant> resultingHoms = operation.doOperation(mutants);
 
         assertEquals(2, resultingHoms.size());
-        assertEquals("Mutant1_Mutant2_Mutant3", resultingHoms.get(0).getFullName());
-        assertEquals("Mutant4_Mutant5", resultingHoms.get(1).getFullName());
+        assertEquals("Mutant1_Mutant2_Mutant3", resultingHoms.get(0).getName());
+        assertEquals("Mutant4_Mutant5", resultingHoms.get(1).getName());
     }
 
     @Test

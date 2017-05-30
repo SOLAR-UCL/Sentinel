@@ -142,19 +142,19 @@ public abstract class IntegrationFacade {
 
     /**
      *
-     * @param programName
+     * @param programString
      * @return
      */
-    public abstract Program instantiateProgram(String programName);
+    public abstract Program instantiateProgram(String programString);
 
     /**
      *
-     * @param programNames
+     * @param programsStrings
      * @return
      */
-    public List<Program> instantiatePrograms(List<String> programNames) {
+    public List<Program> instantiatePrograms(List<String> programsStrings) {
         List<Program> programs = new ArrayList<>();
-        for (String programName : programNames) {
+        for (String programName : programsStrings) {
             programs.add(this.instantiateProgram(programName));
         }
         return programs;
