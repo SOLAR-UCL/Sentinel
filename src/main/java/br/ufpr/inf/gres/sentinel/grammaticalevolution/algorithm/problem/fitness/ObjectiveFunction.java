@@ -32,12 +32,6 @@ public abstract class ObjectiveFunction<T> {
      */
     public abstract Double computeFitness(Solution<T> solution);
 
-    /**
-     *
-     * @return
-     */
-    public abstract String getName();
-
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
@@ -52,6 +46,12 @@ public abstract class ObjectiveFunction<T> {
         final ObjectiveFunction<?> other = (ObjectiveFunction<?>) obj;
         return Objects.equals(this.getName(), other.getName());
     }
+
+    /**
+     *
+     * @return
+     */
+    public abstract String getName();
 
     /**
      *

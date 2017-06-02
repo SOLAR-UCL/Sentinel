@@ -42,8 +42,8 @@ import org.pitest.mutationtest.engine.gregor.mutators.*;
  */
 public class PITFacade extends IntegrationFacade {
 
-    protected static final ArrayList<Operator> ALL_OPERATORS = new ArrayList<>();
-    protected static final HashMap<String, Operator> ALL_OPERATORS_BY_CLASS = new HashMap<>();
+    private static final ArrayList<Operator> ALL_OPERATORS = new ArrayList<>();
+    private static final HashMap<String, Operator> ALL_OPERATORS_BY_CLASS = new HashMap<>();
 
     static {
         Operator operator = new Operator("CONDITIONALS_BOUNDARY", "Conditionals");
@@ -114,11 +114,11 @@ public class PITFacade extends IntegrationFacade {
         ALL_OPERATORS.add(operator);
         ALL_OPERATORS_BY_CLASS.put(ArgumentPropagationMutator.ARGUMENT_PROPAGATION_MUTATOR.getGloballyUniqueId(), operator);
     }
-    protected final HashMap<Program, EntryPointImpl> entryPoints = new HashMap<>();
-    protected final HashMap<Program, HashMap<Mutant, MutationDetails>> generatedMutants = new HashMap<>();
-    protected final HashMap<Program, HashMap<MutationTestUnit, Set<Mutant>>> unitToMutants = new HashMap<>();
+    private final HashMap<Program, EntryPointImpl> entryPoints = new HashMap<>();
+    private final HashMap<Program, HashMap<Mutant, MutationDetails>> generatedMutants = new HashMap<>();
+    private final HashMap<Program, HashMap<MutationTestUnit, Set<Mutant>>> unitToMutants = new HashMap<>();
 
-    protected final String inputDirectory;
+    private final String inputDirectory;
 
     /**
      *

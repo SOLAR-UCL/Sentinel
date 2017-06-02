@@ -7,7 +7,6 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -48,8 +47,8 @@ public class ObjectiveFunctionFactory {
      * @param names
      * @return
      */
-    public static Set<ObjectiveFunction> createObjectiveFunctions(List<String> names) {
-        return names.stream().map(ObjectiveFunctionFactory::createObjectiveFunction).collect(Collectors.toSet());
+    public static List<ObjectiveFunction> createObjectiveFunctions(List<String> names) {
+        return names.stream().map(ObjectiveFunctionFactory::createObjectiveFunction).collect(Collectors.toList());
     }
 
     /**
