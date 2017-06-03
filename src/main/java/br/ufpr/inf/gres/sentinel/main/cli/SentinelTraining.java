@@ -84,7 +84,7 @@ public class SentinelTraining {
                         trainingArgs.upperVariableBound,
                         trainingArgs.maxWraps,
                         trainingArgs.numberOfTrainingRuns,
-                        trainingArgs.conventionalStrategyMultiplier,
+                        trainingArgs.numberOfConventionalRuns,
                         trainingPrograms,
                         trainingArgs.objectiveFunctions);
         return problem;

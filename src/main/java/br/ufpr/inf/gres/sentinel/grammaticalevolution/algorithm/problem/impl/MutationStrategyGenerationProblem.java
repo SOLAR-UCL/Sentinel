@@ -39,7 +39,7 @@ public class MutationStrategyGenerationProblem implements VariableLengthIntegerP
     private final StrategyMapper strategyMapper;
     private final List<Program> testPrograms;
     private int upperVariableBound;
-    private final int conventionalStrategyRunMultiplier;
+    private final int numberOfConventionalRuns;
 
     /**
      *
@@ -50,6 +50,7 @@ public class MutationStrategyGenerationProblem implements VariableLengthIntegerP
      * @param upperVariableBound
      * @param maxWraps
      * @param numberOfStrategyRuns
+     * @param numberOfConventionalRuns
      * @param testPrograms
      * @param objectiveFunctions
      * @throws IOException
@@ -61,7 +62,7 @@ public class MutationStrategyGenerationProblem implements VariableLengthIntegerP
             int upperVariableBound,
             int maxWraps,
             int numberOfStrategyRuns,
-            int conventionalStrategyRunMultiplier,
+            int numberOfConventionalRuns,
             List<Program> testPrograms,
             List<String> objectiveFunctions) throws IOException {
         this.strategyMapper = new StrategyMapper(grammarFile);
@@ -77,7 +78,7 @@ public class MutationStrategyGenerationProblem implements VariableLengthIntegerP
         this.objectiveFunctions = Collections.unmodifiableList(ObjectiveFunctionFactory.createObjectiveFunctions(objectiveFunctions));
         this.objectivesToStoreAsAttribute = ObjectiveFunctionFactory.createAllObjectiveFunctions();
         this.objectivesToStoreAsAttribute.removeAll(this.objectiveFunctions);
-        this.conventionalStrategyRunMultiplier = conventionalStrategyRunMultiplier;
+        this.numberOfConventionalRuns = numberOfConventionalRuns;
     }
 
     private void computeObjectiveValues(VariableLengthSolution<Integer> solution) {
@@ -127,7 +128,7 @@ public class MutationStrategyGenerationProblem implements VariableLengthIntegerP
             evaluationFor:
             for (Program testProgram : this.testPrograms) {
                 IntegrationFacade.setProgramUnderTest(testProgram);
-                integrationFacade.initializeConventionalStrategy(testProgram, this.numberOfStrategyRuns * this.conventionalStrategyRunMultiplier);
+                integrationFacade.initializeConventionalStrategy(testProgram, this.numberOfConventionalRuns);
                 for (int i = 0; i < this.numberOfStrategyRuns; i++) {
                     Stopwatch stopWatch = Stopwatch.createStarted();
                     ThreadMXBean threadBean = ManagementFactory.getThreadMXBean();
@@ -180,7 +181,7 @@ public class MutationStrategyGenerationProblem implements VariableLengthIntegerP
             IntegrationFacade integrationFacade = IntegrationFacade.getIntegrationFacade();
             for (Program testProgram : this.testPrograms) {
                 IntegrationFacade.setProgramUnderTest(testProgram);
-                integrationFacade.initializeConventionalStrategy(testProgram, this.numberOfStrategyRuns * this.conventionalStrategyRunMultiplier);
+                integrationFacade.initializeConventionalStrategy(testProgram, this.numberOfStrategyRuns * this.numberOfConventionalRuns);
                 for (int i = 0; i < this.numberOfStrategyRuns; i++) {
                     Stopwatch stopWatch = Stopwatch.createStarted();
                     ThreadMXBean threadBean = ManagementFactory.getThreadMXBean();

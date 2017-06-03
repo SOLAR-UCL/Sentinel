@@ -169,13 +169,13 @@ public class PITFacadeTest {
 
     @Test
     public void testInstantiateProgram() {
-        Program program = facade.instantiateProgram("Triangle;;br.ufpr.inf.gres.TriTyp*;br.ufpr.inf.gres.TriTypTest*;./training;./testing");
+        Program program = facade.instantiateProgram("Triangle;;br.ufpr.inf.gres.TriTyp*;br.ufpr.inf.gres.TriTypTest*;br");
         assertNotNull(program);
         assertEquals("Triangle", program.getName());
         assertEquals(System.getProperty("user.dir") + File.separator + "training", program.getSourceFile().getAbsolutePath());
         assertEquals("br.ufpr.inf.gres.TriTyp*", program.getAttribute("targetClassesGlob"));
         assertEquals("br.ufpr.inf.gres.TriTypTest*", program.getAttribute("targetTestsGlob"));
-        assertArrayEquals(new Object[]{System.getProperty("user.dir") + File.separator + "training" + File.separator + "./training", System.getProperty("user.dir") + File.separator + "training" + File.separator + "./testing"}, ((List) program.getAttribute("classPath")).toArray());
+        assertArrayEquals(new Object[]{System.getProperty("user.dir") + File.separator + "training" + File.separator + "br"}, ((List) program.getAttribute("classPath")).toArray());
     }
 
     @Test

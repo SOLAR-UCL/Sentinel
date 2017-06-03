@@ -346,7 +346,12 @@ public class PITFacade extends IntegrationFacade {
 
         List<String> classPath = new ArrayList<>();
         while (split.hasNext()) {
-            classPath.add(this.inputDirectory + File.separator + split.next());
+            final String next = split.next();
+            if (new File(this.inputDirectory + File.separator + next).exists()) {
+                classPath.add(this.inputDirectory + File.separator + next);
+            } else if (new File(next).exists()) {
+                classPath.add(next);
+            }
         }
 
         final Program program = new Program(name, this.inputDirectory + File.separator + sourceDir);

@@ -88,9 +88,9 @@ public class TrainingArgs {
     /**
      *
      */
-    @Parameter(names = {"--conventionalStrategyMultiplier", "--multiplier"},
-            description = "Multiplier for the number of training runs for the conventional strategy execution. The conventional strategy will be executed (numberOfTrainingRuns * conventionalStrategyRunMultiplier) times.")
-    public Integer conventionalStrategyMultiplier = 10;
+    @Parameter(names = {"--numberOfConventionalRuns"},
+            description = "Number of times that the conventional strategy shall be executed.")
+    public Integer numberOfConventionalRuns = 5;
 
     /**
      *
