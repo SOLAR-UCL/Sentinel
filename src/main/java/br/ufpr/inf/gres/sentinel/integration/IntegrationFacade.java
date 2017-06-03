@@ -138,6 +138,10 @@ public abstract class IntegrationFacade {
             this.conventionalMutants.removeAll(program);
             this.runConventionalStrategy(program, repetitions);
             System.out.println("Number of generated mutants for " + program.getName() + ": " + this.conventionalMutants.get(program).size());
+            System.out.println("Number of dead mutants for " + program.getName() + ": " + this.conventionalMutants.get(program).stream().filter(Mutant::isDead).count());
+            System.out.println("Number of alive mutants for " + program.getName() + ": " + this.conventionalMutants.get(program).stream().filter(Mutant::isAlive).count());
+            System.out.println("CPU time for " + program.getName() + ": " + this.conventionalExecutionCPUTimes.get(program).stream().mapToDouble(Long::doubleValue).average().getAsDouble());
+            System.out.println("Time for " + program.getName() + ": " + this.conventionalExecutionTimes.get(program).stream().mapToDouble(Long::doubleValue).average().getAsDouble());
         }
     }
 

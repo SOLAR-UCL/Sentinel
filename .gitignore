@@ -179,6 +179,7 @@ nbproject/
 training/result
 training/output
 training/joda
+training/wire
 lib/.index/
 /training/compile_output
 /analysis*
