@@ -137,6 +137,7 @@ public abstract class IntegrationFacade {
             this.conventionalExecutionTimes.removeAll(program);
             this.conventionalMutants.removeAll(program);
             this.runConventionalStrategy(program, repetitions);
+            System.out.println("Number of generated mutants for " + program.getName() + ": " + this.conventionalMutants.get(program).size());
         }
     }
 
