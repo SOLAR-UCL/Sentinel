@@ -5,22 +5,17 @@ import br.ufpr.inf.gres.sentinel.base.mutation.Program;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.problem.VariableLengthIntegerProblem;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.problem.fitness.ObjectiveFunction;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.problem.fitness.ObjectiveFunctionFactory;
+import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.problem.observer.MutationStrategyGenerationObserver;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.representation.VariableLengthSolution;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.representation.impl.DefaultVariableLengthIntegerSolution;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.iterator.CountingIterator;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.StrategyMapper;
 import br.ufpr.inf.gres.sentinel.integration.IntegrationFacade;
 import br.ufpr.inf.gres.sentinel.strategy.Strategy;
-import com.google.common.base.Stopwatch;
-import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Iterables;
 import java.io.IOException;
-import java.lang.management.ManagementFactory;
-import java.lang.management.ThreadMXBean;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
+import java.util.*;
+import java.util.function.Consumer;
 
 /**
  * @author Giovani Guizzo
@@ -28,18 +23,18 @@ import java.util.concurrent.TimeUnit;
 public class MutationStrategyGenerationProblem implements VariableLengthIntegerProblem {
 
     private int evaluationCount;
-    private int lowerVariableBound;
-    private int maxLength;
-    private int maxWraps;
-    private int minLength;
-    private int numberOfConstraints;
+    private final int lowerVariableBound;
+    private final int maxLength;
+    private final int maxWraps;
+    private final int minLength;
+    private final int numberOfConstraints;
     private final int numberOfStrategyRuns;
     private final List<ObjectiveFunction> objectiveFunctions;
-    private final List<ObjectiveFunction> objectivesToStoreAsAttribute;
     private final StrategyMapper strategyMapper;
     private final List<Program> testPrograms;
-    private int upperVariableBound;
+    private final int upperVariableBound;
     private final int numberOfConventionalRuns;
+    private final Set<MutationStrategyGenerationObserver> observers;
 
     /**
      *
@@ -72,25 +67,12 @@ public class MutationStrategyGenerationProblem implements VariableLengthIntegerP
         this.maxLength = maxLength;
         this.maxWraps = maxWraps;
         this.numberOfStrategyRuns = numberOfStrategyRuns;
+        this.numberOfConventionalRuns = numberOfConventionalRuns;
         this.testPrograms = testPrograms;
         this.evaluationCount = 0;
         this.numberOfConstraints = 0;
         this.objectiveFunctions = Collections.unmodifiableList(ObjectiveFunctionFactory.createObjectiveFunctions(objectiveFunctions));
-        this.objectivesToStoreAsAttribute = ObjectiveFunctionFactory.createAllObjectiveFunctions();
-        this.objectivesToStoreAsAttribute.removeAll(this.objectiveFunctions);
-        this.numberOfConventionalRuns = numberOfConventionalRuns;
-    }
-
-    private void computeObjectiveValues(VariableLengthSolution<Integer> solution) {
-        for (int i = 0; i < this.objectiveFunctions.size(); i++) {
-            ObjectiveFunction objectiveFunction = this.objectiveFunctions.get(i);
-            Double objectiveValue = objectiveFunction.computeFitness(solution);
-            solution.setAttribute(objectiveFunction.getName(), objectiveValue);
-            solution.setObjective(i, objectiveValue);
-        }
-        for (ObjectiveFunction objectiveFunction : this.objectivesToStoreAsAttribute) {
-            solution.setAttribute(objectiveFunction.getName(), objectiveFunction.computeFitness(solution));
-        }
+        this.observers = new HashSet<>();
     }
 
     /**
@@ -102,114 +84,60 @@ public class MutationStrategyGenerationProblem implements VariableLengthIntegerP
         return new DefaultVariableLengthIntegerSolution(this);
     }
 
-    private Strategy createStrategy(VariableLengthSolution<Integer> solution) {
-        List<Integer> variables = solution.getVariablesCopy();
-        CountingIterator<Integer> variablesIterator = new CountingIterator<>(Iterables.limit(Iterables.cycle(variables), variables.size() * (this.maxWraps + 1)).iterator());
-        Strategy strategy = this.strategyMapper.interpret(variablesIterator);
-        solution.setAttribute("Consumed Items Count", variablesIterator.getCount());
-        return strategy;
-    }
-
     /**
      *
      * @param solution
      */
     @Override
     public void evaluate(VariableLengthSolution<Integer> solution) {
-        System.out.println("Evaluation: " + (++this.evaluationCount));
+        ++this.evaluationCount;
+        notifyObservers(observer -> observer.notifyEvaluationStart(solution, evaluationCount, objectiveFunctions));
         try {
-            this.setWorst(solution);
+            notifyObservers(observer -> observer.notifyStrategyCreationStart(solution));
             Strategy strategy = this.createStrategy(solution);
-            ArrayListMultimap<Program, Long> nanoTimes = ArrayListMultimap.create();
-            ArrayListMultimap<Program, Long> nanoCPUTimes = ArrayListMultimap.create();
-            ArrayListMultimap<Program, Collection<Mutant>> allMutants = ArrayListMultimap.create();
+            notifyObservers(observer -> observer.notifyStrategyCreationEnd(solution, strategy));
             IntegrationFacade integrationFacade = IntegrationFacade.getIntegrationFacade();
-            boolean isValid = true;
+            boolean isInvalid;
             evaluationFor:
             for (Program testProgram : this.testPrograms) {
-                IntegrationFacade.setProgramUnderTest(testProgram);
+                notifyObservers(observer -> observer.notifyProgramChange(solution, testProgram));
+                notifyObservers(observer -> observer.notifyConventionalStrategyInitializationStart(solution, testProgram, numberOfConventionalRuns));
                 integrationFacade.initializeConventionalStrategy(testProgram, this.numberOfConventionalRuns);
+                notifyObservers(observer -> observer.notifyConventionalStrategyInitializationEnd(solution, testProgram, numberOfConventionalRuns));
                 for (int i = 0; i < this.numberOfStrategyRuns; i++) {
-                    Stopwatch stopWatch = Stopwatch.createStarted();
-                    ThreadMXBean threadBean = ManagementFactory.getThreadMXBean();
-                    long currentThreadCpuTime = threadBean.getCurrentThreadCpuTime();
-                    List<Mutant> mutants = strategy.run();
-                    integrationFacade.executeMutants(mutants);
-                    currentThreadCpuTime = threadBean.getCurrentThreadCpuTime() - currentThreadCpuTime;
-                    stopWatch.stop();
+                    final int runNumber = i;
+                    notifyObservers(observer -> observer.notifyRunStart(solution, runNumber, numberOfStrategyRuns));
+                    notifyObservers(observer -> observer.notifyStrategyExecutionStart(solution, strategy));
+                    List<Mutant> mutants = strategy.run(testProgram);
+                    notifyObservers(observer -> observer.notifyStrategyExecutionEnd(solution, strategy));
+                    notifyObservers(observer -> observer.notifyMutantsExecutionStart(solution, mutants));
+                    integrationFacade.executeMutants(mutants, testProgram);
+                    notifyObservers(observer -> observer.notifyMutantsExecutionEnd(solution, mutants));
+                    notifyObservers(observer -> observer.notifyRunEnd(solution, runNumber, numberOfStrategyRuns));
 
-                    if (mutants.isEmpty()) {
-                        isValid = false;
+                    isInvalid = observers.stream().anyMatch(observer -> observer.shouldStopEvaluation(solution));
+                    if (isInvalid) {
                         break evaluationFor;
                     }
-
-                    nanoTimes.put(testProgram, stopWatch.elapsed(TimeUnit.NANOSECONDS));
-                    nanoCPUTimes.put(testProgram, currentThreadCpuTime);
-                    allMutants.put(testProgram, mutants);
                 }
             }
-            solution.setAttribute("Strategy", strategy);
-            solution.setAttribute("Evaluation Found", this.evaluationCount);
-            if (isValid) {
-                solution.setAttribute("CPUTimes", nanoCPUTimes);
-                solution.setAttribute("ConventionalCPUTimes", integrationFacade.getConventionalExecutionCPUTimes());
-                solution.setAttribute("Times", nanoTimes);
-                solution.setAttribute("ConventionalTimes", integrationFacade.getConventionalExecutionTimes());
-                solution.setAttribute("Mutants", allMutants);
-                solution.setAttribute("ConventionalMutants", integrationFacade.getConventionalMutants());
-                this.computeObjectiveValues(solution);
-            }
+            notifyObservers(observer -> observer.notifyObjectiveComputationStart(solution, objectiveFunctions));
+            notifyObservers(observer -> observer.notifyComputeObjectives(solution, objectiveFunctions));
+            notifyObservers(observer -> observer.notifyObjectiveComputationEnd(solution, objectiveFunctions));
         } catch (Exception ex) {
             // Invalid strategy. Probably discarded due to maximum wraps.
-            System.out.println("Exception! Solution: " + solution.getVariablesCopy());
-            System.out.println(ex.getMessage());
+            notifyObservers(observer -> observer.notifyException(solution, ex));
+        } finally {
+            notifyObservers(observer -> observer.notifyEvaluationEnd(solution, evaluationCount));
         }
     }
 
-    /**
-     *
-     * @param solution
-     */
-    public void evaluateNoConstraints(VariableLengthSolution<Integer> solution) {
-        System.out.println("Evaluation: " + (++this.evaluationCount));
-        try {
-            this.setWorst(solution);
-            Strategy strategy = this.createStrategy(solution);
-            ArrayListMultimap<Program, Long> nanoTimes = ArrayListMultimap.create();
-            ArrayListMultimap<Program, Long> nanoCPUTimes = ArrayListMultimap.create();
-            ArrayListMultimap<Program, Collection<Mutant>> allMutants = ArrayListMultimap.create();
-            IntegrationFacade integrationFacade = IntegrationFacade.getIntegrationFacade();
-            for (Program testProgram : this.testPrograms) {
-                IntegrationFacade.setProgramUnderTest(testProgram);
-                integrationFacade.initializeConventionalStrategy(testProgram, this.numberOfStrategyRuns * this.numberOfConventionalRuns);
-                for (int i = 0; i < this.numberOfStrategyRuns; i++) {
-                    Stopwatch stopWatch = Stopwatch.createStarted();
-                    ThreadMXBean threadBean = ManagementFactory.getThreadMXBean();
-                    long currentThreadCpuTime = threadBean.getCurrentThreadCpuTime();
-                    List<Mutant> mutants = strategy.run();
-                    integrationFacade.executeMutants(mutants);
-                    currentThreadCpuTime = threadBean.getCurrentThreadCpuTime() - currentThreadCpuTime;
-                    stopWatch.stop();
-
-                    nanoTimes.put(testProgram, stopWatch.elapsed(TimeUnit.NANOSECONDS));
-                    nanoCPUTimes.put(testProgram, currentThreadCpuTime);
-                    allMutants.put(testProgram, mutants);
-                }
-            }
-            solution.setAttribute("Strategy", strategy);
-            solution.setAttribute("Evaluation Found", this.evaluationCount);
-            solution.setAttribute("CPUTimes", nanoCPUTimes);
-            solution.setAttribute("ConventionalCPUTimes", integrationFacade.getConventionalExecutionCPUTimes());
-            solution.setAttribute("Times", nanoTimes);
-            solution.setAttribute("ConventionalTimes", integrationFacade.getConventionalExecutionTimes());
-            solution.setAttribute("Mutants", allMutants);
-            solution.setAttribute("ConventionalMutants", integrationFacade.getConventionalMutants());
-            this.computeObjectiveValues(solution);
-        } catch (Exception ex) {
-            // Invalid strategy. Probably discarded due to maximum wraps.
-            System.out.println("Exception! Solution: " + solution.getVariablesCopy());
-            System.out.println(ex.getMessage());
-        }
+    private Strategy createStrategy(VariableLengthSolution<Integer> solution) {
+        List<Integer> variables = solution.getVariablesCopy();
+        CountingIterator<Integer> variablesIterator = new CountingIterator<>(Iterables.limit(Iterables.cycle(variables), variables.size() * (this.maxWraps + 1)).iterator());
+        Strategy strategy = this.strategyMapper.interpret(variablesIterator);
+        notifyObservers(observer -> observer.notifyConsumedItems(solution, variablesIterator.getCount()));
+        return strategy;
     }
 
     /**
@@ -300,16 +228,24 @@ public class MutationStrategyGenerationProblem implements VariableLengthIntegerP
         return this.upperVariableBound;
     }
 
-    private void setWorst(VariableLengthSolution<Integer> solution) {
-        for (int i = 0; i < this.objectiveFunctions.size(); i++) {
-            ObjectiveFunction objectiveFunction = this.objectiveFunctions.get(i);
-            Double worstValue = objectiveFunction.getWorstValue();
-            solution.setAttribute(objectiveFunction.getName(), worstValue);
-            solution.setObjective(i, worstValue);
-        }
-        for (ObjectiveFunction objectiveFunction : this.objectivesToStoreAsAttribute) {
-            solution.setAttribute(objectiveFunction.getName(), objectiveFunction.getWorstValue());
-        }
+    public void attachObserver(MutationStrategyGenerationObserver observer) {
+        this.observers.add(observer);
+    }
+
+    public void attachAllObservers(Collection<MutationStrategyGenerationObserver> observers) {
+        this.observers.addAll(observers);
+    }
+
+    public void dettachObserver(MutationStrategyGenerationObserver observer) {
+        this.observers.remove(observer);
+    }
+
+    public void dettachAllObservers(Collection<MutationStrategyGenerationObserver> observers) {
+        this.observers.removeAll(observers);
+    }
+
+    private void notifyObservers(Consumer<MutationStrategyGenerationObserver> notificationConsumer) {
+        this.observers.stream().forEach(notificationConsumer);
     }
 
 }

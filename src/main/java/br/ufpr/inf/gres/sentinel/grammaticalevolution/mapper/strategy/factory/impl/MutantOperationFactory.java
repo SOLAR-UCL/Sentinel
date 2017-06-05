@@ -8,8 +8,6 @@ import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.Fa
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.FactoryFlyweight;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.TerminalRuleType;
 import br.ufpr.inf.gres.sentinel.strategy.operation.Operation;
-import br.ufpr.inf.gres.sentinel.strategy.operation.impl.combine.CombineMutantsOperation;
-import br.ufpr.inf.gres.sentinel.strategy.operation.impl.combine.generation.AbstractHOMGeneration;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.discard.impl.DiscardMutantsOperation;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.operation.impl.SelectMutantsOperation;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.selection.SelectionOperation;
@@ -60,20 +58,6 @@ public class MutantOperationFactory implements Factory<Option> {
                 SelectionOperation<Mutant> selectionOperation = (SelectionOperation<Mutant>) FactoryFlyweight.getNonTerminalFactory()
                         .createOperation(nextRule, integerIterator);
                 mainOperation = new DiscardMutantsOperation(selectionOperation);
-                break;
-            }
-            case TerminalRuleType.COMBINE_MUTANTS: {
-                Preconditions.checkArgument(rules.hasNext(), "Malformed grammar option: " + node.toString());
-                Rule nextRule = rules.next();
-                AbstractHOMGeneration generation = (AbstractHOMGeneration) FactoryFlyweight.getNonTerminalFactory()
-                        .createOperation(nextRule, integerIterator);
-
-                Preconditions.checkArgument(rules.hasNext(), "Malformed grammar option: " + node.toString());
-                nextRule = rules.next();
-                SelectionOperation<Mutant> selectionOperation = (SelectionOperation<Mutant>) FactoryFlyweight.getNonTerminalFactory()
-                        .createOperation(nextRule, integerIterator);
-
-                mainOperation = new CombineMutantsOperation(generation, selectionOperation);
                 break;
             }
             default:

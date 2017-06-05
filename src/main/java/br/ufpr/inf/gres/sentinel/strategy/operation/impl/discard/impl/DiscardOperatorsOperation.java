@@ -2,6 +2,7 @@ package br.ufpr.inf.gres.sentinel.strategy.operation.impl.discard.impl;
 
 import br.ufpr.inf.gres.sentinel.base.mutation.Mutant;
 import br.ufpr.inf.gres.sentinel.base.mutation.Operator;
+import br.ufpr.inf.gres.sentinel.base.mutation.Program;
 import br.ufpr.inf.gres.sentinel.base.solution.Solution;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.TerminalRuleType;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.discard.AbstractDiscardOperation;
@@ -38,10 +39,10 @@ public class DiscardOperatorsOperation extends AbstractDiscardOperation<Operator
      * @return
      */
     @Override
-    public List<Mutant> doOperation(Solution solution) {
+    public List<Mutant> doOperation(Solution solution, Program program) {
         checkNotNull(this.selection, "No selection operation!");
         List<Operator> listToDiscard = this.obtainList(solution);
-        listToDiscard = this.selection.doOperation(new ArrayList<>(listToDiscard));
+        listToDiscard = this.selection.doOperation(new ArrayList<>(listToDiscard), program);
         solution.getOperators().removeAll(listToDiscard);
         SetUniqueList<Mutant> mutantsToRemove = listToDiscard.stream()
                 .map(Operator::getGeneratedMutants)
@@ -53,7 +54,7 @@ public class DiscardOperatorsOperation extends AbstractDiscardOperation<Operator
                 })
                 .orElse(SetUniqueList.setUniqueList(new ArrayList<>()));
         solution.getMutants().removeAll(mutantsToRemove);
-        return this.next(solution);
+        return this.next(solution, program);
     }
 
     /**

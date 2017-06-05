@@ -1,6 +1,7 @@
 package br.ufpr.inf.gres.sentinel.strategy;
 
 import br.ufpr.inf.gres.sentinel.base.mutation.Mutant;
+import br.ufpr.inf.gres.sentinel.base.mutation.Program;
 import br.ufpr.inf.gres.sentinel.base.solution.Solution;
 import br.ufpr.inf.gres.sentinel.strategy.operation.Operation;
 import java.util.ArrayList;
@@ -49,9 +50,9 @@ public class Strategy {
      *
      * @return
      */
-    public List<Mutant> run() {
+    public List<Mutant> run(Program program) {
         if (this.firstOperation != null) {
-            return this.firstOperation.doOperation(new Solution());
+            return this.firstOperation.doOperation(new Solution(), program);
         }
         return SetUniqueList.setUniqueList(new ArrayList<>());
     }

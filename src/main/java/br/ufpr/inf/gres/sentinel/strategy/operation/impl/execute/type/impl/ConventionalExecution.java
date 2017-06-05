@@ -2,6 +2,7 @@ package br.ufpr.inf.gres.sentinel.strategy.operation.impl.execute.type.impl;
 
 import br.ufpr.inf.gres.sentinel.base.mutation.Mutant;
 import br.ufpr.inf.gres.sentinel.base.mutation.Operator;
+import br.ufpr.inf.gres.sentinel.base.mutation.Program;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.TerminalRuleType;
 import br.ufpr.inf.gres.sentinel.integration.IntegrationFacade;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.execute.type.OperatorExecutionType;
@@ -25,8 +26,8 @@ public class ConventionalExecution extends OperatorExecutionType {
      * @return
      */
     @Override
-    public List<Mutant> doOperation(List<Operator> input) {
-        return IntegrationFacade.getIntegrationFacade().executeOperators(input);
+    public List<Mutant> doOperation(List<Operator> input, Program program) {
+        return IntegrationFacade.getIntegrationFacade().executeOperators(input, program);
     }
 
     /**

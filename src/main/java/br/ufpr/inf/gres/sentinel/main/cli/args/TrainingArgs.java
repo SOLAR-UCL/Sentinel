@@ -39,7 +39,7 @@ public class TrainingArgs {
     @Parameter(names = {"--grammar", "--grammarFile", "-g"},
             description = "The grammar file path (relative to the working directory) used to interpret the strategies.",
             converter = SeparatorConverter.class)
-    public String grammarFilePath = "grammars/default_grammar_no_homs.bnf";
+    public String grammarFilePath = "grammars/default_grammar.bnf";
     /**
      *
      */

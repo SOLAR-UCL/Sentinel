@@ -1,5 +1,6 @@
 package br.ufpr.inf.gres.sentinel.strategy.operation;
 
+import br.ufpr.inf.gres.sentinel.base.mutation.Program;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.defaults.NewBranchOperation;
 import java.util.Objects;
 
@@ -32,9 +33,10 @@ public abstract class Operation<I, O> {
     /**
      *
      * @param input
+     * @param program
      * @return
      */
-    public abstract O doOperation(I input);
+    public abstract O doOperation(I input, Program program);
 
     @Override
     public boolean equals(Object obj) {
@@ -111,11 +113,12 @@ public abstract class Operation<I, O> {
     /**
      *
      * @param input
+     * @param program
      * @return
      */
-    public O next(I input) {
+    public O next(I input, Program program) {
         if (this.successor != null) {
-            return this.successor.doOperation(input);
+            return this.successor.doOperation(input, program);
         }
         return null;
     }

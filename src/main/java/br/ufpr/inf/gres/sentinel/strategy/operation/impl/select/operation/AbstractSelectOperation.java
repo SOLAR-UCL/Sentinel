@@ -1,6 +1,7 @@
 package br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.operation;
 
 import br.ufpr.inf.gres.sentinel.base.mutation.Mutant;
+import br.ufpr.inf.gres.sentinel.base.mutation.Program;
 import br.ufpr.inf.gres.sentinel.base.solution.Solution;
 import br.ufpr.inf.gres.sentinel.strategy.operation.Operation;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.selection.SelectionOperation;
@@ -41,11 +42,11 @@ public abstract class AbstractSelectOperation<T> extends Operation<Solution, Lis
      * @return
      */
     @Override
-    public List<Mutant> doOperation(Solution solution) {
+    public List<Mutant> doOperation(Solution solution, Program program) {
         checkNotNull(this.selection, "No selection operation!");
         List<T> listToRetain = this.obtainList(solution);
-        listToRetain.retainAll(this.selection.doOperation(new ArrayList<>(listToRetain)));
-        return this.next(solution);
+        listToRetain.retainAll(this.selection.doOperation(new ArrayList<>(listToRetain), program));
+        return this.next(solution, program);
     }
 
     /**

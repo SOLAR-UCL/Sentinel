@@ -38,19 +38,6 @@ public class Solution {
             Mutant newMutant = new Mutant(mutant);
             this.mutants.add(newMutant);
         }
-        for (Mutant newMutant : this.mutants) {
-            ArrayList<Mutant> constituentMutants = new ArrayList<>(newMutant.getConstituentMutants());
-            newMutant.getConstituentMutants().clear();
-            for (Mutant constituentMutant : constituentMutants) {
-                for (Mutant tempMutant : this.mutants) {
-                    if (tempMutant.equals(constituentMutant)) {
-                        constituentMutant = tempMutant;
-                        break;
-                    }
-                }
-                newMutant.getConstituentMutants().add(constituentMutant);
-            }
-        }
         for (Operator operator : solution.operators) {
             Operator newOperator = new Operator(operator);
             this.operators.add(newOperator);

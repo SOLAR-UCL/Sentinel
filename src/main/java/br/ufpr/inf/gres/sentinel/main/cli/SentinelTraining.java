@@ -41,7 +41,6 @@ public class SentinelTraining {
         GrammaticalEvolutionAlgorithm<Integer> algorithm = buildAlgorithm(problem, trainingArgs);
         long timeMillis = runAlgorithm(algorithm);
         storeResults(algorithm, timeMillis, trainingArgs);
-        facade.tearDown();
     }
 
     private static GrammaticalEvolutionAlgorithm<Integer> buildAlgorithm(MutationStrategyGenerationProblem problem, TrainingArgs trainingArgs) {

@@ -6,10 +6,8 @@ import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.Fa
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.TerminalRuleType;
 import br.ufpr.inf.gres.sentinel.strategy.operation.Operation;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.group.AbstractGroupingOperation;
-import br.ufpr.inf.gres.sentinel.strategy.operation.impl.group.impl.mutant.GroupMutantsByFOMOrHOM;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.group.impl.mutant.GroupMutantsByOperator;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.group.impl.mutant.GroupMutantsByOperatorType;
-import br.ufpr.inf.gres.sentinel.strategy.operation.impl.group.impl.mutant.GroupMutantsByOrder;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.group.impl.operator.GroupOperatorsByMutantQuantity;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.group.impl.operator.GroupOperatorsByType;
 import com.google.common.base.Preconditions;
@@ -58,12 +56,6 @@ public class GroupingFactory implements Factory<Option> {
                 break;
             case TerminalRuleType.OPERATOR:
                 mainOperation = new GroupMutantsByOperator();
-                break;
-            case TerminalRuleType.FOM_OR_HOM:
-                mainOperation = new GroupMutantsByFOMOrHOM();
-                break;
-            case TerminalRuleType.ORDER:
-                mainOperation = new GroupMutantsByOrder();
                 break;
             default:
                 throw new IllegalArgumentException("Malformed grammar option: " + node.toString());

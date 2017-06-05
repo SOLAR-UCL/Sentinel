@@ -8,7 +8,6 @@ import br.ufpr.inf.gres.sentinel.strategy.operation.Operation;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.sort.AbstractSorterOperation;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.sort.impl.mutant.MutantsOperatorComparator;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.sort.impl.mutant.MutantsOperatorTypeComparator;
-import br.ufpr.inf.gres.sentinel.strategy.operation.impl.sort.impl.mutant.OrderComparator;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.sort.impl.operator.MutantQuantityComparator;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.sort.impl.operator.OperatorTypeComparator;
 import com.google.common.base.Preconditions;
@@ -59,10 +58,6 @@ public class SortingFactory implements Factory<Option> {
                 break;
             case TerminalRuleType.OPERATOR:
                 mainOperation = new MutantsOperatorComparator();
-                break;
-            case TerminalRuleType.FOM_OR_HOM:
-            case TerminalRuleType.ORDER:
-                mainOperation = new OrderComparator();
                 break;
             default:
                 throw new IllegalArgumentException("Malformed grammar option: " + node.toString());

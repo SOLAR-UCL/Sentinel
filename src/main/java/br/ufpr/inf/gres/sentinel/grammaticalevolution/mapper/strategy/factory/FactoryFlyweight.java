@@ -48,8 +48,6 @@ public class FactoryFlyweight {
             // Specific
             case NonTerminalRuleType.OPERATOR_EXECUTION_TYPE:
                 return OperatorExecutionTypeFactory.getInstance();
-            case NonTerminalRuleType.HOM_GENERATION:
-                return HOMGenerationFactory.getInstance();
             default:
                 throw new IllegalArgumentException("Unidentified grammar rule: " + name);
         }

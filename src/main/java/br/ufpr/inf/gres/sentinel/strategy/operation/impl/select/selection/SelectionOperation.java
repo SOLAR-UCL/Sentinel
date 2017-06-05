@@ -1,5 +1,6 @@
 package br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.selection;
 
+import br.ufpr.inf.gres.sentinel.base.mutation.Program;
 import br.ufpr.inf.gres.sentinel.strategy.operation.Operation;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.type.SelectionType;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.sort.AbstractSorterOperation;
@@ -58,7 +59,7 @@ public class SelectionOperation<T> extends Operation<List<T>, List<T>> {
      * @return
      */
     @Override
-    public List<T> doOperation(List<T> input) {
+    public List<T> doOperation(List<T> input, Program program) {
         if (input.size() > 0) {
             checkNotNull(this.selectionType, "No selection type defined for selection!");
             checkArgument(this.percentage != 0D || this.quantity != 0, "No quantity or percentage defined for selection! "

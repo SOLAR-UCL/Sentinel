@@ -1,5 +1,6 @@
 package br.ufpr.inf.gres.sentinel.strategy.operation.impl.group;
 
+import br.ufpr.inf.gres.sentinel.base.mutation.Program;
 import br.ufpr.inf.gres.sentinel.strategy.operation.Operation;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +34,7 @@ public abstract class AbstractGroupingOperation<T> extends Operation<List<T>, Li
      * @return
      */
     @Override
-    public List<List<T>> doOperation(List<T> input) {
+    public List<List<T>> doOperation(List<T> input, Program program) {
         Map<?, List<T>> collect = input.stream().collect(Collectors.groupingBy(this.createGroupingFunction()));
         return new ArrayList<>(collect.values());
     }

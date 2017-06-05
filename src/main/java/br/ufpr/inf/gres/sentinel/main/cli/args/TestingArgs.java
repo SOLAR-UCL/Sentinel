@@ -32,15 +32,21 @@ public class TestingArgs {
     },
             description = "The grammar file path (relative to the working directory) used to interpret the strategies.",
             converter = SeparatorConverter.class)
-    public String grammarFilePath = "grammars/default_grammar_no_homs.bnf";
+    public String grammarFilePath = "grammars/default_grammar.bnf";
 
     /**
      *
      */
     @Parameter(names = {"--testingPrograms", "-tp"},
-            description = "The names of the testing programs to evaluate the strategies. Sentinel will search for the programs in /path/to/testing/directory/ according to the tool used for the mutant generation.",
+            description = "Testing programs for the testing phase. Each String represents one testing program with the following pattern: "
+            + "<name>;<sourceDir>;<targetClassesGlob>;<targetTestsGlob>;<classpathItems>"
+            + ". name is the program's name (for result purposes), sourceDir represents the source directory for the program, "
+            + "targetClassesGlob includes classes to be mutated, targetTestsGlob includes classes to test the software, and classpathItems is "
+            + "used to add dependencies of the program in the Java classpath. The classpath can have as many items as necessary. The classpath "
+            + "must contain the dependencies of the program, the root directory for the compiled classes, and the root directory for the test classes. "
+            + "All directories are in relative to the inputDirectory argument.",
             variableArity = true)
-    public List<String> testingPrograms = Lists.newArrayList("br.ufpr.inf.gres.TriTyp");
+    public List<String> testingPrograms = Lists.newArrayList("Triangle;;br.ufpr.inf.gres.TriTyp*;br.ufpr.inf.gres.TriTypTest*;");
 
     /**
      *

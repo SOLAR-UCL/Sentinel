@@ -1,5 +1,6 @@
 package br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.selection;
 
+import br.ufpr.inf.gres.sentinel.base.mutation.Program;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.group.AbstractGroupingOperation;
 import com.google.common.math.DoubleMath;
 import java.math.RoundingMode;
@@ -33,14 +34,14 @@ public class GroupSelectionOperation<T> extends SelectionOperation<T> {
      * @return
      */
     @Override
-    public List<T> doOperation(List<T> input) {
+    public List<T> doOperation(List<T> input, Program program) {
         checkNotNull(this.selectionType, "No group selection type defined for group selection!");
         checkNotNull(this.groupingFunction, "No grouping function defined for group selection!");
         checkNotNull(this.selectionOperation, "No operator selection type defined for group selection!");
         checkArgument(this.percentage != 0D || this.quantity != 0, "No quantity or percentage defined for group selection! "
                 + "Percentage: " + this.percentage + ". Quantity: " + this.quantity + ".");
         List<T> result = SetUniqueList.setUniqueList(new ArrayList<>());
-        List<List<T>> groups = this.groupingFunction.doOperation(input);
+        List<List<T>> groups = this.groupingFunction.doOperation(input, program);
         if (groups.size() > 0) {
             int numberToSelect;
             if (this.percentage != 0D) {
@@ -53,7 +54,7 @@ public class GroupSelectionOperation<T> extends SelectionOperation<T> {
             }
             groups = this.selectionType.selectItems(groups, numberToSelect);
             for (List<T> group : groups) {
-                result.addAll(this.selectionOperation.doOperation(group));
+                result.addAll(this.selectionOperation.doOperation(group, program));
             }
         }
         return result;

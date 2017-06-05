@@ -1,5 +1,6 @@
 package br.ufpr.inf.gres.sentinel.strategy.operation.impl.sort;
 
+import br.ufpr.inf.gres.sentinel.base.mutation.Program;
 import br.ufpr.inf.gres.sentinel.strategy.operation.Operation;
 import java.util.Comparator;
 import java.util.List;
@@ -42,7 +43,7 @@ public abstract class AbstractSorterOperation<T> extends Operation<List<T>, Inte
      * @return
      */
     @Override
-    public Integer doOperation(List<T> input) {
+    public Integer doOperation(List<T> input, Program program) {
         return this.compare(input.get(0), input.get(1));
     }
 

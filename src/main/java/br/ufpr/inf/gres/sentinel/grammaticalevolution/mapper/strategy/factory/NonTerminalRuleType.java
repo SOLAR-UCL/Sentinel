@@ -12,10 +12,6 @@ public class NonTerminalRuleType {
     /**
      *
      */
-    public static final String HOM_GENERATION = "HOMGeneration";
-    /**
-     *
-     */
     public static final String MUTANT_ATTRIBUTE = "mutantAttribute";
     /**
      *

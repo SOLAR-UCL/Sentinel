@@ -3,13 +3,17 @@ package br.ufpr.inf.gres.sentinel.integration;
 import br.ufpr.inf.gres.sentinel.base.mutation.Mutant;
 import br.ufpr.inf.gres.sentinel.base.mutation.Operator;
 import br.ufpr.inf.gres.sentinel.base.mutation.Program;
+import com.google.common.base.Preconditions;
+import com.google.common.base.Splitter;
 import com.google.common.base.Stopwatch;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
 import com.google.common.collect.Multimaps;
+import java.io.File;
 import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadMXBean;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -19,7 +23,6 @@ import java.util.concurrent.TimeUnit;
 public abstract class IntegrationFacade {
 
     private static IntegrationFacade FACADE_INSTANCE;
-    private static Program PROGRAM_UNDER_TEST;
 
     /**
      *
@@ -37,63 +40,44 @@ public abstract class IntegrationFacade {
         FACADE_INSTANCE = facade;
     }
 
-    /**
-     *
-     * @return
-     */
-    public static Program getProgramUnderTest() {
-        return PROGRAM_UNDER_TEST;
+    protected final ArrayListMultimap<Program, Long> conventionalExecutionCPUTimes = ArrayListMultimap.create();
+    protected final ArrayListMultimap<Program, Long> conventionalExecutionTimes = ArrayListMultimap.create();
+    protected final ArrayListMultimap<Program, Mutant> conventionalMutants = ArrayListMultimap.create();
+    protected final String inputDirectory;
+
+    public IntegrationFacade(String inputDirectory) {
+        this.inputDirectory = inputDirectory;
     }
 
-    /**
-     *
-     * @param programUnderTest
-     */
-    public static void setProgramUnderTest(Program programUnderTest) {
-        IntegrationFacade.PROGRAM_UNDER_TEST = programUnderTest;
+    public String getInputDirectory() {
+        return inputDirectory;
     }
-    private final ArrayListMultimap<Program, Long> conventionalExecutionCPUTimes = ArrayListMultimap.create();
-    private final ArrayListMultimap<Program, Long> conventionalExecutionTimes = ArrayListMultimap.create();
-    private final ArrayListMultimap<Program, Mutant> conventionalMutants = ArrayListMultimap.create();
-
-    /**
-     *
-     * @param mutantsToCombine
-     * @return
-     */
-    public abstract Mutant combineMutants(List<Mutant> mutantsToCombine);
 
     /**
      *
      * @param mutantToExecute
      */
-    public abstract void executeMutant(Mutant mutantToExecute);
+    public abstract void executeMutant(Mutant mutantToExecute, Program program);
 
     /**
      *
      * @param mutantsToExecute
      */
-    public abstract void executeMutants(List<Mutant> mutantsToExecute);
-
-    /**
-     *
-     * @param mutantsToExecute
-     */
-    public abstract void executeMutantsAgainstAllTestCases(List<Mutant> mutantsToExecute);
+    public abstract void executeMutants(List<Mutant> mutantsToExecute, Program program);
 
     /**
      *
      * @param operator
      * @return
      */
-    public abstract List<Mutant> executeOperator(Operator operator);
+    public abstract List<Mutant> executeOperator(Operator operator, Program program);
 
     /**
      *
      * @param operators
      * @return
      */
-    public abstract List<Mutant> executeOperators(List<Operator> operators);
+    public abstract List<Mutant> executeOperators(List<Operator> operators, Program program);
 
     /**
      *
@@ -130,18 +114,13 @@ public abstract class IntegrationFacade {
      * @param program
      * @param repetitions
      */
-    public void initializeConventionalStrategy(Program program, int repetitions) {
+    public synchronized void initializeConventionalStrategy(Program program, int repetitions) {
         if (!this.conventionalExecutionCPUTimes.containsKey(program)) {
             this.runConventionalStrategy(program, 1);
             this.conventionalExecutionCPUTimes.removeAll(program);
             this.conventionalExecutionTimes.removeAll(program);
             this.conventionalMutants.removeAll(program);
             this.runConventionalStrategy(program, repetitions);
-            System.out.println("Number of generated mutants for " + program.getName() + ": " + this.conventionalMutants.get(program).size());
-            System.out.println("Number of dead mutants for " + program.getName() + ": " + this.conventionalMutants.get(program).stream().filter(Mutant::isDead).count());
-            System.out.println("Number of alive mutants for " + program.getName() + ": " + this.conventionalMutants.get(program).stream().filter(Mutant::isAlive).count());
-            System.out.println("CPU time for " + program.getName() + ": " + this.conventionalExecutionCPUTimes.get(program).stream().mapToDouble(Long::doubleValue).average().getAsDouble());
-            System.out.println("Time for " + program.getName() + ": " + this.conventionalExecutionTimes.get(program).stream().mapToDouble(Long::doubleValue).average().getAsDouble());
         }
     }
 
@@ -150,7 +129,34 @@ public abstract class IntegrationFacade {
      * @param programString
      * @return
      */
-    public abstract Program instantiateProgram(String programString);
+    public Program instantiateProgram(String programString) {
+        String errorMessage = "Something went wrong with the following program String: " + programString + ". It appears that it does not have enough information for the mutation testing. If you need more help, please reffer to the '-h' argument.";
+
+        Iterator<String> split = Splitter.on(";").trimResults().split(programString).iterator();
+
+        Preconditions.checkArgument(split.hasNext(), errorMessage);
+        String name = split.next();
+
+        Preconditions.checkArgument(split.hasNext(), errorMessage);
+        String sourceDir = split.next();
+
+        Preconditions.checkArgument(split.hasNext(), errorMessage);
+        String targetClassesGlob = split.next();
+
+        Preconditions.checkArgument(split.hasNext(), errorMessage);
+        String targetTestsGlob = split.next();
+
+        List<String> classPath = new ArrayList<>();
+        while (split.hasNext()) {
+            classPath.add(this.inputDirectory + File.separator + split.next());
+        }
+
+        final Program program = new Program(name, this.inputDirectory + File.separator + sourceDir);
+        program.putAttribute("targetClassesGlob", targetClassesGlob);
+        program.putAttribute("targetTestsGlob", targetTestsGlob);
+        program.putAttribute("classPath", classPath);
+        return program;
+    }
 
     /**
      *
@@ -171,15 +177,14 @@ public abstract class IntegrationFacade {
      * @param repetitions
      */
     protected void runConventionalStrategy(Program program, int repetitions) {
-        IntegrationFacade.setProgramUnderTest(program);
         ThreadMXBean threadBean = ManagementFactory.getThreadMXBean();
         List<Mutant> allMutants = new ArrayList<>();
         for (int i = 0; i < repetitions; i++) {
             Stopwatch stopwatch = Stopwatch.createStarted();
             long currentThreadCpuTime = threadBean.getCurrentThreadCpuTime();
             List<Operator> operators = this.getAllOperators();
-            allMutants = this.executeOperators(operators);
-            this.executeMutants(allMutants);
+            allMutants = this.executeOperators(operators, program);
+            this.executeMutants(allMutants, program);
             currentThreadCpuTime = threadBean.getCurrentThreadCpuTime() - currentThreadCpuTime;
             stopwatch.stop();
             this.conventionalExecutionCPUTimes.put(program, currentThreadCpuTime);
@@ -187,10 +192,5 @@ public abstract class IntegrationFacade {
         }
         this.conventionalMutants.putAll(program, allMutants);
     }
-
-    /**
-     *
-     */
-    public abstract void tearDown();
 
 }

@@ -48,7 +48,6 @@ public class SentinelTesting {
         if (!resultsFromJson.isEmpty()) {
             runTest(problem, nonDominatedSolutions, testingArgs);
         }
-        facade.tearDown();
     }
 
     private static void runTest(MutationStrategyGenerationProblem problem, List<VariableLengthSolution<Integer>> nonDominatedSolutions, TestingArgs testingArgs) throws IOException {
@@ -75,7 +74,7 @@ public class SentinelTesting {
     private static ResultWrapper runSentinelSolutions(List<VariableLengthSolution<Integer>> nonDominatedSolutions, MutationStrategyGenerationProblem problem, TestingArgs testingArgs) {
         Stopwatch stopwatch = Stopwatch.createStarted();
         for (VariableLengthSolution<Integer> nonDominatedSolution : nonDominatedSolutions) {
-            problem.evaluateNoConstraints(nonDominatedSolution);
+            problem.evaluate(nonDominatedSolution);
         }
         stopwatch.stop();
 
@@ -108,7 +107,7 @@ public class SentinelTesting {
 
         Stopwatch stopwatch = Stopwatch.createStarted();
         for (VariableLengthSolution<Integer> solution : solutions) {
-            problem.evaluateNoConstraints(solution);
+            problem.evaluate(solution);
         }
         stopwatch.stop();
 
@@ -140,7 +139,7 @@ public class SentinelTesting {
 
         Stopwatch stopwatch = Stopwatch.createStarted();
         for (VariableLengthSolution<Integer> solution : solutions) {
-            problem.evaluateNoConstraints(solution);
+            problem.evaluate(solution);
         }
         stopwatch.stop();
 
@@ -178,13 +177,14 @@ public class SentinelTesting {
 
             IntegrationFacade facade = IntegrationFacade.getIntegrationFacade();
             for (String testingProgram : testingArgs.testingPrograms) {
-                facade.initializeConventionalStrategy(facade.instantiateProgram(testingProgram), testingArgs.numberOfTestingRuns);
-                facade.executeOperators(allOperators);
+                Program program = facade.instantiateProgram(testingProgram);
+                facade.initializeConventionalStrategy(program, testingArgs.numberOfTestingRuns);
+                facade.executeOperators(allOperators, program);
             }
 
             Stopwatch stopwatch = Stopwatch.createStarted();
             for (VariableLengthSolution<Integer> solution : solutions) {
-                problem.evaluateNoConstraints(solution);
+                problem.evaluate(solution);
             }
             stopwatch.stop();
 

@@ -1,6 +1,7 @@
 package br.ufpr.inf.gres.sentinel.strategy.operation.impl.defaults;
 
 import br.ufpr.inf.gres.sentinel.base.mutation.Mutant;
+import br.ufpr.inf.gres.sentinel.base.mutation.Program;
 import br.ufpr.inf.gres.sentinel.base.solution.Solution;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.TerminalRuleType;
 import br.ufpr.inf.gres.sentinel.strategy.operation.Operation;
@@ -28,12 +29,12 @@ public class NewBranchOperation extends Operation<Solution, List<Mutant>> {
      * @return
      */
     @Override
-    public List<Mutant> doOperation(Solution solution) {
+    public List<Mutant> doOperation(Solution solution, Program program) {
         Solution clonedSolution = new Solution(solution);
-        List<Mutant> result = this.next(solution);
+        List<Mutant> result = this.next(solution, program);
         SetUniqueList<Mutant> newList = SetUniqueList.setUniqueList(new ArrayList<>(result));
         if (this.secondSuccessor != null) {
-            newList.addAll(this.secondSuccessor.doOperation(clonedSolution));
+            newList.addAll(this.secondSuccessor.doOperation(clonedSolution, program));
         }
         return newList;
     }

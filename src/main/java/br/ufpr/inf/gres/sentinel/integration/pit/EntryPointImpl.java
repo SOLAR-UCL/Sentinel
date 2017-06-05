@@ -1,12 +1,9 @@
 package br.ufpr.inf.gres.sentinel.integration.pit;
 
-import br.ufpr.inf.gres.sentinel.base.mutation.Program;
-import br.ufpr.inf.gres.sentinel.integration.IntegrationFacade;
 import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.pitest.classpath.ClassPath;
@@ -41,7 +38,7 @@ import org.pitest.util.Timings;
  */
 public class EntryPointImpl {
 
-    private HashMap<Program, CoverageDatabase> coverageData = new HashMap<>();
+    private CoverageDatabase coverageData;
     private WriterFactory historyWriter;
     private KnownLocationJavaAgentFinder ja;
     private JavaAgent jac;
@@ -140,9 +137,10 @@ public class EntryPointImpl {
     }
 
     private CoverageDatabase getCoverageData(final CoverageGenerator coverageDatabase) {
-        return this.coverageData.computeIfAbsent(IntegrationFacade.getProgramUnderTest(), (program) -> {
-            return coverageDatabase.calculateCoverage();
-        });
+        if (coverageData != null) {
+            coverageData = coverageDatabase.calculateCoverage();
+        }
+        return coverageData;
     }
 
 }

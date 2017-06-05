@@ -19,10 +19,6 @@ public class TerminalRuleType {
     /**
      *
      */
-    public static final String COMBINE_MUTANTS = "Combine Mutants";
-    /**
-     *
-     */
     public static final String CONVENTIONAL = "Conventional";
 
     /**
@@ -48,10 +44,6 @@ public class TerminalRuleType {
      *
      */
     public static final String EXECUTE_OPERATORS = "Execute Operators";
-    /**
-     *
-     */
-    public static final String FOM_OR_HOM = "FOM or HOM";
     /**
      *
      */

@@ -6,21 +6,12 @@ import br.ufpr.inf.gres.sentinel.base.mutation.Program;
 import br.ufpr.inf.gres.sentinel.base.mutation.TestCase;
 import br.ufpr.inf.gres.sentinel.integration.IntegrationFacade;
 import com.google.common.base.Joiner;
-import com.google.common.base.Preconditions;
-import com.google.common.base.Splitter;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -42,8 +33,8 @@ import org.pitest.mutationtest.engine.gregor.mutators.*;
  */
 public class PITFacade extends IntegrationFacade {
 
-    private static final ArrayList<Operator> ALL_OPERATORS = new ArrayList<>();
-    private static final HashMap<String, Operator> ALL_OPERATORS_BY_CLASS = new HashMap<>();
+    protected static final ArrayList<Operator> ALL_OPERATORS = new ArrayList<>();
+    protected static final HashMap<String, Operator> ALL_OPERATORS_BY_CLASS = new HashMap<>();
 
     static {
         Operator operator = new Operator("CONDITIONALS_BOUNDARY", "Conditionals");
@@ -114,38 +105,27 @@ public class PITFacade extends IntegrationFacade {
         ALL_OPERATORS.add(operator);
         ALL_OPERATORS_BY_CLASS.put(ArgumentPropagationMutator.ARGUMENT_PROPAGATION_MUTATOR.getGloballyUniqueId(), operator);
     }
-    private final HashMap<Program, EntryPointImpl> entryPoints = new HashMap<>();
-    private final HashMap<Program, HashMap<Mutant, MutationDetails>> generatedMutants = new HashMap<>();
-    private final HashMap<Program, HashMap<MutationTestUnit, Set<Mutant>>> unitToMutants = new HashMap<>();
-
-    private final String inputDirectory;
+    protected final HashMap<Program, EntryPointImpl> entryPoints = new HashMap<>();
+    protected final HashMap<Program, HashMap<Mutant, MutationDetails>> generatedMutants = new HashMap<>();
+    protected final HashMap<Program, HashMap<MutationTestUnit, Set<Mutant>>> unitToMutants = new HashMap<>();
 
     /**
      *
      * @param inputDirectory
      */
     public PITFacade(String inputDirectory) {
-        this.inputDirectory = inputDirectory;
-    }
-
-    /**
-     *
-     * @param mutantsToCombine
-     * @return
-     */
-    @Override
-    public Mutant combineMutants(List<Mutant> mutantsToCombine) {
-        throw new UnsupportedOperationException("Sorry, PIT test is not adapted to work with HOMs. Please, select a grammar file without HOMs.");
+        super(inputDirectory);
     }
 
     /**
      *
      * @param mutantToExecute
+     * @param program
      */
     @Override
-    public void executeMutant(Mutant mutantToExecute) {
+    public void executeMutant(Mutant mutantToExecute, Program program) {
         if (mutantToExecute != null) {
-            this.executeMutants(Lists.newArrayList(mutantToExecute));
+            this.executeMutants(Lists.newArrayList(mutantToExecute), program);
         }
     }
 
@@ -180,18 +160,18 @@ public class PITFacade extends IntegrationFacade {
     /**
      *
      * @param mutantsToExecute
+     * @param program
      */
     @Override
-    public void executeMutants(List<Mutant> mutantsToExecute) {
+    public void executeMutants(List<Mutant> mutantsToExecute, Program program) {
         if (mutantsToExecute != null && !mutantsToExecute.isEmpty()) {
             PluginServices plugins = PluginServices.makeForContextLoader();
 
-            final Program programUnderTest = IntegrationFacade.getProgramUnderTest();
-            ReportOptions reportOptions = this.createDefaultReportOptions(plugins, programUnderTest);
+            ReportOptions reportOptions = this.createDefaultReportOptions(plugins, program);
 
             try {
-                HashMap<Mutant, MutationDetails> descriptions = this.generatedMutants.get(programUnderTest);
-                HashMap<MutationTestUnit, Set<Mutant>> allUnitsMutants = unitToMutants.get(programUnderTest);
+                HashMap<Mutant, MutationDetails> descriptions = this.generatedMutants.get(program);
+                HashMap<MutationTestUnit, Set<Mutant>> allUnitsMutants = unitToMutants.get(program);
                 if (allUnitsMutants != null || allUnitsMutants.isEmpty()) {
                     for (Map.Entry<MutationTestUnit, Set<Mutant>> unitEntry : allUnitsMutants.entrySet()) {
                         MutationTestUnit unit = unitEntry.getKey();
@@ -211,7 +191,7 @@ public class PITFacade extends IntegrationFacade {
 
                         field.set(unit, fieldValue);
                     }
-                    EntryPointImpl entryPoint = this.getOrCreateEntryPoint();
+                    EntryPointImpl entryPoint = this.getOrCreateEntryPoint(program);
                     Collection<MutationResult> result = entryPoint.executeMutants(null, reportOptions, new SettingsFactory(reportOptions, plugins), new HashMap<>(), new ArrayList<>(allUnitsMutants.keySet()));
 
                     for (Mutant mutant : mutantsToExecute) {
@@ -236,41 +216,33 @@ public class PITFacade extends IntegrationFacade {
 
     /**
      *
-     * @param mutantsToExecute
-     */
-    @Override
-    public void executeMutantsAgainstAllTestCases(List<Mutant> mutantsToExecute) {
-        //TODO
-    }
-
-    /**
-     *
      * @param operator
+     * @param program
      * @return
      */
     @Override
-    public List<Mutant> executeOperator(Operator operator) {
-        return this.executeOperators(Lists.newArrayList(operator));
+    public List<Mutant> executeOperator(Operator operator, Program program) {
+        return this.executeOperators(Lists.newArrayList(operator), program);
     }
 
     /**
      *
      * @param operators
+     * @param program
      * @return
      */
     @Override
-    public List<Mutant> executeOperators(List<Operator> operators) {
+    public List<Mutant> executeOperators(List<Operator> operators, Program program) {
         List<Mutant> mutants = new ArrayList<>();
-        final Program programUnderTest = IntegrationFacade.getProgramUnderTest();
         if (operators != null && !operators.isEmpty()) {
             final PluginServices plugins = PluginServices.makeForContextLoader();
-            ReportOptions reportOptions = this.createDefaultReportOptions(plugins, programUnderTest);
+            ReportOptions reportOptions = this.createDefaultReportOptions(plugins, program);
             reportOptions.setMutators(operators.stream().map(Operator::getName).collect(Collectors.toList()));
             try {
-                EntryPointImpl entryPoint = this.getOrCreateEntryPoint();
+                EntryPointImpl entryPoint = this.getOrCreateEntryPoint(program);
                 List<MutationAnalysisUnit> units = entryPoint.generateMutants(null, reportOptions, new SettingsFactory(reportOptions, plugins), new HashMap<>());
 
-                HashMap<MutationTestUnit, Set<Mutant>> unitToMutant = this.unitToMutants.computeIfAbsent(programUnderTest, t -> new HashMap<>());
+                HashMap<MutationTestUnit, Set<Mutant>> unitToMutant = this.unitToMutants.computeIfAbsent(program, t -> new HashMap<>());
                 for (MutationAnalysisUnit unit : units) {
                     if (unit instanceof MutationTestUnit) {
                         MutationTestUnit testUnit = (MutationTestUnit) unit;
@@ -279,13 +251,13 @@ public class PITFacade extends IntegrationFacade {
                         field.setAccessible(true);
                         Collection<MutationDetails> fieldValue = (Collection<MutationDetails>) field.get(testUnit);
                         mutants.addAll(fieldValue.stream().map((mutationDetails) -> {
-                            Mutant mutant = new Mutant(mutationDetails.getId().toString(), null, programUnderTest);
+                            Mutant mutant = new Mutant(mutationDetails.getId().toString(), null, program);
                             Operator mappedOperator = ALL_OPERATORS_BY_CLASS.get(mutationDetails.getMutator());
                             Operator operator = Iterables.find(operators, (tempOperator) -> tempOperator.equals(mappedOperator));
                             mutant.getOperators().add(operator);
                             operator.getGeneratedMutants().add(mutant);
 
-                            HashMap<Mutant, MutationDetails> programMutants = this.generatedMutants.computeIfAbsent(programUnderTest, t -> new HashMap<>());
+                            HashMap<Mutant, MutationDetails> programMutants = this.generatedMutants.computeIfAbsent(program, t -> new HashMap<>());
                             programMutants.putIfAbsent(mutant, mutationDetails);
 
                             unitMutants.add(mutant);
@@ -315,63 +287,10 @@ public class PITFacade extends IntegrationFacade {
         return operators;
     }
 
-    private EntryPointImpl getOrCreateEntryPoint() {
-        return this.entryPoints.computeIfAbsent(IntegrationFacade.getProgramUnderTest(), (program) -> {
+    private EntryPointImpl getOrCreateEntryPoint(Program program) {
+        return this.entryPoints.computeIfAbsent(program, (programTemp) -> {
             return new EntryPointImpl();
         });
-    }
-
-    /**
-     *
-     * @param programString
-     * @return
-     */
-    @Override
-    public Program instantiateProgram(String programString) {
-        String errorMessage = "Something went wrong with the following program String: " + programString + ". It appears that it does not have enough information for the mutation testing. If you need more help, please reffer to the '-h' argument.";
-
-        Iterator<String> split = Splitter.on(";").trimResults().split(programString).iterator();
-
-        Preconditions.checkArgument(split.hasNext(), errorMessage);
-        String name = split.next();
-
-        Preconditions.checkArgument(split.hasNext(), errorMessage);
-        String sourceDir = split.next();
-
-        Preconditions.checkArgument(split.hasNext(), errorMessage);
-        String targetClassesGlob = split.next();
-
-        Preconditions.checkArgument(split.hasNext(), errorMessage);
-        String targetTestsGlob = split.next();
-
-        List<String> classPath = new ArrayList<>();
-        while (split.hasNext()) {
-            final String next = split.next();
-            if (new File(this.inputDirectory + File.separator + next).exists()) {
-                classPath.add(this.inputDirectory + File.separator + next);
-            } else if (new File(next).exists()) {
-                classPath.add(next);
-            }
-        }
-
-        final Program program = new Program(name, this.inputDirectory + File.separator + sourceDir);
-        program.putAttribute("targetClassesGlob", targetClassesGlob);
-        program.putAttribute("targetTestsGlob", targetTestsGlob);
-        program.putAttribute("classPath", classPath);
-        return program;
-    }
-
-    /**
-     *
-     */
-    @Override
-    public void tearDown() {
-        for (EntryPointImpl entry : this.entryPoints.values()) {
-            entry.close();
-        }
-        this.entryPoints.clear();
-        this.unitToMutants.clear();
-        this.generatedMutants.clear();
     }
 
 }

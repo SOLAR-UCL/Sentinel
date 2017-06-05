@@ -24,6 +24,10 @@ public class Operator {
      */
     protected String type;
 
+    protected double executionTime = -1;
+
+    protected double cpuTime = -1;
+
     /**
      *
      * @param name
@@ -117,6 +121,22 @@ public class Operator {
     @Override
     public String toString() {
         return this.name;
+    }
+
+    public double getExecutionTime() {
+        return executionTime;
+    }
+
+    public void setExecutionTime(double executionTime) {
+        this.executionTime = executionTime;
+    }
+
+    public double getCpuTime() {
+        return cpuTime;
+    }
+
+    public void setCpuTime(double cpuTime) {
+        this.cpuTime = cpuTime;
     }
 
 }

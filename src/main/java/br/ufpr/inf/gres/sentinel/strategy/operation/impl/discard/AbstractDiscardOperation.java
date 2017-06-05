@@ -1,6 +1,7 @@
 package br.ufpr.inf.gres.sentinel.strategy.operation.impl.discard;
 
 import br.ufpr.inf.gres.sentinel.base.mutation.Mutant;
+import br.ufpr.inf.gres.sentinel.base.mutation.Program;
 import br.ufpr.inf.gres.sentinel.base.solution.Solution;
 import br.ufpr.inf.gres.sentinel.strategy.operation.Operation;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.selection.SelectionOperation;
@@ -44,11 +45,11 @@ public abstract class AbstractDiscardOperation<T> extends Operation<Solution, Li
      * @return
      */
     @Override
-    public List<Mutant> doOperation(Solution solution) {
+    public List<Mutant> doOperation(Solution solution, Program program) {
         checkNotNull(this.selection, "No selection operation!");
         List<T> listToDiscard = this.obtainList(solution);
-        listToDiscard.removeAll(this.selection.doOperation(new ArrayList<>(listToDiscard)));
-        return this.next(solution);
+        listToDiscard.removeAll(this.selection.doOperation(new ArrayList<>(listToDiscard), program));
+        return this.next(solution, program);
     }
 
     /**

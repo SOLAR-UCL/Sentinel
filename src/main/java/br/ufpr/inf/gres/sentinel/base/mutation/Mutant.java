@@ -18,13 +18,6 @@ import org.apache.commons.collections4.list.SetUniqueList;
 public class Mutant extends Program {
 
     /**
-     * The constituent mutants of this mutant. Constituent mutants are the
-     * mutants used to create a
-     * <a href="http://dl.acm.org/citation.cfm?id=1570728">Higher Order
-     * Mutant</a>.
-     */
-    protected SetUniqueList<Mutant> constituentMutants;
-    /**
      * If this mutant is equivalent.
      */
     protected boolean equivalent = false;
@@ -44,6 +37,26 @@ public class Mutant extends Program {
     protected Program originalProgram;
 
     /**
+     * The clock time this particular mutant took to be executed. Default value
+     * is -1. If the value -1 is here, it means either that the mutant was not
+     * yet executed, or that the Integration Facade was not able to store the
+     * individual time for this mutant.
+     *
+     * @see #cpuTime
+     */
+    protected double executionTime = -1;
+
+    /**
+     * The CPU time this particular mutant took to be executed. Default value is
+     * -1. If the value -1 is here, it means either that the mutant was not yet
+     * executed, or that the Integration Facade was not able to store the
+     * individual time for this mutant.
+     *
+     * @see #executionTime
+     */
+    protected double cpuTime = -1;
+
+    /**
      * The standard constructor for a mutant.
      *
      * @param name the name of this mutant
@@ -54,7 +67,6 @@ public class Mutant extends Program {
     public Mutant(String name, File sourceFile, Program originalProgram) {
         super(name, sourceFile);
         this.originalProgram = originalProgram;
-        this.constituentMutants = SetUniqueList.setUniqueList(new ArrayList<>());
         this.killingTestCases = SetUniqueList.setUniqueList(new ArrayList<>());
         this.operators = SetUniqueList.setUniqueList(new ArrayList<>());
     }
@@ -67,7 +79,6 @@ public class Mutant extends Program {
     public Mutant(Mutant mutant) {
         this(mutant.name, mutant.sourceFile, mutant.originalProgram);
         this.equivalent = mutant.equivalent;
-        this.constituentMutants.addAll(mutant.constituentMutants);
         this.killingTestCases.addAll(mutant.killingTestCases);
         this.operators.addAll(mutant.operators);
     }
@@ -85,32 +96,6 @@ public class Mutant extends Program {
         }
         final Mutant other = (Mutant) obj;
         return Objects.equals(this.originalProgram, other.originalProgram) && Objects.equals(this.name, other.name);
-    }
-
-    /**
-     * Returns the constituent mutants of this mutant. The constituent mutants
-     * are the mutants that are combined to generate a
-     * <a href="http://dl.acm.org/citation.cfm?id=1570728">Higher Order
-     * Mutant</a>.
-     *
-     * @return the constituent mutants of this mutant. Empty list if it is a
-     * first order mutant.
-     *
-     * @see #isHigherOrder()
-     * @see #getOrder()
-     */
-    public SetUniqueList<Mutant> getConstituentMutants() {
-        return this.constituentMutants;
-    }
-
-    /**
-     *
-     * Sets the constituent mutants of this mutant.
-     *
-     * @param constituentMutants the constituent mutants of this mutant
-     */
-    public void setConstituentMutants(SetUniqueList<Mutant> constituentMutants) {
-        this.constituentMutants = constituentMutants;
     }
 
     /**
@@ -152,23 +137,6 @@ public class Mutant extends Program {
      */
     public void setOperators(SetUniqueList<Operator> operators) {
         this.operators = operators;
-    }
-
-    /**
-     * Gets the order of this mutant. The order is computed by the size of the
-     * {@link #constituentMutants} attribute. If the list is empty, then this is
-     * a first order mutant. If the list has {@literal x > 1 } mutants, then
-     * this is a
-     * <a href="http://dl.acm.org/citation.cfm?id=1570728">Higher Order
-     * Mutant</a> of order {@literal x}.
-     *
-     * @return the order of the mutant
-     *
-     * @see #isHigherOrder()
-     */
-    public int getOrder() {
-        int order = this.getConstituentMutants().size();
-        return order == 0 ? 1 : order;
     }
 
     /**
@@ -247,16 +215,53 @@ public class Mutant extends Program {
     }
 
     /**
-     * Checks if this mutant is a HOM. This is computed by the size of the
-     * {@link #constituentMutants} list.
+     * Gets the clock execution time this particular mutant took to be executed.
      *
-     * @return if the mutant is of higher order. {@code true} if
-     * {@code order > 1}, {@code false} otherwise.
+     * @return the clock execution time of this particular mutant. Default value
+     * is -1. If the value -1 is here, it means either that the mutant was not
+     * yet executed, or that the Integration Facade was not able to store the
+     * individual time for this mutant.
      *
-     * @see #getOrder()
+     * @see #getCpuTime()
      */
-    public boolean isHigherOrder() {
-        return this.getOrder() > 1;
+    public double getExecutionTime() {
+        return executionTime;
+    }
+
+    /**
+     * Sets the clock execution time of this particular mutant
+     *
+     * @param executionTime the clock execution time of this particular mutant.
+     *
+     * @see #setCpuTime(double)
+     */
+    public void setExecutionTime(double executionTime) {
+        this.executionTime = executionTime;
+    }
+
+    /**
+     * Gets the CPU execution time this particular mutant took to be executed.
+     *
+     * @return the CPU execution time of this particular mutant. Default value
+     * is -1. If the value -1 is here, it means either that the mutant was not
+     * yet executed, or that the Integration Facade was not able to store the
+     * individual time for this mutant.
+     *
+     * @see #getExecutionTime()
+     */
+    public double getCpuTime() {
+        return cpuTime;
+    }
+
+    /**
+     * Sets the CPU time of this particular mutant
+     *
+     * @param cpuTime the CPU execution time of this particular mutant.
+     *
+     * @see #setExecutionTime(double)
+     */
+    public void setCpuTime(double cpuTime) {
+        this.cpuTime = cpuTime;
     }
 
     @Override

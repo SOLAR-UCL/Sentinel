@@ -1,5 +1,6 @@
 package br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.type;
 
+import br.ufpr.inf.gres.sentinel.base.mutation.Program;
 import br.ufpr.inf.gres.sentinel.strategy.operation.Operation;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +28,7 @@ public abstract class SelectionType<T> extends Operation<List<T>, List<T>> {
      * @return
      */
     @Override
-    public List<T> doOperation(List<T> input) {
+    public List<T> doOperation(List<T> input, Program program) {
         if (!input.isEmpty()) {
             return this.selectItems(input, RANDOM.nextInt(input.size()) + 1);
         } else {
