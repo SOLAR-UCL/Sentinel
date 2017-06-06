@@ -29,14 +29,14 @@ public class MutantTest {
         Mutant instance = new Mutant("Program1", new File("Test"), IntegrationFacade.getProgramUnderTest());
         instance.getConstituentMutants().add(new Mutant("Mutant2", null, IntegrationFacade.getProgramUnderTest()));
         instance.getConstituentMutants().add(new Mutant("Mutant3", null, IntegrationFacade.getProgramUnderTest()));
-        instance.getOperators().add(new Operator("Operator1", "Type1"));
-        instance.getOperators().add(new Operator("Operator2", "Type1"));
+        instance.getOperator().add(new Operator("Operator1", "Type1"));
+        instance.getOperator().add(new Operator("Operator2", "Type1"));
         Mutant instance2 = new Mutant(instance);
         assertEquals(instance, instance2);
         assertEquals(instance.getSourceFile(), instance2.getSourceFile());
         assertEquals(instance.getOriginalProgram(), instance2.getOriginalProgram());
         assertArrayEquals(instance.getConstituentMutants().toArray(), instance2.getConstituentMutants().toArray());
-        assertArrayEquals(instance.getOperators().toArray(), instance2.getOperators().toArray());
+        assertArrayEquals(instance.getOperator().toArray(), instance2.getOperator().toArray());
     }
 
     @Test
@@ -118,8 +118,8 @@ public class MutantTest {
     public void testGetAndSetOperators() {
         Mutant instance = new Mutant("Mutant1", null, IntegrationFacade.getProgramUnderTest());
         SetUniqueList<Operator> setUniqueList = SetUniqueList.setUniqueList(new ArrayList<>());
-        instance.setOperators(setUniqueList);
-        SetUniqueList result = instance.getOperators();
+        instance.setOperator(setUniqueList);
+        SetUniqueList result = instance.getOperator();
         assertEquals(setUniqueList, result);
     }
 

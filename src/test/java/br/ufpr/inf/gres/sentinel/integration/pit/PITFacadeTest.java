@@ -102,7 +102,7 @@ public class PITFacadeTest {
         assertNotNull(mutants);
         assertEquals(13, mutants.size());
         assertTrue(mutants.stream().allMatch(Mutant::isAlive));
-        assertTrue(mutants.stream().allMatch((t) -> t.getOperators().contains(allOperators.get(0))));
+        assertTrue(mutants.stream().allMatch((t) -> t.getOperator().contains(allOperators.get(0))));
         assertTrue(allOperators.get(0).getGeneratedMutants().containsAll(mutants));
     }
 

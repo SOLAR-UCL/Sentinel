@@ -32,13 +32,13 @@ public class SolutionTest {
         mutant.getKillingTestCases().add(testCase);
         mutant.getConstituentMutants().add(mutant2);
         mutant.getConstituentMutants().add(mutant3);
-        mutant.getOperators().add(operator);
+        mutant.getOperator().add(operator);
 
         mutant2.getKillingTestCases().add(testCase);
-        mutant2.getOperators().add(operator);
+        mutant2.getOperator().add(operator);
 
         mutant3.getKillingTestCases().add(testCase);
-        mutant3.getOperators().add(operator);
+        mutant3.getOperator().add(operator);
 
         operator.getGeneratedMutants().add(mutant);
         operator.getGeneratedMutants().add(mutant2);
@@ -59,7 +59,7 @@ public class SolutionTest {
             Mutant temp1 = solution.getMutants().get(i);
             Mutant temp2 = solution2.getMutants().get(i);
             assertNotSame(temp1, temp2);
-            assertNotSame(temp1.getOperators().get(0), temp2.getOperators().get(0));
+            assertNotSame(temp1.getOperator().get(0), temp2.getOperator().get(0));
             assertEquals(temp1.isHigherOrder(), temp2.isHigherOrder());
             if (temp1.isHigherOrder()) {
                 assertNotSame(temp1.getConstituentMutants().get(0), temp2.getConstituentMutants().get(0));

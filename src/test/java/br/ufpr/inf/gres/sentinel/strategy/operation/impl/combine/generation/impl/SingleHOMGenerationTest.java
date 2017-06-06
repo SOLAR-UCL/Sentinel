@@ -29,9 +29,9 @@ public class SingleHOMGenerationTest {
         Operator operator2 = new Operator("Operator2", "Type1");
 
         Mutant mutant1 = new Mutant("Mutant1", null, IntegrationFacade.getProgramUnderTest());
-        mutant1.getOperators().add(operator1);
+        mutant1.getOperator().add(operator1);
         Mutant mutant2 = new Mutant("Mutant2", null, IntegrationFacade.getProgramUnderTest());
-        mutant2.getOperators().add(operator2);
+        mutant2.getOperator().add(operator2);
 
         List<Mutant> mutants = operation.doOperation(Lists.newArrayList(mutant1, mutant2));
         assertFalse(mutants.isEmpty());
@@ -42,7 +42,7 @@ public class SingleHOMGenerationTest {
         assertNotNull(hom);
         assertEquals("Mutant1_Mutant2", hom.getName());
         assertArrayEquals(new Mutant[]{mutant1, mutant2}, hom.getConstituentMutants().toArray());
-        assertArrayEquals(new Operator[]{operator1, operator2}, hom.getOperators().toArray());
+        assertArrayEquals(new Operator[]{operator1, operator2}, hom.getOperator().toArray());
         assertEquals(2, hom.getOrder());
         assertTrue(hom.isHigherOrder());
         assertTrue(operator1.getGeneratedMutants().contains(hom));

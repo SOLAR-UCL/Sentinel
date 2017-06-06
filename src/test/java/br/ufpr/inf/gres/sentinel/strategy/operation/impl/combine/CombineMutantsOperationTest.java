@@ -42,13 +42,13 @@ public class CombineMutantsOperationTest {
         Operator operator2 = new Operator("Operator2", "Type1");
 
         Mutant mutant1 = new Mutant("Mutant1", null, IntegrationFacade.getProgramUnderTest());
-        mutant1.getOperators().add(operator1);
+        mutant1.getOperator().add(operator1);
         Mutant mutant2 = new Mutant("Mutant2", null, IntegrationFacade.getProgramUnderTest());
-        mutant2.getOperators().add(operator2);
+        mutant2.getOperator().add(operator2);
         Mutant mutant3 = new Mutant("Mutant3", null, IntegrationFacade.getProgramUnderTest());
-        mutant3.getOperators().add(operator1);
+        mutant3.getOperator().add(operator1);
         Mutant mutant4 = new Mutant("Mutant4", null, IntegrationFacade.getProgramUnderTest());
-        mutant4.getOperators().add(operator2);
+        mutant4.getOperator().add(operator2);
 
         solution.getMutants().add(mutant1);
         solution.getMutants().add(mutant2);

@@ -102,7 +102,7 @@ public class IntegrationFacadeTest {
                     new Mutant(operator + "_3", new File(operator + "_3"), programToBeMutated),
                     new Mutant(operator + "_4", new File(operator + "_4"), programToBeMutated));
             for (Mutant mutant : mutants) {
-                mutant.getOperators().add(operator);
+                mutant.getOperator().add(operator);
                 operator.getGeneratedMutants().add(mutant);
             }
             return mutants;

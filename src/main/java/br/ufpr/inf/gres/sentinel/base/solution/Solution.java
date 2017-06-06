@@ -51,8 +51,7 @@ public class Solution {
                         break;
                     }
                 }
-                generatedMutant.getOperators().remove(newOperator);
-                generatedMutant.getOperators().add(newOperator);
+                generatedMutant.setOperator(newOperator);
                 newOperator.getGeneratedMutants().add(generatedMutant);
             }
         }

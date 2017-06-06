@@ -46,6 +46,8 @@ public class Operator {
     public Operator(Operator operator) {
         this(operator.name, operator.type);
         this.generatedMutants.addAll(operator.getGeneratedMutants());
+        this.executionTime = operator.executionTime;
+        this.cpuTime = operator.cpuTime;
     }
 
     @Override

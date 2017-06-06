@@ -45,11 +45,11 @@ public class DiscardOperatorsOperationTest {
         operator2.getGeneratedMutants().add(mutant4);
         operator2.getGeneratedMutants().add(mutant5);
 
-        mutant1.getOperators().add(operator1);
-        mutant2.getOperators().add(operator1);
-        mutant3.getOperators().add(operator1);
-        mutant4.getOperators().add(operator2);
-        mutant5.getOperators().add(operator2);
+        mutant1.getOperator().add(operator1);
+        mutant2.getOperator().add(operator1);
+        mutant3.getOperator().add(operator1);
+        mutant4.getOperator().add(operator2);
+        mutant5.getOperator().add(operator2);
 
         SelectionOperation<Operator> selectionOp = new SelectionOperation<>();
         selectionOp.setSelectionType(new SequentialSelection());

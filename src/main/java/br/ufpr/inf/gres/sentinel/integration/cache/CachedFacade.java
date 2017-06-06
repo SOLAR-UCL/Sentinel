@@ -28,26 +28,20 @@ public class CachedFacade extends IntegrationFacade {
         super(facade.getInputDirectory());
         this.facade = facade;
         this.cache = new FacadeCache();
+        this.cache.setAllOperators(facade.getAllOperators());
     }
 
     /**
      *
      * @param facade
+     * @param inputDirectory
      * @param outputDirectory
      */
-    public CachedFacade(IntegrationFacade facade, String outputDirectory) {
-        super(facade.getInputDirectory());
-        this.facade = facade;
-        this.cache = new FacadeCache(null, outputDirectory);
-    }
-
-    /**
-     *
-     * @param inputDirectory
-     */
-    public CachedFacade(String inputDirectory) {
+    public CachedFacade(IntegrationFacade facade, String inputDirectory, String outputDirectory) {
         super(inputDirectory);
-        this.cache = new FacadeCache(inputDirectory, null);
+        this.facade = facade;
+        this.cache = new FacadeCache(inputDirectory, outputDirectory);
+        this.cache.setAllOperators(facade.getAllOperators());
     }
 
     @Override
@@ -58,7 +52,10 @@ public class CachedFacade extends IntegrationFacade {
             this.conventionalExecutionTimes.removeAll(program);
             this.conventionalMutants.removeAll(program);
             this.cache.clearCache(program);
+
             this.runConventionalStrategy(program, repetitions);
+            this.cache.setCached(program);
+            this.cache.writeCache();
         }
     }
 
@@ -77,9 +74,6 @@ public class CachedFacade extends IntegrationFacade {
                 double operatorCpuTime = operator.getCpuTime();
                 double operatorExecutionTime = operator.getExecutionTime();
 
-                this.cache.recordOperatorCPUTime(program, operator, (long) operatorCpuTime);
-                this.cache.recordOperatorExecutionTime(program, operator, (long) operatorExecutionTime);
-
                 cpuTimeSum += operatorCpuTime;
                 timeSum += operatorExecutionTime;
             }
@@ -87,9 +81,6 @@ public class CachedFacade extends IntegrationFacade {
             for (Mutant mutant : allMutants) {
                 double mutantCpuTime = mutant.getCpuTime();
                 double mutantExecutionTime = mutant.getExecutionTime();
-
-                this.cache.recordMutantCPUTime(program, mutant, (long) mutantCpuTime);
-                this.cache.recordMutantExecutionTime(program, mutant, (long) mutantExecutionTime);
 
                 cpuTimeSum += mutantCpuTime;
                 timeSum += mutantExecutionTime;
@@ -99,39 +90,21 @@ public class CachedFacade extends IntegrationFacade {
             this.conventionalExecutionTimes.put(program, timeSum);
         }
         this.conventionalMutants.putAll(program, allMutants);
-        cache.setCached(program);
-        cache.writeCache();
     }
 
     @Override
-    public void executeMutants(List<Mutant> mutantsToExecute, Program program) {
-        if (facade != null && !cache.isCached(program)) {
-            for (Mutant mutant : mutantsToExecute) {
-                this.executeMutant(mutant, program);
-            }
+    public List<Mutant> executeOperators(List<Operator> operators, Program program) {
+        List<Mutant> allMutants = new ArrayList<>();
+        for (Operator operator : operators) {
+            List<Mutant> generatedMutants = this.executeOperator(operator, program);
+            allMutants.addAll(generatedMutants);
         }
-    }
-
-    @Override
-    public void executeMutant(Mutant mutantToExecute, Program program) {
-        if (facade != null && !cache.isCached(program)) {
-            Stopwatch stopWatch = Stopwatch.createStarted();
-            ThreadMXBean threadBean = ManagementFactory.getThreadMXBean();
-            long cpuTime = threadBean.getCurrentThreadCpuTime();
-
-            this.facade.executeMutant(mutantToExecute, program);
-
-            cpuTime = threadBean.getCurrentThreadCpuTime() - cpuTime;
-            stopWatch.stop();
-
-            mutantToExecute.setCpuTime(cpuTime);
-            mutantToExecute.setExecutionTime(stopWatch.elapsed(TimeUnit.NANOSECONDS));
-        }
+        return allMutants;
     }
 
     @Override
     public List<Mutant> executeOperator(Operator operator, Program program) {
-        if (facade != null && !cache.isCached(program)) {
+        if (!cache.isCached(program)) {
             Stopwatch stopWatch = Stopwatch.createStarted();
             ThreadMXBean threadBean = ManagementFactory.getThreadMXBean();
             long cpuTime = threadBean.getCurrentThreadCpuTime();
@@ -140,35 +113,55 @@ public class CachedFacade extends IntegrationFacade {
 
             cpuTime = threadBean.getCurrentThreadCpuTime() - cpuTime;
             stopWatch.stop();
+            long executionTime = stopWatch.elapsed(TimeUnit.NANOSECONDS);
 
             operator.setCpuTime(cpuTime);
-            operator.setExecutionTime(stopWatch.elapsed(TimeUnit.NANOSECONDS));
+            operator.setExecutionTime(executionTime);
+
+            this.cache.recordOperatorCPUTime(program, operator, (long) cpuTime);
+            this.cache.recordOperatorExecutionTime(program, operator, (long) executionTime);
+            this.cache.recordOperatorGeneratedMutants(program, operator, generatedMutants);
+
             return generatedMutants;
         } else {
-            return null;
+            return this.cache.retrieveOperatorExecutionInformation(program, operator);
         }
     }
 
     @Override
-    public List<Mutant> executeOperators(List<Operator> operators, Program program) {
-        if (facade != null && !cache.isCached(program)) {
-            List<Mutant> allMutants = new ArrayList<>();
-            for (Operator operator : operators) {
-                allMutants.addAll(this.executeOperator(operator, program));
-            }
-            return allMutants;
+    public void executeMutants(List<Mutant> mutantsToExecute, Program program) {
+        for (Mutant mutant : mutantsToExecute) {
+            this.executeMutant(mutant, program);
+        }
+    }
+
+    @Override
+    public void executeMutant(Mutant mutantToExecute, Program program) {
+        if (!cache.isCached(program)) {
+            Stopwatch stopWatch = Stopwatch.createStarted();
+            ThreadMXBean threadBean = ManagementFactory.getThreadMXBean();
+            long cpuTime = threadBean.getCurrentThreadCpuTime();
+
+            this.facade.executeMutant(mutantToExecute, program);
+
+            cpuTime = threadBean.getCurrentThreadCpuTime() - cpuTime;
+            stopWatch.stop();
+            long executionTime = stopWatch.elapsed(TimeUnit.NANOSECONDS);
+
+            mutantToExecute.setCpuTime(cpuTime);
+            mutantToExecute.setExecutionTime(executionTime);
+
+            this.cache.recordMutantCPUTime(program, mutantToExecute, (long) cpuTime);
+            this.cache.recordMutantExecutionTime(program, mutantToExecute, (long) executionTime);
+            this.cache.recordMutantKillingTestCases(program, mutantToExecute, mutantToExecute.getKillingTestCases());
         } else {
-            return null;
+            this.cache.retrieveMutantExecutionInformation(program, mutantToExecute);
         }
     }
 
     @Override
     public List<Operator> getAllOperators() {
-        if (facade != null) {
-            return this.facade.getAllOperators();
-        } else {
-            return null;
-        }
+        return this.facade.getAllOperators();
     }
 
 }

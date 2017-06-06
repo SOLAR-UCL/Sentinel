@@ -181,6 +181,7 @@ public class PITFacade extends IntegrationFacade {
                         field.setAccessible(true);
                         Collection<MutationDetails> fieldValue = (Collection<MutationDetails>) field.get(unit);
                         fieldValue.clear();
+                        field.set(unit, fieldValue);
 
                         for (Mutant mutant : mutantsToExecute) {
                             if (unitMutants.contains(mutant)) {
@@ -201,7 +202,6 @@ public class PITFacade extends IntegrationFacade {
                         });
                         mutant.getKillingTestCases().addAll(specificResult.getKillingTest().map((testCase) -> {
                             TestCase sentinelTestCase = new TestCase(testCase);
-                            sentinelTestCase.getKillingMutants().add(mutant);
                             return sentinelTestCase;
                         }));
                     }
@@ -254,7 +254,7 @@ public class PITFacade extends IntegrationFacade {
                             Mutant mutant = new Mutant(mutationDetails.getId().toString(), null, program);
                             Operator mappedOperator = ALL_OPERATORS_BY_CLASS.get(mutationDetails.getMutator());
                             Operator operator = Iterables.find(operators, (tempOperator) -> tempOperator.equals(mappedOperator));
-                            mutant.getOperators().add(operator);
+                            mutant.setOperator(operator);
                             operator.getGeneratedMutants().add(mutant);
 
                             HashMap<Mutant, MutationDetails> programMutants = this.generatedMutants.computeIfAbsent(program, t -> new HashMap<>());

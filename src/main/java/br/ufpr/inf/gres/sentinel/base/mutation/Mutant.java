@@ -7,11 +7,6 @@ import org.apache.commons.collections4.list.SetUniqueList;
 
 /**
  * This class represents a mutant. A mutant is a {@link Program}, but mutated.
- * This class can also represent
- * <a href="http://dl.acm.org/citation.cfm?id=1570728">Higher Order Mutants
- * (HOM)</a> by having several mutants in its {@link #constituentMutants} list.
- * Please, refer to <a href="http://dl.acm.org/citation.cfm?id=1570728">Higher
- * Order Mutant</a> for more information about HOMs.
  *
  * @author Giovani Guizzo
  */
@@ -26,11 +21,9 @@ public class Mutant extends Program {
      */
     protected SetUniqueList<TestCase> killingTestCases;
     /**
-     * The operators that generated this mutant. It is a list because it can be
-     * a <a href="http://dl.acm.org/citation.cfm?id=1570728">Higher Order
-     * Mutant</a>.
+     * The operator that generated this mutant.
      */
-    protected SetUniqueList<Operator> operators;
+    protected Operator operator;
     /**
      * The original program from which this mutant was derived.
      */
@@ -68,7 +61,6 @@ public class Mutant extends Program {
         super(name, sourceFile);
         this.originalProgram = originalProgram;
         this.killingTestCases = SetUniqueList.setUniqueList(new ArrayList<>());
-        this.operators = SetUniqueList.setUniqueList(new ArrayList<>());
     }
 
     /**
@@ -80,7 +72,9 @@ public class Mutant extends Program {
         this(mutant.name, mutant.sourceFile, mutant.originalProgram);
         this.equivalent = mutant.equivalent;
         this.killingTestCases.addAll(mutant.killingTestCases);
-        this.operators.addAll(mutant.operators);
+        this.operator = mutant.operator;
+        this.executionTime = mutant.executionTime;
+        this.cpuTime = mutant.cpuTime;
     }
 
     @Override
@@ -119,24 +113,21 @@ public class Mutant extends Program {
     }
 
     /**
-     * Gets the operators that generated this mutant. If this list contains more
-     * than one operator, then this mutant is a
-     * <a href="http://dl.acm.org/citation.cfm?id=1570728">Higher Order
-     * Mutant</a>.
+     * Gets the operator that generated this mutant.
      *
-     * @return the operators that generated this mutant
+     * @return the operator that generated this mutant
      */
-    public SetUniqueList<Operator> getOperators() {
-        return this.operators;
+    public Operator getOperator() {
+        return this.operator;
     }
 
     /**
-     * Sets the operators that generated this mutant.
+     * Sets the operator that generated this mutant.
      *
-     * @param operators the operators that generated this mutant
+     * @param operators the operator that generated this mutant
      */
-    public void setOperators(SetUniqueList<Operator> operators) {
-        this.operators = operators;
+    public void setOperator(Operator operator) {
+        this.operator = operator;
     }
 
     /**

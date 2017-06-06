@@ -23,11 +23,11 @@ public class GroupMutantsByOperatorTest {
         Operator operator2 = new Operator("Operator2", "Type1");
         Operator operator3 = new Operator("Operator3", "Type1");
 
-        mutant1.getOperators().add(operator1);
-        mutant1.getOperators().add(operator2);
-        mutant1.getOperators().add(operator3);
+        mutant1.getOperator().add(operator1);
+        mutant1.getOperator().add(operator2);
+        mutant1.getOperator().add(operator3);
 
-        mutant2.getOperators().add(operator1);
+        mutant2.getOperator().add(operator1);
 
         assertEquals("Operator1", function.apply(mutant1));
         assertEquals("Operator1", function.apply(mutant2));
@@ -45,10 +45,10 @@ public class GroupMutantsByOperatorTest {
         Operator operator2 = new Operator("Operator2", "Type1");
         Operator operator3 = new Operator("Operator3", "Type1");
 
-        mutant1.getOperators().add(operator3);
+        mutant1.getOperator().add(operator3);
 
-        mutant2.getOperators().add(operator2);
-        mutant2.getOperators().add(operator3);
+        mutant2.getOperator().add(operator2);
+        mutant2.getOperator().add(operator3);
 
         assertEquals("Operator3", function.apply(mutant1));
         assertEquals("Operator2", function.apply(mutant2));
