@@ -4,12 +4,14 @@ import br.ufpr.inf.gres.sentinel.base.mutation.Mutant;
 import br.ufpr.inf.gres.sentinel.base.mutation.Operator;
 import br.ufpr.inf.gres.sentinel.base.mutation.Program;
 import br.ufpr.inf.gres.sentinel.integration.IntegrationFacade;
+import br.ufpr.inf.gres.sentinel.integration.cache.observer.CacheFacadeObserver;
 import com.google.common.base.Stopwatch;
+import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadMXBean;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 
 /**
  *
@@ -17,8 +19,9 @@ import java.util.concurrent.TimeUnit;
  */
 public class CachedFacade extends IntegrationFacade {
 
-    private IntegrationFacade facade;
-    private FacadeCache cache;
+    private final IntegrationFacade facade;
+    private final FacadeCache cache;
+    private final Set<CacheFacadeObserver> observers;
 
     /**
      *
@@ -28,20 +31,20 @@ public class CachedFacade extends IntegrationFacade {
         super(facade.getInputDirectory());
         this.facade = facade;
         this.cache = new FacadeCache();
-        this.cache.setAllOperators(facade.getAllOperators());
+        this.observers = new HashSet<>();
     }
 
     /**
      *
      * @param facade
-     * @param inputDirectory
-     * @param outputDirectory
+     * @param cacheInputDirectory
+     * @param cacheOutputDirectory
      */
-    public CachedFacade(IntegrationFacade facade, String inputDirectory, String outputDirectory) {
-        super(inputDirectory);
+    public CachedFacade(IntegrationFacade facade, String cacheInputDirectory, String cacheOutputDirectory) {
+        super(facade.getInputDirectory());
         this.facade = facade;
-        this.cache = new FacadeCache(inputDirectory, outputDirectory);
-        this.cache.setAllOperators(facade.getAllOperators());
+        this.cache = new FacadeCache(cacheInputDirectory, cacheOutputDirectory);
+        this.observers = new HashSet<>();
     }
 
     @Override
@@ -55,7 +58,12 @@ public class CachedFacade extends IntegrationFacade {
 
             this.runConventionalStrategy(program, repetitions);
             this.cache.setCached(program);
-            this.cache.writeCache();
+            try {
+                this.cache.writeCache();
+            } catch (IOException ex) {
+                System.err.println("Could not write cache file. The exception is: ");
+                System.err.println(ex.getMessage());
+            }
         }
     }
 
@@ -124,7 +132,9 @@ public class CachedFacade extends IntegrationFacade {
 
             return generatedMutants;
         } else {
-            return this.cache.retrieveOperatorExecutionInformation(program, operator);
+            List<Mutant> mutants = this.cache.retrieveOperatorExecutionInformation(program, operator);
+            notifyObservers(observer -> observer.notifyOperatorExecutionInformationRetrieved(operator));
+            return mutants;
         }
     }
 
@@ -155,6 +165,7 @@ public class CachedFacade extends IntegrationFacade {
             this.cache.recordMutantExecutionTime(program, mutantToExecute, (long) executionTime);
             this.cache.recordMutantKillingTestCases(program, mutantToExecute, mutantToExecute.getKillingTestCases());
         } else {
+            notifyObservers(observer -> observer.notifyMutantExecutionInformationRetrieved(mutantToExecute));
             this.cache.retrieveMutantExecutionInformation(program, mutantToExecute);
         }
     }
@@ -162,6 +173,26 @@ public class CachedFacade extends IntegrationFacade {
     @Override
     public List<Operator> getAllOperators() {
         return this.facade.getAllOperators();
+    }
+
+    public void attachObserver(CacheFacadeObserver observer) {
+        this.observers.add(observer);
+    }
+
+    public void attachAllObservers(Collection<CacheFacadeObserver> observers) {
+        this.observers.addAll(observers);
+    }
+
+    public void dettachObserver(CacheFacadeObserver observer) {
+        this.observers.remove(observer);
+    }
+
+    public void dettachAllObservers(Collection<CacheFacadeObserver> observers) {
+        this.observers.removeAll(observers);
+    }
+
+    private void notifyObservers(Consumer<CacheFacadeObserver> notificationConsumer) {
+        this.observers.stream().forEach(notificationConsumer);
     }
 
 }

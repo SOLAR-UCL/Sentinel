@@ -24,9 +24,9 @@ public class Operator {
      */
     protected String type;
 
-    protected double executionTime = -1;
+    protected double executionTime = 0;
 
-    protected double cpuTime = -1;
+    protected double cpuTime = 0;
 
     /**
      *

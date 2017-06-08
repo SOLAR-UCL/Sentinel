@@ -23,7 +23,7 @@ public class Mutant extends Program {
     /**
      * The operator that generated this mutant.
      */
-    protected Operator operator;
+    protected transient Operator operator;
     /**
      * The original program from which this mutant was derived.
      */
@@ -31,23 +31,23 @@ public class Mutant extends Program {
 
     /**
      * The clock time this particular mutant took to be executed. Default value
-     * is -1. If the value -1 is here, it means either that the mutant was not
-     * yet executed, or that the Integration Facade was not able to store the
+     * is 0. If the value 0 is here, it means either that the mutant was not yet
+     * executed, or that the Integration Facade was not able to store the
      * individual time for this mutant.
      *
      * @see #cpuTime
      */
-    protected double executionTime = -1;
+    protected double executionTime = 0;
 
     /**
      * The CPU time this particular mutant took to be executed. Default value is
-     * -1. If the value -1 is here, it means either that the mutant was not yet
+     * 0. If the value 0 is here, it means either that the mutant was not yet
      * executed, or that the Integration Facade was not able to store the
      * individual time for this mutant.
      *
      * @see #executionTime
      */
-    protected double cpuTime = -1;
+    protected double cpuTime = 0;
 
     /**
      * The standard constructor for a mutant.
@@ -124,7 +124,7 @@ public class Mutant extends Program {
     /**
      * Sets the operator that generated this mutant.
      *
-     * @param operators the operator that generated this mutant
+     * @param operator the operator that generated this mutant
      */
     public void setOperator(Operator operator) {
         this.operator = operator;
@@ -209,8 +209,8 @@ public class Mutant extends Program {
      * Gets the clock execution time this particular mutant took to be executed.
      *
      * @return the clock execution time of this particular mutant. Default value
-     * is -1. If the value -1 is here, it means either that the mutant was not
-     * yet executed, or that the Integration Facade was not able to store the
+     * is 0. If the value 0 is here, it means either that the mutant was not yet
+     * executed, or that the Integration Facade was not able to store the
      * individual time for this mutant.
      *
      * @see #getCpuTime()
@@ -234,8 +234,8 @@ public class Mutant extends Program {
      * Gets the CPU execution time this particular mutant took to be executed.
      *
      * @return the CPU execution time of this particular mutant. Default value
-     * is -1. If the value -1 is here, it means either that the mutant was not
-     * yet executed, or that the Integration Facade was not able to store the
+     * is 0. If the value 0 is here, it means either that the mutant was not yet
+     * executed, or that the Integration Facade was not able to store the
      * individual time for this mutant.
      *
      * @see #getExecutionTime()
