@@ -20,12 +20,16 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.apache.commons.collections4.list.SetUniqueList;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  *
  * @author Giovani Guizzo
  */
 public class FacadeCache {
+
+    private static final Logger LOGGER = LogManager.getLogger(FacadeCache.class);
 
     private HashMap<Program, CacheHolder> caches;
     private String outputDirectory;
@@ -270,7 +274,7 @@ public class FacadeCache {
                     try (JsonReader jsonReader = new JsonReader(new FileReader(file.toFile()))) {
                         CacheHolder cache = gson.fromJson(jsonReader, CacheHolder.class);
                         this.facadeCache.caches.put(cache.program, cache);
-                        System.out.println("Found cache for " + cache.program.getName() + ". It is successfully loaded.");
+                        LOGGER.debug("Found cache for " + cache.program.getName() + ". It is successfully loaded.");
                     }
                 }
             } catch (Exception ex) {

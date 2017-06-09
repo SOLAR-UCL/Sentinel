@@ -48,7 +48,7 @@ public class CachedFacade extends IntegrationFacade {
     }
 
     @Override
-    public void initializeConventionalStrategy(Program program, int repetitions) {
+    public boolean initializeConventionalStrategy(Program program, int repetitions) {
         if (!this.cache.isCached(program)) {
             this.runConventionalStrategy(program, 1);
             this.conventionalExecutionCPUTimes.removeAll(program);
@@ -64,7 +64,9 @@ public class CachedFacade extends IntegrationFacade {
                 System.err.println("Could not write cache file. The exception is: ");
                 System.err.println(ex.getMessage());
             }
+            return true;
         }
+        return false;
     }
 
     @Override

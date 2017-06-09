@@ -12,15 +12,22 @@ import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.iterator.CountingIt
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.StrategyMapper;
 import br.ufpr.inf.gres.sentinel.integration.IntegrationFacade;
 import br.ufpr.inf.gres.sentinel.strategy.Strategy;
+import com.google.common.base.Stopwatch;
 import com.google.common.collect.Iterables;
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
+import org.apache.commons.lang.time.DurationFormatUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * @author Giovani Guizzo
  */
 public class MutationStrategyGenerationProblem implements VariableLengthIntegerProblem {
+
+    private static final Logger LOGGER = LogManager.getLogger(MutationStrategyGenerationProblem.class);
 
     private int evaluationCount;
     private final int lowerVariableBound;
@@ -35,6 +42,8 @@ public class MutationStrategyGenerationProblem implements VariableLengthIntegerP
     private final int upperVariableBound;
     private final int numberOfConventionalRuns;
     private final Set<MutationStrategyGenerationObserver> observers;
+
+    private boolean haveProgramsBeenInitialized;
 
     /**
      *
@@ -73,6 +82,18 @@ public class MutationStrategyGenerationProblem implements VariableLengthIntegerP
         this.numberOfConstraints = 0;
         this.objectiveFunctions = Collections.unmodifiableList(ObjectiveFunctionFactory.createObjectiveFunctions(objectiveFunctions));
         this.observers = new HashSet<>();
+        this.haveProgramsBeenInitialized = false;
+        LOGGER.debug("Initializing problem.");
+        LOGGER.trace("Grammar File: " + grammarFile);
+        LOGGER.trace("Minimum Length: " + minLength);
+        LOGGER.trace("Maximum Length: " + maxLength);
+        LOGGER.trace("Lower Variable Bound: " + lowerVariableBound);
+        LOGGER.trace("Upper Variable Bound: " + upperVariableBound);
+        LOGGER.trace("Maximum Wraps: " + maxWraps);
+        LOGGER.trace("Number of Strategy Runs: " + numberOfStrategyRuns);
+        LOGGER.trace("Number of Conventional Runs: " + numberOfConventionalRuns);
+        LOGGER.trace("Test Programs: " + testPrograms);
+        LOGGER.trace("Objective Functions: " + objectiveFunctions);
     }
 
     /**
@@ -90,53 +111,101 @@ public class MutationStrategyGenerationProblem implements VariableLengthIntegerP
      */
     @Override
     public void evaluate(VariableLengthSolution<Integer> solution) {
+        IntegrationFacade integrationFacade = IntegrationFacade.getIntegrationFacade();
+        initializePrograms(integrationFacade);
+
         ++this.evaluationCount;
-        notifyObservers(observer -> observer.notifyEvaluationStart(solution, evaluationCount, objectiveFunctions));
+        LOGGER.info("Evaluation: " + this.evaluationCount);
+        LOGGER.debug("Solution being evaluated: " + solution.getVariablesCopy());
+        notifyObservers(observer -> observer.notifyEvaluationStart(solution, this.evaluationCount, this.objectiveFunctions, this.testPrograms, this.numberOfStrategyRuns));
         try {
-            notifyObservers(observer -> observer.notifyStrategyCreationStart(solution));
             Strategy strategy = this.createStrategy(solution);
-            notifyObservers(observer -> observer.notifyStrategyCreationEnd(solution, strategy));
-            IntegrationFacade integrationFacade = IntegrationFacade.getIntegrationFacade();
+            notifyObservers(observer -> observer.notifyStrategyCreated(strategy));
+
+            LOGGER.debug("Initializing evaluation runs for the solution.");
             boolean isInvalid;
             evaluationFor:
             for (Program testProgram : this.testPrograms) {
-                notifyObservers(observer -> observer.notifyProgramChange(solution, testProgram));
-                notifyObservers(observer -> observer.notifyConventionalStrategyInitializationStart(solution, testProgram, numberOfConventionalRuns));
-                integrationFacade.initializeConventionalStrategy(testProgram, this.numberOfConventionalRuns);
-                notifyObservers(observer -> observer.notifyConventionalStrategyInitializationEnd(solution, testProgram, numberOfConventionalRuns));
+                LOGGER.debug("Evaluating the solution for program " + testProgram.getName());
+                notifyObservers(observer -> observer.notifyProgramChange(testProgram));
                 for (int i = 0; i < this.numberOfStrategyRuns; i++) {
                     final int runNumber = i;
-                    notifyObservers(observer -> observer.notifyRunStart(solution, runNumber, numberOfStrategyRuns));
-                    notifyObservers(observer -> observer.notifyStrategyExecutionStart(solution, strategy));
-                    List<Mutant> mutants = strategy.run(testProgram);
-                    notifyObservers(observer -> observer.notifyStrategyExecutionEnd(solution, strategy));
-                    notifyObservers(observer -> observer.notifyMutantsExecutionStart(solution, mutants));
-                    integrationFacade.executeMutants(mutants, testProgram);
-                    notifyObservers(observer -> observer.notifyMutantsExecutionEnd(solution, mutants));
-                    notifyObservers(observer -> observer.notifyRunEnd(solution, runNumber, numberOfStrategyRuns));
+                    LOGGER.debug("Evaluation run number " + i);
+                    notifyObservers(observer -> observer.notifyRunStart(runNumber));
 
-                    isInvalid = observers.stream().anyMatch(observer -> observer.shouldStopEvaluation(solution));
+                    LOGGER.debug("Starting strategy execution.");
+                    Stopwatch stopwatch = Stopwatch.createStarted();
+                    notifyObservers(observer -> observer.notifyStrategyExecutionStart());
+                    List<Mutant> mutants = strategy.run(testProgram);
+                    notifyObservers(observer -> observer.notifyStrategyExecutionEnd());
+                    stopwatch.stop();
+                    LOGGER.debug("Strategy execution finished succesfully in " + DurationFormatUtils.formatDurationHMS(stopwatch.elapsed(TimeUnit.MILLISECONDS)));
+
+                    LOGGER.debug("Starting mutants execution.");
+                    stopwatch.reset();
+                    stopwatch.start();
+                    notifyObservers(observer -> observer.notifyMutantsExecutionStart(mutants));
+                    integrationFacade.executeMutants(mutants, testProgram);
+                    notifyObservers(observer -> observer.notifyMutantsExecutionEnd());
+                    stopwatch.stop();
+                    LOGGER.debug("Mutants execution finished succesfully in " + DurationFormatUtils.formatDurationHMS(stopwatch.elapsed(TimeUnit.MILLISECONDS)));
+
+                    notifyObservers(observer -> observer.notifyRunEnd());
+                    LOGGER.trace("Checking validity of strategy.");
+                    isInvalid = observers.stream().anyMatch(observer -> observer.shouldStopEvaluation());
                     if (isInvalid) {
+                        LOGGER.trace("Strategy is invalid due to constraints. Stopping evaluation.");
+                        notifyObservers(observer -> observer.notifyInvalidSolution());
                         break evaluationFor;
                     }
+                    LOGGER.trace("Strategy is valid.");
                 }
             }
-            notifyObservers(observer -> observer.notifyObjectiveComputationStart(solution, objectiveFunctions));
-            notifyObservers(observer -> observer.notifyComputeObjectives(solution, objectiveFunctions));
-            notifyObservers(observer -> observer.notifyObjectiveComputationEnd(solution, objectiveFunctions));
+            LOGGER.debug("Computing fitness.");
+            notifyObservers(observer -> observer.prepareForFitnessEvaluation());
+            notifyObservers(observer -> observer.notifyComputeObjectives());
         } catch (Exception ex) {
             // Invalid strategy. Probably discarded due to maximum wraps.
-            notifyObservers(observer -> observer.notifyException(solution, ex));
+            LOGGER.debug("Exception! Solution is invalid. Not enough variables. Don't need to worry, though.");
+            notifyObservers(observer -> observer.notifyException(ex));
         } finally {
-            notifyObservers(observer -> observer.notifyEvaluationEnd(solution, evaluationCount));
+            LOGGER.debug("Evaluation finished.");
+            notifyObservers(observer -> observer.notifyEvaluationEnd());
+        }
+    }
+
+    private void initializePrograms(IntegrationFacade integrationFacade) {
+        if (!haveProgramsBeenInitialized) {
+            LOGGER.trace("Starting programs initialization.");
+            Stopwatch stopwatch = Stopwatch.createStarted();
+            for (Program testProgram : this.testPrograms) {
+                Stopwatch stopwatchProgram = Stopwatch.createStarted();
+                LOGGER.trace("Initializing program: " + testProgram.getName());
+                notifyObservers(observer -> observer.notifyConventionalStrategyInitializationStart(this.numberOfConventionalRuns));
+                boolean wasInitialized = integrationFacade.initializeConventionalStrategy(testProgram, this.numberOfConventionalRuns);
+                notifyObservers(observer -> observer.notifyConventionalStrategyInitializationEnd(wasInitialized));
+                stopwatchProgram.stop();
+                LOGGER.trace("Program initialized successfully in " + DurationFormatUtils.formatDurationHMS(stopwatchProgram.elapsed(TimeUnit.MILLISECONDS)));
+                LOGGER.trace("Generated mutants: " + integrationFacade.getConventionalMutants().get(testProgram).size());
+                LOGGER.trace("Dead mutants: " + integrationFacade.getConventionalMutants().get(testProgram).stream().filter(Mutant::isDead).count());
+                LOGGER.trace("Alive mutants: " + integrationFacade.getConventionalMutants().get(testProgram).stream().filter(Mutant::isAlive).count());
+            }
+            stopwatch.stop();
+            LOGGER.trace("Programs initialized successfully in " + DurationFormatUtils.formatDurationHMS(stopwatch.elapsed(TimeUnit.MILLISECONDS)));
+            this.haveProgramsBeenInitialized = true;
         }
     }
 
     private Strategy createStrategy(VariableLengthSolution<Integer> solution) {
         List<Integer> variables = solution.getVariablesCopy();
         CountingIterator<Integer> variablesIterator = new CountingIterator<>(Iterables.limit(Iterables.cycle(variables), variables.size() * (this.maxWraps + 1)).iterator());
+        LOGGER.debug("Creating strategy.");
+        Stopwatch stopwatch = Stopwatch.createStarted();
         Strategy strategy = this.strategyMapper.interpret(variablesIterator);
-        notifyObservers(observer -> observer.notifyConsumedItems(solution, variablesIterator.getCount()));
+        stopwatch.stop();
+        LOGGER.debug("Strategy created successfully in " + stopwatch.elapsed(TimeUnit.MILLISECONDS) + "ms");
+        LOGGER.trace("Number of iterations for crating the strategy: " + variablesIterator.getCount());
+        notifyObservers(observer -> observer.notifyConsumedItems(variablesIterator.getCount()));
         return strategy;
     }
 

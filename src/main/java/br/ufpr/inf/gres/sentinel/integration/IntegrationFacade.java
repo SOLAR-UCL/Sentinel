@@ -114,14 +114,16 @@ public abstract class IntegrationFacade {
      * @param program
      * @param repetitions
      */
-    public synchronized void initializeConventionalStrategy(Program program, int repetitions) {
+    public synchronized boolean initializeConventionalStrategy(Program program, int repetitions) {
         if (!this.conventionalExecutionCPUTimes.containsKey(program)) {
             this.runConventionalStrategy(program, 1);
             this.conventionalExecutionCPUTimes.removeAll(program);
             this.conventionalExecutionTimes.removeAll(program);
             this.conventionalMutants.removeAll(program);
             this.runConventionalStrategy(program, repetitions);
+            return true;
         }
+        return false;
     }
 
     /**
