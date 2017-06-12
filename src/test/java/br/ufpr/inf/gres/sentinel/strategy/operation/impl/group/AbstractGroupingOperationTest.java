@@ -19,7 +19,7 @@ public class AbstractGroupingOperationTest {
     @Test
     public void testDoOperation() {
         AbstractGroupingOperation<String> function = new StubGroupingOperation();
-        List<List<String>> result = function.doOperation(Collections.emptyList());
+        List<List<String>> result = function.doOperation(Collections.emptyList(), null);
 
         assertEquals(0, result.size());
     }
@@ -27,7 +27,7 @@ public class AbstractGroupingOperationTest {
     @Test
     public void testDoOperation2() {
         AbstractGroupingOperation<String> function = new StubGroupingOperation();
-        List<List<String>> result = function.doOperation(Lists.newArrayList("1", "12", "12", ""));
+        List<List<String>> result = function.doOperation(Lists.newArrayList("1", "12", "12", ""), null);
 
         assertEquals(3, result.size());
         assertEquals(1, result.get(0).size());

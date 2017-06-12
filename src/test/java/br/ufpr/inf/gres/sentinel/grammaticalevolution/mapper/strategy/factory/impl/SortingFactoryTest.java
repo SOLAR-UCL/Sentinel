@@ -11,7 +11,6 @@ import br.ufpr.inf.gres.sentinel.strategy.operation.Operation;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.sort.AbstractSorterOperation;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.sort.impl.mutant.MutantsOperatorComparator;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.sort.impl.mutant.MutantsOperatorTypeComparator;
-import br.ufpr.inf.gres.sentinel.strategy.operation.impl.sort.impl.mutant.OrderComparator;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.sort.impl.operator.MutantQuantityComparator;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.sort.impl.operator.OperatorTypeComparator;
 import com.google.common.collect.Lists;
@@ -112,22 +111,6 @@ public class SortingFactoryTest {
         Operation operation = FactoryFlyweight.getNonTerminalFactory().createOperation(testingRuleMutant, iterator);
         assertNotNull(operation);
         assertTrue(operation instanceof MutantsOperatorComparator);
-    }
-
-    @Test
-    public void testCreateOperation7() {
-        Iterator<Integer> iterator = Lists.newArrayList(0, 2, 0).iterator();
-        Operation operation = FactoryFlyweight.getNonTerminalFactory().createOperation(testingRuleMutant, iterator);
-        assertNotNull(operation);
-        assertTrue(operation instanceof OrderComparator);
-    }
-
-    @Test
-    public void testCreateOperation8() {
-        Iterator<Integer> iterator = Lists.newArrayList(0, 3, 0).iterator();
-        Operation operation = FactoryFlyweight.getNonTerminalFactory().createOperation(testingRuleMutant, iterator);
-        assertNotNull(operation);
-        assertTrue(operation instanceof OrderComparator);
     }
 
 }

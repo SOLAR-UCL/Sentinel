@@ -137,7 +137,7 @@ public class EntryPointImpl {
     }
 
     private CoverageDatabase getCoverageData(final CoverageGenerator coverageDatabase) {
-        if (coverageData != null) {
+        if (coverageData == null) {
             coverageData = coverageDatabase.calculateCoverage();
         }
         return coverageData;

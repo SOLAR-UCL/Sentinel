@@ -1,6 +1,5 @@
 package br.ufpr.inf.gres.sentinel.base.mutation;
 
-import br.ufpr.inf.gres.sentinel.integration.IntegrationFacade;
 import java.util.ArrayList;
 import org.apache.commons.collections4.list.SetUniqueList;
 import org.junit.Test;
@@ -18,8 +17,8 @@ public class OperatorTest {
     @Test
     public void testCloneConstructor() {
         Operator instance = new Operator("Operator1", "Type1");
-        instance.getGeneratedMutants().add(new Mutant("Mutant1", null, IntegrationFacade.getProgramUnderTest()));
-        instance.getGeneratedMutants().add(new Mutant("Mutant2", null, IntegrationFacade.getProgramUnderTest()));
+        instance.getGeneratedMutants().add(new Mutant("Mutant1", null, new Program("Program1", "Program/path")));
+        instance.getGeneratedMutants().add(new Mutant("Mutant2", null, new Program("Program1", "Program/path")));
         Operator instance2 = new Operator(instance);
         assertEquals(instance, instance2);
         assertEquals(instance.getType(), instance2.getType());

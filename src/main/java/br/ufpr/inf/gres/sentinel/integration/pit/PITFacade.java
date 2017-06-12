@@ -4,17 +4,21 @@ import br.ufpr.inf.gres.sentinel.base.mutation.Mutant;
 import br.ufpr.inf.gres.sentinel.base.mutation.Operator;
 import br.ufpr.inf.gres.sentinel.base.mutation.Program;
 import br.ufpr.inf.gres.sentinel.base.mutation.TestCase;
+import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.problem.impl.MutationStrategyGenerationProblem;
 import br.ufpr.inf.gres.sentinel.integration.IntegrationFacade;
 import com.google.common.base.Joiner;
+import com.google.common.base.Stopwatch;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+import org.apache.commons.lang3.time.DurationFormatUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.pitest.mutationtest.MutationResult;
 import org.pitest.mutationtest.build.MutationAnalysisUnit;
 import org.pitest.mutationtest.build.MutationTestUnit;
@@ -32,6 +36,8 @@ import org.pitest.mutationtest.engine.gregor.mutators.*;
  * @author Giovani Guizzo
  */
 public class PITFacade extends IntegrationFacade {
+
+    private static final Logger LOGGER = LogManager.getLogger(MutationStrategyGenerationProblem.class);
 
     protected static final ArrayList<Operator> ALL_OPERATORS = new ArrayList<>();
     protected static final HashMap<String, Operator> ALL_OPERATORS_BY_CLASS = new HashMap<>();
@@ -165,6 +171,7 @@ public class PITFacade extends IntegrationFacade {
     @Override
     public void executeMutants(List<Mutant> mutantsToExecute, Program program) {
         if (mutantsToExecute != null && !mutantsToExecute.isEmpty()) {
+            LOGGER.debug("Preparing to execute " + mutantsToExecute.size() + " mutants for program " + program.getName() + ".");
             PluginServices plugins = PluginServices.makeForContextLoader();
 
             ReportOptions reportOptions = this.createDefaultReportOptions(plugins, program);
@@ -192,8 +199,12 @@ public class PITFacade extends IntegrationFacade {
 
                         field.set(unit, fieldValue);
                     }
+                    LOGGER.debug("Starting mutants execution.");
+                    Stopwatch stopwatch = Stopwatch.createStarted();
                     EntryPointImpl entryPoint = this.getOrCreateEntryPoint(program);
                     Collection<MutationResult> result = entryPoint.executeMutants(null, reportOptions, new SettingsFactory(reportOptions, plugins), new HashMap<>(), new ArrayList<>(allUnitsMutants.keySet()));
+                    stopwatch.stop();
+                    LOGGER.debug("Mutants execution finished in " + DurationFormatUtils.formatDurationHMS(stopwatch.elapsed(TimeUnit.MILLISECONDS)));
 
                     for (Mutant mutant : mutantsToExecute) {
                         MutationDetails description = descriptions.get(mutant);
@@ -205,11 +216,15 @@ public class PITFacade extends IntegrationFacade {
                             return sentinelTestCase;
                         }));
                     }
+                    LOGGER.debug("Mutants dead: " + mutantsToExecute.stream().filter(Mutant::isDead).count());
+                    LOGGER.debug("Mutants alive: " + mutantsToExecute.stream().filter(Mutant::isAlive).count());
                 } else {
-                    throw new IOException("Something went wrong. I could not find the mutation unit for the mutation procedure. This has something to do to the program under test. Maybe it is non-existent?");
+                    IOException ex = new IOException("Something went wrong. I could not find the mutation unit for the mutation procedure. This has something to do to the program under test. Maybe it is non-existent?");
+                    LOGGER.fatal(ex.getMessage(), ex);
+                    throw ex;
                 }
             } catch (IOException | SecurityException | IllegalArgumentException | NoSuchFieldException | IllegalAccessException ex) {
-                Logger.getLogger(PITFacade.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.fatal(ex.getMessage(), ex);
             }
         }
     }
@@ -235,18 +250,28 @@ public class PITFacade extends IntegrationFacade {
     public List<Mutant> executeOperators(List<Operator> operators, Program program) {
         List<Mutant> mutants = new ArrayList<>();
         if (operators != null && !operators.isEmpty()) {
+            LOGGER.debug("Preparing to execute " + operators.size() + " operators for program " + program.getName() + ".");
+            LOGGER.trace("Operators: " + operators.toString());
             final PluginServices plugins = PluginServices.makeForContextLoader();
             ReportOptions reportOptions = this.createDefaultReportOptions(plugins, program);
             reportOptions.setMutators(operators.stream().map(Operator::getName).collect(Collectors.toList()));
             try {
+                LOGGER.debug("Starting operators execution.");
+                Stopwatch stopwatch = Stopwatch.createStarted();
                 EntryPointImpl entryPoint = this.getOrCreateEntryPoint(program);
                 List<MutationAnalysisUnit> units = entryPoint.generateMutants(null, reportOptions, new SettingsFactory(reportOptions, plugins), new HashMap<>());
+                stopwatch.stop();
+                LOGGER.debug("Operators execution finished in " + DurationFormatUtils.formatDurationHMS(stopwatch.elapsed(TimeUnit.MILLISECONDS)));
 
                 HashMap<MutationTestUnit, Set<Mutant>> unitToMutant = this.unitToMutants.computeIfAbsent(program, t -> new HashMap<>());
+                boolean initializing = unitToMutant.isEmpty();
                 for (MutationAnalysisUnit unit : units) {
                     if (unit instanceof MutationTestUnit) {
                         MutationTestUnit testUnit = (MutationTestUnit) unit;
-                        Set<Mutant> unitMutants = unitToMutant.computeIfAbsent(testUnit, t -> new HashSet<>());
+                        Set<Mutant> unitMutants = new HashSet<>();
+                        if (initializing) {
+                            unitToMutant.put(testUnit, unitMutants);
+                        }
                         Field field = testUnit.getClass().getDeclaredField("availableMutations");
                         field.setAccessible(true);
                         Collection<MutationDetails> fieldValue = (Collection<MutationDetails>) field.get(testUnit);
@@ -264,11 +289,14 @@ public class PITFacade extends IntegrationFacade {
                             return mutant;
                         }).collect(Collectors.toList()));
                     } else {
-                        throw new IllegalArgumentException("This should not be happening!");
+                        IllegalArgumentException ex = new IllegalArgumentException("This should not be happening!");
+                        LOGGER.fatal(ex.getMessage(), ex);
+                        throw ex;
                     }
                 }
+                LOGGER.debug(mutants.size() + " mutants generated.");
             } catch (IOException | NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException ex) {
-                Logger.getLogger(PITFacade.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.fatal(ex.getMessage(), ex);
             }
         }
         return mutants;

@@ -1,11 +1,9 @@
 package br.ufpr.inf.gres.sentinel.base.mutation;
 
-import br.ufpr.inf.gres.sentinel.integration.IntegrationFacade;
-import java.util.ArrayList;
-import org.apache.commons.collections4.list.SetUniqueList;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 
 /**
  * @author Giovani Guizzo
@@ -18,11 +16,8 @@ public class TestCaseTest {
     @Test
     public void testCloneConstructor() {
         TestCase instance = new TestCase("Test1");
-        instance.getKillingMutants().add(new Mutant("Mutant1", null, IntegrationFacade.getProgramUnderTest()));
-        instance.getKillingMutants().add(new Mutant("Mutant2", null, IntegrationFacade.getProgramUnderTest()));
         TestCase instance2 = new TestCase(instance);
         assertEquals(instance, instance2);
-        assertArrayEquals(instance.getKillingMutants().toArray(), instance2.getKillingMutants().toArray());
     }
 
     @Test
@@ -58,15 +53,6 @@ public class TestCaseTest {
         TestCase testCase = new TestCase("Test1");
         Object testCase2 = new Object();
         assertNotEquals(testCase, testCase2);
-    }
-
-    @Test
-    public void testGetAndSetKillingMutants() {
-        TestCase testCase = new TestCase("Test1");
-        SetUniqueList<Mutant> setUniqueList = SetUniqueList.setUniqueList(new ArrayList<>());
-        testCase.setKillingMutants(setUniqueList);
-        SetUniqueList result = testCase.getKillingMutants();
-        assertEquals(setUniqueList, result);
     }
 
     @Test

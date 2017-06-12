@@ -8,10 +8,8 @@ import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.Fa
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.FactoryFlyweight;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.NonTerminalRuleType;
 import br.ufpr.inf.gres.sentinel.strategy.operation.Operation;
-import br.ufpr.inf.gres.sentinel.strategy.operation.impl.group.impl.mutant.GroupMutantsByFOMOrHOM;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.group.impl.mutant.GroupMutantsByOperator;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.group.impl.mutant.GroupMutantsByOperatorType;
-import br.ufpr.inf.gres.sentinel.strategy.operation.impl.group.impl.mutant.GroupMutantsByOrder;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.group.impl.operator.GroupOperatorsByMutantQuantity;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.group.impl.operator.GroupOperatorsByType;
 import com.google.common.collect.Lists;
@@ -91,22 +89,6 @@ public class GroupingFactoryTest {
         Operation operation = FactoryFlyweight.getNonTerminalFactory().createOperation(mutantRule, iterator);
         assertNotNull(operation);
         assertTrue(operation instanceof GroupMutantsByOperator);
-    }
-
-    @Test
-    public void testCreateOperation5() {
-        Iterator<Integer> iterator = Lists.newArrayList(2).iterator();
-        Operation operation = FactoryFlyweight.getNonTerminalFactory().createOperation(mutantRule, iterator);
-        assertNotNull(operation);
-        assertTrue(operation instanceof GroupMutantsByFOMOrHOM);
-    }
-
-    @Test
-    public void testCreateOperation6() {
-        Iterator<Integer> iterator = Lists.newArrayList(3).iterator();
-        Operation operation = FactoryFlyweight.getNonTerminalFactory().createOperation(mutantRule, iterator);
-        assertNotNull(operation);
-        assertTrue(operation instanceof GroupMutantsByOrder);
     }
 
 }

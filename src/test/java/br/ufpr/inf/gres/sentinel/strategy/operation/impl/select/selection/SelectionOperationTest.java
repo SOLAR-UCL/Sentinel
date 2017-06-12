@@ -37,7 +37,7 @@ public class SelectionOperationTest {
         group1.add(operator3);
         group1.add(operator4);
 
-        List<Operator> result = selectionOp.doOperation(group1);
+        List<Operator> result = selectionOp.doOperation(group1, null);
         assertEquals(1, result.size());
         assertEquals(operator1, result.get(0));
     }
@@ -51,7 +51,7 @@ public class SelectionOperationTest {
 
         List<Operator> group1 = new ArrayList<>();
 
-        List<Operator> result = selectionOp.doOperation(group1);
+        List<Operator> result = selectionOp.doOperation(group1, null);
         assertTrue(result.isEmpty());
     }
 
@@ -73,7 +73,7 @@ public class SelectionOperationTest {
         group1.add(operator3);
         group1.add(operator4);
 
-        List<Operator> result = selectionOp.doOperation(group1);
+        List<Operator> result = selectionOp.doOperation(group1, null);
         assertEquals(1, result.size());
         assertEquals(operator3, result.get(0));
     }
@@ -96,7 +96,7 @@ public class SelectionOperationTest {
         group1.add(operator3);
         group1.add(operator4);
 
-        List<Operator> result = selectionOp.doOperation(group1);
+        List<Operator> result = selectionOp.doOperation(group1, null);
         assertEquals(5, result.size());
         assertEquals(operator1, result.get(0));
         assertEquals(operator2, result.get(1));
@@ -123,7 +123,7 @@ public class SelectionOperationTest {
         group1.add(operator3);
         group1.add(operator4);
 
-        List<Operator> result = selectionOp.doOperation(group1);
+        List<Operator> result = selectionOp.doOperation(group1, null);
     }
 
     @Test
@@ -144,7 +144,7 @@ public class SelectionOperationTest {
         group1.add(operator3);
         group1.add(operator4);
 
-        List<Operator> result = selectionOp.doOperation(group1);
+        List<Operator> result = selectionOp.doOperation(group1, null);
         assertEquals(4, result.size());
         assertEquals(operator1, result.get(0));
         assertEquals(operator2, result.get(1));
@@ -170,7 +170,7 @@ public class SelectionOperationTest {
         group1.add(operator3);
         group1.add(operator4);
 
-        List<Operator> result = selectionOp.doOperation(group1);
+        List<Operator> result = selectionOp.doOperation(group1, null);
         assertEquals(2, result.size());
         assertEquals(operator1, result.get(0));
         assertEquals(operator2, result.get(1));
@@ -194,7 +194,7 @@ public class SelectionOperationTest {
         group1.add(operator3);
         group1.add(operator4);
 
-        List<Operator> result = selectionOp.doOperation(group1);
+        List<Operator> result = selectionOp.doOperation(group1, null);
         assertEquals(2, result.size());
         assertEquals(operator1, result.get(0));
         assertEquals(operator2, result.get(1));
@@ -218,7 +218,7 @@ public class SelectionOperationTest {
         group1.add(operator3);
         group1.add(operator4);
 
-        List<Operator> result = selectionOp.doOperation(group1);
+        List<Operator> result = selectionOp.doOperation(group1, null);
         assertEquals(3, result.size());
         assertEquals(operator1, result.get(0));
         assertEquals(operator4, result.get(1));
@@ -243,7 +243,7 @@ public class SelectionOperationTest {
         group1.add(operator3);
         group1.add(operator4);
 
-        List<Operator> result = selectionOp.doOperation(group1);
+        List<Operator> result = selectionOp.doOperation(group1, null);
         assertEquals(1, result.size());
         assertEquals(operator1, result.get(0));
     }

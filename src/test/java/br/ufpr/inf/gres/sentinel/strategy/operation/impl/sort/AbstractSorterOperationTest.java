@@ -18,21 +18,21 @@ public class AbstractSorterOperationTest {
     @Test
     public void testDoOperation() {
         AbstractSorterOperationStub stub = new AbstractSorterOperationStub();
-        int result = stub.doOperation(Lists.newArrayList(1, 1));
+        int result = stub.doOperation(Lists.newArrayList(1, 1), null);
         assertEquals(0, result);
     }
 
     @Test
     public void testDoOperation2() {
         AbstractSorterOperationStub stub = new AbstractSorterOperationStub();
-        int result = stub.doOperation(Lists.newArrayList(1, 2));
+        int result = stub.doOperation(Lists.newArrayList(1, 2), null);
         assertTrue(result < 0);
     }
 
     @Test
     public void testDoOperation3() {
         AbstractSorterOperationStub stub = new AbstractSorterOperationStub();
-        int result = stub.doOperation(Lists.newArrayList(2, 1));
+        int result = stub.doOperation(Lists.newArrayList(2, 1), null);
         assertTrue(result > 0);
     }
 
@@ -47,7 +47,7 @@ public class AbstractSorterOperationTest {
     public void testReversed() {
         AbstractSorterOperation<Integer> stub = new AbstractSorterOperationStub();
         stub.setReversed(true);
-        int result = stub.doOperation(Lists.newArrayList(1, 1));
+        int result = stub.doOperation(Lists.newArrayList(1, 1), null);
         assertEquals(0, result);
     }
 
@@ -55,7 +55,7 @@ public class AbstractSorterOperationTest {
     public void testReversed2() {
         AbstractSorterOperation<Integer> stub = new AbstractSorterOperationStub();
         stub.setReversed(true);
-        int result = stub.doOperation(Lists.newArrayList(1, 2));
+        int result = stub.doOperation(Lists.newArrayList(1, 2), null);
         assertTrue(result > 0);
     }
 
@@ -63,7 +63,7 @@ public class AbstractSorterOperationTest {
     public void testReversed3() {
         AbstractSorterOperation<Integer> stub = new AbstractSorterOperationStub();
         stub.setReversed(true);
-        int result = stub.doOperation(Lists.newArrayList(2, 1));
+        int result = stub.doOperation(Lists.newArrayList(2, 1), null);
         assertTrue(result < 0);
     }
 

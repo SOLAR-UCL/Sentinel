@@ -2,7 +2,7 @@ package br.ufpr.inf.gres.sentinel.strategy.operation.impl.sort.impl.operator;
 
 import br.ufpr.inf.gres.sentinel.base.mutation.Mutant;
 import br.ufpr.inf.gres.sentinel.base.mutation.Operator;
-import br.ufpr.inf.gres.sentinel.integration.IntegrationFacade;
+import br.ufpr.inf.gres.sentinel.base.mutation.Program;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.Test;
@@ -19,18 +19,18 @@ public class MutantQuantityInGroupComparatorTest {
         MutantQuantityInGroupComparator comparator = new MutantQuantityInGroupComparator();
 
         Operator operator1 = new Operator("Operator1", "Type1");
-        operator1.getGeneratedMutants().add(new Mutant("Mutant1", null, IntegrationFacade.getProgramUnderTest()));
-        operator1.getGeneratedMutants().add(new Mutant("Mutant2", null, IntegrationFacade.getProgramUnderTest()));
+        operator1.getGeneratedMutants().add(new Mutant("Mutant1", null, new Program("Program1", "Program/path")));
+        operator1.getGeneratedMutants().add(new Mutant("Mutant2", null, new Program("Program1", "Program/path")));
 
         Operator operator2 = new Operator("Operator2", "Type1");
-        operator2.getGeneratedMutants().add(new Mutant("Mutant3", null, IntegrationFacade.getProgramUnderTest()));
+        operator2.getGeneratedMutants().add(new Mutant("Mutant3", null, new Program("Program1", "Program/path")));
 
         Operator operator3 = new Operator("Operator3", "Type1");
-        operator3.getGeneratedMutants().add(new Mutant("Mutant4", null, IntegrationFacade.getProgramUnderTest()));
+        operator3.getGeneratedMutants().add(new Mutant("Mutant4", null, new Program("Program1", "Program/path")));
 
         Operator operator4 = new Operator("Operator4", "Type1");
-        operator4.getGeneratedMutants().add(new Mutant("Mutant5", null, IntegrationFacade.getProgramUnderTest()));
-        operator4.getGeneratedMutants().add(new Mutant("Mutant6", null, IntegrationFacade.getProgramUnderTest()));
+        operator4.getGeneratedMutants().add(new Mutant("Mutant5", null, new Program("Program1", "Program/path")));
+        operator4.getGeneratedMutants().add(new Mutant("Mutant6", null, new Program("Program1", "Program/path")));
 
         List<Operator> group1 = new ArrayList<>();
         group1.add(operator1);
@@ -48,17 +48,17 @@ public class MutantQuantityInGroupComparatorTest {
         MutantQuantityInGroupComparator comparator = new MutantQuantityInGroupComparator();
 
         Operator operator1 = new Operator("Operator1", "Type1");
-        operator1.getGeneratedMutants().add(new Mutant("Mutant1", null, IntegrationFacade.getProgramUnderTest()));
-        operator1.getGeneratedMutants().add(new Mutant("Mutant2", null, IntegrationFacade.getProgramUnderTest()));
+        operator1.getGeneratedMutants().add(new Mutant("Mutant1", null, new Program("Program1", "Program/path")));
+        operator1.getGeneratedMutants().add(new Mutant("Mutant2", null, new Program("Program1", "Program/path")));
 
         Operator operator2 = new Operator("Operator2", "Type1");
-        operator2.getGeneratedMutants().add(new Mutant("Mutant3", null, IntegrationFacade.getProgramUnderTest()));
+        operator2.getGeneratedMutants().add(new Mutant("Mutant3", null, new Program("Program1", "Program/path")));
 
         Operator operator3 = new Operator("Operator3", "Type1");
-        operator3.getGeneratedMutants().add(new Mutant("Mutant4", null, IntegrationFacade.getProgramUnderTest()));
+        operator3.getGeneratedMutants().add(new Mutant("Mutant4", null, new Program("Program1", "Program/path")));
 
         Operator operator4 = new Operator("Operator4", "Type1");
-        operator4.getGeneratedMutants().add(new Mutant("Mutant5", null, IntegrationFacade.getProgramUnderTest()));
+        operator4.getGeneratedMutants().add(new Mutant("Mutant5", null, new Program("Program1", "Program/path")));
 
         List<Operator> group1 = new ArrayList<>();
         group1.add(operator1);
@@ -76,17 +76,17 @@ public class MutantQuantityInGroupComparatorTest {
         MutantQuantityInGroupComparator comparator = new MutantQuantityInGroupComparator();
 
         Operator operator1 = new Operator("Operator1", "Type1");
-        operator1.getGeneratedMutants().add(new Mutant("Mutant1", null, IntegrationFacade.getProgramUnderTest()));
+        operator1.getGeneratedMutants().add(new Mutant("Mutant1", null, new Program("Program1", "Program/path")));
 
         Operator operator2 = new Operator("Operator2", "Type1");
-        operator2.getGeneratedMutants().add(new Mutant("Mutant3", null, IntegrationFacade.getProgramUnderTest()));
+        operator2.getGeneratedMutants().add(new Mutant("Mutant3", null, new Program("Program1", "Program/path")));
 
         Operator operator3 = new Operator("Operator3", "Type1");
-        operator3.getGeneratedMutants().add(new Mutant("Mutant4", null, IntegrationFacade.getProgramUnderTest()));
+        operator3.getGeneratedMutants().add(new Mutant("Mutant4", null, new Program("Program1", "Program/path")));
 
         Operator operator4 = new Operator("Operator4", "Type1");
-        operator4.getGeneratedMutants().add(new Mutant("Mutant5", null, IntegrationFacade.getProgramUnderTest()));
-        operator4.getGeneratedMutants().add(new Mutant("Mutant6", null, IntegrationFacade.getProgramUnderTest()));
+        operator4.getGeneratedMutants().add(new Mutant("Mutant5", null, new Program("Program1", "Program/path")));
+        operator4.getGeneratedMutants().add(new Mutant("Mutant6", null, new Program("Program1", "Program/path")));
 
         List<Operator> group1 = new ArrayList<>();
         group1.add(operator1);
@@ -108,11 +108,11 @@ public class MutantQuantityInGroupComparatorTest {
         Operator operator2 = new Operator("Operator2", "Type1");
 
         Operator operator3 = new Operator("Operator3", "Type1");
-        operator3.getGeneratedMutants().add(new Mutant("Mutant4", null, IntegrationFacade.getProgramUnderTest()));
+        operator3.getGeneratedMutants().add(new Mutant("Mutant4", null, new Program("Program1", "Program/path")));
 
         Operator operator4 = new Operator("Operator4", "Type1");
-        operator4.getGeneratedMutants().add(new Mutant("Mutant5", null, IntegrationFacade.getProgramUnderTest()));
-        operator4.getGeneratedMutants().add(new Mutant("Mutant6", null, IntegrationFacade.getProgramUnderTest()));
+        operator4.getGeneratedMutants().add(new Mutant("Mutant5", null, new Program("Program1", "Program/path")));
+        operator4.getGeneratedMutants().add(new Mutant("Mutant6", null, new Program("Program1", "Program/path")));
 
         List<Operator> group1 = new ArrayList<>();
         group1.add(operator1);

@@ -3,6 +3,7 @@ package br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.problem.impl;
 import br.ufpr.inf.gres.sentinel.base.mutation.Program;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.problem.fitness.ObjectiveFunction;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.problem.fitness.impl.AverageCPUTime;
+import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.problem.fitness.impl.AverageQuantity;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.problem.fitness.impl.AverageScore;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.representation.VariableLengthSolution;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.GrammarFiles;
@@ -12,10 +13,11 @@ import br.ufpr.inf.gres.sentinel.integration.IntegrationFacadeTest;
 import br.ufpr.inf.gres.sentinel.integration.pit.PITFacade;
 import com.google.common.collect.Lists;
 import java.io.File;
-import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 /**
  * @author Giovani Guizzo
@@ -42,6 +44,7 @@ public class MutationStrategyGenerationProblemTest {
     @Test
     public void createSolution() throws Exception {
         VariableLengthSolution<Integer> solution = problem.createSolution();
+        assertNotNull(solution);
     }
 
     @Test
@@ -56,7 +59,6 @@ public class MutationStrategyGenerationProblemTest {
         assertNotNull(solution.getAttribute("Strategy"));
         Object strategy = solution.getAttribute("Strategy");
         assertTrue(solution.getObjective(0) >= 0);
-        assertEquals(1, (double) solution.getAttribute(ObjectiveFunction.AVERAGE_QUANTITY), 0.000001);
         assertEquals(-1, solution.getObjective(1), 0.000001);
 
         VariableLengthSolution<Integer> copy = solution.copy();
@@ -67,7 +69,6 @@ public class MutationStrategyGenerationProblemTest {
         assertNotNull(copy.getAttribute("Strategy"));
         Object strategy2 = copy.getAttribute("Strategy");
         assertTrue(copy.getObjective(0) >= 0);
-        assertEquals(1, (double) copy.getAttribute(ObjectiveFunction.AVERAGE_QUANTITY), 0.000001);
         assertEquals(-1, copy.getObjective(1), 0.000001);
 
         assertNotEquals(strategy2, strategy);
@@ -83,7 +84,6 @@ public class MutationStrategyGenerationProblemTest {
         assertNull(solution.getAttribute("Strategy"));
         assertEquals(Double.MAX_VALUE, solution.getObjective(0), 0.0001);
         assertEquals(Double.MAX_VALUE, solution.getObjective(1), 0.000001);
-        assertEquals(Double.MAX_VALUE, (double) solution.getAttribute(ObjectiveFunction.AVERAGE_QUANTITY), 0.000001);
     }
 
     @Test
@@ -98,28 +98,28 @@ public class MutationStrategyGenerationProblemTest {
                 0,
                 179,
                 0,
-                1,
+                5,
                 1,
                 Lists.newArrayList(programUnderTest),
                 Lists.newArrayList(ObjectiveFunction.AVERAGE_CPU_TIME, ObjectiveFunction.AVERAGE_SCORE));
 
         IntegrationFacade.setIntegrationFacade(facade);
-        IntegrationFacade.setProgramUnderTest(programUnderTest);
 
         VariableLengthSolution<Integer> solution = problem.createSolution();
         solution.clearVariables();
         solution.addAllVariables(Lists.newArrayList(0, 2, 1, 0, 0, 1, 9, 3));
         problem.evaluate(solution);
 
+        Double quantity = new AverageQuantity<Integer>().computeFitness(solution);
         System.out.println(solution.getAttribute("Strategy"));
         System.out.println("Objective 1\t(time)\texp > 0:\t" + solution.getObjective(0));
         System.out.println("Objective 2\t(score)\texp = 1:\t" + solution.getObjective(1));
-        System.out.println("Objective 3\t(quantity):\texp = 1:\t" + (double) solution.getAttribute("Quantity"));
+        System.out.println("Objective 3\t(quantity)\texp = 1:\t" + quantity);
 
         assertNotNull(solution.getAttribute("Strategy"));
         assertTrue(solution.getObjective(0) > 0);
-        assertEquals(1, (double) solution.getAttribute(ObjectiveFunction.AVERAGE_QUANTITY), 0.000001);
         assertEquals(-1, solution.getObjective(1), 0.000001);
+        assertEquals(1, quantity, 0.000001);
     }
 
     @Test
@@ -132,7 +132,6 @@ public class MutationStrategyGenerationProblemTest {
         assertNotNull(solution.getAttribute("Strategy"));
         assertEquals(Double.MAX_VALUE, solution.getObjective(0), 0.0001);
         assertEquals(Double.MAX_VALUE, solution.getObjective(1), 0.000001);
-        assertEquals(Double.MAX_VALUE, (double) solution.getAttribute(ObjectiveFunction.AVERAGE_QUANTITY), 0.000001);
     }
 
     @Test
@@ -140,9 +139,8 @@ public class MutationStrategyGenerationProblemTest {
     public void evaluate5() throws Exception {
         IntegrationFacade facade = IntegrationFacadeFactory.createIntegrationFacade("PIT", System.getProperty("user.dir") + File.separator + "training");
         Program programUnderTest = facade.instantiateProgram("Triangle;;br.ufpr.inf.gres.TriTyp*;br.ufpr.inf.gres.TriTypTest*;");
-        IntegrationFacade.setProgramUnderTest(programUnderTest);
         IntegrationFacade.setIntegrationFacade(facade);
-        problem = new MutationStrategyGenerationProblem(GrammarFiles.getGrammarPath(GrammarFiles.DEFAULT_GRAMMAR_NO_HOMS),
+        problem = new MutationStrategyGenerationProblem(GrammarFiles.getGrammarPath(GrammarFiles.DEFAULT_GRAMMAR),
                 10,
                 100,
                 1,

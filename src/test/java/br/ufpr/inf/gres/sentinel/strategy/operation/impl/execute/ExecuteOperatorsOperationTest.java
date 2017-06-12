@@ -2,6 +2,7 @@ package br.ufpr.inf.gres.sentinel.strategy.operation.impl.execute;
 
 import br.ufpr.inf.gres.sentinel.base.mutation.Mutant;
 import br.ufpr.inf.gres.sentinel.base.mutation.Operator;
+import br.ufpr.inf.gres.sentinel.base.mutation.Program;
 import br.ufpr.inf.gres.sentinel.base.solution.Solution;
 import br.ufpr.inf.gres.sentinel.integration.IntegrationFacade;
 import br.ufpr.inf.gres.sentinel.integration.IntegrationFacadeTest.IntegrationFacadeStub;
@@ -38,9 +39,10 @@ public class ExecuteOperatorsOperationTest {
         selectionOperation.setSelectionType(new SequentialSelection());
         operation.setSelection(selectionOperation);
 
+        Program program = new Program("Program1", "Program/path");
         Operator operator1 = new Operator("Operator1", "Type1");
         Operator operator2 = new Operator("Operator2", "Type1");
-        operator2.getGeneratedMutants().add(new Mutant("Operator1_1", null, IntegrationFacade.getProgramUnderTest()));
+        operator2.getGeneratedMutants().add(new Mutant("Operator1_1", null, program));
         Operator operator3 = new Operator("Operator3", "Type2");
         Operator operator4 = new Operator("Operator4", "Type3");
 
@@ -49,7 +51,7 @@ public class ExecuteOperatorsOperationTest {
         solution.getOperators().add(operator3);
         solution.getOperators().add(operator4);
 
-        operation.doOperation(solution);
+        operation.doOperation(solution, program);
 
         assertEquals(16, solution.getMutants().size());
         assertEquals(4, operator1.getGeneratedMutants().size());
@@ -60,6 +62,7 @@ public class ExecuteOperatorsOperationTest {
 
     @Test
     public void testDoOperation2() {
+        Program program = new Program("Program1", "Program/path");
         Solution solution = new Solution();
         ExecuteOperatorsOperation operation = new ExecuteOperatorsOperation();
         operation.setExecutionType(new ConventionalExecution());
@@ -69,7 +72,7 @@ public class ExecuteOperatorsOperationTest {
         selectionOperation.setSelectionType(new SequentialSelection());
         operation.setSelection(selectionOperation);
 
-        operation.doOperation(solution);
+        operation.doOperation(solution, program);
 
         assertEquals(0, solution.getMutants().size());
     }

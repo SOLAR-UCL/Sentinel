@@ -34,7 +34,7 @@ public class AbstractDiscardOperationTest {
         solution.getOperators().add(operator1);
         solution.getOperators().add(operator2);
 
-        operation.doOperation(solution);
+        operation.doOperation(solution, null);
 
         assertEquals(1, solution.getOperators().size());
         assertEquals(operator2, solution.getOperators().get(0));

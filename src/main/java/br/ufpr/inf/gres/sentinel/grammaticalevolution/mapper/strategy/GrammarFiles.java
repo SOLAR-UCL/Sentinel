@@ -13,11 +13,6 @@ public class GrammarFiles {
      */
     public static final String DEFAULT_GRAMMAR = "default";
 
-    /**
-     *
-     */
-    public static final String DEFAULT_GRAMMAR_NO_HOMS = "default_no_homs";
-
     private static String WORKING_DIRECTORY = System.getProperty("user.dir");
 
     /**
@@ -38,8 +33,6 @@ public class GrammarFiles {
         switch (grammarName.toLowerCase()) {
             case DEFAULT_GRAMMAR:
                 return directory + "default_grammar.bnf";
-            case DEFAULT_GRAMMAR_NO_HOMS:
-                return directory + "default_grammar_no_homs.bnf";
             default:
                 throw new IllegalArgumentException("Grammar " + grammarName + " not recognized.");
         }

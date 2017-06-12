@@ -26,7 +26,7 @@ public class AddAllOperatorsOperationTest {
     public void testDoOperation() {
         Solution solution = new Solution();
         AddAllOperatorsOperation operation = new AddAllOperatorsOperation();
-        operation.doOperation(solution);
+        operation.doOperation(solution, null);
         assertEquals(4, solution.getOperators().size());
     }
 

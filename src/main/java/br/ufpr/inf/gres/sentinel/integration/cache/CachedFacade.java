@@ -12,12 +12,16 @@ import java.lang.management.ThreadMXBean;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  *
  * @author Giovani
  */
 public class CachedFacade extends IntegrationFacade {
+
+    private static final Logger LOGGER = LogManager.getLogger(CachedFacade.class);
 
     private final IntegrationFacade facade;
     private final FacadeCache cache;
@@ -49,23 +53,30 @@ public class CachedFacade extends IntegrationFacade {
 
     @Override
     public boolean initializeConventionalStrategy(Program program, int repetitions) {
+        LOGGER.debug("Initializing program " + program.getName() + " for " + repetitions + " repetitions.");
         if (!this.cache.isCached(program)) {
+            LOGGER.debug("Program is not cached. Starting execution.");
+            LOGGER.trace("Starting first execution. It's gonna be discarded.");
             this.runConventionalStrategy(program, 1);
             this.conventionalExecutionCPUTimes.removeAll(program);
             this.conventionalExecutionTimes.removeAll(program);
             this.conventionalMutants.removeAll(program);
             this.cache.clearCache(program);
 
+            LOGGER.trace("Starting actual execution.");
             this.runConventionalStrategy(program, repetitions);
             this.cache.setCached(program);
+            LOGGER.debug("Program executed and successfully cached.");
             try {
+                LOGGER.debug("Writing cache file.");
                 this.cache.writeCache();
+                LOGGER.debug("Cache file written successfully.");
             } catch (IOException ex) {
-                System.err.println("Could not write cache file. The exception is: ");
-                System.err.println(ex.getMessage());
+                LOGGER.error("Could not write cache file. The exception is: " + ex.getMessage(), ex);
             }
             return true;
         }
+        LOGGER.debug("Program is cached. Returning cached values.");
         return false;
     }
 
@@ -73,6 +84,7 @@ public class CachedFacade extends IntegrationFacade {
     protected void runConventionalStrategy(Program program, int repetitions) {
         List<Mutant> allMutants = new ArrayList<>();
         for (int i = 0; i < repetitions; i++) {
+            LOGGER.trace("Executing repetition " + i + ".");
             long cpuTimeSum = 0;
             long timeSum = 0;
 
@@ -98,7 +110,9 @@ public class CachedFacade extends IntegrationFacade {
 
             this.conventionalExecutionCPUTimes.put(program, cpuTimeSum);
             this.conventionalExecutionTimes.put(program, timeSum);
+            LOGGER.trace("Repetition ended. " + (i / repetitions * 100) + "% complete.");
         }
+        LOGGER.trace(allMutants.size() + " mutants generated.");
         this.conventionalMutants.putAll(program, allMutants);
     }
 

@@ -8,7 +8,6 @@ import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.Fa
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.FactoryFlyweight;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.NonTerminalRuleType;
 import br.ufpr.inf.gres.sentinel.strategy.operation.Operation;
-import br.ufpr.inf.gres.sentinel.strategy.operation.impl.combine.CombineMutantsOperation;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.discard.AbstractDiscardOperation;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.operation.AbstractSelectOperation;
 import com.google.common.collect.Lists;
@@ -65,16 +64,6 @@ public class MutantOperationFactoryTest {
         assertNotNull(operation);
         assertTrue(operation instanceof AbstractDiscardOperation);
         assertNotNull(((AbstractDiscardOperation) operation).getSelection());
-    }
-
-    @Test
-    public void testCreateOperation3() {
-        Iterator<Integer> iterator = Lists.newArrayList(2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0).iterator();
-        Operation operation = FactoryFlyweight.getNonTerminalFactory().createOperation(testingRule, iterator);
-        assertNotNull(operation);
-        assertTrue(operation instanceof CombineMutantsOperation);
-        assertNotNull(((CombineMutantsOperation) operation).getSelection());
-        assertNotNull(((CombineMutantsOperation) operation).getGeneration());
     }
 
 }

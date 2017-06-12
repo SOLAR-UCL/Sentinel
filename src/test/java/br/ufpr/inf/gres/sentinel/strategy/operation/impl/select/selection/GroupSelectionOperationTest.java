@@ -2,7 +2,7 @@ package br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.selection;
 
 import br.ufpr.inf.gres.sentinel.base.mutation.Mutant;
 import br.ufpr.inf.gres.sentinel.base.mutation.Operator;
-import br.ufpr.inf.gres.sentinel.integration.IntegrationFacade;
+import br.ufpr.inf.gres.sentinel.base.mutation.Program;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.group.impl.operator.GroupOperatorsByMutantQuantity;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.group.impl.operator.GroupOperatorsByType;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.type.impl.SequentialSelection;
@@ -42,7 +42,7 @@ public class GroupSelectionOperationTest {
         Operator operator3 = new Operator("Operator3", "Type2");
         Operator operator4 = new Operator("Operator4", "Type3");
 
-        List<Operator> result = groupOp.doOperation(Lists.newArrayList(operator1, operator2, operator3, operator4));
+        List<Operator> result = groupOp.doOperation(Lists.newArrayList(operator1, operator2, operator3, operator4), null);
         assertEquals(1, result.size());
         assertEquals(operator3, result.get(0));
     }
@@ -66,7 +66,7 @@ public class GroupSelectionOperationTest {
         Operator operator3 = new Operator("Operator3", "Type2");
         Operator operator4 = new Operator("Operator4", "Type3");
 
-        List<Operator> result = groupOp.doOperation(Lists.newArrayList(operator1, operator2, operator3, operator4));
+        List<Operator> result = groupOp.doOperation(Lists.newArrayList(operator1, operator2, operator3, operator4), null);
         assertEquals(2, result.size());
         assertEquals(operator3, result.get(0));
         assertEquals(operator4, result.get(1));
@@ -91,7 +91,7 @@ public class GroupSelectionOperationTest {
         Operator operator3 = new Operator("Operator3", "Type2");
         Operator operator4 = new Operator("Operator4", "Type3");
 
-        List<Operator> result = groupOp.doOperation(Lists.newArrayList(operator1, operator2, operator3, operator4));
+        List<Operator> result = groupOp.doOperation(Lists.newArrayList(operator1, operator2, operator3, operator4), null);
         assertEquals(3, result.size());
         assertEquals(operator3, result.get(0));
         assertEquals(operator4, result.get(1));
@@ -117,7 +117,7 @@ public class GroupSelectionOperationTest {
         Operator operator3 = new Operator("Operator3", "Type2");
         Operator operator4 = new Operator("Operator4", "Type3");
 
-        List<Operator> result = groupOp.doOperation(Lists.newArrayList(operator1, operator2, operator3, operator4));
+        List<Operator> result = groupOp.doOperation(Lists.newArrayList(operator1, operator2, operator3, operator4), null);
         assertEquals(4, result.size());
         assertEquals(operator3, result.get(0));
         assertEquals(operator4, result.get(1));
@@ -146,7 +146,7 @@ public class GroupSelectionOperationTest {
         Operator operator3 = new Operator("Operator3", "Type2");
         Operator operator4 = new Operator("Operator4", "Type3");
 
-        List<Operator> result = groupOp.doOperation(Lists.newArrayList(operator1, operator2, operator3, operator4));
+        List<Operator> result = groupOp.doOperation(Lists.newArrayList(operator1, operator2, operator3, operator4), null);
         assertEquals(3, result.size());
         assertEquals(operator1, result.get(0));
         assertEquals(operator2, result.get(1));
@@ -173,16 +173,16 @@ public class GroupSelectionOperationTest {
         groupOp.setQuantity(3);
 
         Operator operator1 = new Operator("Operator1", "Type1");
-        operator1.getGeneratedMutants().add(new Mutant("Mutant1", null, IntegrationFacade.getProgramUnderTest()));
-        operator1.getGeneratedMutants().add(new Mutant("Mutant2", null, IntegrationFacade.getProgramUnderTest()));
+        operator1.getGeneratedMutants().add(new Mutant("Mutant1", null, new Program("Program1", "Program/path")));
+        operator1.getGeneratedMutants().add(new Mutant("Mutant2", null, new Program("Program1", "Program/path")));
         Operator operator2 = new Operator("Operator2", "Type2");
-        operator2.getGeneratedMutants().add(new Mutant("Mutant1", null, IntegrationFacade.getProgramUnderTest()));
-        operator2.getGeneratedMutants().add(new Mutant("Mutant2", null, IntegrationFacade.getProgramUnderTest()));
+        operator2.getGeneratedMutants().add(new Mutant("Mutant1", null, new Program("Program1", "Program/path")));
+        operator2.getGeneratedMutants().add(new Mutant("Mutant2", null, new Program("Program1", "Program/path")));
 
         Operator operator3 = new Operator("Operator3", "Type1");
         Operator operator4 = new Operator("Operator4", "Type1");
 
-        List<Operator> result = groupOp.doOperation(Lists.newArrayList(operator1, operator2, operator3, operator4));
+        List<Operator> result = groupOp.doOperation(Lists.newArrayList(operator1, operator2, operator3, operator4), null);
         assertEquals(2, result.size());
         assertEquals(operator3, result.get(0));
         assertEquals(operator2, result.get(1));
@@ -209,7 +209,7 @@ public class GroupSelectionOperationTest {
 
         List<Operator> group1 = new ArrayList<>();
 
-        List<Operator> result = groupOp.doOperation(group1);
+        List<Operator> result = groupOp.doOperation(group1, null);
         assertTrue(result.isEmpty());
     }
 
@@ -249,7 +249,7 @@ public class GroupSelectionOperationTest {
         Operator operator3 = new Operator("Operator3", "Type2");
         Operator operator4 = new Operator("Operator4", "Type3");
 
-        List<Operator> result = groupOp.doOperation(Lists.newArrayList(operator1, operator2, operator3, operator4));
+        List<Operator> result = groupOp.doOperation(Lists.newArrayList(operator1, operator2, operator3, operator4), null);
         assertEquals(3, result.size());
         assertEquals(operator3, result.get(0));
         assertEquals(operator4, result.get(1));

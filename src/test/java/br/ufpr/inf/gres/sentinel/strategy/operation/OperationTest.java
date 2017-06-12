@@ -1,9 +1,9 @@
 package br.ufpr.inf.gres.sentinel.strategy.operation;
 
 import br.ufpr.inf.gres.sentinel.base.mutation.Mutant;
+import br.ufpr.inf.gres.sentinel.base.mutation.Program;
 import br.ufpr.inf.gres.sentinel.base.solution.Solution;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.TerminalRuleType;
-import br.ufpr.inf.gres.sentinel.integration.IntegrationFacade;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.defaults.NewBranchOperation;
 import java.util.List;
 import org.junit.Test;
@@ -150,9 +150,9 @@ public class OperationTest {
         }
 
         @Override
-        public List<Mutant> doOperation(Solution input) {
-            input.getMutants().add(new Mutant(this.name + " executed!", null, IntegrationFacade.getProgramUnderTest()));
-            List<Mutant> result = this.next(input);
+        public List<Mutant> doOperation(Solution input, Program program) {
+            input.getMutants().add(new Mutant(this.name + " executed!", null, program));
+            List<Mutant> result = this.next(input, program);
             return result == null ? input.getMutants() : result;
         }
 

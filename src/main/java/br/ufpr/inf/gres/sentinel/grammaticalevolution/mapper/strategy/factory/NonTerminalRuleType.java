@@ -85,10 +85,6 @@ public class NonTerminalRuleType {
     /**
      *
      */
-    public static final String ORDER = "order";
-    /**
-     *
-     */
     public static final String PERCENTAGE = "percentage";
     /**
      *

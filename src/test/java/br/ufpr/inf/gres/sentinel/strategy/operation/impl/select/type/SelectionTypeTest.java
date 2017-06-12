@@ -21,7 +21,7 @@ public class SelectionTypeTest {
     public void testDoOperation() {
         List<Integer> input = Lists.newArrayList(1, 2, 3, 4, 5, 6);
         RandomSelection<Integer> operation = new RandomSelection<>();
-        List<Integer> result = operation.doOperation(input);
+        List<Integer> result = operation.doOperation(input, null);
         assertFalse(result.isEmpty());
     }
 
@@ -29,7 +29,7 @@ public class SelectionTypeTest {
     public void testDoOperation2() {
         List<Integer> input = new ArrayList<>();
         RandomSelection<Integer> operation = new RandomSelection<>();
-        List<Integer> result = operation.doOperation(input);
+        List<Integer> result = operation.doOperation(input, null);
         assertTrue(result.isEmpty());
     }
 

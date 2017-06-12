@@ -1,6 +1,7 @@
 package br.ufpr.inf.gres.sentinel.strategy.operation.impl.execute.type.impl;
 
 import br.ufpr.inf.gres.sentinel.base.mutation.Operator;
+import br.ufpr.inf.gres.sentinel.base.mutation.Program;
 import br.ufpr.inf.gres.sentinel.integration.IntegrationFacade;
 import br.ufpr.inf.gres.sentinel.integration.IntegrationFacadeTest.IntegrationFacadeStub;
 import com.google.common.collect.Lists;
@@ -34,7 +35,7 @@ public class ConventionalExecutionTest {
         Operator operator4 = new Operator("Operator4", "Type3");
         List<Operator> operators = Lists.newArrayList(operator1, operator2, operator3, operator4);
 
-        operation.doOperation(operators);
+        operation.doOperation(operators, new Program("Program1", "Program/path"));
 
         operators.forEach((operator) -> {
             assertEquals(4, operator.getGeneratedMutants().size());
@@ -47,7 +48,7 @@ public class ConventionalExecutionTest {
 
         List<Operator> operators = new ArrayList<>();
 
-        operation.doOperation(operators);
+        operation.doOperation(operators, new Program("Program1", "Program/path"));
     }
 
 }

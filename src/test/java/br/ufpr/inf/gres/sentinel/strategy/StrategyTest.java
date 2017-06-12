@@ -1,6 +1,7 @@
 package br.ufpr.inf.gres.sentinel.strategy;
 
 import br.ufpr.inf.gres.sentinel.base.mutation.Mutant;
+import br.ufpr.inf.gres.sentinel.base.mutation.Program;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.GrammarFiles;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.StrategyMapper;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.TerminalRuleType;
@@ -41,40 +42,42 @@ public class StrategyTest {
     @Test
     public void testRun() {
         Strategy instance = new Strategy(OperationTest.getComplexTestOperationChain());
-        List<Mutant> expResult = Lists.newArrayList(new Mutant("TestOperation executed!", null, IntegrationFacade.getProgramUnderTest()), new Mutant("TestOperation2 executed!", null, IntegrationFacade
-                .getProgramUnderTest()), new Mutant("TestOperation3 executed!", null, IntegrationFacade.getProgramUnderTest()), new Mutant("TestOperation5 executed!", null, IntegrationFacade
-                .getProgramUnderTest()), new Mutant("TestOperation6 executed!", null, IntegrationFacade.getProgramUnderTest()), new Mutant("TestOperation4 executed!", null, IntegrationFacade
-                .getProgramUnderTest()));
-        List<Mutant> result = instance.run();
+        Program program = new Program("Program1", "Program/path");
+        List<Mutant> expResult = Lists.newArrayList(new Mutant("TestOperation executed!", null, program), new Mutant("TestOperation2 executed!", null, program), new Mutant("TestOperation3 executed!", null, program), new Mutant("TestOperation5 executed!", null, program), new Mutant("TestOperation6 executed!", null, program), new Mutant("TestOperation4 executed!", null, program));
+        List<Mutant> result = instance.run(program);
         Assert.assertArrayEquals(expResult.toArray(), result.toArray());
     }
 
     public void testRun2() {
+        Program program = new Program("Program1", "Program/path");
         Strategy instance = new Strategy();
-        List<Mutant> result = instance.run();
+        List<Mutant> result = instance.run(program);
         assertArrayEquals(new Mutant[0], result.toArray());
     }
 
     public void testRun3() {
+        Program program = new Program("Program1", "Program/path");
         Strategy instance = new Strategy();
         instance.setFirstOperation(new OperationStub("Test"));
-        List<Mutant> result = instance.run();
-        assertEquals(new Mutant("Test executed!", null, IntegrationFacade.getProgramUnderTest()), result.get(0));
+        List<Mutant> result = instance.run(program);
+        assertEquals(new Mutant("Test executed!", null, new Program("Program1", "Program/path")), result.get(0));
     }
 
     @Test
     public void testRun4() {
+        Program program = new Program("Program1", "Program/path");
         Strategy strategy = new Strategy();
-        List<Mutant> result = strategy.run();
+        List<Mutant> result = strategy.run(program);
         assertTrue(result.isEmpty());
     }
 
     @Test
     public void testStrategy() throws Exception {
+        Program program = new Program("Program1", "Program/path");
         StrategyMapper strategyMapper = new StrategyMapper(new File(GrammarFiles.getDefaultGrammarPath()));
         // Executes all operators in reversed order, then selects the 10% first mutants (1) and store them.
         Strategy strategy = strategyMapper.interpret(Lists.newArrayList(0, 2, 1, 0, 0, 0, 0, 1, 9, 1, 0, 1, 0, 0, 1, 0, 3, 1, 2));
-        List<Mutant> result = strategy.run();
+        List<Mutant> result = strategy.run(program);
         assertEquals(1, result.size());
         assertEquals("Operator4_1", result.get(0).getName());
     }

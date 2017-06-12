@@ -201,6 +201,8 @@ public class FacadeCache {
                 File outputFile = new File(outputFolder.getAbsolutePath() + File.separator + cache.program.getName() + ".json");
                 com.google.common.io.Files.createParentDirs(outputFile);
                 com.google.common.io.Files.write(gson.toJson(cache), outputFile, Charset.defaultCharset());
+                LOGGER.debug("Cache file for program " + cache.program.getName() + " was created seccessfully.");
+                LOGGER.trace("Output file: " + outputFile.getAbsolutePath());
             }
         }
     }
@@ -274,7 +276,8 @@ public class FacadeCache {
                     try (JsonReader jsonReader = new JsonReader(new FileReader(file.toFile()))) {
                         CacheHolder cache = gson.fromJson(jsonReader, CacheHolder.class);
                         this.facadeCache.caches.put(cache.program, cache);
-                        LOGGER.debug("Found cache for " + cache.program.getName() + ". It is successfully loaded.");
+                        LOGGER.debug("Found cache for " + cache.program.getName() + ". It was successfully loaded.");
+                        LOGGER.trace("Cache file: " + file.toAbsolutePath().toString());
                     }
                 }
             } catch (Exception ex) {

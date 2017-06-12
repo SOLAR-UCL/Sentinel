@@ -33,7 +33,7 @@ public class VariableLengthSolutionGsonDeserializerTest {
         oldFacade = IntegrationFacade.getIntegrationFacade();
         IntegrationFacade.setIntegrationFacade(facade);
 
-        problem = new MutationStrategyGenerationProblem(GrammarFiles.getGrammarPath(GrammarFiles.DEFAULT_GRAMMAR_NO_HOMS),
+        problem = new MutationStrategyGenerationProblem(GrammarFiles.getGrammarPath(GrammarFiles.DEFAULT_GRAMMAR),
                 15,
                 100,
                 0,

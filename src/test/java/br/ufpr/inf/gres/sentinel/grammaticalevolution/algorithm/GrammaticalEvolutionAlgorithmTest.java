@@ -15,12 +15,13 @@ import com.google.common.collect.Lists;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-import static org.junit.Assert.assertEquals;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.uma.jmetal.operator.impl.selection.BinaryTournamentSelection;
 import org.uma.jmetal.util.comparator.RankingAndCrowdingDistanceComparator;
 import org.uma.jmetal.util.evaluator.impl.SequentialSolutionListEvaluator;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author Giovani Guizzo
@@ -39,7 +40,6 @@ public class GrammaticalEvolutionAlgorithmTest {
         Program programUnderTest
                 = new Program("br.ufpr.inf.gres.TriTyp",
                         new File("src/test/resources/testfiles/TriTyp/src/br/ufpr/inf/gres/TriTyp.java"));
-        IntegrationFacade.setProgramUnderTest(programUnderTest);
 
         problem
                 = new ProblemStub(GrammarFiles.getDefaultGrammarPath(),

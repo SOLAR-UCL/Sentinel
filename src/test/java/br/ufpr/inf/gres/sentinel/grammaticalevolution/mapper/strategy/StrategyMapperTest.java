@@ -20,9 +20,10 @@ import com.google.common.collect.Lists;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-import static org.junit.Assert.*;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 /**
  * @author Giovani Guizzo
@@ -84,7 +85,6 @@ public class StrategyMapperTest {
         PITFacade facade = new PITFacade(System.getProperty("user.dir") + File.separator + "training");
         Program programUnderTest = facade.instantiateProgram("Triangle;;br.ufpr.inf.gres.TriTyp*;br.ufpr.inf.gres.TriTypTest*;");
         IntegrationFacade.setIntegrationFacade(facade);
-        IntegrationFacade.setProgramUnderTest(programUnderTest);
 
         StrategyMapper strategyMapper = new StrategyMapper(new File(GrammarFiles.getDefaultGrammarPath()));
         Strategy strategy
@@ -118,7 +118,7 @@ public class StrategyMapperTest {
         StoreMutantsOperation store = (StoreMutantsOperation) mutantsOperation.getSuccessor();
         assertNull(store.getSuccessor());
 
-        List<Mutant> result = strategy.run();
+        List<Mutant> result = strategy.run(programUnderTest);
         assertFalse(result.isEmpty());
         setUpClass();
     }

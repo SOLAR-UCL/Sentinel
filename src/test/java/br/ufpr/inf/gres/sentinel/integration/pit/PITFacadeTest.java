@@ -9,11 +9,11 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import org.junit.AfterClass;
-import static org.junit.Assert.*;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 /**
  *
@@ -30,27 +30,16 @@ public class PITFacadeTest {
         programUnderTest = facade.instantiateProgram("Triangle;;br.ufpr.inf.gres.TriTyp*;br.ufpr.inf.gres.TriTypTest*;");
     }
 
-    @AfterClass
-    public static void tearDownClass() {
-        facade.tearDown();
-    }
-
-    @Test(expected = Exception.class)
-    public void testCombineMutants() {
-        facade.combineMutants(new ArrayList<>());
-    }
-
     @Test
     @Ignore
     public void testJodaExecution() {
         PITFacade facade = new PITFacade("training");
         Program programUnderTest = facade.instantiateProgram("Joda-Time;joda/sources;org.joda.time.*;**TestAllPackages;joda/joda-time-2.9.9-jar-with-dependencies.jar;joda/classes;joda/test-classes");
         IntegrationFacade.setIntegrationFacade(facade);
-        IntegrationFacade.setProgramUnderTest(programUnderTest);
 
         Stopwatch stopwatch = Stopwatch.createStarted();
-        List<Mutant> mutants = facade.executeOperators(facade.getAllOperators());
-        facade.executeMutants(mutants);
+        List<Mutant> mutants = facade.executeOperators(facade.getAllOperators(), programUnderTest);
+        facade.executeMutants(mutants, programUnderTest);
         stopwatch.stop();
 
         System.out.println("Time: " + stopwatch.elapsed(TimeUnit.MINUTES) + "m" + (stopwatch.elapsed(TimeUnit.SECONDS) % 60) + "s");
@@ -62,32 +51,30 @@ public class PITFacadeTest {
     @Test
     public void testExecuteMutant() {
         IntegrationFacade.setIntegrationFacade(facade);
-        IntegrationFacade.setProgramUnderTest(programUnderTest);
 
-        List<Mutant> mutants = facade.executeOperators(facade.getAllOperators());
+        List<Mutant> mutants = facade.executeOperators(facade.getAllOperators(), programUnderTest);
         assertNotNull(mutants);
 
-        facade.executeMutant(mutants.get(0));
+        facade.executeMutant(mutants.get(0), programUnderTest);
         assertTrue(mutants.get(0).isDead());
 
-        facade.executeMutant(mutants.get(1));
+        facade.executeMutant(mutants.get(1), programUnderTest);
         assertTrue(mutants.get(1).isDead());
 
-        facade.executeMutant(mutants.get(2));
+        facade.executeMutant(mutants.get(2), programUnderTest);
         assertTrue(mutants.get(2).isDead());
 
-        facade.executeMutant(null);
+        facade.executeMutant(null, programUnderTest);
     }
 
     @Test
     public void testExecuteMutants() {
         IntegrationFacade.setIntegrationFacade(facade);
-        IntegrationFacade.setProgramUnderTest(programUnderTest);
 
-        List<Mutant> mutants = facade.executeOperators(facade.getAllOperators());
+        List<Mutant> mutants = facade.executeOperators(facade.getAllOperators(), programUnderTest);
         assertNotNull(mutants);
 
-        facade.executeMutants(mutants);
+        facade.executeMutants(mutants, programUnderTest);
         assertEquals(119, mutants.stream().filter(Mutant::isDead).count());
         assertEquals(3, mutants.stream().filter(Mutant::isAlive).count());
     }
@@ -95,23 +82,21 @@ public class PITFacadeTest {
     @Test
     public void testExecuteOperator() {
         IntegrationFacade.setIntegrationFacade(facade);
-        IntegrationFacade.setProgramUnderTest(programUnderTest);
         List<Operator> allOperators = facade.getAllOperators();
 
-        List<Mutant> mutants = facade.executeOperator(allOperators.get(0));
+        List<Mutant> mutants = facade.executeOperator(allOperators.get(0), programUnderTest);
         assertNotNull(mutants);
         assertEquals(13, mutants.size());
         assertTrue(mutants.stream().allMatch(Mutant::isAlive));
-        assertTrue(mutants.stream().allMatch((t) -> t.getOperator().contains(allOperators.get(0))));
+        assertTrue(mutants.stream().allMatch((t) -> t.getOperator().equals(allOperators.get(0))));
         assertTrue(allOperators.get(0).getGeneratedMutants().containsAll(mutants));
     }
 
     @Test
     public void testExecuteOperator2() {
         IntegrationFacade.setIntegrationFacade(facade);
-        IntegrationFacade.setProgramUnderTest(programUnderTest);
 
-        List<Mutant> mutants = facade.executeOperator(facade.getAllOperators().get(15));
+        List<Mutant> mutants = facade.executeOperator(facade.getAllOperators().get(15), programUnderTest);
         assertNotNull(mutants);
         assertTrue(mutants.isEmpty());
     }
@@ -119,9 +104,8 @@ public class PITFacadeTest {
     @Test
     public void testExecuteOperators() {
         IntegrationFacade.setIntegrationFacade(facade);
-        IntegrationFacade.setProgramUnderTest(programUnderTest);
 
-        List<Mutant> mutants = facade.executeOperators(facade.getAllOperators());
+        List<Mutant> mutants = facade.executeOperators(facade.getAllOperators(), programUnderTest);
         assertNotNull(mutants);
         assertEquals(122, mutants.size());
         assertTrue(mutants.stream().allMatch(Mutant::isAlive));
@@ -130,9 +114,8 @@ public class PITFacadeTest {
     @Test
     public void testExecuteOperators2() {
         IntegrationFacade.setIntegrationFacade(facade);
-        IntegrationFacade.setProgramUnderTest(programUnderTest);
 
-        List<Mutant> mutants = facade.executeOperators(new ArrayList<>());
+        List<Mutant> mutants = facade.executeOperators(new ArrayList<>(), programUnderTest);
         assertNotNull(mutants);
         assertTrue(mutants.isEmpty());
     }
@@ -140,10 +123,9 @@ public class PITFacadeTest {
     @Test
     public void testExecuteOperators3() {
         IntegrationFacade.setIntegrationFacade(facade);
-        IntegrationFacade.setProgramUnderTest(programUnderTest);
 
-        List<Mutant> mutants = facade.executeOperators(facade.getAllOperators());
-        mutants = facade.executeOperators(facade.getAllOperators());
+        List<Mutant> mutants = facade.executeOperators(facade.getAllOperators(), programUnderTest);
+        mutants = facade.executeOperators(facade.getAllOperators(), programUnderTest);
         assertNotNull(mutants);
         assertEquals(122, mutants.size());
         assertTrue(mutants.stream().allMatch(Mutant::isAlive));
@@ -152,10 +134,9 @@ public class PITFacadeTest {
     @Test(expected = Exception.class)
     public void testExecuteOperators4() {
         IntegrationFacade.setIntegrationFacade(facade);
-        IntegrationFacade.setProgramUnderTest(programUnderTest);
+        Program programUnderTest = new Program("unknown.Program", new File("unknown" + File.separator + "Program.java"));
 
-        IntegrationFacade.setProgramUnderTest(new Program("unknown.Program", new File("unknown" + File.separator + "Program.java")));
-        List<Mutant> mutants = facade.executeOperators(facade.getAllOperators());
+        List<Mutant> mutants = facade.executeOperators(facade.getAllOperators(), programUnderTest);
         assertNotNull(mutants);
         assertTrue(mutants.isEmpty());
     }

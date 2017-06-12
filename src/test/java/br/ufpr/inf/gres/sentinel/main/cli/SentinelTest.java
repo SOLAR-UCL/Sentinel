@@ -17,10 +17,10 @@ public class SentinelTest {
     @Test
     public void testSentinel() throws Exception {
         String[] args = new String[]{"train",
-            "--maxEvaluations", "1",
-            "--populationSize", "1",
+            "--maxEvaluations", "2",
+            "--populationSize", "2",
             "--trainingRuns", "1",
-            "--conventionalStrategyMultiplier", "1"};
+            "--numberOfConventionalRuns", "1"};
         Sentinel.main(args);
         File result = new File("training/Experiment/result_1.json");
         Assert.assertTrue(result.exists());

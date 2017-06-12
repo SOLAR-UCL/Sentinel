@@ -19,8 +19,6 @@ public class GrammarFilesTest {
         GrammarFiles.setWorkingDirectory("test");
         String defaultGrammarPath = GrammarFiles.getGrammarPath(GrammarFiles.DEFAULT_GRAMMAR);
         assertEquals("test" + File.separator + "grammars" + File.separator + "default_grammar.bnf", defaultGrammarPath);
-        defaultGrammarPath = GrammarFiles.getGrammarPath(GrammarFiles.DEFAULT_GRAMMAR_NO_HOMS);
-        assertEquals("test" + File.separator + "grammars" + File.separator + "default_grammar_no_homs.bnf", defaultGrammarPath);
         GrammarFiles.getGrammarPath("Unknown");
     }
 

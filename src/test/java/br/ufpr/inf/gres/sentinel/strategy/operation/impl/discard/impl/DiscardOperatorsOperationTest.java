@@ -45,11 +45,11 @@ public class DiscardOperatorsOperationTest {
         operator2.getGeneratedMutants().add(mutant4);
         operator2.getGeneratedMutants().add(mutant5);
 
-        mutant1.getOperator().add(operator1);
-        mutant2.getOperator().add(operator1);
-        mutant3.getOperator().add(operator1);
-        mutant4.getOperator().add(operator2);
-        mutant5.getOperator().add(operator2);
+        mutant1.setOperator(operator1);
+        mutant2.setOperator(operator1);
+        mutant3.setOperator(operator1);
+        mutant4.setOperator(operator2);
+        mutant5.setOperator(operator2);
 
         SelectionOperation<Operator> selectionOp = new SelectionOperation<>();
         selectionOp.setSelectionType(new SequentialSelection());
@@ -67,7 +67,7 @@ public class DiscardOperatorsOperationTest {
         solution.getMutants().add(mutant4);
         solution.getMutants().add(mutant5);
 
-        operation.doOperation(solution);
+        operation.doOperation(solution, null);
 
         assertEquals(1, solution.getOperators().size());
         assertEquals(operator2, solution.getOperators().get(0));

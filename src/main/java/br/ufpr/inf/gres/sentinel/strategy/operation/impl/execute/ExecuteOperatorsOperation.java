@@ -49,7 +49,7 @@ public class ExecuteOperatorsOperation extends Operation<Solution, List<Mutant>>
         checkNotNull(this.selection, "No selection operation!");
         checkNotNull(this.executionType, "No execution operation!");
         List<Operator> selectedOperators = this.selection.doOperation(new ArrayList<>(solution.getOperators()), null);
-        List<Mutant> generatedMutants = this.executionType.doOperation(selectedOperators, null);
+        List<Mutant> generatedMutants = this.executionType.doOperation(selectedOperators, program);
         solution.getMutants().addAll(generatedMutants);
         return this.next(solution, program);
     }

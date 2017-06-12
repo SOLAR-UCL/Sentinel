@@ -22,20 +22,20 @@ import java.util.function.ToDoubleFunction;
  */
 public class ConstrainedObjectiveFunctionObserver implements MutationStrategyGenerationObserver {
 
-    private ThreadMXBean threadBean;
+    protected ThreadMXBean threadBean;
 
-    private VariableLengthSolution<Integer> solution;
-    private ArrayListMultimap<Program, Collection<Mutant>> allMutants;
-    private ArrayListMultimap<Program, Long> nanoCPUTimes;
-    private ArrayListMultimap<Program, Long> nanoTimes;
-    private Collection<ObjectiveFunction> objectiveFunctions;
-    private boolean isInvalid;
+    protected VariableLengthSolution<Integer> solution;
+    protected ArrayListMultimap<Program, Collection<Mutant>> allMutants;
+    protected ArrayListMultimap<Program, Long> nanoCPUTimes;
+    protected ArrayListMultimap<Program, Long> nanoTimes;
+    protected Collection<ObjectiveFunction> objectiveFunctions;
+    protected boolean isInvalid;
 
-    private Program program;
+    protected Program program;
 
-    private long currentThreadCpuTime;
-    private Stopwatch stopwatch;
-    private Collection<Mutant> mutants;
+    protected long currentThreadCpuTime;
+    protected Stopwatch stopwatch;
+    protected Collection<Mutant> mutants;
 
     public ConstrainedObjectiveFunctionObserver() {
         this.threadBean = ManagementFactory.getThreadMXBean();

@@ -6,6 +6,7 @@ import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.problem.Variable
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.problem.fitness.ObjectiveFunction;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.problem.fitness.ObjectiveFunctionFactory;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.problem.observer.MutationStrategyGenerationObserver;
+import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.problem.observer.impl.ConstrainedObjectiveFunctionObserver;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.representation.VariableLengthSolution;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.representation.impl.DefaultVariableLengthIntegerSolution;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.iterator.CountingIterator;
@@ -82,6 +83,7 @@ public class MutationStrategyGenerationProblem implements VariableLengthIntegerP
         this.numberOfConstraints = 0;
         this.objectiveFunctions = Collections.unmodifiableList(ObjectiveFunctionFactory.createObjectiveFunctions(objectiveFunctions));
         this.observers = new HashSet<>();
+        this.observers.add(new ConstrainedObjectiveFunctionObserver());
         this.haveProgramsBeenInitialized = false;
         LOGGER.debug("Initializing problem.");
         LOGGER.trace("Grammar File: " + grammarFile);
@@ -176,7 +178,7 @@ public class MutationStrategyGenerationProblem implements VariableLengthIntegerP
 
     private void initializePrograms(IntegrationFacade integrationFacade) {
         if (!haveProgramsBeenInitialized) {
-            LOGGER.trace("Starting programs initialization.");
+            LOGGER.info("Starting programs initialization.");
             Stopwatch stopwatch = Stopwatch.createStarted();
             for (Program testProgram : this.testPrograms) {
                 Stopwatch stopwatchProgram = Stopwatch.createStarted();
@@ -191,7 +193,7 @@ public class MutationStrategyGenerationProblem implements VariableLengthIntegerP
                 LOGGER.trace("Alive mutants: " + integrationFacade.getConventionalMutants().get(testProgram).stream().filter(Mutant::isAlive).count());
             }
             stopwatch.stop();
-            LOGGER.trace("Programs initialized successfully in " + DurationFormatUtils.formatDurationHMS(stopwatch.elapsed(TimeUnit.MILLISECONDS)));
+            LOGGER.info("Programs initialized successfully in " + DurationFormatUtils.formatDurationHMS(stopwatch.elapsed(TimeUnit.MILLISECONDS)));
             this.haveProgramsBeenInitialized = true;
         }
     }
@@ -204,7 +206,7 @@ public class MutationStrategyGenerationProblem implements VariableLengthIntegerP
         Strategy strategy = this.strategyMapper.interpret(variablesIterator);
         stopwatch.stop();
         LOGGER.debug("Strategy created successfully in " + stopwatch.elapsed(TimeUnit.MILLISECONDS) + "ms");
-        LOGGER.trace("Number of iterations for crating the strategy: " + variablesIterator.getCount());
+        LOGGER.trace("Number of iterations for creating the strategy: " + variablesIterator.getCount());
         notifyObservers(observer -> observer.notifyConsumedItems(variablesIterator.getCount()));
         return strategy;
     }
@@ -311,6 +313,10 @@ public class MutationStrategyGenerationProblem implements VariableLengthIntegerP
 
     public void dettachAllObservers(Collection<MutationStrategyGenerationObserver> observers) {
         this.observers.removeAll(observers);
+    }
+
+    public void dettachAllObservers() {
+        this.observers.clear();
     }
 
     private void notifyObservers(Consumer<MutationStrategyGenerationObserver> notificationConsumer) {

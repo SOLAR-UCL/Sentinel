@@ -1,6 +1,7 @@
 package br.ufpr.inf.gres.sentinel.strategy.operation.impl.defaults;
 
 import br.ufpr.inf.gres.sentinel.base.mutation.Mutant;
+import br.ufpr.inf.gres.sentinel.base.mutation.Program;
 import br.ufpr.inf.gres.sentinel.base.solution.Solution;
 import br.ufpr.inf.gres.sentinel.integration.IntegrationFacade;
 import br.ufpr.inf.gres.sentinel.integration.IntegrationFacadeTest.IntegrationFacadeStub;
@@ -27,11 +28,11 @@ public class StoreMutantsOperationTest {
     @Test
     public void testDoOperation() {
         Solution solution = new Solution();
-        solution.getMutants().add(new Mutant("Mutant1", null, IntegrationFacade.getProgramUnderTest()));
-        solution.getMutants().add(new Mutant("Mutant2", null, IntegrationFacade.getProgramUnderTest()));
+        solution.getMutants().add(new Mutant("Mutant1", null, new Program("Program1", "Program/path")));
+        solution.getMutants().add(new Mutant("Mutant2", null, new Program("Program1", "Program/path")));
 
         StoreMutantsOperation storeMutantsOperation = new StoreMutantsOperation();
-        List<Mutant> result = storeMutantsOperation.doOperation(solution);
+        List<Mutant> result = storeMutantsOperation.doOperation(solution, null);
 
         assertEquals(2, result.size());
     }
