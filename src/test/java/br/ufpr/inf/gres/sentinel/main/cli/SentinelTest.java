@@ -37,7 +37,8 @@ public class SentinelTest {
             "--trainingRuns", "1",
             "--numberOfConventionalRuns", "1",
             "--cached",
-            "--storeCacheInFile", "false"};
+            "--storeCacheInFile", "false",
+            "--verbose"};
         Sentinel.main(args);
 
         File result = new File("training/Experiment/result_1.json");

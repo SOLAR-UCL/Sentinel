@@ -46,6 +46,12 @@ public class TrainingArgs {
     @Parameter(names = {"--help", "-h"}, description = "Shows this message.")
     public boolean help = false;
 
+    /**
+     *
+     */
+    @Parameter(names = {"--verbose"}, description = "If Sentinel should log everything.")
+    public boolean verbose = false;
+
     @Parameter(names = {"--cached", "-c"}, description = "Whether the results should be cached or not. This can drastically improve performance, but will (probably) result in less accurate results.")
     public boolean cached = false;
 

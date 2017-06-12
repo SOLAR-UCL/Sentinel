@@ -23,6 +23,11 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Comparator;
 import java.util.List;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.core.LoggerContext;
+import org.apache.logging.log4j.core.config.Configuration;
+import org.apache.logging.log4j.core.config.LoggerConfig;
 import org.uma.jmetal.operator.impl.selection.BinaryTournamentSelection;
 import org.uma.jmetal.util.comparator.RankingAndCrowdingDistanceComparator;
 import org.uma.jmetal.util.evaluator.impl.SequentialSolutionListEvaluator;
@@ -40,6 +45,13 @@ public class SentinelTraining {
      * @throws Exception
      */
     public static void train(TrainingArgs trainingArgs, String[] rawArgs) throws Exception {
+        if (trainingArgs.verbose) {
+            LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
+            Configuration config = ctx.getConfiguration();
+            LoggerConfig loggerConfig = config.getLoggerConfig(LogManager.ROOT_LOGGER_NAME);
+            loggerConfig.setLevel(Level.ALL);
+            ctx.updateLoggers();
+        }
         CachedObjectiveFunctionObserver cachedObserver = new CachedObjectiveFunctionObserver();
         IntegrationFacade facade = buildFacade(trainingArgs, cachedObserver);
         MutationStrategyGenerationProblem problem = buildProblem(facade, trainingArgs, cachedObserver);
