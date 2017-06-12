@@ -1,5 +1,6 @@
 package br.ufpr.inf.gres.sentinel.main.cli;
 
+import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.problem.impl.StubProblem;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.representation.VariableLengthSolution;
 import br.ufpr.inf.gres.sentinel.gson.GsonUtil;
 import br.ufpr.inf.gres.sentinel.gson.ResultWrapper;
@@ -49,7 +50,7 @@ public class SentinelAnalysis {
      * @throws IOException
      */
     public static void analyse(AnalysisArgs analysisArgs, String[] args) throws IOException {
-        GsonUtil util = new GsonUtil();
+        GsonUtil util = new GsonUtil(new StubProblem());
         ListMultimap<String, ResultWrapper> resultsFromJson = util.getResultsFromJsonFiles(analysisArgs.workingDirectory + File.separator + analysisArgs.inputDirectory, analysisArgs.inputFilesGlob);
         if (!resultsFromJson.isEmpty()) {
             File outputDirectory = new File(analysisArgs.workingDirectory + File.separator + analysisArgs.outputDirectory);

@@ -1,12 +1,10 @@
 package br.ufpr.inf.gres.sentinel.gson;
 
+import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.problem.VariableLengthIntegerProblem;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.problem.fitness.ObjectiveFunction;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.problem.fitness.ObjectiveFunctionFactory;
-import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.problem.impl.MutationStrategyGenerationProblem;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.representation.VariableLengthSolution;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.representation.impl.DefaultVariableLengthIntegerSolution;
-import br.ufpr.inf.gres.sentinel.main.cli.SentinelTraining;
-import br.ufpr.inf.gres.sentinel.main.cli.args.TrainingArgs;
 import com.google.gson.*;
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -18,24 +16,15 @@ import java.util.List;
  */
 public class VariableLengthSolutionGsonDeserializer implements JsonDeserializer<VariableLengthSolution<Integer>> {
 
-    private final MutationStrategyGenerationProblem problem;
+    private final VariableLengthIntegerProblem problem;
 
     /**
      *
+     * @param problem
      * @throws IOException
      */
-    public VariableLengthSolutionGsonDeserializer() throws IOException {
-        TrainingArgs trainingArgs = new TrainingArgs();
-        this.problem = SentinelTraining.buildProblem(SentinelTraining.buildFacade(trainingArgs), trainingArgs);
-    }
-
-    /**
-     *
-     * @param trainingArgs
-     * @throws IOException
-     */
-    public VariableLengthSolutionGsonDeserializer(TrainingArgs trainingArgs) throws IOException {
-        this.problem = SentinelTraining.buildProblem(SentinelTraining.buildFacade(trainingArgs), trainingArgs);
+    public VariableLengthSolutionGsonDeserializer(VariableLengthIntegerProblem problem) throws IOException {
+        this.problem = problem;
     }
 
     @Override

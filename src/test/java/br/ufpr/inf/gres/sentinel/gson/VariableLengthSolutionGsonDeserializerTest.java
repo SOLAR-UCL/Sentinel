@@ -53,7 +53,7 @@ public class VariableLengthSolutionGsonDeserializerTest {
     @Test
     public void testDeserialize() throws IOException {
         Gson gson = new GsonBuilder()
-                .registerTypeAdapter(VariableLengthSolution.class, new VariableLengthSolutionGsonDeserializer())
+                .registerTypeAdapter(VariableLengthSolution.class, new VariableLengthSolutionGsonDeserializer(problem))
                 .create();
 
         VariableLengthSolution<Integer> solution = gson.fromJson("{\"" + ObjectiveFunction.AVERAGE_CPU_TIME + "\":10.0,\"" + ObjectiveFunction.AVERAGE_QUANTITY + "\":10.0,\"" + ObjectiveFunction.AVERAGE_SCORE + "\":10.0,\"objectives\":[1000.0,2000.0],\"consumedItemsCount\":2,\"evaluation\":100,\"variables\":[0,2,1,0,0,1,9,3],\"strategy\":{\"firstOperation\":{\"name\":\"TestOperation\",\"successor\":{\"name\":\"TestOperation2\",\"successor\":{\"name\":\"New Branch\",\"successor\":{\"name\":\"TestOperation3\"},\"secondSuccessor\":{\"name\":\"New Branch\",\"successor\":{\"name\":\"New Branch\",\"successor\":{\"name\":\"TestOperation5\"},\"secondSuccessor\":{\"name\":\"TestOperation6\"}},\"secondSuccessor\":{\"name\":\"TestOperation4\"}}}}}}}", VariableLengthSolution.class);

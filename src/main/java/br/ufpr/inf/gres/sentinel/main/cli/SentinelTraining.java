@@ -7,11 +7,15 @@ import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.operators.duplic
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.operators.mutation.impl.SimpleRandomVariableMutation;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.operators.prune.impl.PruneToUsedOperator;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.problem.impl.MutationStrategyGenerationProblem;
+import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.problem.observer.MutationStrategyGenerationObserver;
+import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.problem.observer.impl.CachedObjectiveFunctionObserver;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.representation.VariableLengthSolution;
 import br.ufpr.inf.gres.sentinel.gson.GsonUtil;
 import br.ufpr.inf.gres.sentinel.gson.ResultWrapper;
 import br.ufpr.inf.gres.sentinel.integration.IntegrationFacade;
 import br.ufpr.inf.gres.sentinel.integration.IntegrationFacadeFactory;
+import br.ufpr.inf.gres.sentinel.integration.cache.CachedFacade;
+import br.ufpr.inf.gres.sentinel.integration.cache.observer.CacheFacadeObserver;
 import br.ufpr.inf.gres.sentinel.main.cli.args.TrainingArgs;
 import com.google.common.io.Files;
 import java.io.File;
@@ -36,8 +40,9 @@ public class SentinelTraining {
      * @throws Exception
      */
     public static void train(TrainingArgs trainingArgs, String[] rawArgs) throws Exception {
-        IntegrationFacade facade = buildFacade(trainingArgs);
-        MutationStrategyGenerationProblem problem = buildProblem(facade, trainingArgs);
+        CachedObjectiveFunctionObserver cachedObserver = new CachedObjectiveFunctionObserver();
+        IntegrationFacade facade = buildFacade(trainingArgs, cachedObserver);
+        MutationStrategyGenerationProblem problem = buildProblem(facade, trainingArgs, cachedObserver);
         GrammaticalEvolutionAlgorithm<Integer> algorithm = buildAlgorithm(problem, trainingArgs);
         long timeMillis = runAlgorithm(algorithm);
         storeResults(algorithm, timeMillis, trainingArgs);
@@ -60,17 +65,24 @@ public class SentinelTraining {
         return algorithm;
     }
 
-    public static IntegrationFacade buildFacade(TrainingArgs trainingArgs) {
+    public static IntegrationFacade buildFacade(TrainingArgs trainingArgs, CacheFacadeObserver cachedObserver) {
         IntegrationFacade facade
                 = IntegrationFacadeFactory.createIntegrationFacade(trainingArgs.facade,
                         trainingArgs.workingDirectory
                         + File.separator
                         + trainingArgs.inputDirectory);
+        if (trainingArgs.cached) {
+            CachedFacade cachedFacade = new CachedFacade(facade,
+                    trainingArgs.readCacheFromFile ? facade.getInputDirectory() : null,
+                    trainingArgs.storeCacheInFile ? facade.getInputDirectory() : null);
+            cachedFacade.attachObserver(cachedObserver);
+            facade = cachedFacade;
+        }
         IntegrationFacade.setIntegrationFacade(facade);
         return facade;
     }
 
-    public static MutationStrategyGenerationProblem buildProblem(IntegrationFacade facade, TrainingArgs trainingArgs) throws IOException {
+    public static MutationStrategyGenerationProblem buildProblem(IntegrationFacade facade, TrainingArgs trainingArgs, MutationStrategyGenerationObserver cachedObserver) throws IOException {
         List<Program> trainingPrograms = facade.instantiatePrograms(trainingArgs.trainingPrograms);
         String grammarPath = trainingArgs.workingDirectory
                 + File.separator
@@ -86,6 +98,10 @@ public class SentinelTraining {
                         trainingArgs.numberOfConventionalRuns,
                         trainingPrograms,
                         trainingArgs.objectiveFunctions);
+        if (trainingArgs.cached) {
+            problem.dettachAllObservers();
+            problem.attachObserver(cachedObserver);
+        }
         return problem;
     }
 
@@ -116,7 +132,7 @@ public class SentinelTraining {
                 + File.separator
                 + "result_" + trainingArgs.runNumber + ".json");
         Files.createParentDirs(outputFile);
-        GsonUtil gson = new GsonUtil(trainingArgs);
+        GsonUtil gson = new GsonUtil();
         Files.write(gson.toJson(result), outputFile, Charset.defaultCharset());
     }
 

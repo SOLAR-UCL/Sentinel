@@ -57,7 +57,8 @@ public class CachedFacade extends IntegrationFacade {
         if (!this.cache.isCached(program)) {
             LOGGER.debug("Program is not cached. Starting execution.");
             LOGGER.trace("Starting first execution. It's gonna be discarded.");
-            this.runConventionalStrategy(program, 1);
+            List<Mutant> allMutants = this.facade.executeOperators(this.facade.getAllOperators(), program);
+            this.facade.executeMutants(allMutants, program);
             this.conventionalExecutionCPUTimes.removeAll(program);
             this.conventionalExecutionTimes.removeAll(program);
             this.conventionalMutants.removeAll(program);
@@ -110,7 +111,7 @@ public class CachedFacade extends IntegrationFacade {
 
             this.conventionalExecutionCPUTimes.put(program, cpuTimeSum);
             this.conventionalExecutionTimes.put(program, timeSum);
-            LOGGER.trace("Repetition ended. " + (i / repetitions * 100) + "% complete.");
+            LOGGER.trace("Repetition ended. " + ((i + 1) / repetitions * 100) + "% complete.");
         }
         LOGGER.trace(allMutants.size() + " mutants generated.");
         this.conventionalMutants.putAll(program, allMutants);
@@ -119,70 +120,79 @@ public class CachedFacade extends IntegrationFacade {
     @Override
     public List<Mutant> executeOperators(List<Operator> operators, Program program) {
         List<Mutant> allMutants = new ArrayList<>();
-        for (Operator operator : operators) {
-            List<Mutant> generatedMutants = this.executeOperator(operator, program);
-            allMutants.addAll(generatedMutants);
+        if (operators != null) {
+            for (Operator operator : operators) {
+                List<Mutant> generatedMutants = this.executeOperator(operator, program);
+                allMutants.addAll(generatedMutants);
+            }
         }
         return allMutants;
     }
 
     @Override
     public List<Mutant> executeOperator(Operator operator, Program program) {
-        if (!cache.isCached(program)) {
-            Stopwatch stopWatch = Stopwatch.createStarted();
-            ThreadMXBean threadBean = ManagementFactory.getThreadMXBean();
-            long cpuTime = threadBean.getCurrentThreadCpuTime();
+        if (operator != null) {
+            if (!cache.isCached(program)) {
+                Stopwatch stopWatch = Stopwatch.createStarted();
+                ThreadMXBean threadBean = ManagementFactory.getThreadMXBean();
+                long cpuTime = threadBean.getCurrentThreadCpuTime();
 
-            List<Mutant> generatedMutants = this.facade.executeOperator(operator, program);
+                List<Mutant> generatedMutants = this.facade.executeOperator(operator, program);
 
-            cpuTime = threadBean.getCurrentThreadCpuTime() - cpuTime;
-            stopWatch.stop();
-            long executionTime = stopWatch.elapsed(TimeUnit.NANOSECONDS);
+                cpuTime = threadBean.getCurrentThreadCpuTime() - cpuTime;
+                stopWatch.stop();
+                long executionTime = stopWatch.elapsed(TimeUnit.NANOSECONDS);
 
-            operator.setCpuTime(cpuTime);
-            operator.setExecutionTime(executionTime);
+                operator.setCpuTime(cpuTime);
+                operator.setExecutionTime(executionTime);
 
-            this.cache.recordOperatorCPUTime(program, operator, (long) cpuTime);
-            this.cache.recordOperatorExecutionTime(program, operator, (long) executionTime);
-            this.cache.recordOperatorGeneratedMutants(program, operator, generatedMutants);
+                this.cache.recordOperatorCPUTime(program, operator, (long) cpuTime);
+                this.cache.recordOperatorExecutionTime(program, operator, (long) executionTime);
+                this.cache.recordOperatorGeneratedMutants(program, operator, generatedMutants);
 
-            return generatedMutants;
-        } else {
-            List<Mutant> mutants = this.cache.retrieveOperatorExecutionInformation(program, operator);
-            notifyObservers(observer -> observer.notifyOperatorExecutionInformationRetrieved(operator));
-            return mutants;
+                return generatedMutants;
+            } else {
+                List<Mutant> mutants = this.cache.retrieveOperatorExecutionInformation(program, operator);
+                notifyObservers(observer -> observer.notifyOperatorExecutionInformationRetrieved(operator));
+                return mutants;
+            }
         }
+        return new ArrayList<>();
     }
 
     @Override
     public void executeMutants(List<Mutant> mutantsToExecute, Program program) {
-        for (Mutant mutant : mutantsToExecute) {
-            this.executeMutant(mutant, program);
+        if (mutantsToExecute != null) {
+            for (Mutant mutant : mutantsToExecute) {
+                this.executeMutant(mutant, program);
+            }
         }
     }
 
     @Override
     public void executeMutant(Mutant mutantToExecute, Program program) {
-        if (!cache.isCached(program)) {
-            Stopwatch stopWatch = Stopwatch.createStarted();
-            ThreadMXBean threadBean = ManagementFactory.getThreadMXBean();
-            long cpuTime = threadBean.getCurrentThreadCpuTime();
+        if (mutantToExecute != null) {
+            if (!cache.isCached(program)) {
+                Stopwatch stopWatch = Stopwatch.createStarted();
+                ThreadMXBean threadBean = ManagementFactory.getThreadMXBean();
+                long cpuTime = threadBean.getCurrentThreadCpuTime();
 
-            this.facade.executeMutant(mutantToExecute, program);
+                this.facade.executeMutant(mutantToExecute, program);
 
-            cpuTime = threadBean.getCurrentThreadCpuTime() - cpuTime;
-            stopWatch.stop();
-            long executionTime = stopWatch.elapsed(TimeUnit.NANOSECONDS);
+                cpuTime = threadBean.getCurrentThreadCpuTime() - cpuTime;
+                stopWatch.stop();
+                long executionTime = stopWatch.elapsed(TimeUnit.NANOSECONDS);
 
-            mutantToExecute.setCpuTime(cpuTime);
-            mutantToExecute.setExecutionTime(executionTime);
+                mutantToExecute.setCpuTime(cpuTime);
+                mutantToExecute.setExecutionTime(executionTime);
 
-            this.cache.recordMutantCPUTime(program, mutantToExecute, (long) cpuTime);
-            this.cache.recordMutantExecutionTime(program, mutantToExecute, (long) executionTime);
-            this.cache.recordMutantKillingTestCases(program, mutantToExecute, mutantToExecute.getKillingTestCases());
-        } else {
-            notifyObservers(observer -> observer.notifyMutantExecutionInformationRetrieved(mutantToExecute));
-            this.cache.retrieveMutantExecutionInformation(program, mutantToExecute);
+                this.cache.recordMutantCPUTime(program, mutantToExecute, (long) cpuTime);
+                this.cache.recordMutantExecutionTime(program, mutantToExecute, (long) executionTime);
+                this.cache.recordMutantKillingTestCases(program, mutantToExecute, mutantToExecute.getKillingTestCases());
+            } else {
+                notifyObservers(observer -> observer.notifyMutantExecutionInformationRetrieved(mutantToExecute));
+                this.cache.retrieveMutantExecutionInformation(program, mutantToExecute);
+            }
         }
     }
 
@@ -209,6 +219,10 @@ public class CachedFacade extends IntegrationFacade {
 
     private void notifyObservers(Consumer<CacheFacadeObserver> notificationConsumer) {
         this.observers.stream().forEach(notificationConsumer);
+    }
+
+    private void clearCache() {
+        this.cache.clearCache();
     }
 
 }

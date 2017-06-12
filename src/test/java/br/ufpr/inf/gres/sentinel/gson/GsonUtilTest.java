@@ -1,6 +1,11 @@
 package br.ufpr.inf.gres.sentinel.gson;
 
 import br.ufpr.inf.gres.sentinel.base.mutation.Operator;
+import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.problem.fitness.ObjectiveFunction;
+import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.problem.impl.MutationStrategyGenerationProblem;
+import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.GrammarFiles;
+import br.ufpr.inf.gres.sentinel.integration.IntegrationFacade;
+import br.ufpr.inf.gres.sentinel.integration.IntegrationFacadeFactory;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.group.impl.operator.GroupOperatorsByType;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.selection.GroupSelectionOperation;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.selection.SelectionOperation;
@@ -21,9 +26,23 @@ import org.junit.Test;
 public class GsonUtilTest {
 
     public GsonUtil gson;
+    private static MutationStrategyGenerationProblem problem;
 
     public GsonUtilTest() throws IOException {
-        this.gson = new GsonUtil();
+        IntegrationFacade facade = IntegrationFacadeFactory.createIntegrationFacade("PIT",
+                System.getProperty("user.dir") + File.separator + "training");
+        IntegrationFacade.setIntegrationFacade(facade);
+        problem = new MutationStrategyGenerationProblem(GrammarFiles.getGrammarPath(GrammarFiles.DEFAULT_GRAMMAR),
+                15,
+                100,
+                0,
+                179,
+                10,
+                5,
+                1,
+                Lists.newArrayList(facade.instantiateProgram("Triangle;;br.ufpr.inf.gres.TriTyp*;br.ufpr.inf.gres.TriTypTest*;")),
+                Lists.newArrayList(ObjectiveFunction.AVERAGE_CPU_TIME, ObjectiveFunction.AVERAGE_SCORE));
+        this.gson = new GsonUtil(problem);
     }
 
     @Test

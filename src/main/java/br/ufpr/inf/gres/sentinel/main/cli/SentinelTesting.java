@@ -41,7 +41,7 @@ public class SentinelTesting {
         IntegrationFacade facade = buildFacade(testingArgs);
         MutationStrategyGenerationProblem problem = buildProblem(facade, testingArgs);
 
-        GsonUtil util = new GsonUtil();
+        GsonUtil util = new GsonUtil(problem);
         ListMultimap<String, ResultWrapper> resultsFromJson = util.getResultsFromJsonFiles(testingArgs.workingDirectory + File.separator + testingArgs.inputDirectory, testingArgs.inputFilesGlob);
 
         List<VariableLengthSolution<Integer>> nonDominatedSolutions = getNonDominatedSolutions(resultsFromJson.values());

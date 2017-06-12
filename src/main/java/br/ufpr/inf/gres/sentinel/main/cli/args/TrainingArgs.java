@@ -45,6 +45,16 @@ public class TrainingArgs {
      */
     @Parameter(names = {"--help", "-h"}, description = "Shows this message.")
     public boolean help = false;
+
+    @Parameter(names = {"--cached", "-c"}, description = "Whether the results should be cached or not. This can drastically improve performance, but will (probably) result in less accurate results.")
+    public boolean cached = false;
+
+    @Parameter(names = {"--storeCacheInFile"}, arity = 1, description = "Whether the cached results should be stored in a file.")
+    public boolean storeCacheInFile = true;
+
+    @Parameter(names = {"--readCacheFromFile"}, arity = 1, description = "Whether the cached results should be read from a file. Sentinel will look for a cache file inside the training directory.")
+    public boolean readCacheFromFile = true;
+
     /**
      *
      */

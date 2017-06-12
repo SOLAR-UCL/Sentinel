@@ -1,8 +1,8 @@
 package br.ufpr.inf.gres.sentinel.gson;
 
+import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.problem.VariableLengthIntegerProblem;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.representation.VariableLengthSolution;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.representation.impl.DefaultVariableLengthIntegerSolution;
-import br.ufpr.inf.gres.sentinel.main.cli.args.TrainingArgs;
 import br.ufpr.inf.gres.sentinel.strategy.operation.Operation;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
@@ -31,20 +31,25 @@ public class GsonUtil {
      * @throws IOException
      */
     public GsonUtil() throws IOException {
-        this(new TrainingArgs());
+        this.gson = new GsonBuilder()
+                .registerTypeAdapter(DefaultVariableLengthIntegerSolution.class, new VariableLengthSolutionGsonSerializer())
+                .registerTypeAdapter(VariableLengthSolution.class, new VariableLengthSolutionGsonSerializer())
+                .registerTypeAdapter(Operation.class, new OperationSerializer())
+                .setPrettyPrinting()
+                .create();
     }
 
     /**
      *
-     * @param trainingArgs
+     * @param problem
      * @throws IOException
      */
-    public GsonUtil(TrainingArgs trainingArgs) throws IOException {
+    public GsonUtil(VariableLengthIntegerProblem problem) throws IOException {
         this.gson = new GsonBuilder()
                 .registerTypeAdapter(DefaultVariableLengthIntegerSolution.class, new VariableLengthSolutionGsonSerializer())
-                .registerTypeAdapter(DefaultVariableLengthIntegerSolution.class, new VariableLengthSolutionGsonDeserializer(trainingArgs))
+                .registerTypeAdapter(DefaultVariableLengthIntegerSolution.class, new VariableLengthSolutionGsonDeserializer(problem))
                 .registerTypeAdapter(VariableLengthSolution.class, new VariableLengthSolutionGsonSerializer())
-                .registerTypeAdapter(VariableLengthSolution.class, new VariableLengthSolutionGsonDeserializer(trainingArgs))
+                .registerTypeAdapter(VariableLengthSolution.class, new VariableLengthSolutionGsonDeserializer(problem))
                 .registerTypeAdapter(Operation.class, new OperationSerializer())
                 .setPrettyPrinting()
                 .create();

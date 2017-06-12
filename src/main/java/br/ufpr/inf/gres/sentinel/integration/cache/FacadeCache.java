@@ -43,7 +43,10 @@ public class FacadeCache {
         this();
         this.inputDirectory = inputDirectory;
         this.outputDirectory = outputDirectory;
-        this.loadCache();
+        if (inputDirectory != null) {
+            LOGGER.debug("Trying to load cache from " + inputDirectory);
+            this.loadCache();
+        }
     }
 
     public Set<Program> getCachedPrograms() {
@@ -273,11 +276,11 @@ public class FacadeCache {
             try {
                 String fileExtension = com.google.common.io.Files.getFileExtension(file.toString());
                 if (fileExtension.equals("json")) {
+                    LOGGER.trace("Found a json file: " + file.toAbsolutePath().toString());
                     try (JsonReader jsonReader = new JsonReader(new FileReader(file.toFile()))) {
                         CacheHolder cache = gson.fromJson(jsonReader, CacheHolder.class);
                         this.facadeCache.caches.put(cache.program, cache);
-                        LOGGER.debug("Found cache for " + cache.program.getName() + ". It was successfully loaded.");
-                        LOGGER.trace("Cache file: " + file.toAbsolutePath().toString());
+                        LOGGER.debug("File is a valid cache for " + cache.program.getName() + ". It was successfully loaded.");
                     }
                 }
             } catch (Exception ex) {
