@@ -308,6 +308,24 @@ public class CachedFacadeTest {
         assertEquals(0.654388926237488, solution.getObjective(0), 0.0001);
         assertEquals(-1.0, solution.getObjective(1), 0.0001);
 
+        solution = problem.createSolution();
+        solution.clearVariables();
+        solution.addAllVariables(Lists.newArrayList(0));
+
+        problem.evaluate(solution);
+
+        assertEquals(Double.MAX_VALUE, solution.getObjective(0), 0.001);
+        assertEquals(Double.MAX_VALUE, solution.getObjective(1), 0.001);
+
+        solution = problem.createSolution();
+        solution.clearVariables();
+        solution.addAllVariables(Lists.newArrayList(3));
+
+        problem.evaluate(solution);
+
+        assertEquals(Double.MAX_VALUE, solution.getObjective(0), 0.001);
+        assertEquals(Double.MAX_VALUE, solution.getObjective(1), 0.001);
+
         facade.dettachObserver(observer);
     }
 
