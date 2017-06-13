@@ -63,6 +63,12 @@ public class TestingArgs {
     /**
      *
      */
+    @Parameter(names = {"--verbose"}, description = "If Sentinel should log everything.")
+    public boolean verbose = false;
+
+    /**
+     *
+     */
     @Parameter(names = {"--workingDirectory", "-w"},
             description = "The working directory of Sentinel.",
             converter = SeparatorConverter.class)
@@ -73,7 +79,7 @@ public class TestingArgs {
      */
     @Parameter(names = "--numberOfTestingRuns",
             description = "Number of testing runs for each testing program in each testing evaluation.")
-    public Integer numberOfTestingRuns = 100;
+    public Integer numberOfTestingRuns = 10;
 
     /**
      *
