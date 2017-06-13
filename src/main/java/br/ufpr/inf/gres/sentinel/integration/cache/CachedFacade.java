@@ -12,6 +12,7 @@ import java.lang.management.ThreadMXBean;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
+import org.apache.commons.collections4.list.SetUniqueList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -76,9 +77,34 @@ public class CachedFacade extends IntegrationFacade {
                 LOGGER.error("Could not write cache file. The exception is: " + ex.getMessage(), ex);
             }
             return true;
+        } else {
+            LOGGER.debug("Program is cached. Returning cached values.");
+            if (!this.conventionalMutants.containsKey(program)) {
+                SetUniqueList<Mutant> allMutants = SetUniqueList.setUniqueList(new ArrayList<>());
+                for (int i = 0; i < repetitions; i++) {
+                    long cpuTimeSum = 0;
+                    long timeSum = 0;
+
+                    List<Operator> operators = this.getAllOperators();
+
+                    allMutants = SetUniqueList.setUniqueList(new ArrayList<>());
+                    for (Operator operator : operators) {
+                        allMutants.addAll(this.cache.retrieveOperatorExecutionInformation(program, operator));
+                        cpuTimeSum += operator.getCpuTime();
+                        timeSum += operator.getExecutionTime();
+                    }
+                    for (Mutant mutant : allMutants) {
+                        this.cache.retrieveMutantExecutionInformation(program, mutant);
+                        cpuTimeSum += mutant.getCpuTime();
+                        timeSum += mutant.getExecutionTime();
+                    }
+                    this.conventionalExecutionCPUTimes.put(program, cpuTimeSum);
+                    this.conventionalExecutionTimes.put(program, timeSum);
+                }
+                this.conventionalMutants.putAll(program, allMutants);
+            }
+            return false;
         }
-        LOGGER.debug("Program is cached. Returning cached values.");
-        return false;
     }
 
     @Override
@@ -190,8 +216,8 @@ public class CachedFacade extends IntegrationFacade {
                 this.cache.recordMutantExecutionTime(program, mutantToExecute, (long) executionTime);
                 this.cache.recordMutantKillingTestCases(program, mutantToExecute, mutantToExecute.getKillingTestCases());
             } else {
-                notifyObservers(observer -> observer.notifyMutantExecutionInformationRetrieved(mutantToExecute));
                 this.cache.retrieveMutantExecutionInformation(program, mutantToExecute);
+                notifyObservers(observer -> observer.notifyMutantExecutionInformationRetrieved(mutantToExecute));
             }
         }
     }

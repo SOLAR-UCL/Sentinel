@@ -3,13 +3,18 @@ package br.ufpr.inf.gres.sentinel.integration.cache;
 import br.ufpr.inf.gres.sentinel.base.mutation.Mutant;
 import br.ufpr.inf.gres.sentinel.base.mutation.Operator;
 import br.ufpr.inf.gres.sentinel.base.mutation.Program;
+import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.problem.fitness.ObjectiveFunction;
+import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.problem.impl.MutationStrategyGenerationProblem;
+import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.problem.observer.impl.CachedObjectiveFunctionObserver;
+import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.representation.VariableLengthSolution;
+import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.GrammarFiles;
 import br.ufpr.inf.gres.sentinel.integration.IntegrationFacade;
 import br.ufpr.inf.gres.sentinel.integration.pit.PITFacade;
+import com.google.common.collect.Lists;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.AfterClass;
@@ -34,23 +39,23 @@ public class CachedFacadeTest {
 
     @BeforeClass
     public static void setUpClass() {
-        LOGGER.debug("Initializing CachedFacadeTest.");
-        String directory = System.getProperty("user.dir") + File.separator + "training";
-        facade = new CachedFacade(new PITFacade(directory), directory, directory);
-        programUnderTest = facade.instantiateProgram("Triangle;;br.ufpr.inf.gres.TriTyp*;br.ufpr.inf.gres.TriTypTest*;");
-        LOGGER.debug("Initializing program.");
-        facade.initializeConventionalStrategy(programUnderTest, 1);
+//        LOGGER.debug("Initializing CachedFacadeTest.");
+//        String directory = System.getProperty("user.dir") + File.separator + "training";
+//        facade = new CachedFacade(new PITFacade(directory), directory, directory);
+//        programUnderTest = facade.instantiateProgram("Triangle;;br.ufpr.inf.gres.TriTyp*;br.ufpr.inf.gres.TriTypTest*;");
+//        LOGGER.debug("Initializing program.");
+//        facade.initializeConventionalStrategy(programUnderTest, 1);
     }
 
     @AfterClass
     public static void tearDownClass() {
-        try {
-            String cacheFolderPath = System.getProperty("user.dir") + File.separator + "training" + File.separator + ".cache";
-            LOGGER.debug("Deleting cache folder at " + cacheFolderPath);
-            FileUtils.deleteDirectory(new File(cacheFolderPath));
-        } catch (IOException ex) {
-            LOGGER.error("Couldn't delete the cache folder.", ex);
-        }
+//        try {
+//            String cacheFolderPath = System.getProperty("user.dir") + File.separator + "training" + File.separator + ".cache";
+//            LOGGER.debug("Deleting cache folder at " + cacheFolderPath);
+//            FileUtils.deleteDirectory(new File(cacheFolderPath));
+//        } catch (IOException ex) {
+//            LOGGER.error("Couldn't delete the cache folder.", ex);
+//        }
     }
 
     @Test
@@ -247,6 +252,63 @@ public class CachedFacadeTest {
     public void testInstantiateProgram3() {
         LOGGER.debug("Testing method: testInstantiateProgram3");
         Program program = facade.instantiateProgram("Triangle;;br.ufpr.inf.gres.TriTyp*");
+    }
+
+    @Test
+    public void testRead() throws IOException {
+        String directory = System.getProperty("user.dir") + File.separator + "training";
+        CachedFacade facade = new CachedFacade(new PITFacade(directory), "src" + File.separator + "test" + File.separator + "resources", null);
+        IntegrationFacade.setIntegrationFacade(facade);
+
+        CachedObjectiveFunctionObserver observer = new CachedObjectiveFunctionObserver();
+        facade.attachObserver(observer);
+
+        MutationStrategyGenerationProblem problem = new MutationStrategyGenerationProblem(GrammarFiles.getDefaultGrammarPath(),
+                10,
+                15,
+                1,
+                10,
+                0,
+                5,
+                1,
+                Lists.newArrayList(new Program("wire", "")),
+                Lists.newArrayList(ObjectiveFunction.AVERAGE_CPU_TIME, ObjectiveFunction.AVERAGE_SCORE));
+        problem.dettachAllObservers();
+        problem.attachObserver(observer);
+
+        VariableLengthSolution<Integer> solution = problem.createSolution();
+        solution.clearVariables();
+        solution.addAllVariables(Lists.newArrayList(164, 20, 99, 169, 97, 71, 20, 171, 174, 137, 30, 36, 83, 107, 118, 123, 36, 43, 140, 154, 110, 141, 125, 169, 87, 5, 118, 121));
+
+        problem.evaluate(solution);
+
+        assertEquals(0.654388926237488, solution.getObjective(0), 0.0001);
+        assertEquals(-1.0, solution.getObjective(1), 0.0001);
+
+        problem = new MutationStrategyGenerationProblem(GrammarFiles.getDefaultGrammarPath(),
+                10,
+                15,
+                1,
+                10,
+                0,
+                20,
+                20,
+                Lists.newArrayList(new Program("wire", "")),
+                Lists.newArrayList(ObjectiveFunction.AVERAGE_CPU_TIME, ObjectiveFunction.AVERAGE_SCORE));
+        problem.dettachAllObservers();
+        problem.attachObserver(observer);
+
+        problem.evaluate(solution);
+
+        assertEquals(0.654388926237488, solution.getObjective(0), 0.0001);
+        assertEquals(-1.0, solution.getObjective(1), 0.0001);
+
+        problem.evaluate(solution);
+
+        assertEquals(0.654388926237488, solution.getObjective(0), 0.0001);
+        assertEquals(-1.0, solution.getObjective(1), 0.0001);
+
+        facade.dettachObserver(observer);
     }
 
 }
