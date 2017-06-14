@@ -17,8 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -39,23 +39,12 @@ public class CachedFacadeTest {
 
     @BeforeClass
     public static void setUpClass() {
-//        LOGGER.debug("Initializing CachedFacadeTest.");
-//        String directory = System.getProperty("user.dir") + File.separator + "training";
-//        facade = new CachedFacade(new PITFacade(directory), directory, directory);
-//        programUnderTest = facade.instantiateProgram("Triangle;;br.ufpr.inf.gres.TriTyp*;br.ufpr.inf.gres.TriTypTest*;");
-//        LOGGER.debug("Initializing program.");
-//        facade.initializeConventionalStrategy(programUnderTest, 1);
-    }
-
-    @AfterClass
-    public static void tearDownClass() {
-//        try {
-//            String cacheFolderPath = System.getProperty("user.dir") + File.separator + "training" + File.separator + ".cache";
-//            LOGGER.debug("Deleting cache folder at " + cacheFolderPath);
-//            FileUtils.deleteDirectory(new File(cacheFolderPath));
-//        } catch (IOException ex) {
-//            LOGGER.error("Couldn't delete the cache folder.", ex);
-//        }
+        LOGGER.debug("Initializing CachedFacadeTest.");
+        String directory = System.getProperty("user.dir") + File.separator + "training";
+        facade = new CachedFacade(new PITFacade(directory), "src" + File.separator + "test" + File.separator + "resources", null);
+        programUnderTest = facade.instantiateProgram("Triangle;;br.ufpr.inf.gres.TriTyp*;br.ufpr.inf.gres.TriTypTest*;");
+        LOGGER.debug("Initializing program.");
+        facade.initializeConventionalStrategy(programUnderTest, 1);
     }
 
     @Test
@@ -103,11 +92,31 @@ public class CachedFacadeTest {
     }
 
     @Test
+    public void testExecuteOperator2() {
+        LOGGER.debug("Testing method: testExecuteOperator2");
+        IntegrationFacade.setIntegrationFacade(facade);
+
+        List<Operator> allOperators = facade.getAllOperators();
+
+        Operator operator1 = allOperators.get(0);
+        List<Mutant> mutants = facade.executeOperator(operator1, programUnderTest);
+        mutants = facade.executeOperator(operator1, programUnderTest);
+        assertNotNull(mutants);
+        assertEquals(13, mutants.size());
+        assertTrue(mutants.stream().allMatch(Mutant::isAlive));
+        assertTrue(mutants.stream().allMatch((t) -> t.getOperator().equals(operator1)));
+        assertTrue(operator1.getGeneratedMutants().containsAll(mutants));
+        assertTrue(operator1.getCpuTime() > 0);
+        assertTrue(operator1.getExecutionTime() > 0);
+
+        facade.executeMutant(mutants.get(0), programUnderTest);
+        assertTrue(mutants.get(0).isDead());
+        assertEquals(1, mutants.get(0).getKillingTestCases().size());
+    }
+
+    @Test
     public void testExecuteOperators() {
         LOGGER.debug("Testing method: testExecuteOperators");
-        String directory = System.getProperty("user.dir") + File.separator + "training";
-        IntegrationFacade facade = new CachedFacade(new PITFacade(directory), directory, directory);
-        IntegrationFacade.setIntegrationFacade(facade);
 
         List<Operator> allOperators = facade.getAllOperators();
 
@@ -256,6 +265,7 @@ public class CachedFacadeTest {
 
     @Test
     public void testRead() throws IOException {
+        LOGGER.debug("Testing method: testRead");
         String directory = System.getProperty("user.dir") + File.separator + "training";
         CachedFacade facade = new CachedFacade(new PITFacade(directory), "src" + File.separator + "test" + File.separator + "resources", null);
         IntegrationFacade.setIntegrationFacade(facade);
@@ -325,6 +335,82 @@ public class CachedFacadeTest {
 
         assertEquals(Double.MAX_VALUE, solution.getObjective(0), 0.001);
         assertEquals(Double.MAX_VALUE, solution.getObjective(1), 0.001);
+
+        facade.dettachObserver(observer);
+    }
+
+    @Test
+    public void testRead2() throws IOException {
+        LOGGER.debug("Testing method: testRead2");
+        String directory = System.getProperty("user.dir") + File.separator + "training";
+        CachedFacade facade = new CachedFacade(new PITFacade(directory), "src" + File.separator + "test" + File.separator + "resources", null);
+        IntegrationFacade.setIntegrationFacade(facade);
+
+        CachedObjectiveFunctionObserver observer = new CachedObjectiveFunctionObserver();
+        facade.attachObserver(observer);
+
+        MutationStrategyGenerationProblem problem = new MutationStrategyGenerationProblem(GrammarFiles.getDefaultGrammarPath(),
+                10,
+                15,
+                1,
+                10,
+                0,
+                5,
+                1,
+                Lists.newArrayList(new Program("wire", "")),
+                Lists.newArrayList(ObjectiveFunction.AVERAGE_CPU_TIME, ObjectiveFunction.AVERAGE_SCORE));
+        problem.dettachAllObservers();
+        problem.attachObserver(observer);
+
+        VariableLengthSolution<Integer> solution = problem.createSolution();
+        solution.clearVariables();
+        solution.addAllVariables(Lists.newArrayList(124, 20, 75, 14, 126, 47, 163, 96, 95, 6, 119, 165, 74, 123, 54, 70, 173, 116, 22, 121, 57, 109, 34, 89, 153, 95, 96, 107, 26, 50, 102, 160, 171, 9, 96, 95, 6, 119, 165, 74, 123, 54, 70, 173, 116, 22, 121, 57, 109, 34, 89, 153, 95, 96));
+
+        problem.evaluate(solution);
+
+        assertEquals(0.7845230604446107, solution.getObjective(0), 0.0001);
+        assertEquals(-0.9982285208148804, solution.getObjective(1), 0.0001);
+
+        problem.evaluate(solution);
+
+        assertEquals(0.7845230604446107, solution.getObjective(0), 0.0001);
+        assertEquals(-0.9982285208148804, solution.getObjective(1), 0.0001);
+
+        facade.dettachObserver(observer);
+    }
+
+    @Test
+    @Ignore
+    public void profiling() throws IOException {
+        LOGGER.debug("Testing method: profiling");
+        String directory = System.getProperty("user.dir") + File.separator + "training";
+        CachedFacade facade = new CachedFacade(new PITFacade(directory), "src" + File.separator + "test" + File.separator + "resources", null);
+        IntegrationFacade.setIntegrationFacade(facade);
+
+        CachedObjectiveFunctionObserver observer = new CachedObjectiveFunctionObserver();
+        facade.attachObserver(observer);
+
+        MutationStrategyGenerationProblem problem = new MutationStrategyGenerationProblem(GrammarFiles.getDefaultGrammarPath(),
+                10,
+                15,
+                1,
+                10,
+                0,
+                5,
+                1,
+                Lists.newArrayList(new Program("wire", "")),
+                Lists.newArrayList(ObjectiveFunction.AVERAGE_CPU_TIME, ObjectiveFunction.AVERAGE_SCORE));
+        problem.dettachAllObservers();
+        problem.attachObserver(observer);
+
+        List<VariableLengthSolution<Integer>> allSolutions = new ArrayList<>();
+        for (int i = 0; i < 1000; i++) {
+            VariableLengthSolution<Integer> solution = problem.createSolution();
+            solution.clearVariables();
+            solution.addAllVariables(Lists.newArrayList(124, 20, 75, 14, 126, 47, 163, 96, 95, 6, 119, 165, 74, 123, 54, 70, 173, 116, 22, 121, 57, 109, 34, 89, 153, 95, 96, 107, 26, 50, 102, 160, 171, 9, 96, 95, 6, 119, 165, 74, 123, 54, 70, 173, 116, 22, 121, 57, 109, 34, 89, 153, 95, 96));
+            allSolutions.add(solution);
+            problem.evaluate(solution);
+        }
 
         facade.dettachObserver(observer);
     }

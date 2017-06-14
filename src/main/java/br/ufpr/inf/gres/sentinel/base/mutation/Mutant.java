@@ -27,7 +27,7 @@ public class Mutant extends Program {
     /**
      * The original program from which this mutant was derived.
      */
-    protected Program originalProgram;
+    protected transient Program originalProgram;
 
     /**
      * The clock time this particular mutant took to be executed. Default value

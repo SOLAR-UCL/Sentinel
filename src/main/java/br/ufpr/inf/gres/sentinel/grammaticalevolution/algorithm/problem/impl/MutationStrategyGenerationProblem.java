@@ -143,7 +143,7 @@ public class MutationStrategyGenerationProblem implements VariableLengthIntegerP
                     stopwatch.stop();
                     LOGGER.debug("Strategy execution finished succesfully in " + DurationFormatUtils.formatDurationHMS(stopwatch.elapsed(TimeUnit.MILLISECONDS)));
 
-                    LOGGER.debug("Starting mutants execution.");
+                    LOGGER.debug("Starting mutants execution. " + mutants.size() + " will be executed.");
                     stopwatch.reset();
                     stopwatch.start();
                     notifyObservers(observer -> observer.notifyMutantsExecutionStart(mutants));

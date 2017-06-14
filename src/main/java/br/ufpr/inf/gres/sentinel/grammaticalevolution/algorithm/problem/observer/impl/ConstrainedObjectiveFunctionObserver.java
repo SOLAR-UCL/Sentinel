@@ -130,4 +130,20 @@ public class ConstrainedObjectiveFunctionObserver implements MutationStrategyGen
         this.notifyComputeObjectives();
     }
 
+    @Override
+    public void notifyEvaluationEnd() {
+        this.solution.setAttribute("CPUTimes", null);
+        this.solution.setAttribute("ConventionalCPUTimes", null);
+        this.solution.setAttribute("Times", null);
+        this.solution.setAttribute("ConventionalTimes", null);
+        this.solution.setAttribute("Mutants", null);
+        this.solution.setAttribute("ConventionalMutants", null);
+
+        this.solution = null;
+        this.nanoTimes = null;
+        this.nanoCPUTimes = null;
+        this.allMutants = null;
+        this.isInvalid = false;
+        this.objectiveFunctions = null;
+    }
 }
