@@ -20,7 +20,9 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.nio.charset.Charset;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.apache.logging.log4j.Level;
@@ -83,7 +85,7 @@ public class SentinelTesting {
         File outputDirectory = new File(testingArgs.workingDirectory + File.separator + testingArgs.outputDirectory);
         outputDirectory.mkdirs();
 
-        LOGGER.info("Starting Sentinel executions.");
+        LOGGER.info("Starting Sentinel executions. There are " + resultsFromJson.values().stream().mapToInt((resultWrapper) -> resultWrapper.getResult().size()).sum() + " Sentinel startegies to run.");
         for (ResultWrapper trainingResult : resultsFromJson.values()) {
             LOGGER.debug("Running " + trainingResult.getSession() + " " + trainingResult.getRunNumber());
             ResultWrapper testResult = runSentinelSolutions(trainingResult, problem, testingArgs);
@@ -91,17 +93,17 @@ public class SentinelTesting {
             LOGGER.debug("Execution finished in " + DurationFormatUtils.formatDurationHMS(testResult.getExecutionTimeInMillis()));
         }
 
-        LOGGER.info("Starting Random Mutant Sampling execution.");
+        LOGGER.info("Starting Random Mutant Sampling executions.");
         ResultWrapper randomMutantSamplingResults = runRandomMutantSampling(problem, testingArgs);
         result.put("Random Mutant Sampling", randomMutantSamplingResults);
         LOGGER.debug("Execution finished in " + DurationFormatUtils.formatDurationHMS(randomMutantSamplingResults.getExecutionTimeInMillis()));
 
-        LOGGER.info("Starting Random Operator Selection execution.");
+        LOGGER.info("Starting Random Operator Selection executions.");
         ResultWrapper randomOperatorSelectionResults = runRandomOperatorSelection(problem, testingArgs);
         result.put("Random Operator Selection", randomOperatorSelectionResults);
         LOGGER.debug("Execution finished in " + DurationFormatUtils.formatDurationHMS(randomOperatorSelectionResults.getExecutionTimeInMillis()));
 
-        LOGGER.info("Starting Selective Mutation execution.");
+        LOGGER.info("Starting Selective Mutation executions.");
         ResultWrapper selectiveMutationResults = runSelectiveMutation(problem, testingArgs);
         result.put("Selective Mutation", selectiveMutationResults);
         LOGGER.debug("Execution finished in " + DurationFormatUtils.formatDurationHMS(selectiveMutationResults.getExecutionTimeInMillis()));
@@ -261,7 +263,7 @@ public class SentinelTesting {
                         0,
                         testingArgs.maxWraps,
                         testingArgs.numberOfTestingRuns,
-                        1,
+                        testingArgs.numberOfTestingRuns,
                         trainingPrograms,
                         testingArgs.objectiveFunctions);
         return problem;
