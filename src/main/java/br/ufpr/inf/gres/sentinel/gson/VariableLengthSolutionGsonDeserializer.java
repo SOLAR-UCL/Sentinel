@@ -47,7 +47,6 @@ public class VariableLengthSolutionGsonDeserializer implements JsonDeserializer<
 
         List<ObjectiveFunction> objectiveFunctions = ObjectiveFunctionFactory.createAllObjectiveFunctions();
         for (ObjectiveFunction objectiveFunction : objectiveFunctions) {
-            solution.setAttribute(objectiveFunction.getName(), json);
             JsonElement objective = jsonObject.get(objectiveFunction.getName());
             if (objective != null) {
                 solution.setAttribute(objectiveFunction.getName(), objective.getAsDouble());
