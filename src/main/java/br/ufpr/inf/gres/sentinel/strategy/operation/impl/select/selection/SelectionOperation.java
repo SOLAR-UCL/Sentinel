@@ -60,6 +60,10 @@ public class SelectionOperation<T> extends Operation<List<T>, List<T>> {
      */
     @Override
     public List<T> doOperation(List<T> input, Program program) {
+        return this.doSelection(input);
+    }
+
+    protected List doSelection(List input) {
         if (input.size() > 0) {
             checkNotNull(this.selectionType, "No selection type defined for selection!");
             checkArgument(this.percentage != 0D || this.quantity != 0, "No quantity or percentage defined for selection! "
@@ -70,6 +74,7 @@ public class SelectionOperation<T> extends Operation<List<T>, List<T>> {
             } else {
                 numberToSelect = this.quantity;
             }
+            numberToSelect = numberToSelect <= input.size() ? numberToSelect : input.size();
             if (this.sorter != null) {
                 input.sort(this.sorter);
             }

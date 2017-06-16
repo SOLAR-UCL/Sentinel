@@ -278,7 +278,7 @@ public class CachedFacadeTest {
                 15,
                 1,
                 10,
-                0,
+                10,
                 5,
                 1,
                 Lists.newArrayList(new Program("wire", "")),
@@ -288,12 +288,12 @@ public class CachedFacadeTest {
 
         VariableLengthSolution<Integer> solution = problem.createSolution();
         solution.clearVariables();
-        solution.addAllVariables(Lists.newArrayList(164, 20, 99, 169, 97, 71, 20, 171, 174, 137, 30, 36, 83, 107, 118, 123, 36, 43, 140, 154, 110, 141, 125, 169, 87, 5, 118, 121));
+        solution.addAllVariables(Lists.newArrayList(0, 2, 1, 0, 0, 1, 2, 3));
 
         problem.evaluate(solution);
 
-        assertEquals(0.654388926237488, solution.getObjective(0), 0.0001);
-        assertEquals(-1.0, solution.getObjective(1), 0.0001);
+        assertEquals(0.2796440157531618, solution.getObjective(0), 0.0001);
+        assertEquals(-0.9743135518157662, solution.getObjective(1), 0.0001);
 
         problem = new MutationStrategyGenerationProblem(GrammarFiles.getDefaultGrammarPath(),
                 10,
@@ -310,13 +310,13 @@ public class CachedFacadeTest {
 
         problem.evaluate(solution);
 
-        assertEquals(0.654388926237488, solution.getObjective(0), 0.0001);
-        assertEquals(-1.0, solution.getObjective(1), 0.0001);
+        assertEquals(0.2796440157531618, solution.getObjective(0), 0.0001);
+        assertEquals(-0.9743135518157662, solution.getObjective(1), 0.0001);
 
         problem.evaluate(solution);
 
-        assertEquals(0.654388926237488, solution.getObjective(0), 0.0001);
-        assertEquals(-1.0, solution.getObjective(1), 0.0001);
+        assertEquals(0.2796440157531618, solution.getObjective(0), 0.0001);
+        assertEquals(-0.9743135518157662, solution.getObjective(1), 0.0001);
 
         solution = problem.createSolution();
         solution.clearVariables();

@@ -2,13 +2,10 @@ package br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.selection;
 
 import br.ufpr.inf.gres.sentinel.base.mutation.Program;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.group.AbstractGroupingOperation;
-import com.google.common.math.DoubleMath;
-import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.collections4.list.SetUniqueList;
 
-import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -35,24 +32,12 @@ public class GroupSelectionOperation<T> extends SelectionOperation<T> {
      */
     @Override
     public List<T> doOperation(List<T> input, Program program) {
-        checkNotNull(this.selectionType, "No group selection type defined for group selection!");
         checkNotNull(this.groupingFunction, "No grouping function defined for group selection!");
         checkNotNull(this.selectionOperation, "No operator selection type defined for group selection!");
-        checkArgument(this.percentage != 0D || this.quantity != 0, "No quantity or percentage defined for group selection! "
-                + "Percentage: " + this.percentage + ". Quantity: " + this.quantity + ".");
         List<T> result = SetUniqueList.setUniqueList(new ArrayList<>());
         List<List<T>> groups = this.groupingFunction.doOperation(input, program);
         if (groups.size() > 0) {
-            int numberToSelect;
-            if (this.percentage != 0D) {
-                numberToSelect = DoubleMath.roundToInt(groups.size() * this.percentage, RoundingMode.CEILING);
-            } else {
-                numberToSelect = this.quantity;
-            }
-            if (this.sorter != null) {
-                groups.sort(this.sorter);
-            }
-            groups = this.selectionType.selectItems(groups, numberToSelect);
+            groups = this.doSelection(groups);
             for (List<T> group : groups) {
                 result.addAll(this.selectionOperation.doOperation(group, program));
             }

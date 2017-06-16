@@ -312,9 +312,14 @@ public class FacadeCache {
             cache.mutants = context.deserialize(jsonObject.get("mutants"), new TypeToken<HashMap<String, Mutant>>() {
             }.getType());
 
+            for (Mutant mutant : cache.mutants.values()) {
+                mutant.setOriginalProgram(program);
+            }
+
             for (Operator operator : cache.operators.values()) {
                 for (Mutant mutant : operator.getGeneratedMutants()) {
                     mutant.setOperator(operator);
+                    mutant.setOriginalProgram(program);
                     cache.mutants.get(mutant.toString()).setOperator(operator);
                 }
             }

@@ -97,12 +97,11 @@ public class SelectionOperationTest {
         group1.add(operator4);
 
         List<Operator> result = selectionOp.doOperation(group1, null);
-        assertEquals(5, result.size());
+        assertEquals(4, result.size());
         assertEquals(operator1, result.get(0));
         assertEquals(operator2, result.get(1));
         assertEquals(operator3, result.get(2));
         assertEquals(operator4, result.get(3));
-        assertEquals(operator1, result.get(4));
     }
 
     @Test(expected = Exception.class)
