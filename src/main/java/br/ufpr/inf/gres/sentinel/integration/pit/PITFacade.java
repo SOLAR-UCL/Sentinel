@@ -29,7 +29,13 @@ import org.pitest.mutationtest.config.PluginServices;
 import org.pitest.mutationtest.config.ReportOptions;
 import org.pitest.mutationtest.config.SettingsFactory;
 import org.pitest.mutationtest.engine.MutationDetails;
-import org.pitest.mutationtest.engine.gregor.mutators.*;
+import org.pitest.mutationtest.engine.gregor.mutators.ConditionalsBoundaryMutator;
+import org.pitest.mutationtest.engine.gregor.mutators.IncrementsMutator;
+import org.pitest.mutationtest.engine.gregor.mutators.InvertNegsMutator;
+import org.pitest.mutationtest.engine.gregor.mutators.MathMutator;
+import org.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator;
+import org.pitest.mutationtest.engine.gregor.mutators.ReturnValsMutator;
+import org.pitest.mutationtest.engine.gregor.mutators.VoidMethodCallMutator;
 
 /**
  *
@@ -43,73 +49,75 @@ public class PITFacade extends IntegrationFacade {
     protected static final HashMap<String, Operator> ALL_OPERATORS_BY_CLASS = new HashMap<>();
 
     static {
-        Operator operator = new Operator("CONDITIONALS_BOUNDARY", "Conditionals");
+        Operator operator;
+
+        operator = new Operator("CONDITIONALS_BOUNDARY", "Conditionals");
         ALL_OPERATORS.add(operator);
         ALL_OPERATORS_BY_CLASS.put(ConditionalsBoundaryMutator.CONDITIONALS_BOUNDARY_MUTATOR.getGloballyUniqueId(), operator);
-
+//
         operator = new Operator("NEGATE_CONDITIONALS", "Conditionals");
         ALL_OPERATORS.add(operator);
         ALL_OPERATORS_BY_CLASS.put(NegateConditionalsMutator.NEGATE_CONDITIONALS_MUTATOR.getGloballyUniqueId(), operator);
-
-        operator = new Operator("REMOVE_CONDITIONALS_EQ_IF", "Conditionals");
-        ALL_OPERATORS.add(operator);
-        ALL_OPERATORS_BY_CLASS.put(new RemoveConditionalMutator(RemoveConditionalMutator.Choice.EQUAL, true).getGloballyUniqueId(), operator);
-
-        operator = new Operator("REMOVE_CONDITIONALS_EQ_ELSE", "Conditionals");
-        ALL_OPERATORS.add(operator);
-        ALL_OPERATORS_BY_CLASS.put(new RemoveConditionalMutator(RemoveConditionalMutator.Choice.EQUAL, false).getGloballyUniqueId(), operator);
-
-        operator = new Operator("REMOVE_CONDITIONALS_ORD_IF", "Conditionals");
-        ALL_OPERATORS.add(operator);
-        ALL_OPERATORS_BY_CLASS.put(new RemoveConditionalMutator(RemoveConditionalMutator.Choice.ORDER, true).getGloballyUniqueId(), operator);
-
-        operator = new Operator("REMOVE_CONDITIONALS_ORD_ELSE", "Conditionals");
-        ALL_OPERATORS.add(operator);
-        ALL_OPERATORS_BY_CLASS.put(new RemoveConditionalMutator(RemoveConditionalMutator.Choice.ORDER, false).getGloballyUniqueId(), operator);
-
+//
+//        operator = new Operator("REMOVE_CONDITIONALS_EQ_IF", "Conditionals");
+//        ALL_OPERATORS.add(operator);
+//        ALL_OPERATORS_BY_CLASS.put(new RemoveConditionalMutator(RemoveConditionalMutator.Choice.EQUAL, true).getGloballyUniqueId(), operator);
+//
+//        operator = new Operator("REMOVE_CONDITIONALS_EQ_ELSE", "Conditionals");
+//        ALL_OPERATORS.add(operator);
+//        ALL_OPERATORS_BY_CLASS.put(new RemoveConditionalMutator(RemoveConditionalMutator.Choice.EQUAL, false).getGloballyUniqueId(), operator);
+//
+//        operator = new Operator("REMOVE_CONDITIONALS_ORD_IF", "Conditionals");
+//        ALL_OPERATORS.add(operator);
+//        ALL_OPERATORS_BY_CLASS.put(new RemoveConditionalMutator(RemoveConditionalMutator.Choice.ORDER, true).getGloballyUniqueId(), operator);
+//
+//        operator = new Operator("REMOVE_CONDITIONALS_ORD_ELSE", "Conditionals");
+//        ALL_OPERATORS.add(operator);
+//        ALL_OPERATORS_BY_CLASS.put(new RemoveConditionalMutator(RemoveConditionalMutator.Choice.ORDER, false).getGloballyUniqueId(), operator);
+//
         operator = new Operator("MATH", "Variables");
         ALL_OPERATORS.add(operator);
         ALL_OPERATORS_BY_CLASS.put(MathMutator.MATH_MUTATOR.getGloballyUniqueId(), operator);
-
+//
         operator = new Operator("INCREMENTS", "Variables");
         ALL_OPERATORS.add(operator);
         ALL_OPERATORS_BY_CLASS.put(IncrementsMutator.INCREMENTS_MUTATOR.getGloballyUniqueId(), operator);
-
+//
         operator = new Operator("INVERT_NEGS", "Variables");
         ALL_OPERATORS.add(operator);
         ALL_OPERATORS_BY_CLASS.put(InvertNegsMutator.INVERT_NEGS_MUTATOR.getGloballyUniqueId(), operator);
-
-        operator = new Operator("INLINE_CONSTS", "Variables");
-        ALL_OPERATORS.add(operator);
-        ALL_OPERATORS_BY_CLASS.put(new InlineConstantMutator().getGloballyUniqueId(), operator);
-
-        operator = new Operator("EXPERIMENTAL_MEMBER_VARIABLE", "Variables");
-        ALL_OPERATORS.add(operator);
-        ALL_OPERATORS_BY_CLASS.put(new org.pitest.mutationtest.engine.gregor.mutators.experimental.MemberVariableMutator().getGloballyUniqueId(), operator);
-
+//
+//        operator = new Operator("INLINE_CONSTS", "Variables");
+//        ALL_OPERATORS.add(operator);
+//        ALL_OPERATORS_BY_CLASS.put(new InlineConstantMutator().getGloballyUniqueId(), operator);
+//
+//        operator = new Operator("EXPERIMENTAL_MEMBER_VARIABLE", "Variables");
+//        ALL_OPERATORS.add(operator);
+//        ALL_OPERATORS_BY_CLASS.put(new org.pitest.mutationtest.engine.gregor.mutators.experimental.MemberVariableMutator().getGloballyUniqueId(), operator);
+//
         operator = new Operator("RETURN_VALS", "Method");
         ALL_OPERATORS.add(operator);
         ALL_OPERATORS_BY_CLASS.put(ReturnValsMutator.RETURN_VALS_MUTATOR.getGloballyUniqueId(), operator);
-
+//
         operator = new Operator("VOID_METHOD_CALLS", "Method");
         ALL_OPERATORS.add(operator);
         ALL_OPERATORS_BY_CLASS.put(VoidMethodCallMutator.VOID_METHOD_CALL_MUTATOR.getGloballyUniqueId(), operator);
-
-        operator = new Operator("NON_VOID_METHOD_CALLS", "Method");
-        ALL_OPERATORS.add(operator);
-        ALL_OPERATORS_BY_CLASS.put(NonVoidMethodCallMutator.NON_VOID_METHOD_CALL_MUTATOR.getGloballyUniqueId(), operator);
-
-        operator = new Operator("CONSTRUCTOR_CALLS", "Method");
-        ALL_OPERATORS.add(operator);
-        ALL_OPERATORS_BY_CLASS.put(ConstructorCallMutator.CONSTRUCTOR_CALL_MUTATOR.getGloballyUniqueId(), operator);
-
-        operator = new Operator("EXPERIMENTAL_SWITCH", "Method");
-        ALL_OPERATORS.add(operator);
-        ALL_OPERATORS_BY_CLASS.put(new org.pitest.mutationtest.engine.gregor.mutators.experimental.SwitchMutator().getGloballyUniqueId(), operator);
-
-        operator = new Operator("EXPERIMENTAL_ARGUMENT_PROPAGATION", "Method");
-        ALL_OPERATORS.add(operator);
-        ALL_OPERATORS_BY_CLASS.put(ArgumentPropagationMutator.ARGUMENT_PROPAGATION_MUTATOR.getGloballyUniqueId(), operator);
+//
+//        operator = new Operator("NON_VOID_METHOD_CALLS", "Method");
+//        ALL_OPERATORS.add(operator);
+//        ALL_OPERATORS_BY_CLASS.put(NonVoidMethodCallMutator.NON_VOID_METHOD_CALL_MUTATOR.getGloballyUniqueId(), operator);
+//
+//        operator = new Operator("CONSTRUCTOR_CALLS", "Method");
+//        ALL_OPERATORS.add(operator);
+//        ALL_OPERATORS_BY_CLASS.put(ConstructorCallMutator.CONSTRUCTOR_CALL_MUTATOR.getGloballyUniqueId(), operator);
+//
+//        operator = new Operator("EXPERIMENTAL_SWITCH", "Method");
+//        ALL_OPERATORS.add(operator);
+//        ALL_OPERATORS_BY_CLASS.put(new org.pitest.mutationtest.engine.gregor.mutators.experimental.SwitchMutator().getGloballyUniqueId(), operator);
+//
+//        operator = new Operator("EXPERIMENTAL_ARGUMENT_PROPAGATION", "Method");
+//        ALL_OPERATORS.add(operator);
+//        ALL_OPERATORS_BY_CLASS.put(ArgumentPropagationMutator.ARGUMENT_PROPAGATION_MUTATOR.getGloballyUniqueId(), operator);
     }
     protected final HashMap<Program, EntryPointImpl> entryPoints = new HashMap<>();
     protected final HashMap<Program, HashMap<Mutant, MutationDetails>> generatedMutants = new HashMap<>();
