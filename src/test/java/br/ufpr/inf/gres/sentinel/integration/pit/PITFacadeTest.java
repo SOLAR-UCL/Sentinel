@@ -9,11 +9,10 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import static org.junit.Assert.*;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
-
-import static org.junit.Assert.*;
 
 /**
  *
@@ -75,8 +74,8 @@ public class PITFacadeTest {
         assertNotNull(mutants);
 
         facade.executeMutants(mutants, programUnderTest);
-        assertEquals(119, mutants.stream().filter(Mutant::isDead).count());
-        assertEquals(3, mutants.stream().filter(Mutant::isAlive).count());
+        assertEquals(50, mutants.stream().filter(Mutant::isDead).count());
+        assertEquals(0, mutants.stream().filter(Mutant::isAlive).count());
     }
 
     @Test
@@ -96,7 +95,7 @@ public class PITFacadeTest {
     public void testExecuteOperator2() {
         IntegrationFacade.setIntegrationFacade(facade);
 
-        List<Mutant> mutants = facade.executeOperator(facade.getAllOperators().get(15), programUnderTest);
+        List<Mutant> mutants = facade.executeOperator(facade.getAllOperators().get(6), programUnderTest);
         assertNotNull(mutants);
         assertTrue(mutants.isEmpty());
     }
@@ -107,7 +106,7 @@ public class PITFacadeTest {
 
         List<Mutant> mutants = facade.executeOperators(facade.getAllOperators(), programUnderTest);
         assertNotNull(mutants);
-        assertEquals(122, mutants.size());
+        assertEquals(50, mutants.size());
         assertTrue(mutants.stream().allMatch(Mutant::isAlive));
     }
 
@@ -127,7 +126,7 @@ public class PITFacadeTest {
         List<Mutant> mutants = facade.executeOperators(facade.getAllOperators(), programUnderTest);
         mutants = facade.executeOperators(facade.getAllOperators(), programUnderTest);
         assertNotNull(mutants);
-        assertEquals(122, mutants.size());
+        assertEquals(50, mutants.size());
         assertTrue(mutants.stream().allMatch(Mutant::isAlive));
     }
 
@@ -145,7 +144,7 @@ public class PITFacadeTest {
     public void testGetAllOperators() {
         List<Operator> allOperators = facade.getAllOperators();
         assertNotNull(allOperators);
-        assertEquals(17, allOperators.size());
+        assertEquals(7, allOperators.size());
     }
 
     @Test

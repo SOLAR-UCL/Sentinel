@@ -187,6 +187,7 @@ public class PITFacade extends IntegrationFacade {
                 HashMap<Mutant, MutationDetails> descriptions = this.generatedMutants.get(program);
                 HashMap<MutationTestUnit, Set<Mutant>> allUnitsMutants = unitToMutants.get(program);
                 if (allUnitsMutants != null || allUnitsMutants.isEmpty()) {
+                    HashSet<MutationTestUnit> unitsToSubmit = new HashSet<>();
                     for (Map.Entry<MutationTestUnit, Set<Mutant>> unitEntry : allUnitsMutants.entrySet()) {
                         MutationTestUnit unit = unitEntry.getKey();
                         Set<Mutant> unitMutants = unitEntry.getValue();
@@ -201,6 +202,7 @@ public class PITFacade extends IntegrationFacade {
                             if (unitMutants.contains(mutant)) {
                                 MutationDetails description = descriptions.get(mutant);
                                 fieldValue.add(description);
+                                unitsToSubmit.add(unit);
                             }
                         }
 
@@ -209,7 +211,7 @@ public class PITFacade extends IntegrationFacade {
                     LOGGER.debug("Starting mutants execution.");
                     Stopwatch stopwatch = Stopwatch.createStarted();
                     EntryPointImpl entryPoint = this.getOrCreateEntryPoint(program);
-                    Collection<MutationResult> result = entryPoint.executeMutants(null, reportOptions, new SettingsFactory(reportOptions, plugins), new HashMap<>(), new ArrayList<>(allUnitsMutants.keySet()));
+                    Collection<MutationResult> result = entryPoint.executeMutants(null, reportOptions, new SettingsFactory(reportOptions, plugins), new HashMap<>(), new ArrayList<>(unitsToSubmit));
                     stopwatch.stop();
                     LOGGER.debug("Mutants execution finished in " + DurationFormatUtils.formatDurationHMS(stopwatch.elapsed(TimeUnit.MILLISECONDS)));
 

@@ -17,11 +17,10 @@ import java.util.ArrayList;
 import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import static org.junit.Assert.*;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
-
-import static org.junit.Assert.*;
 
 /**
  *
@@ -52,7 +51,7 @@ public class CachedFacadeTest {
         LOGGER.debug("Testing method: testGetAllOperators");
         List<Operator> allOperators = facade.getAllOperators();
         assertNotNull(allOperators);
-        assertEquals(17, allOperators.size());
+        assertEquals(7, allOperators.size());
     }
 
     @Test
@@ -122,14 +121,14 @@ public class CachedFacadeTest {
 
         List<Mutant> mutants = facade.executeOperators(allOperators, programUnderTest);
         assertNotNull(mutants);
-        assertEquals(122, mutants.size());
+        assertEquals(50, mutants.size());
         assertTrue(mutants.stream().allMatch(Mutant::isAlive));
 
         List<Operator> allOperators2 = facade.getAllOperators();
 
         List<Mutant> mutants2 = facade.executeOperators(allOperators2, programUnderTest);
         assertNotNull(mutants2);
-        assertEquals(122, mutants2.size());
+        assertEquals(50, mutants2.size());
         assertTrue(mutants2.stream().allMatch(Mutant::isAlive));
 
         for (int i = 0; i < allOperators.size(); i++) {
@@ -173,14 +172,14 @@ public class CachedFacadeTest {
 
         List<Mutant> mutants = facade.executeOperators(allOperators, programUnderTest);
         assertNotNull(mutants);
-        assertEquals(122, mutants.size());
+        assertEquals(50, mutants.size());
         assertTrue(mutants.stream().allMatch(Mutant::isAlive));
 
         List<Operator> allOperators2 = facade.getAllOperators();
 
         List<Mutant> mutants2 = facade.executeOperators(allOperators2, programUnderTest);
         assertNotNull(mutants2);
-        assertEquals(122, mutants2.size());
+        assertEquals(50, mutants2.size());
         assertTrue(mutants2.stream().allMatch(Mutant::isAlive));
 
         facade.executeMutant(mutants.get(0), programUnderTest);
@@ -205,23 +204,23 @@ public class CachedFacadeTest {
 
         List<Mutant> mutants = facade.executeOperators(allOperators, programUnderTest);
         assertNotNull(mutants);
-        assertEquals(122, mutants.size());
+        assertEquals(50, mutants.size());
         assertTrue(mutants.stream().allMatch(Mutant::isAlive));
 
         List<Operator> allOperators2 = facade.getAllOperators();
 
         List<Mutant> mutants2 = facade.executeOperators(allOperators2, programUnderTest);
         assertNotNull(mutants2);
-        assertEquals(122, mutants2.size());
+        assertEquals(50, mutants2.size());
         assertTrue(mutants2.stream().allMatch(Mutant::isAlive));
 
         facade.executeMutants(mutants, programUnderTest);
-        assertEquals(119, mutants.stream().filter(Mutant::isDead).count());
-        assertEquals(3, mutants.stream().filter(Mutant::isAlive).count());
+        assertEquals(50, mutants.stream().filter(Mutant::isDead).count());
+        assertEquals(0, mutants.stream().filter(Mutant::isAlive).count());
 
         facade.executeMutants(mutants2, programUnderTest);
-        assertEquals(119, mutants2.stream().filter(Mutant::isDead).count());
-        assertEquals(3, mutants2.stream().filter(Mutant::isAlive).count());
+        assertEquals(50, mutants2.stream().filter(Mutant::isDead).count());
+        assertEquals(0, mutants2.stream().filter(Mutant::isAlive).count());
 
         for (int i = 0; i < mutants.size(); i++) {
             Mutant mutant1 = mutants.get(i);
@@ -292,8 +291,8 @@ public class CachedFacadeTest {
 
         problem.evaluate(solution);
 
-        assertEquals(0.2796440157531618, solution.getObjective(0), 0.0001);
-        assertEquals(-0.9743135518157662, solution.getObjective(1), 0.0001);
+        assertEquals(0.37466576997949436, solution.getObjective(0), 0.0001);
+        assertEquals(-0.969309462915601, solution.getObjective(1), 0.0001);
 
         problem = new MutationStrategyGenerationProblem(GrammarFiles.getDefaultGrammarPath(),
                 10,
@@ -310,13 +309,13 @@ public class CachedFacadeTest {
 
         problem.evaluate(solution);
 
-        assertEquals(0.2796440157531618, solution.getObjective(0), 0.0001);
-        assertEquals(-0.9743135518157662, solution.getObjective(1), 0.0001);
+        assertEquals(0.37466576997949436, solution.getObjective(0), 0.0001);
+        assertEquals(-0.969309462915601, solution.getObjective(1), 0.0001);
 
         problem.evaluate(solution);
 
-        assertEquals(0.2796440157531618, solution.getObjective(0), 0.0001);
-        assertEquals(-0.9743135518157662, solution.getObjective(1), 0.0001);
+        assertEquals(0.37466576997949436, solution.getObjective(0), 0.0001);
+        assertEquals(-0.969309462915601, solution.getObjective(1), 0.0001);
 
         solution = problem.createSolution();
         solution.clearVariables();
@@ -368,13 +367,13 @@ public class CachedFacadeTest {
 
         problem.evaluate(solution);
 
-        assertEquals(0.7845230604446107, solution.getObjective(0), 0.0001);
-        assertEquals(-0.9982285208148804, solution.getObjective(1), 0.0001);
+        assertEquals(0.9564509075453619, solution.getObjective(0), 0.0001);
+        assertEquals(-1.0, solution.getObjective(1), 0.0001);
 
         problem.evaluate(solution);
 
-        assertEquals(0.7845230604446107, solution.getObjective(0), 0.0001);
-        assertEquals(-0.9982285208148804, solution.getObjective(1), 0.0001);
+        assertEquals(0.9564509075453619, solution.getObjective(0), 0.0001);
+        assertEquals(-1.0, solution.getObjective(1), 0.0001);
 
         facade.dettachObserver(observer);
     }
