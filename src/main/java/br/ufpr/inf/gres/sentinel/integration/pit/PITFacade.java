@@ -4,7 +4,6 @@ import br.ufpr.inf.gres.sentinel.base.mutation.Mutant;
 import br.ufpr.inf.gres.sentinel.base.mutation.Operator;
 import br.ufpr.inf.gres.sentinel.base.mutation.Program;
 import br.ufpr.inf.gres.sentinel.base.mutation.TestCase;
-import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.problem.impl.MutationStrategyGenerationProblem;
 import br.ufpr.inf.gres.sentinel.integration.IntegrationFacade;
 import com.google.common.base.Joiner;
 import com.google.common.base.Stopwatch;
@@ -43,7 +42,7 @@ import org.pitest.mutationtest.engine.gregor.mutators.VoidMethodCallMutator;
  */
 public class PITFacade extends IntegrationFacade {
 
-    private static final Logger LOGGER = LogManager.getLogger(MutationStrategyGenerationProblem.class);
+    private static final Logger LOGGER = LogManager.getLogger(PITFacade.class);
 
     protected static final ArrayList<Operator> ALL_OPERATORS = new ArrayList<>();
     protected static final HashMap<String, Operator> ALL_OPERATORS_BY_CLASS = new HashMap<>();
