@@ -137,7 +137,7 @@ public class CachedFacade extends IntegrationFacade {
 
             this.conventionalExecutionCPUTimes.put(program, cpuTimeSum);
             this.conventionalExecutionTimes.put(program, timeSum);
-            LOGGER.trace("Repetition ended. " + ((i + 1) / repetitions * 100) + "% complete.");
+            LOGGER.trace("Repetition ended. " + (((double) i + 1) / (double) repetitions * 100) + "% complete.");
         }
         LOGGER.trace(allMutants.size() + " mutants generated.");
         this.conventionalMutants.putAll(program, allMutants);
