@@ -12,8 +12,8 @@ import br.ufpr.inf.gres.sentinel.strategy.operation.impl.discard.impl.DiscardMut
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.operation.impl.SelectMutantsOperation;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.selection.SelectionOperation;
 import com.google.common.base.Preconditions;
+import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
 
 /**
  * @author Giovani Guizzo
@@ -42,7 +42,7 @@ public class MutantOperationFactory implements Factory<Option> {
         Iterator<Rule> rules = node.getRules().iterator();
         Preconditions.checkArgument(rules.hasNext(), "Malformed grammar option: " + node.toString());
         Rule firstRule = rules.next();
-        Operation<Solution, List<Mutant>> mainOperation;
+        Operation<Solution, Collection<Mutant>> mainOperation;
         switch (firstRule.getName()) {
             case TerminalRuleType.SELECT_MUTANTS: {
                 Preconditions.checkArgument(rules.hasNext(), "Malformed grammar option: " + node.toString());

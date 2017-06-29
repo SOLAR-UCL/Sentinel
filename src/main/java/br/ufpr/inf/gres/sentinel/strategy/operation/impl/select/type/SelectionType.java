@@ -3,14 +3,14 @@ package br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.type;
 import br.ufpr.inf.gres.sentinel.base.mutation.Program;
 import br.ufpr.inf.gres.sentinel.strategy.operation.Operation;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 import java.util.Random;
 
 /**
  * @author Giovani Guizzo
  * @param <T>
  */
-public abstract class SelectionType<T> extends Operation<List<T>, List<T>> {
+public abstract class SelectionType<T> extends Operation<Collection<T>, Collection<T>> {
 
     private static final Random RANDOM = new Random();
 
@@ -28,7 +28,7 @@ public abstract class SelectionType<T> extends Operation<List<T>, List<T>> {
      * @return
      */
     @Override
-    public List<T> doOperation(List<T> input, Program program) {
+    public Collection<T> doOperation(Collection<T> input, Program program) {
         if (!input.isEmpty()) {
             return this.selectItems(input, RANDOM.nextInt(input.size()) + 1);
         } else {
@@ -42,6 +42,6 @@ public abstract class SelectionType<T> extends Operation<List<T>, List<T>> {
      * @param numberOfItemsToSelect
      * @return
      */
-    public abstract List<T> selectItems(List<T> items, int numberOfItemsToSelect);
+    public abstract Collection<T> selectItems(Collection<T> items, int numberOfItemsToSelect);
 
 }

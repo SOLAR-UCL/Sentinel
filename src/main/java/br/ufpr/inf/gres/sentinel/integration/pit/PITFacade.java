@@ -28,13 +28,7 @@ import org.pitest.mutationtest.config.PluginServices;
 import org.pitest.mutationtest.config.ReportOptions;
 import org.pitest.mutationtest.config.SettingsFactory;
 import org.pitest.mutationtest.engine.MutationDetails;
-import org.pitest.mutationtest.engine.gregor.mutators.ConditionalsBoundaryMutator;
-import org.pitest.mutationtest.engine.gregor.mutators.IncrementsMutator;
-import org.pitest.mutationtest.engine.gregor.mutators.InvertNegsMutator;
-import org.pitest.mutationtest.engine.gregor.mutators.MathMutator;
-import org.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator;
-import org.pitest.mutationtest.engine.gregor.mutators.ReturnValsMutator;
-import org.pitest.mutationtest.engine.gregor.mutators.VoidMethodCallMutator;
+import org.pitest.mutationtest.engine.gregor.mutators.*;
 
 /**
  *
@@ -176,7 +170,7 @@ public class PITFacade extends IntegrationFacade {
      * @param program
      */
     @Override
-    public void executeMutants(List<Mutant> mutantsToExecute, Program program) {
+    public void executeMutants(Collection<Mutant> mutantsToExecute, Program program) {
         if (mutantsToExecute != null && !mutantsToExecute.isEmpty()) {
             LOGGER.debug("Preparing to execute " + mutantsToExecute.size() + " mutants for program " + program.getName() + ".");
             PluginServices plugins = PluginServices.makeForContextLoader();
@@ -245,7 +239,7 @@ public class PITFacade extends IntegrationFacade {
      * @return
      */
     @Override
-    public List<Mutant> executeOperator(Operator operator, Program program) {
+    public LinkedHashSet<Mutant> executeOperator(Operator operator, Program program) {
         return this.executeOperators(Lists.newArrayList(operator), program);
     }
 
@@ -256,8 +250,8 @@ public class PITFacade extends IntegrationFacade {
      * @return
      */
     @Override
-    public List<Mutant> executeOperators(List<Operator> operators, Program program) {
-        List<Mutant> mutants = new ArrayList<>();
+    public LinkedHashSet<Mutant> executeOperators(Collection<Operator> operators, Program program) {
+        LinkedHashSet<Mutant> mutants = new LinkedHashSet<>();
         if (operators != null && !operators.isEmpty()) {
             LOGGER.debug("Preparing to execute " + operators.size() + " operators for program " + program.getName() + ".");
             LOGGER.trace("Operators: " + operators.toString());
@@ -316,7 +310,7 @@ public class PITFacade extends IntegrationFacade {
      * @return
      */
     @Override
-    public List<Operator> getAllOperators() {
+    public Collection<Operator> getAllOperators() {
         ArrayList<Operator> operators = new ArrayList<>();
         for (Operator operator : ALL_OPERATORS) {
             operators.add(new Operator(operator));

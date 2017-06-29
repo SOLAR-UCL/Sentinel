@@ -5,7 +5,7 @@ import br.ufpr.inf.gres.sentinel.base.mutation.Program;
 import br.ufpr.inf.gres.sentinel.base.solution.Solution;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.TerminalRuleType;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.defaults.NewBranchOperation;
-import java.util.List;
+import java.util.Collection;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -143,16 +143,16 @@ public class OperationTest {
         assertEquals(expResult, result);
     }
 
-    public static class OperationStub extends Operation<Solution, List<Mutant>> {
+    public static class OperationStub extends Operation<Solution, Collection<Mutant>> {
 
         public OperationStub(String name) {
             super(name);
         }
 
         @Override
-        public List<Mutant> doOperation(Solution input, Program program) {
+        public Collection<Mutant> doOperation(Solution input, Program program) {
             input.getMutants().add(new Mutant(this.name + " executed!", null, program));
-            List<Mutant> result = this.next(input, program);
+            Collection<Mutant> result = this.next(input, program);
             return result == null ? input.getMutants() : result;
         }
 

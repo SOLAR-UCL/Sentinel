@@ -1,8 +1,7 @@
 package br.ufpr.inf.gres.sentinel.base.mutation;
 
-import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.Objects;
-import org.apache.commons.collections4.list.SetUniqueList;
 
 /**
  * @author Giovani Guizzo
@@ -12,7 +11,7 @@ public class Operator {
     /**
      *
      */
-    protected SetUniqueList<Mutant> generatedMutants;
+    protected LinkedHashSet<Mutant> generatedMutants;
 
     /**
      *
@@ -36,7 +35,7 @@ public class Operator {
     public Operator(String name, String type) {
         this.name = name;
         this.type = type;
-        this.generatedMutants = SetUniqueList.setUniqueList(new ArrayList<>());
+        this.generatedMutants = new LinkedHashSet<>();
     }
 
     /**
@@ -69,7 +68,7 @@ public class Operator {
      *
      * @return
      */
-    public SetUniqueList<Mutant> getGeneratedMutants() {
+    public LinkedHashSet<Mutant> getGeneratedMutants() {
         return this.generatedMutants;
     }
 
@@ -77,7 +76,7 @@ public class Operator {
      *
      * @param generatedMutants
      */
-    public void setGeneratedMutants(SetUniqueList<Mutant> generatedMutants) {
+    public void setGeneratedMutants(LinkedHashSet<Mutant> generatedMutants) {
         this.generatedMutants = generatedMutants;
     }
 

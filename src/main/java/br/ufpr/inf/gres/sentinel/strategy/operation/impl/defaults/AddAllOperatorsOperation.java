@@ -6,12 +6,12 @@ import br.ufpr.inf.gres.sentinel.base.solution.Solution;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.TerminalRuleType;
 import br.ufpr.inf.gres.sentinel.integration.IntegrationFacade;
 import br.ufpr.inf.gres.sentinel.strategy.operation.Operation;
-import java.util.List;
+import java.util.Collection;
 
 /**
  * @author Giovani Guizzo
  */
-public class AddAllOperatorsOperation extends Operation<Solution, List<Mutant>> {
+public class AddAllOperatorsOperation extends Operation<Solution, Collection<Mutant>> {
 
     /**
      *
@@ -26,7 +26,7 @@ public class AddAllOperatorsOperation extends Operation<Solution, List<Mutant>> 
      * @return
      */
     @Override
-    public List<Mutant> doOperation(Solution solution, Program program) {
+    public Collection<Mutant> doOperation(Solution solution, Program program) {
         solution.getOperators().addAll(IntegrationFacade.getIntegrationFacade().getAllOperators());
         return this.next(solution, program);
     }

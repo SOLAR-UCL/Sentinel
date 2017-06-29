@@ -1,7 +1,6 @@
 package br.ufpr.inf.gres.sentinel.base.mutation;
 
-import java.util.ArrayList;
-import org.apache.commons.collections4.list.SetUniqueList;
+import java.util.LinkedHashSet;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -70,9 +69,9 @@ public class OperatorTest {
     @Test
     public void testGetAndSetGeneratedMutants() {
         Operator instance = new Operator("Operator1", "Type1");
-        SetUniqueList<Mutant> setUniqueList = SetUniqueList.setUniqueList(new ArrayList<>());
+        LinkedHashSet<Mutant> setUniqueList = new LinkedHashSet<>();
         instance.setGeneratedMutants(setUniqueList);
-        SetUniqueList result = instance.getGeneratedMutants();
+        LinkedHashSet<Mutant> result = instance.getGeneratedMutants();
         assertEquals(setUniqueList, result);
     }
 

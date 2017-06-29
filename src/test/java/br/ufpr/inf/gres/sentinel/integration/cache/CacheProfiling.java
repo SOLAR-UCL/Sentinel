@@ -43,7 +43,7 @@ public class CacheProfiling {
     @Test
     @Ignore
     public void profiling() throws IOException {
-        LOGGER.debug("Testing method: testRead4");
+        LOGGER.debug("Testing method: profiling");
         String directory = System.getProperty("user.dir") + File.separator + "training";
         CachedFacade facade = new CachedFacade(new PITFacade(directory), directory, null);
         IntegrationFacade.setIntegrationFacade(facade);
@@ -56,7 +56,7 @@ public class CacheProfiling {
                 15,
                 1,
                 10,
-                0,
+                10,
                 10,
                 1,
                 Lists.newArrayList(new Program("joda-time-2.8.1", "")),
@@ -66,7 +66,7 @@ public class CacheProfiling {
 
         VariableLengthSolution<Integer> solution = problem.createSolution();
         solution.clearVariables();
-        solution.addAllVariables(Lists.newArrayList(72, 131, 70, 81, 106, 134, 137, 74, 146, 28, 38, 79, 39, 166, 132, 69, 155, 18, 74, 84, 29, 29, 136, 66, 2, 42, 146, 162, 45, 126, 142, 137, 128, 83, 34, 135, 53, 139, 83, 13, 157, 147, 148, 159, 49, 129, 45, 57, 18, 55, 13));
+        solution.addAllVariables(Lists.newArrayList(98, 42, 70, 136, 134, 123, 34, 66, 63, 108, 15, 123, 2, 169, 67, 124, 156, 175, 166, 39, 86, 156, 151, 81, 81, 166, 126, 39, 98, 77, 34, 149, 89, 38, 114, 20, 72, 13, 114, 172, 119, 92, 60, 162, 32, 92));
 
         problem.evaluate(solution);
 
@@ -76,7 +76,7 @@ public class CacheProfiling {
     @Test
     @Ignore
     public void profiling2() throws IOException {
-        LOGGER.debug("Testing method: profiling");
+        LOGGER.debug("Testing method: profiling2");
         String directory = System.getProperty("user.dir") + File.separator + "training";
         CachedFacade facade = new CachedFacade(new PITFacade(directory), "src" + File.separator + "test" + File.separator + "resources", null);
         IntegrationFacade.setIntegrationFacade(facade);

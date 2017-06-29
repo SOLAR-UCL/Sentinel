@@ -3,7 +3,8 @@ package br.ufpr.inf.gres.sentinel.base.solution;
 import br.ufpr.inf.gres.sentinel.base.mutation.Mutant;
 import br.ufpr.inf.gres.sentinel.base.mutation.Operator;
 import java.util.ArrayList;
-import org.apache.commons.collections4.list.SetUniqueList;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 
 /**
  * @author Giovani Guizzo
@@ -13,19 +14,19 @@ public class Solution {
     /**
      *
      */
-    protected SetUniqueList<Mutant> mutants;
+    protected LinkedHashSet<Mutant> mutants;
 
     /**
      *
      */
-    protected SetUniqueList<Operator> operators;
+    protected LinkedHashSet<Operator> operators;
 
     /**
      *
      */
     public Solution() {
-        this.mutants = SetUniqueList.setUniqueList(new ArrayList<>());
-        this.operators = SetUniqueList.setUniqueList(new ArrayList<>());
+        this.mutants = new LinkedHashSet();
+        this.operators = new LinkedHashSet();
     }
 
     /**
@@ -34,34 +35,37 @@ public class Solution {
      */
     public Solution(Solution solution) {
         this();
+
+        LinkedHashMap<String, Operator> operatorHashMap = new LinkedHashMap<>();
+        LinkedHashMap<String, Mutant> mutantHashMap = new LinkedHashMap<>();
+
         for (Mutant mutant : solution.mutants) {
             Mutant newMutant = new Mutant(mutant);
-            this.mutants.add(newMutant);
+            mutantHashMap.put(newMutant.getName(), newMutant);
         }
         for (Operator operator : solution.operators) {
             Operator newOperator = new Operator(operator);
-            this.operators.add(newOperator);
+            operatorHashMap.put(newOperator.getName(), newOperator);
 
             ArrayList<Mutant> generatedMutants = new ArrayList<>(newOperator.getGeneratedMutants());
             newOperator.getGeneratedMutants().clear();
             for (Mutant generatedMutant : generatedMutants) {
-                for (Mutant tempMutant : this.mutants) {
-                    if (tempMutant.equals(generatedMutant)) {
-                        generatedMutant = tempMutant;
-                        break;
-                    }
-                }
+                Mutant tempMutant = mutantHashMap.get(generatedMutant.getName());
+                generatedMutant = tempMutant;
                 generatedMutant.setOperator(newOperator);
                 newOperator.getGeneratedMutants().add(generatedMutant);
             }
         }
+
+        this.operators.addAll(operatorHashMap.values());
+        this.mutants.addAll(mutantHashMap.values());
     }
 
     /**
      *
      * @return
      */
-    public SetUniqueList<Mutant> getMutants() {
+    public LinkedHashSet<Mutant> getMutants() {
         return this.mutants;
     }
 
@@ -69,7 +73,7 @@ public class Solution {
      *
      * @param mutants
      */
-    public void setMutants(SetUniqueList<Mutant> mutants) {
+    public void setMutants(LinkedHashSet<Mutant> mutants) {
         this.mutants = mutants;
     }
 
@@ -77,7 +81,7 @@ public class Solution {
      *
      * @return
      */
-    public SetUniqueList<Operator> getOperators() {
+    public LinkedHashSet<Operator> getOperators() {
         return this.operators;
     }
 
@@ -85,7 +89,7 @@ public class Solution {
      *
      * @param operators
      */
-    public void setOperators(SetUniqueList<Operator> operators) {
+    public void setOperators(LinkedHashSet<Operator> operators) {
         this.operators = operators;
     }
 }

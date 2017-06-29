@@ -8,6 +8,8 @@ import br.ufpr.inf.gres.sentinel.integration.pit.PITFacade;
 import com.google.common.collect.Lists;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedHashSet;
 import java.util.List;
 import org.junit.Test;
 
@@ -66,21 +68,22 @@ public class IntegrationFacadeTest {
         }
 
         @Override
-        public void executeMutants(List<Mutant> mutantsToExecute, Program program) {
-            int size = mutantsToExecute.size();
+        public void executeMutants(Collection<Mutant> mutantsToExecute, Program program) {
+            List<Mutant> mutantsList = new ArrayList<>(mutantsToExecute);
+            int size = mutantsList.size();
             for (int i = 0; i < size / 2; i++) {
-                Mutant mutant = mutantsToExecute.get(i);
+                Mutant mutant = mutantsList.get(i);
                 TestCase testCase = new TestCase(i % 2 == 0 ? "Test1" : "Test2");
                 mutant.getKillingTestCases().add(testCase);
             }
         }
 
         @Override
-        public List<Mutant> executeOperator(Operator operator, Program program) {
-            ArrayList<Mutant> mutants = Lists.newArrayList(new Mutant(operator + "_1", new File(operator + "_1"), program),
+        public LinkedHashSet<Mutant> executeOperator(Operator operator, Program program) {
+            LinkedHashSet<Mutant> mutants = new LinkedHashSet<>(Lists.newArrayList(new Mutant(operator + "_1", new File(operator + "_1"), program),
                     new Mutant(operator + "_2", new File(operator + "_2"), program),
                     new Mutant(operator + "_3", new File(operator + "_3"), program),
-                    new Mutant(operator + "_4", new File(operator + "_4"), program));
+                    new Mutant(operator + "_4", new File(operator + "_4"), program)));
             for (Mutant mutant : mutants) {
                 mutant.setOperator(operator);
                 operator.getGeneratedMutants().add(mutant);
@@ -89,8 +92,8 @@ public class IntegrationFacadeTest {
         }
 
         @Override
-        public List<Mutant> executeOperators(List<Operator> operators, Program program) {
-            List<Mutant> allMutants = new ArrayList<>();
+        public LinkedHashSet<Mutant> executeOperators(Collection<Operator> operators, Program program) {
+            LinkedHashSet<Mutant> allMutants = new LinkedHashSet<>();
             for (Operator operator : operators) {
                 allMutants.addAll(this.executeOperator(operator, program));
             }

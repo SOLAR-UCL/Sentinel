@@ -5,8 +5,7 @@ import br.ufpr.inf.gres.sentinel.base.mutation.Program;
 import br.ufpr.inf.gres.sentinel.base.solution.Solution;
 import br.ufpr.inf.gres.sentinel.strategy.operation.Operation;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.selection.SelectionOperation;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -14,7 +13,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * @author Giovani Guizzo
  * @param <T>
  */
-public abstract class AbstractDiscardOperation<T> extends Operation<Solution, List<Mutant>> {
+public abstract class AbstractDiscardOperation<T> extends Operation<Solution, Collection<Mutant>> {
 
     /**
      *
@@ -45,10 +44,10 @@ public abstract class AbstractDiscardOperation<T> extends Operation<Solution, Li
      * @return
      */
     @Override
-    public List<Mutant> doOperation(Solution solution, Program program) {
+    public Collection<Mutant> doOperation(Solution solution, Program program) {
         checkNotNull(this.selection, "No selection operation!");
-        List<T> listToDiscard = this.obtainList(solution);
-        listToDiscard.removeAll(this.selection.doOperation(new ArrayList<>(listToDiscard), program));
+        Collection<T> listToDiscard = this.obtainList(solution);
+        listToDiscard.removeAll(this.selection.doOperation(listToDiscard, program));
         return this.next(solution, program);
     }
 
@@ -82,6 +81,6 @@ public abstract class AbstractDiscardOperation<T> extends Operation<Solution, Li
      * @param solution
      * @return
      */
-    protected abstract List<T> obtainList(Solution solution);
+    protected abstract Collection<T> obtainList(Solution solution);
 
 }

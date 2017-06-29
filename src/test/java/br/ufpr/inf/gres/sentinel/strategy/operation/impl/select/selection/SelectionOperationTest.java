@@ -5,6 +5,8 @@ import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.type.impl.LastTo
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.type.impl.SequentialSelection;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.sort.impl.operator.OperatorTypeComparator;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import org.junit.Test;
 
@@ -37,9 +39,11 @@ public class SelectionOperationTest {
         group1.add(operator3);
         group1.add(operator4);
 
-        List<Operator> result = selectionOp.doOperation(group1, null);
+        Collection<Operator> result = selectionOp.doOperation(group1, null);
         assertEquals(1, result.size());
-        assertEquals(operator1, result.get(0));
+
+        Iterator<Operator> iterator = result.iterator();
+        assertEquals(operator1, iterator.next());
     }
 
     @Test
@@ -51,7 +55,7 @@ public class SelectionOperationTest {
 
         List<Operator> group1 = new ArrayList<>();
 
-        List<Operator> result = selectionOp.doOperation(group1, null);
+        Collection<Operator> result = selectionOp.doOperation(group1, null);
         assertTrue(result.isEmpty());
     }
 
@@ -73,9 +77,11 @@ public class SelectionOperationTest {
         group1.add(operator3);
         group1.add(operator4);
 
-        List<Operator> result = selectionOp.doOperation(group1, null);
+        Collection<Operator> result = selectionOp.doOperation(group1, null);
         assertEquals(1, result.size());
-        assertEquals(operator3, result.get(0));
+
+        Iterator<Operator> iterator = result.iterator();
+        assertEquals(operator3, iterator.next());
     }
 
     @Test
@@ -96,12 +102,14 @@ public class SelectionOperationTest {
         group1.add(operator3);
         group1.add(operator4);
 
-        List<Operator> result = selectionOp.doOperation(group1, null);
+        Collection<Operator> result = selectionOp.doOperation(group1, null);
         assertEquals(4, result.size());
-        assertEquals(operator1, result.get(0));
-        assertEquals(operator2, result.get(1));
-        assertEquals(operator3, result.get(2));
-        assertEquals(operator4, result.get(3));
+
+        Iterator<Operator> iterator = result.iterator();
+        assertEquals(operator1, iterator.next());
+        assertEquals(operator2, iterator.next());
+        assertEquals(operator3, iterator.next());
+        assertEquals(operator4, iterator.next());
     }
 
     @Test(expected = Exception.class)
@@ -122,7 +130,7 @@ public class SelectionOperationTest {
         group1.add(operator3);
         group1.add(operator4);
 
-        List<Operator> result = selectionOp.doOperation(group1, null);
+        Collection<Operator> result = selectionOp.doOperation(group1, null);
     }
 
     @Test
@@ -143,12 +151,14 @@ public class SelectionOperationTest {
         group1.add(operator3);
         group1.add(operator4);
 
-        List<Operator> result = selectionOp.doOperation(group1, null);
+        Collection<Operator> result = selectionOp.doOperation(group1, null);
         assertEquals(4, result.size());
-        assertEquals(operator1, result.get(0));
-        assertEquals(operator2, result.get(1));
-        assertEquals(operator3, result.get(2));
-        assertEquals(operator4, result.get(3));
+
+        Iterator<Operator> iterator = result.iterator();
+        assertEquals(operator1, iterator.next());
+        assertEquals(operator2, iterator.next());
+        assertEquals(operator3, iterator.next());
+        assertEquals(operator4, iterator.next());
     }
 
     @Test
@@ -169,10 +179,12 @@ public class SelectionOperationTest {
         group1.add(operator3);
         group1.add(operator4);
 
-        List<Operator> result = selectionOp.doOperation(group1, null);
+        Collection<Operator> result = selectionOp.doOperation(group1, null);
         assertEquals(2, result.size());
-        assertEquals(operator1, result.get(0));
-        assertEquals(operator2, result.get(1));
+
+        Iterator<Operator> iterator = result.iterator();
+        assertEquals(operator1, iterator.next());
+        assertEquals(operator2, iterator.next());
     }
 
     @Test
@@ -193,10 +205,12 @@ public class SelectionOperationTest {
         group1.add(operator3);
         group1.add(operator4);
 
-        List<Operator> result = selectionOp.doOperation(group1, null);
+        Collection<Operator> result = selectionOp.doOperation(group1, null);
         assertEquals(2, result.size());
-        assertEquals(operator1, result.get(0));
-        assertEquals(operator2, result.get(1));
+
+        Iterator<Operator> iterator = result.iterator();
+        assertEquals(operator1, iterator.next());
+        assertEquals(operator2, iterator.next());
     }
 
     @Test
@@ -217,11 +231,13 @@ public class SelectionOperationTest {
         group1.add(operator3);
         group1.add(operator4);
 
-        List<Operator> result = selectionOp.doOperation(group1, null);
+        Collection<Operator> result = selectionOp.doOperation(group1, null);
         assertEquals(3, result.size());
-        assertEquals(operator1, result.get(0));
-        assertEquals(operator4, result.get(1));
-        assertEquals(operator2, result.get(2));
+
+        Iterator<Operator> iterator = result.iterator();
+        assertEquals(operator1, iterator.next());
+        assertEquals(operator4, iterator.next());
+        assertEquals(operator2, iterator.next());
     }
 
     @Test
@@ -242,9 +258,11 @@ public class SelectionOperationTest {
         group1.add(operator3);
         group1.add(operator4);
 
-        List<Operator> result = selectionOp.doOperation(group1, null);
+        Collection<Operator> result = selectionOp.doOperation(group1, null);
         assertEquals(1, result.size());
-        assertEquals(operator1, result.get(0));
+
+        Iterator<Operator> iterator = result.iterator();
+        assertEquals(operator1, iterator.next());
     }
 
 }

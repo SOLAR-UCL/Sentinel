@@ -8,8 +8,8 @@ import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.Te
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.discard.AbstractDiscardOperation;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.selection.SelectionOperation;
 import java.util.ArrayList;
-import java.util.List;
-import org.apache.commons.collections4.list.SetUniqueList;
+import java.util.Collection;
+import java.util.LinkedHashSet;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -39,20 +39,20 @@ public class DiscardOperatorsOperation extends AbstractDiscardOperation<Operator
      * @return
      */
     @Override
-    public List<Mutant> doOperation(Solution solution, Program program) {
+    public Collection<Mutant> doOperation(Solution solution, Program program) {
         checkNotNull(this.selection, "No selection operation!");
-        List<Operator> listToDiscard = this.obtainList(solution);
+        Collection<Operator> listToDiscard = this.obtainList(solution);
         listToDiscard = this.selection.doOperation(new ArrayList<>(listToDiscard), program);
         solution.getOperators().removeAll(listToDiscard);
-        SetUniqueList<Mutant> mutantsToRemove = listToDiscard.stream()
+        LinkedHashSet<Mutant> mutantsToRemove = listToDiscard.stream()
                 .map(Operator::getGeneratedMutants)
                 .reduce((mutants1, mutants2) -> {
-                    SetUniqueList<Mutant> reducedMutants = SetUniqueList.setUniqueList(new ArrayList<>());
+                    LinkedHashSet<Mutant> reducedMutants = new LinkedHashSet<>();
                     reducedMutants.addAll(mutants1);
                     reducedMutants.addAll(mutants2);
                     return reducedMutants;
                 })
-                .orElse(SetUniqueList.setUniqueList(new ArrayList<>()));
+                .orElse(new LinkedHashSet<>());
         solution.getMutants().removeAll(mutantsToRemove);
         return this.next(solution, program);
     }
@@ -63,7 +63,7 @@ public class DiscardOperatorsOperation extends AbstractDiscardOperation<Operator
      * @return
      */
     @Override
-    protected List<Operator> obtainList(Solution solution) {
+    protected Collection<Operator> obtainList(Solution solution) {
         return solution.getOperators();
     }
 

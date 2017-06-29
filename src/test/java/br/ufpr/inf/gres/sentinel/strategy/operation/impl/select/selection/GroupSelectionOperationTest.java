@@ -10,6 +10,8 @@ import br.ufpr.inf.gres.sentinel.strategy.operation.impl.sort.impl.QuantityInGro
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.sort.impl.operator.OperatorTypeComparator;
 import com.google.common.collect.Lists;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import org.junit.Test;
 
@@ -42,9 +44,9 @@ public class GroupSelectionOperationTest {
         Operator operator3 = new Operator("Operator3", "Type2");
         Operator operator4 = new Operator("Operator4", "Type3");
 
-        List<Operator> result = groupOp.doOperation(Lists.newArrayList(operator1, operator2, operator3, operator4), null);
+        Collection<Operator> result = groupOp.doOperation(Lists.newArrayList(operator1, operator2, operator3, operator4), null);
         assertEquals(1, result.size());
-        assertEquals(operator3, result.get(0));
+        assertEquals(operator3, result.iterator().next());
     }
 
     @Test
@@ -66,10 +68,12 @@ public class GroupSelectionOperationTest {
         Operator operator3 = new Operator("Operator3", "Type2");
         Operator operator4 = new Operator("Operator4", "Type3");
 
-        List<Operator> result = groupOp.doOperation(Lists.newArrayList(operator1, operator2, operator3, operator4), null);
+        Collection<Operator> result = groupOp.doOperation(Lists.newArrayList(operator1, operator2, operator3, operator4), null);
         assertEquals(2, result.size());
-        assertEquals(operator3, result.get(0));
-        assertEquals(operator4, result.get(1));
+
+        Iterator<Operator> iterator = result.iterator();
+        assertEquals(operator3, iterator.next());
+        assertEquals(operator4, iterator.next());
     }
 
     @Test
@@ -91,11 +95,13 @@ public class GroupSelectionOperationTest {
         Operator operator3 = new Operator("Operator3", "Type2");
         Operator operator4 = new Operator("Operator4", "Type3");
 
-        List<Operator> result = groupOp.doOperation(Lists.newArrayList(operator1, operator2, operator3, operator4), null);
+        Collection<Operator> result = groupOp.doOperation(Lists.newArrayList(operator1, operator2, operator3, operator4), null);
         assertEquals(3, result.size());
-        assertEquals(operator3, result.get(0));
-        assertEquals(operator4, result.get(1));
-        assertEquals(operator1, result.get(2));
+
+        Iterator<Operator> iterator = result.iterator();
+        assertEquals(operator3, iterator.next());
+        assertEquals(operator4, iterator.next());
+        assertEquals(operator1, iterator.next());
     }
 
     @Test
@@ -117,12 +123,14 @@ public class GroupSelectionOperationTest {
         Operator operator3 = new Operator("Operator3", "Type2");
         Operator operator4 = new Operator("Operator4", "Type3");
 
-        List<Operator> result = groupOp.doOperation(Lists.newArrayList(operator1, operator2, operator3, operator4), null);
+        Collection<Operator> result = groupOp.doOperation(Lists.newArrayList(operator1, operator2, operator3, operator4), null);
         assertEquals(4, result.size());
-        assertEquals(operator3, result.get(0));
-        assertEquals(operator4, result.get(1));
-        assertEquals(operator1, result.get(2));
-        assertEquals(operator2, result.get(3));
+
+        Iterator<Operator> iterator = result.iterator();
+        assertEquals(operator3, iterator.next());
+        assertEquals(operator4, iterator.next());
+        assertEquals(operator1, iterator.next());
+        assertEquals(operator2, iterator.next());
     }
 
     @Test
@@ -146,11 +154,13 @@ public class GroupSelectionOperationTest {
         Operator operator3 = new Operator("Operator3", "Type2");
         Operator operator4 = new Operator("Operator4", "Type3");
 
-        List<Operator> result = groupOp.doOperation(Lists.newArrayList(operator1, operator2, operator3, operator4), null);
+        Collection<Operator> result = groupOp.doOperation(Lists.newArrayList(operator1, operator2, operator3, operator4), null);
         assertEquals(3, result.size());
-        assertEquals(operator1, result.get(0));
-        assertEquals(operator2, result.get(1));
-        assertEquals(operator3, result.get(2));
+
+        Iterator<Operator> iterator = result.iterator();
+        assertEquals(operator1, iterator.next());
+        assertEquals(operator2, iterator.next());
+        assertEquals(operator3, iterator.next());
     }
 
     @Test
@@ -182,10 +192,12 @@ public class GroupSelectionOperationTest {
         Operator operator3 = new Operator("Operator3", "Type1");
         Operator operator4 = new Operator("Operator4", "Type1");
 
-        List<Operator> result = groupOp.doOperation(Lists.newArrayList(operator1, operator2, operator3, operator4), null);
+        Collection<Operator> result = groupOp.doOperation(Lists.newArrayList(operator1, operator2, operator3, operator4), null);
         assertEquals(2, result.size());
-        assertEquals(operator3, result.get(0));
-        assertEquals(operator2, result.get(1));
+
+        Iterator<Operator> iterator = result.iterator();
+        assertEquals(operator3, iterator.next());
+        assertEquals(operator2, iterator.next());
     }
 
     @Test
@@ -209,7 +221,7 @@ public class GroupSelectionOperationTest {
 
         List<Operator> group1 = new ArrayList<>();
 
-        List<Operator> result = groupOp.doOperation(group1, null);
+        Collection<Operator> result = groupOp.doOperation(group1, null);
         assertTrue(result.isEmpty());
     }
 
@@ -249,11 +261,13 @@ public class GroupSelectionOperationTest {
         Operator operator3 = new Operator("Operator3", "Type2");
         Operator operator4 = new Operator("Operator4", "Type3");
 
-        List<Operator> result = groupOp.doOperation(Lists.newArrayList(operator1, operator2, operator3, operator4), null);
+        Collection<Operator> result = groupOp.doOperation(Lists.newArrayList(operator1, operator2, operator3, operator4), null);
         assertEquals(3, result.size());
-        assertEquals(operator3, result.get(0));
-        assertEquals(operator4, result.get(1));
-        assertEquals(operator1, result.get(2));
+
+        Iterator<Operator> iterator = result.iterator();
+        assertEquals(operator3, iterator.next());
+        assertEquals(operator4, iterator.next());
+        assertEquals(operator1, iterator.next());
     }
 
 }

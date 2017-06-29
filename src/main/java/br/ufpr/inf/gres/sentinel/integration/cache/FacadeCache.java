@@ -16,7 +16,6 @@ import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.*;
 import java.util.stream.Collectors;
-import org.apache.commons.collections4.list.SetUniqueList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -119,7 +118,7 @@ public class FacadeCache {
         longValues.add(executionTime);
     }
 
-    public void recordOperatorGeneratedMutants(Program program, Operator operator, List<Mutant> generatedMutants) {
+    public void recordOperatorGeneratedMutants(Program program, Operator operator, Collection<Mutant> generatedMutants) {
         CacheHolder cache = getOrCreateCache(program);
 
         HashMap<String, Operator> operators = cache.operators;
@@ -131,12 +130,12 @@ public class FacadeCache {
         }
     }
 
-    public void recordMutantKillingTestCases(Program program, Mutant mutantToExecute, SetUniqueList<TestCase> killingTestCases) {
+    public void recordMutantKillingTestCases(Program program, Mutant mutantToExecute, Collection<TestCase> killingTestCases) {
         Mutant mutant = getOrCreateCache(program).mutants.get(mutantToExecute.toString());
-        mutant.setKillingTestCases(killingTestCases);
+        mutant.setKillingTestCases(new LinkedHashSet<>(killingTestCases));
     }
 
-    public List<Mutant> retrieveOperatorExecutionInformation(Program program, Operator operator) {
+    public LinkedHashSet<Mutant> retrieveOperatorExecutionInformation(Program program, Operator operator) {
         CacheHolder cache = getOrCreateCache(program);
 
         operator.setExecutionTime(cache.operatorsAvgExecutionTime
@@ -145,18 +144,18 @@ public class FacadeCache {
         operator.setCpuTime(cache.operatorsAvgCPUTime
                 .getOrDefault(operator.toString(), 0D));
 
-        List<Mutant> resultMutants = new ArrayList<>();
+        LinkedHashSet<Mutant> resultMutants = new LinkedHashSet<>();
 
         Operator cachedOperator = cache.operators.get(operator.toString());
         if (cachedOperator != null) {
-            List<Mutant> cachedMutants = cachedOperator.getGeneratedMutants();
+            LinkedHashSet<Mutant> cachedMutants = cachedOperator.getGeneratedMutants();
             for (Mutant cachedMutant : cachedMutants) {
                 Mutant newMutant = new Mutant(cachedMutant.getName(), cachedMutant.getSourceFile(), cachedMutant.getOriginalProgram());
                 newMutant.setOperator(operator);
                 resultMutants.add(newMutant);
             }
 
-            operator.setGeneratedMutants(SetUniqueList.setUniqueList(resultMutants));
+            operator.setGeneratedMutants(resultMutants);
         }
         return resultMutants;
     }
@@ -174,14 +173,14 @@ public class FacadeCache {
 
         Mutant cachedMutant = cache.mutants.get(mutantToExecute.toString());
         if (cachedMutant != null) {
-            List<TestCase> cachedTestCases = cachedMutant.getKillingTestCases();
+            LinkedHashSet<TestCase> cachedTestCases = cachedMutant.getKillingTestCases();
             for (TestCase cachedTestCase : cachedTestCases) {
                 TestCase testCase = new TestCase(cachedTestCase);
                 newTestCases.add(testCase);
             }
         }
 
-        mutantToExecute.setKillingTestCases(SetUniqueList.setUniqueList(newTestCases));
+        mutantToExecute.setKillingTestCases(new LinkedHashSet<>(newTestCases));
     }
 
     private CacheHolder getOrCreateCache(Program program) {
@@ -268,7 +267,6 @@ public class FacadeCache {
             this.facadeCache = facadeCache;
             this.gson = new GsonBuilder()
                     .registerTypeAdapter(CacheHolder.class, new CacheHolderDeserializer())
-                    .registerTypeAdapter(SetUniqueList.class, (InstanceCreator<SetUniqueList>) (Type type) -> SetUniqueList.setUniqueList(new ArrayList<>()))
                     .create();
         }
 

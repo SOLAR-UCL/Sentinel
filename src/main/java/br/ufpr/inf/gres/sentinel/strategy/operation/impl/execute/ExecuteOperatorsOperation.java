@@ -8,15 +8,14 @@ import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.Te
 import br.ufpr.inf.gres.sentinel.strategy.operation.Operation;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.execute.type.OperatorExecutionType;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.selection.SelectionOperation;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * @author Giovani Guizzo
  */
-public class ExecuteOperatorsOperation extends Operation<Solution, List<Mutant>> {
+public class ExecuteOperatorsOperation extends Operation<Solution, Collection<Mutant>> {
 
     private OperatorExecutionType executionType;
     private SelectionOperation<Operator> selection;
@@ -45,11 +44,11 @@ public class ExecuteOperatorsOperation extends Operation<Solution, List<Mutant>>
      * @return
      */
     @Override
-    public List<Mutant> doOperation(Solution solution, Program program) {
+    public Collection<Mutant> doOperation(Solution solution, Program program) {
         checkNotNull(this.selection, "No selection operation!");
         checkNotNull(this.executionType, "No execution operation!");
-        List<Operator> selectedOperators = this.selection.doOperation(new ArrayList<>(solution.getOperators()), null);
-        List<Mutant> generatedMutants = this.executionType.doOperation(selectedOperators, program);
+        Collection<Operator> selectedOperators = this.selection.doOperation(solution.getOperators(), null);
+        Collection<Mutant> generatedMutants = this.executionType.doOperation(selectedOperators, program);
         solution.getMutants().addAll(generatedMutants);
         return this.next(solution, program);
     }

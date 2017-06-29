@@ -5,16 +5,15 @@ import br.ufpr.inf.gres.sentinel.base.mutation.Program;
 import br.ufpr.inf.gres.sentinel.base.solution.Solution;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.TerminalRuleType;
 import br.ufpr.inf.gres.sentinel.strategy.operation.Operation;
-import java.util.ArrayList;
-import java.util.List;
-import org.apache.commons.collections4.list.SetUniqueList;
+import java.util.Collection;
+import java.util.LinkedHashSet;
 
 /**
  * @author Giovani Guizzo
  */
-public class NewBranchOperation extends Operation<Solution, List<Mutant>> {
+public class NewBranchOperation extends Operation<Solution, Collection<Mutant>> {
 
-    private Operation<Solution, List<Mutant>> secondSuccessor;
+    private Operation<Solution, Collection<Mutant>> secondSuccessor;
 
     /**
      *
@@ -29,10 +28,10 @@ public class NewBranchOperation extends Operation<Solution, List<Mutant>> {
      * @return
      */
     @Override
-    public List<Mutant> doOperation(Solution solution, Program program) {
+    public Collection<Mutant> doOperation(Solution solution, Program program) {
         Solution clonedSolution = new Solution(solution);
-        List<Mutant> result = this.next(solution, program);
-        SetUniqueList<Mutant> newList = SetUniqueList.setUniqueList(new ArrayList<>(result));
+        Collection<Mutant> result = this.next(solution, program);
+        LinkedHashSet<Mutant> newList = new LinkedHashSet<>(result);
         if (this.secondSuccessor != null) {
             newList.addAll(this.secondSuccessor.doOperation(clonedSolution, program));
         }
@@ -43,7 +42,7 @@ public class NewBranchOperation extends Operation<Solution, List<Mutant>> {
      *
      * @return
      */
-    public Operation<Solution, List<Mutant>> getSecondSuccessor() {
+    public Operation<Solution, Collection<Mutant>> getSecondSuccessor() {
         return this.secondSuccessor;
     }
 
@@ -51,7 +50,7 @@ public class NewBranchOperation extends Operation<Solution, List<Mutant>> {
      *
      * @param secondSuccessor
      */
-    public void setSecondSuccessor(Operation<Solution, List<Mutant>> secondSuccessor) {
+    public void setSecondSuccessor(Operation<Solution, Collection<Mutant>> secondSuccessor) {
         this.secondSuccessor = secondSuccessor;
     }
 

@@ -5,7 +5,7 @@ import br.ufpr.inf.gres.sentinel.base.solution.Solution;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.TerminalRuleType;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.operation.AbstractSelectOperation;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.selection.SelectionOperation;
-import java.util.List;
+import java.util.Collection;
 
 /**
  * @author Giovani Guizzo
@@ -33,7 +33,7 @@ public class SelectMutantsOperation extends AbstractSelectOperation<Mutant> {
      * @return
      */
     @Override
-    public List<Mutant> obtainList(Solution solution) {
+    public Collection<Mutant> obtainList(Solution solution) {
         return solution.getMutants();
     }
 

@@ -5,7 +5,7 @@ import br.ufpr.inf.gres.sentinel.base.mutation.Program;
 import br.ufpr.inf.gres.sentinel.base.solution.Solution;
 import br.ufpr.inf.gres.sentinel.integration.IntegrationFacade;
 import br.ufpr.inf.gres.sentinel.integration.IntegrationFacadeTest.IntegrationFacadeStub;
-import java.util.List;
+import java.util.Collection;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -32,7 +32,7 @@ public class StoreMutantsOperationTest {
         solution.getMutants().add(new Mutant("Mutant2", null, new Program("Program1", "Program/path")));
 
         StoreMutantsOperation storeMutantsOperation = new StoreMutantsOperation();
-        List<Mutant> result = storeMutantsOperation.doOperation(solution, null);
+        Collection<Mutant> result = storeMutantsOperation.doOperation(solution, null);
 
         assertEquals(2, result.size());
     }

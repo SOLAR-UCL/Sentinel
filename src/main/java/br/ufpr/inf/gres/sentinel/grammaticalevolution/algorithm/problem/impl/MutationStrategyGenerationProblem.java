@@ -138,7 +138,7 @@ public class MutationStrategyGenerationProblem implements VariableLengthIntegerP
                     LOGGER.debug("Starting strategy execution.");
                     Stopwatch stopwatch = Stopwatch.createStarted();
                     notifyObservers(observer -> observer.notifyStrategyExecutionStart());
-                    List<Mutant> mutants = strategy.run(testProgram);
+                    Collection<Mutant> mutants = strategy.run(testProgram);
                     notifyObservers(observer -> observer.notifyStrategyExecutionEnd());
                     stopwatch.stop();
                     LOGGER.debug("Strategy execution finished succesfully in " + DurationFormatUtils.formatDurationHMS(stopwatch.elapsed(TimeUnit.MILLISECONDS)));
@@ -174,7 +174,11 @@ public class MutationStrategyGenerationProblem implements VariableLengthIntegerP
             LOGGER.debug("Exception! Solution is invalid. Not enough variables. Don't need to worry, though.");
             notifyObservers(observer -> observer.notifyException(ex));
         } finally {
-            LOGGER.debug("Evaluation finished.");
+            String objectiveValues = "";
+            for (int i = 0; i < solution.getNumberOfObjectives(); i++) {
+                objectiveValues += solution.getObjective(i) + " ";
+            }
+            LOGGER.info("Evaluation finished. Objective values are: " + objectiveValues);
             notifyObservers(observer -> observer.notifyEvaluationEnd());
         }
     }

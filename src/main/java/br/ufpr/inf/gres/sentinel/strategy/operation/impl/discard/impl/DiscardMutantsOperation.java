@@ -5,7 +5,7 @@ import br.ufpr.inf.gres.sentinel.base.solution.Solution;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.TerminalRuleType;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.discard.AbstractDiscardOperation;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.selection.SelectionOperation;
-import java.util.List;
+import java.util.Collection;
 
 /**
  * @author Giovani Guizzo
@@ -33,7 +33,7 @@ public class DiscardMutantsOperation extends AbstractDiscardOperation<Mutant> {
      * @return
      */
     @Override
-    protected List<Mutant> obtainList(Solution solution) {
+    protected Collection<Mutant> obtainList(Solution solution) {
         return solution.getMutants();
     }
 

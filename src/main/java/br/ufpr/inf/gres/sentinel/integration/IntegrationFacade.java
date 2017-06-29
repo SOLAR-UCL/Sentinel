@@ -12,9 +12,7 @@ import com.google.common.collect.Multimaps;
 import java.io.File;
 import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadMXBean;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -63,27 +61,27 @@ public abstract class IntegrationFacade {
      *
      * @param mutantsToExecute
      */
-    public abstract void executeMutants(List<Mutant> mutantsToExecute, Program program);
+    public abstract void executeMutants(Collection<Mutant> mutantsToExecute, Program program);
 
     /**
      *
      * @param operator
      * @return
      */
-    public abstract List<Mutant> executeOperator(Operator operator, Program program);
+    public abstract LinkedHashSet<Mutant> executeOperator(Operator operator, Program program);
 
     /**
      *
      * @param operators
      * @return
      */
-    public abstract List<Mutant> executeOperators(List<Operator> operators, Program program);
+    public abstract LinkedHashSet<Mutant> executeOperators(Collection<Operator> operators, Program program);
 
     /**
      *
      * @return
      */
-    public abstract List<Operator> getAllOperators();
+    public abstract Collection<Operator> getAllOperators();
 
     /**
      *
@@ -180,11 +178,11 @@ public abstract class IntegrationFacade {
      */
     protected void runConventionalStrategy(Program program, int repetitions) {
         ThreadMXBean threadBean = ManagementFactory.getThreadMXBean();
-        List<Mutant> allMutants = new ArrayList<>();
+        LinkedHashSet<Mutant> allMutants = new LinkedHashSet<>();
         for (int i = 0; i < repetitions; i++) {
             Stopwatch stopwatch = Stopwatch.createStarted();
             long currentThreadCpuTime = threadBean.getCurrentThreadCpuTime();
-            List<Operator> operators = this.getAllOperators();
+            Collection<Operator> operators = this.getAllOperators();
             allMutants = this.executeOperators(operators, program);
             this.executeMutants(allMutants, program);
             currentThreadCpuTime = threadBean.getCurrentThreadCpuTime() - currentThreadCpuTime;

@@ -4,9 +4,8 @@ import br.ufpr.inf.gres.sentinel.base.mutation.Mutant;
 import br.ufpr.inf.gres.sentinel.base.mutation.Program;
 import br.ufpr.inf.gres.sentinel.base.solution.Solution;
 import br.ufpr.inf.gres.sentinel.strategy.operation.Operation;
-import java.util.ArrayList;
-import java.util.List;
-import org.apache.commons.collections4.list.SetUniqueList;
+import java.util.Collection;
+import java.util.LinkedHashSet;
 
 /**
  *
@@ -14,7 +13,7 @@ import org.apache.commons.collections4.list.SetUniqueList;
  */
 public class Strategy {
 
-    private Operation<Solution, List<Mutant>> firstOperation;
+    private Operation<Solution, Collection<Mutant>> firstOperation;
 
     /**
      *
@@ -26,7 +25,7 @@ public class Strategy {
      *
      * @param firstOperation
      */
-    public Strategy(Operation<Solution, List<Mutant>> firstOperation) {
+    public Strategy(Operation<Solution, Collection<Mutant>> firstOperation) {
         this.firstOperation = firstOperation;
     }
 
@@ -34,7 +33,7 @@ public class Strategy {
      *
      * @return
      */
-    public Operation<Solution, List<Mutant>> getFirstOperation() {
+    public Operation<Solution, Collection<Mutant>> getFirstOperation() {
         return this.firstOperation;
     }
 
@@ -42,7 +41,7 @@ public class Strategy {
      *
      * @param firstOperation
      */
-    public void setFirstOperation(Operation<Solution, List<Mutant>> firstOperation) {
+    public void setFirstOperation(Operation<Solution, Collection<Mutant>> firstOperation) {
         this.firstOperation = firstOperation;
     }
 
@@ -50,11 +49,11 @@ public class Strategy {
      *
      * @return
      */
-    public List<Mutant> run(Program program) {
+    public Collection<Mutant> run(Program program) {
         if (this.firstOperation != null) {
             return this.firstOperation.doOperation(new Solution(), program);
         }
-        return SetUniqueList.setUniqueList(new ArrayList<>());
+        return new LinkedHashSet<>();
     }
 
     @Override

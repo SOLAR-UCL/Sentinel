@@ -7,7 +7,7 @@ import br.ufpr.inf.gres.sentinel.strategy.operation.impl.sort.AbstractSorterOper
 import com.google.common.math.DoubleMath;
 import java.math.RoundingMode;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -17,7 +17,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  *
  * @author Giovani Guizzo
  */
-public class SelectionOperation<T> extends Operation<List<T>, List<T>> {
+public class SelectionOperation<T> extends Operation<Collection<T>, Collection<T>> {
 
     /**
      *
@@ -59,26 +59,27 @@ public class SelectionOperation<T> extends Operation<List<T>, List<T>> {
      * @return
      */
     @Override
-    public List<T> doOperation(List<T> input, Program program) {
+    public Collection<T> doOperation(Collection<T> input, Program program) {
         return this.doSelection(input);
     }
 
-    protected List doSelection(List input) {
+    protected Collection doSelection(Collection input) {
         if (input.size() > 0) {
             checkNotNull(this.selectionType, "No selection type defined for selection!");
             checkArgument(this.percentage != 0D || this.quantity != 0, "No quantity or percentage defined for selection! "
                     + "Percentage: " + this.percentage + ". Quantity: " + this.quantity + ".");
+            ArrayList tempList = new ArrayList(input);
             int numberToSelect;
             if (this.percentage != 0D) {
-                numberToSelect = DoubleMath.roundToInt(input.size() * this.percentage, RoundingMode.DOWN);
+                numberToSelect = DoubleMath.roundToInt(tempList.size() * this.percentage, RoundingMode.DOWN);
             } else {
                 numberToSelect = this.quantity;
             }
-            numberToSelect = numberToSelect <= input.size() ? numberToSelect : input.size();
+            numberToSelect = numberToSelect <= tempList.size() ? numberToSelect : tempList.size();
             if (this.sorter != null) {
-                input.sort(this.sorter);
+                tempList.sort(this.sorter);
             }
-            return this.selectionType.selectItems(input, numberToSelect);
+            return this.selectionType.selectItems(tempList, numberToSelect);
         } else {
             return new ArrayList<>();
         }

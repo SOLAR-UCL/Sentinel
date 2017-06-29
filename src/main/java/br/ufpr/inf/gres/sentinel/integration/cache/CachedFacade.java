@@ -12,7 +12,6 @@ import java.lang.management.ThreadMXBean;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
-import org.apache.commons.collections4.list.SetUniqueList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -58,7 +57,7 @@ public class CachedFacade extends IntegrationFacade {
         if (!this.cache.isCached(program)) {
             LOGGER.debug("Program is not cached. Starting execution.");
             LOGGER.trace("Starting first execution. It's gonna be discarded.");
-            List<Mutant> allMutants = this.facade.executeOperators(this.facade.getAllOperators(), program);
+            LinkedHashSet<Mutant> allMutants = this.facade.executeOperators(this.facade.getAllOperators(), program);
             this.facade.executeMutants(allMutants, program);
             this.conventionalExecutionCPUTimes.removeAll(program);
             this.conventionalExecutionTimes.removeAll(program);
@@ -84,14 +83,14 @@ public class CachedFacade extends IntegrationFacade {
         } else {
             LOGGER.debug("Program is cached. Returning cached values.");
             if (!this.conventionalMutants.containsKey(program)) {
-                SetUniqueList<Mutant> allMutants = SetUniqueList.setUniqueList(new ArrayList<>());
+                Collection<Mutant> allMutants = new LinkedHashSet<>();
                 for (int i = 0; i < repetitions; i++) {
                     long cpuTimeSum = 0;
                     long timeSum = 0;
 
-                    List<Operator> operators = this.getAllOperators();
+                    Collection<Operator> operators = this.getAllOperators();
 
-                    allMutants = SetUniqueList.setUniqueList(new ArrayList<>());
+                    allMutants = new LinkedHashSet<>();
                     for (Operator operator : operators) {
                         allMutants.addAll(this.cache.retrieveOperatorExecutionInformation(program, operator));
                         cpuTimeSum += operator.getCpuTime();
@@ -113,13 +112,13 @@ public class CachedFacade extends IntegrationFacade {
 
     @Override
     protected void runConventionalStrategy(Program program, int repetitions) {
-        List<Mutant> allMutants = new ArrayList<>();
+        LinkedHashSet<Mutant> allMutants = new LinkedHashSet<>();
         for (int i = 0; i < repetitions; i++) {
             LOGGER.trace("Executing repetition " + i + ".");
             long cpuTimeSum = 0;
             long timeSum = 0;
 
-            List<Operator> operators = this.getAllOperators();
+            Collection<Operator> operators = this.getAllOperators();
             allMutants = this.executeOperators(operators, program);
             this.executeMutants(allMutants, program);
 
@@ -148,11 +147,11 @@ public class CachedFacade extends IntegrationFacade {
     }
 
     @Override
-    public List<Mutant> executeOperators(List<Operator> operators, Program program) {
-        List<Mutant> allMutants = new ArrayList<>();
+    public LinkedHashSet<Mutant> executeOperators(Collection<Operator> operators, Program program) {
+        LinkedHashSet<Mutant> allMutants = new LinkedHashSet<>();
         if (operators != null) {
             for (Operator operator : operators) {
-                List<Mutant> generatedMutants = this.executeOperator(operator, program);
+                LinkedHashSet<Mutant> generatedMutants = this.executeOperator(operator, program);
                 allMutants.addAll(generatedMutants);
             }
         }
@@ -160,14 +159,14 @@ public class CachedFacade extends IntegrationFacade {
     }
 
     @Override
-    public List<Mutant> executeOperator(Operator operator, Program program) {
+    public LinkedHashSet<Mutant> executeOperator(Operator operator, Program program) {
         if (operator != null) {
             if (!cache.isCached(program)) {
                 Stopwatch stopWatch = Stopwatch.createStarted();
                 ThreadMXBean threadBean = ManagementFactory.getThreadMXBean();
                 long cpuTime = threadBean.getCurrentThreadCpuTime();
 
-                List<Mutant> generatedMutants = this.facade.executeOperator(operator, program);
+                LinkedHashSet<Mutant> generatedMutants = this.facade.executeOperator(operator, program);
 
                 cpuTime = threadBean.getCurrentThreadCpuTime() - cpuTime;
                 stopWatch.stop();
@@ -182,16 +181,16 @@ public class CachedFacade extends IntegrationFacade {
 
                 return generatedMutants;
             } else {
-                List<Mutant> mutants = this.cache.retrieveOperatorExecutionInformation(program, operator);
+                LinkedHashSet<Mutant> mutants = this.cache.retrieveOperatorExecutionInformation(program, operator);
                 notifyObservers(observer -> observer.notifyOperatorExecutionInformationRetrieved(operator));
                 return mutants;
             }
         }
-        return new ArrayList<>();
+        return new LinkedHashSet<>();
     }
 
     @Override
-    public void executeMutants(List<Mutant> mutantsToExecute, Program program) {
+    public void executeMutants(Collection<Mutant> mutantsToExecute, Program program) {
         if (mutantsToExecute != null) {
             for (Mutant mutant : mutantsToExecute) {
                 this.executeMutant(mutant, program);
@@ -227,7 +226,7 @@ public class CachedFacade extends IntegrationFacade {
     }
 
     @Override
-    public List<Operator> getAllOperators() {
+    public Collection<Operator> getAllOperators() {
         return this.facade.getAllOperators();
     }
 

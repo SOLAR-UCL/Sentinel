@@ -5,14 +5,13 @@ import br.ufpr.inf.gres.sentinel.base.mutation.Program;
 import br.ufpr.inf.gres.sentinel.base.solution.Solution;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.TerminalRuleType;
 import br.ufpr.inf.gres.sentinel.strategy.operation.Operation;
-import java.util.ArrayList;
-import java.util.List;
-import org.apache.commons.collections4.list.SetUniqueList;
+import java.util.Collection;
+import java.util.LinkedHashSet;
 
 /**
  * @author Giovani Guizzo
  */
-public class StoreMutantsOperation extends Operation<Solution, List<Mutant>> {
+public class StoreMutantsOperation extends Operation<Solution, Collection<Mutant>> {
 
     /**
      *
@@ -27,8 +26,8 @@ public class StoreMutantsOperation extends Operation<Solution, List<Mutant>> {
      * @return
      */
     @Override
-    public List<Mutant> doOperation(Solution solution, Program program) {
-        return SetUniqueList.setUniqueList(new ArrayList<>(solution.getMutants()));
+    public Collection<Mutant> doOperation(Solution solution, Program program) {
+        return new LinkedHashSet(solution.getMutants());
     }
 
     /**

@@ -4,6 +4,7 @@ import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.Te
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.type.SelectionType;
 import edu.emory.mathcs.backport.java.util.Collections;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Random;
 
@@ -38,7 +39,7 @@ public class RandomSelection<T> extends SelectionType<T> {
      * @return
      */
     @Override
-    public List<T> selectItems(List<T> items, int numberOfItemsToSelect) {
+    public Collection<T> selectItems(Collection<T> items, int numberOfItemsToSelect) {
         List<T> newList = new ArrayList<>();
         if (!items.isEmpty() && numberOfItemsToSelect > 0) {
             newList = new ArrayList<>(items);

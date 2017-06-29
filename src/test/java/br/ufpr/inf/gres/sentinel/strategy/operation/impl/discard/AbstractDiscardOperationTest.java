@@ -4,7 +4,7 @@ import br.ufpr.inf.gres.sentinel.base.mutation.Operator;
 import br.ufpr.inf.gres.sentinel.base.solution.Solution;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.selection.SelectionOperation;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.type.impl.SequentialSelection;
-import java.util.List;
+import java.util.Collection;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -37,7 +37,7 @@ public class AbstractDiscardOperationTest {
         operation.doOperation(solution, null);
 
         assertEquals(1, solution.getOperators().size());
-        assertEquals(operator2, solution.getOperators().get(0));
+        assertEquals(operator2, solution.getOperators().iterator().next());
     }
 
     @Test
@@ -61,7 +61,7 @@ public class AbstractDiscardOperationTest {
         }
 
         @Override
-        protected List<Operator> obtainList(Solution solution) {
+        protected Collection<Operator> obtainList(Solution solution) {
             return solution.getOperators();
         }
     }

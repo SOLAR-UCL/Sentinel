@@ -19,7 +19,7 @@ import br.ufpr.inf.gres.sentinel.strategy.operation.impl.sort.impl.operator.Oper
 import com.google.common.collect.Lists;
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
+import java.util.Collection;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -53,7 +53,7 @@ public class StrategyMapperTest {
         assertNotNull(strategy);
         assertEquals("1.All Operators - 2.Execute Operators - 3.Select Mutants - 4.Store Mutants", strategy.toString());
 
-        Operation<Solution, List<Mutant>> operation = strategy.getFirstOperation();
+        Operation<Solution, Collection<Mutant>> operation = strategy.getFirstOperation();
         assertTrue(operation instanceof AddAllOperatorsOperation);
 
         assertTrue(operation.getSuccessor() instanceof ExecuteOperatorsOperation);
@@ -92,7 +92,7 @@ public class StrategyMapperTest {
         assertNotNull(strategy);
         assertEquals("1.All Operators - 2.Execute Operators - 3.Select Mutants - 4.Store Mutants", strategy.toString());
 
-        Operation<Solution, List<Mutant>> operation = strategy.getFirstOperation();
+        Operation<Solution, Collection<Mutant>> operation = strategy.getFirstOperation();
         assertTrue(operation instanceof AddAllOperatorsOperation);
 
         assertTrue(operation.getSuccessor() instanceof ExecuteOperatorsOperation);
@@ -118,7 +118,7 @@ public class StrategyMapperTest {
         StoreMutantsOperation store = (StoreMutantsOperation) mutantsOperation.getSuccessor();
         assertNull(store.getSuccessor());
 
-        List<Mutant> result = strategy.run(programUnderTest);
+        Collection<Mutant> result = strategy.run(programUnderTest);
         assertFalse(result.isEmpty());
         setUpClass();
     }

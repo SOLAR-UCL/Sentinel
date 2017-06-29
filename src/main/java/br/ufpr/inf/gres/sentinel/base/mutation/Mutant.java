@@ -1,9 +1,8 @@
 package br.ufpr.inf.gres.sentinel.base.mutation;
 
 import java.io.File;
-import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.Objects;
-import org.apache.commons.collections4.list.SetUniqueList;
 
 /**
  * This class represents a mutant. A mutant is a {@link Program}, but mutated.
@@ -19,7 +18,7 @@ public class Mutant extends Program {
     /**
      * The test cases that kill this mutant.
      */
-    protected SetUniqueList<TestCase> killingTestCases;
+    protected LinkedHashSet<TestCase> killingTestCases;
     /**
      * The operator that generated this mutant.
      */
@@ -60,7 +59,7 @@ public class Mutant extends Program {
     public Mutant(String name, File sourceFile, Program originalProgram) {
         super(name, sourceFile);
         this.originalProgram = originalProgram;
-        this.killingTestCases = SetUniqueList.setUniqueList(new ArrayList<>());
+        this.killingTestCases = new LinkedHashSet<>();
     }
 
     /**
@@ -99,7 +98,7 @@ public class Mutant extends Program {
      * @see #isAlive()
      * @see #isDead()
      */
-    public SetUniqueList<TestCase> getKillingTestCases() {
+    public LinkedHashSet<TestCase> getKillingTestCases() {
         return this.killingTestCases;
     }
 
@@ -108,7 +107,7 @@ public class Mutant extends Program {
      *
      * @param killingTestCases the test cases that kill this mutant
      */
-    public void setKillingTestCases(SetUniqueList<TestCase> killingTestCases) {
+    public void setKillingTestCases(LinkedHashSet<TestCase> killingTestCases) {
         this.killingTestCases = killingTestCases;
     }
 

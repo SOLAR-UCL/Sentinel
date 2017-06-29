@@ -14,6 +14,7 @@ import com.google.common.collect.Lists;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -49,7 +50,7 @@ public class CachedFacadeTest {
     @Test
     public void testGetAllOperators() {
         LOGGER.debug("Testing method: testGetAllOperators");
-        List<Operator> allOperators = facade.getAllOperators();
+        Collection<Operator> allOperators = facade.getAllOperators();
         assertNotNull(allOperators);
         assertEquals(7, allOperators.size());
     }
@@ -59,10 +60,10 @@ public class CachedFacadeTest {
         LOGGER.debug("Testing method: testExecuteOperator");
         IntegrationFacade.setIntegrationFacade(facade);
 
-        List<Operator> allOperators = facade.getAllOperators();
+        Collection<Operator> allOperators = facade.getAllOperators();
 
-        Operator operator1 = allOperators.get(0);
-        List<Mutant> mutants = facade.executeOperator(operator1, programUnderTest);
+        Operator operator1 = allOperators.iterator().next();
+        Collection<Mutant> mutants = facade.executeOperator(operator1, programUnderTest);
         assertNotNull(mutants);
         assertEquals(13, mutants.size());
         assertTrue(mutants.stream().allMatch(Mutant::isAlive));
@@ -73,10 +74,10 @@ public class CachedFacadeTest {
 
         facade.initializeConventionalStrategy(programUnderTest, 1);
 
-        List<Operator> allOperators2 = facade.getAllOperators();
+        Collection<Operator> allOperators2 = facade.getAllOperators();
 
-        Operator operator2 = allOperators2.get(0);
-        List<Mutant> mutants2 = facade.executeOperator(operator2, programUnderTest);
+        Operator operator2 = allOperators2.iterator().next();
+        Collection<Mutant> mutants2 = facade.executeOperator(operator2, programUnderTest);
         assertNotNull(mutants2);
         assertEquals(13, mutants2.size());
         assertTrue(mutants2.stream().allMatch(Mutant::isAlive));
@@ -95,10 +96,10 @@ public class CachedFacadeTest {
         LOGGER.debug("Testing method: testExecuteOperator2");
         IntegrationFacade.setIntegrationFacade(facade);
 
-        List<Operator> allOperators = facade.getAllOperators();
+        Collection<Operator> allOperators = facade.getAllOperators();
 
-        Operator operator1 = allOperators.get(0);
-        List<Mutant> mutants = facade.executeOperator(operator1, programUnderTest);
+        Operator operator1 = allOperators.iterator().next();
+        Collection<Mutant> mutants = facade.executeOperator(operator1, programUnderTest);
         mutants = facade.executeOperator(operator1, programUnderTest);
         assertNotNull(mutants);
         assertEquals(13, mutants.size());
@@ -108,25 +109,25 @@ public class CachedFacadeTest {
         assertTrue(operator1.getCpuTime() > 0);
         assertTrue(operator1.getExecutionTime() > 0);
 
-        facade.executeMutant(mutants.get(0), programUnderTest);
-        assertTrue(mutants.get(0).isDead());
-        assertEquals(1, mutants.get(0).getKillingTestCases().size());
+        facade.executeMutant(mutants.iterator().next(), programUnderTest);
+        assertTrue(mutants.iterator().next().isDead());
+        assertEquals(1, mutants.iterator().next().getKillingTestCases().size());
     }
 
     @Test
     public void testExecuteOperators() {
         LOGGER.debug("Testing method: testExecuteOperators");
 
-        List<Operator> allOperators = facade.getAllOperators();
+        List<Operator> allOperators = new ArrayList<>(facade.getAllOperators());
 
-        List<Mutant> mutants = facade.executeOperators(allOperators, programUnderTest);
+        Collection<Mutant> mutants = facade.executeOperators(allOperators, programUnderTest);
         assertNotNull(mutants);
         assertEquals(50, mutants.size());
         assertTrue(mutants.stream().allMatch(Mutant::isAlive));
 
-        List<Operator> allOperators2 = facade.getAllOperators();
+        List<Operator> allOperators2 = new ArrayList<>(facade.getAllOperators());
 
-        List<Mutant> mutants2 = facade.executeOperators(allOperators2, programUnderTest);
+        Collection<Mutant> mutants2 = facade.executeOperators(allOperators2, programUnderTest);
         assertNotNull(mutants2);
         assertEquals(50, mutants2.size());
         assertTrue(mutants2.stream().allMatch(Mutant::isAlive));
@@ -146,7 +147,7 @@ public class CachedFacadeTest {
         LOGGER.debug("Testing method: testExecuteOperators2");
         IntegrationFacade.setIntegrationFacade(facade);
 
-        List<Mutant> mutants = facade.executeOperators(new ArrayList<>(), programUnderTest);
+        Collection<Mutant> mutants = facade.executeOperators(new ArrayList<>(), programUnderTest);
         assertNotNull(mutants);
         assertTrue(mutants.isEmpty());
     }
@@ -157,7 +158,7 @@ public class CachedFacadeTest {
         IntegrationFacade.setIntegrationFacade(facade);
         Program programUnderTest = new Program("unknown.Program", new File("unknown" + File.separator + "Program.java"));
 
-        List<Mutant> mutants = facade.executeOperators(facade.getAllOperators(), programUnderTest);
+        Collection<Mutant> mutants = facade.executeOperators(facade.getAllOperators(), programUnderTest);
         assertNotNull(mutants);
         assertTrue(mutants.isEmpty());
     }
@@ -167,16 +168,16 @@ public class CachedFacadeTest {
         LOGGER.debug("Testing method: testExecuteMutant");
         IntegrationFacade.setIntegrationFacade(facade);
 
-        List<Operator> allOperators = facade.getAllOperators();
+        List<Operator> allOperators = new ArrayList<>(facade.getAllOperators());
 
-        List<Mutant> mutants = facade.executeOperators(allOperators, programUnderTest);
+        List<Mutant> mutants = new ArrayList<>(facade.executeOperators(allOperators, programUnderTest));
         assertNotNull(mutants);
         assertEquals(50, mutants.size());
         assertTrue(mutants.stream().allMatch(Mutant::isAlive));
 
-        List<Operator> allOperators2 = facade.getAllOperators();
+        List<Operator> allOperators2 = new ArrayList<>(facade.getAllOperators());
 
-        List<Mutant> mutants2 = facade.executeOperators(allOperators2, programUnderTest);
+        List<Mutant> mutants2 = new ArrayList<>(facade.executeOperators(allOperators2, programUnderTest));
         assertNotNull(mutants2);
         assertEquals(50, mutants2.size());
         assertTrue(mutants2.stream().allMatch(Mutant::isAlive));
@@ -199,16 +200,16 @@ public class CachedFacadeTest {
         LOGGER.debug("Testing method: testExecuteMutants");
         IntegrationFacade.setIntegrationFacade(facade);
 
-        List<Operator> allOperators = facade.getAllOperators();
+        List<Operator> allOperators = new ArrayList<>(facade.getAllOperators());
 
-        List<Mutant> mutants = facade.executeOperators(allOperators, programUnderTest);
+        List<Mutant> mutants = new ArrayList<>(facade.executeOperators(allOperators, programUnderTest));
         assertNotNull(mutants);
         assertEquals(50, mutants.size());
         assertTrue(mutants.stream().allMatch(Mutant::isAlive));
 
-        List<Operator> allOperators2 = facade.getAllOperators();
+        List<Operator> allOperators2 = new ArrayList<>(facade.getAllOperators());
 
-        List<Mutant> mutants2 = facade.executeOperators(allOperators2, programUnderTest);
+        List<Mutant> mutants2 = new ArrayList<>(facade.executeOperators(allOperators2, programUnderTest));
         assertNotNull(mutants2);
         assertEquals(50, mutants2.size());
         assertTrue(mutants2.stream().allMatch(Mutant::isAlive));

@@ -8,6 +8,7 @@ import br.ufpr.inf.gres.sentinel.strategy.operation.impl.discard.AbstractDiscard
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.selection.SelectionOperation;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.type.impl.SequentialSelection;
 import java.io.File;
+import java.util.ArrayList;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -70,10 +71,11 @@ public class DiscardOperatorsOperationTest {
         operation.doOperation(solution, null);
 
         assertEquals(1, solution.getOperators().size());
-        assertEquals(operator2, solution.getOperators().get(0));
+        assertEquals(operator2, solution.getOperators().iterator().next());
         assertEquals(2, solution.getMutants().size());
-        assertEquals(mutant4, solution.getMutants().get(0));
-        assertEquals(mutant5, solution.getMutants().get(1));
+        ArrayList<Mutant> solutionMutants = new ArrayList<>(solution.getMutants());
+        assertEquals(mutant4, solutionMutants.get(0));
+        assertEquals(mutant5, solutionMutants.get(1));
     }
 
     @Test

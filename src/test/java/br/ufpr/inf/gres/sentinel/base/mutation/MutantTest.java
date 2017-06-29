@@ -1,8 +1,7 @@
 package br.ufpr.inf.gres.sentinel.base.mutation;
 
 import java.io.File;
-import java.util.ArrayList;
-import org.apache.commons.collections4.list.SetUniqueList;
+import java.util.LinkedHashSet;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -87,9 +86,9 @@ public class MutantTest {
     @Test
     public void testGetAndSetKillingTestCases() {
         Mutant instance = new Mutant("Mutant1", null, new Program("Program1", "Program/path"));
-        SetUniqueList<TestCase> setUniqueList = SetUniqueList.setUniqueList(new ArrayList<>());
+        LinkedHashSet<TestCase> setUniqueList = new LinkedHashSet<>();
         instance.setKillingTestCases(setUniqueList);
-        SetUniqueList result = instance.getKillingTestCases();
+        LinkedHashSet<TestCase> result = instance.getKillingTestCases();
         assertEquals(setUniqueList, result);
     }
 

@@ -6,7 +6,8 @@ import br.ufpr.inf.gres.sentinel.base.mutation.Program;
 import br.ufpr.inf.gres.sentinel.base.mutation.TestCase;
 import java.io.File;
 import java.util.ArrayList;
-import org.apache.commons.collections4.list.SetUniqueList;
+import java.util.LinkedHashSet;
+import java.util.List;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -53,24 +54,32 @@ public class SolutionTest {
         assertArrayEquals(solution.getMutants().toArray(), solution2.getMutants().toArray());
         assertArrayEquals(solution.getOperators().toArray(), solution2.getOperators().toArray());
 
+        ArrayList<Mutant> solutionMutants = new ArrayList<>(solution.getMutants());
+        ArrayList<Mutant> solution2Mutants = new ArrayList<>(solution2.getMutants());
         for (int i = 0; i < solution.getMutants().size(); i++) {
-            Mutant temp1 = solution.getMutants().get(i);
-            Mutant temp2 = solution2.getMutants().get(i);
+            Mutant temp1 = solutionMutants.get(i);
+            Mutant temp2 = solution2Mutants.get(i);
             assertNotSame(temp1, temp2);
             assertNotSame(temp1.getOperator(), temp2.getOperator());
         }
 
+        ArrayList<Operator> solutionOperators = new ArrayList<>(solution.getOperators());
+        ArrayList<Operator> solution2Operators = new ArrayList<>(solution2.getOperators());
         for (int i = 0; i < solution.getOperators().size(); i++) {
-            Operator temp1 = solution.getOperators().get(i);
-            Operator temp2 = solution2.getOperators().get(i);
+            Operator temp1 = solutionOperators.get(i);
+            Operator temp2 = solution2Operators.get(i);
             assertNotSame(temp1, temp2);
-            assertNotSame(temp1.getGeneratedMutants().get(0), temp2.getGeneratedMutants().get(0));
+
+            List<Mutant> generatedMutants1 = new ArrayList<>(temp1.getGeneratedMutants());
+            List<Mutant> generatedMutants2 = new ArrayList<>(temp2.getGeneratedMutants());
+
+            assertNotSame(generatedMutants1.get(0), generatedMutants2.get(0));
         }
     }
 
     @Test
     public void testGetAndSetMutants() {
-        SetUniqueList<Mutant> mutants = SetUniqueList.setUniqueList(new ArrayList<>());
+        LinkedHashSet<Mutant> mutants = new LinkedHashSet<>();
         Solution solution = new Solution();
         solution.setMutants(mutants);
         assertEquals(mutants, solution.getMutants());
@@ -78,7 +87,7 @@ public class SolutionTest {
 
     @Test
     public void testGetAndSetOperators() {
-        SetUniqueList<Operator> operators = SetUniqueList.setUniqueList(new ArrayList<>());
+        LinkedHashSet<Operator> operators = new LinkedHashSet<>();
         Solution solution = new Solution();
         solution.setOperators(operators);
         assertEquals(operators, solution.getOperators());
