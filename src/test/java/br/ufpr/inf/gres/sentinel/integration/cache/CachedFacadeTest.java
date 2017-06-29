@@ -18,7 +18,6 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -414,42 +413,6 @@ public class CachedFacadeTest {
 
         assertEquals(1.0, solution.getObjective(0), 0.0001);
         assertEquals(-1.0, solution.getObjective(1), 0.0001);
-
-        facade.dettachObserver(observer);
-    }
-
-    @Test
-    @Ignore
-    public void profiling() throws IOException {
-        LOGGER.debug("Testing method: profiling");
-        String directory = System.getProperty("user.dir") + File.separator + "training";
-        CachedFacade facade = new CachedFacade(new PITFacade(directory), "src" + File.separator + "test" + File.separator + "resources", null);
-        IntegrationFacade.setIntegrationFacade(facade);
-
-        CachedObjectiveFunctionObserver observer = new CachedObjectiveFunctionObserver();
-        facade.attachObserver(observer);
-
-        MutationStrategyGenerationProblem problem = new MutationStrategyGenerationProblem(GrammarFiles.getDefaultGrammarPath(),
-                10,
-                15,
-                1,
-                10,
-                0,
-                5,
-                1,
-                Lists.newArrayList(new Program("wire", "")),
-                Lists.newArrayList(ObjectiveFunction.AVERAGE_CPU_TIME, ObjectiveFunction.AVERAGE_SCORE));
-        problem.dettachAllObservers();
-        problem.attachObserver(observer);
-
-        List<VariableLengthSolution<Integer>> allSolutions = new ArrayList<>();
-        for (int i = 0; i < 1000; i++) {
-            VariableLengthSolution<Integer> solution = problem.createSolution();
-            solution.clearVariables();
-            solution.addAllVariables(Lists.newArrayList(124, 20, 75, 14, 126, 47, 163, 96, 95, 6, 119, 165, 74, 123, 54, 70, 173, 116, 22, 121, 57, 109, 34, 89, 153, 95, 96, 107, 26, 50, 102, 160, 171, 9, 96, 95, 6, 119, 165, 74, 123, 54, 70, 173, 116, 22, 121, 57, 109, 34, 89, 153, 95, 96));
-            allSolutions.add(solution);
-            problem.evaluate(solution);
-        }
 
         facade.dettachObserver(observer);
     }

@@ -45,7 +45,9 @@ public abstract class AbstractSelectOperation<T> extends Operation<Solution, Lis
     public List<Mutant> doOperation(Solution solution, Program program) {
         checkNotNull(this.selection, "No selection operation!");
         List<T> listToRetain = this.obtainList(solution);
-        listToRetain.retainAll(this.selection.doOperation(new ArrayList<>(listToRetain), program));
+        List<T> copyList = new ArrayList<>(listToRetain);
+        listToRetain.clear();
+        listToRetain.addAll(this.selection.doOperation(copyList, program));
         return this.next(solution, program);
     }
 
