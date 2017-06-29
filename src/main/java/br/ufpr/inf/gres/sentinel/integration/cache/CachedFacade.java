@@ -70,9 +70,13 @@ public class CachedFacade extends IntegrationFacade {
             this.cache.setCached(program);
             LOGGER.debug("Program executed and successfully cached.");
             try {
-                LOGGER.debug("Writing cache file.");
-                this.cache.writeCache();
-                LOGGER.debug("Cache file written successfully.");
+                LOGGER.debug("Preparing to write cache file.");
+                boolean written = this.cache.writeCache();
+                if (written) {
+                    LOGGER.debug("Cache file written successfully.");
+                } else {
+                    LOGGER.debug("No cache file was written.");
+                }
             } catch (IOException ex) {
                 LOGGER.error("Could not write cache file. The exception is: " + ex.getMessage(), ex);
             }

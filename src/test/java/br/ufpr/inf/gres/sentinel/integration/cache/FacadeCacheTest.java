@@ -73,10 +73,6 @@ public class FacadeCacheTest {
         cache.recordMutantCPUTime(program, mutant2, 900L);
         cache.recordMutantCPUTime(program, mutant2, 10000L);
 
-        cache.retrieveOperatorExecutionInformation(program, operator1);
-        cache.retrieveMutantExecutionInformation(program, mutant1);
-        cache.retrieveMutantExecutionInformation(program, mutant2);
-
         Path expectedOutputFile1 = Paths.get("src"
                 + File.separator
                 + "test"
@@ -108,6 +104,10 @@ public class FacadeCacheTest {
         cache.writeCache();
         assertTrue(Files.exists(expectedOutputFile1));
 
+        cache.retrieveOperatorExecutionInformation(program, operator1);
+        cache.retrieveMutantExecutionInformation(program, mutant1);
+        cache.retrieveMutantExecutionInformation(program, mutant2);
+
         FacadeCache cache2 = new FacadeCache("src"
                 + File.separator
                 + "test"
@@ -126,6 +126,9 @@ public class FacadeCacheTest {
         mutant1.getKillingTestCases().add(new TestCase("TestCase1"));
         Mutant mutant4 = new Mutant("Mutant2", new File("./Mutant2"), program);
         Operator operator2 = new Operator("Operator1", "OperatorType");
+
+        mutant3.setOperator(operator1);
+        mutant4.setOperator(operator1);
 
         cache2.retrieveOperatorExecutionInformation(program, operator2);
         cache2.retrieveMutantExecutionInformation(program, mutant3);

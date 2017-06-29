@@ -17,10 +17,11 @@ import java.util.ArrayList;
 import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import static org.junit.Assert.*;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 /**
  *
@@ -40,10 +41,10 @@ public class CachedFacadeTest {
     public static void setUpClass() {
         LOGGER.debug("Initializing CachedFacadeTest.");
         String directory = System.getProperty("user.dir") + File.separator + "training";
-        facade = new CachedFacade(new PITFacade(directory), "src" + File.separator + "test" + File.separator + "resources", null);
+        facade = new CachedFacade(new PITFacade(directory), "src" + File.separator + "test" + File.separator + "resources", "src" + File.separator + "test" + File.separator + "resources");
         programUnderTest = facade.instantiateProgram("Triangle;;br.ufpr.inf.gres.TriTyp*;br.ufpr.inf.gres.TriTypTest*;");
         LOGGER.debug("Initializing program.");
-        facade.initializeConventionalStrategy(programUnderTest, 1);
+        facade.initializeConventionalStrategy(programUnderTest, 5);
     }
 
     @Test
@@ -139,7 +140,6 @@ public class CachedFacadeTest {
             assertEquals(operator1.getExecutionTime(), operator2.getExecutionTime(), 0.0001);
             assertArrayEquals(operator1.getGeneratedMutants().toArray(), operator2.getGeneratedMutants().toArray());
         }
-        IntegrationFacade.setIntegrationFacade(this.facade);
     }
 
     @Test
@@ -280,7 +280,7 @@ public class CachedFacadeTest {
                 10,
                 5,
                 1,
-                Lists.newArrayList(new Program("wire", "")),
+                Lists.newArrayList(new Program("Triangle", "")),
                 Lists.newArrayList(ObjectiveFunction.AVERAGE_CPU_TIME, ObjectiveFunction.AVERAGE_SCORE));
         problem.dettachAllObservers();
         problem.attachObserver(observer);
@@ -291,8 +291,8 @@ public class CachedFacadeTest {
 
         problem.evaluate(solution);
 
-        assertEquals(0.37466576997949436, solution.getObjective(0), 0.0001);
-        assertEquals(-0.969309462915601, solution.getObjective(1), 0.0001);
+        assertEquals(0.608, solution.getObjective(0), 0.0001);
+        assertEquals(-0.76, solution.getObjective(1), 0.0001);
 
         problem = new MutationStrategyGenerationProblem(GrammarFiles.getDefaultGrammarPath(),
                 10,
@@ -302,20 +302,20 @@ public class CachedFacadeTest {
                 0,
                 20,
                 20,
-                Lists.newArrayList(new Program("wire", "")),
+                Lists.newArrayList(new Program("Triangle", "")),
                 Lists.newArrayList(ObjectiveFunction.AVERAGE_CPU_TIME, ObjectiveFunction.AVERAGE_SCORE));
         problem.dettachAllObservers();
         problem.attachObserver(observer);
 
         problem.evaluate(solution);
 
-        assertEquals(0.37466576997949436, solution.getObjective(0), 0.0001);
-        assertEquals(-0.969309462915601, solution.getObjective(1), 0.0001);
+        assertEquals(0.608, solution.getObjective(0), 0.0001);
+        assertEquals(-0.76, solution.getObjective(1), 0.0001);
 
         problem.evaluate(solution);
 
-        assertEquals(0.37466576997949436, solution.getObjective(0), 0.0001);
-        assertEquals(-0.969309462915601, solution.getObjective(1), 0.0001);
+        assertEquals(0.608, solution.getObjective(0), 0.0001);
+        assertEquals(-0.76, solution.getObjective(1), 0.0001);
 
         solution = problem.createSolution();
         solution.clearVariables();
@@ -356,7 +356,7 @@ public class CachedFacadeTest {
                 0,
                 5,
                 1,
-                Lists.newArrayList(new Program("wire", "")),
+                Lists.newArrayList(new Program("Triangle", "")),
                 Lists.newArrayList(ObjectiveFunction.AVERAGE_CPU_TIME, ObjectiveFunction.AVERAGE_SCORE));
         problem.dettachAllObservers();
         problem.attachObserver(observer);
@@ -367,12 +367,52 @@ public class CachedFacadeTest {
 
         problem.evaluate(solution);
 
-        assertEquals(0.9564509075453619, solution.getObjective(0), 0.0001);
+        assertEquals(1.04, solution.getObjective(0), 0.0001);
         assertEquals(-1.0, solution.getObjective(1), 0.0001);
 
         problem.evaluate(solution);
 
-        assertEquals(0.9564509075453619, solution.getObjective(0), 0.0001);
+        assertEquals(1.04, solution.getObjective(0), 0.0001);
+        assertEquals(-1.0, solution.getObjective(1), 0.0001);
+
+        facade.dettachObserver(observer);
+    }
+
+    @Test
+    public void testRead3() throws IOException {
+        LOGGER.debug("Testing method: testRead3");
+        String directory = System.getProperty("user.dir") + File.separator + "training";
+        CachedFacade facade = new CachedFacade(new PITFacade(directory), "src" + File.separator + "test" + File.separator + "resources", null);
+        IntegrationFacade.setIntegrationFacade(facade);
+
+        CachedObjectiveFunctionObserver observer = new CachedObjectiveFunctionObserver();
+        facade.attachObserver(observer);
+
+        MutationStrategyGenerationProblem problem = new MutationStrategyGenerationProblem(GrammarFiles.getDefaultGrammarPath(),
+                10,
+                15,
+                1,
+                10,
+                0,
+                5,
+                1,
+                Lists.newArrayList(new Program("Triangle", "")),
+                Lists.newArrayList(ObjectiveFunction.AVERAGE_CPU_TIME, ObjectiveFunction.AVERAGE_SCORE));
+        problem.dettachAllObservers();
+        problem.attachObserver(observer);
+
+        VariableLengthSolution<Integer> solution = problem.createSolution();
+        solution.clearVariables();
+        solution.addAllVariables(Lists.newArrayList(0, 2, 1, 0, 0, 1, 9, 3));
+
+        problem.evaluate(solution);
+
+        assertEquals(1.0, solution.getObjective(0), 0.0001);
+        assertEquals(-1.0, solution.getObjective(1), 0.0001);
+
+        problem.evaluate(solution);
+
+        assertEquals(1.0, solution.getObjective(0), 0.0001);
         assertEquals(-1.0, solution.getObjective(1), 0.0001);
 
         facade.dettachObserver(observer);

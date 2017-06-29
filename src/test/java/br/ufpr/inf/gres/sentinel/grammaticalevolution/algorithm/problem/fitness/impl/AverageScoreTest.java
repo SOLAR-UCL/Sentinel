@@ -66,7 +66,7 @@ public class AverageScoreTest {
         pointSolution.setAttribute("Mutants", mutants);
 
         AverageScore averageScore = new AverageScore();
-        assertEquals(-0.6, averageScore.computeFitness(pointSolution), 0.1);
+        assertEquals(-0.6, averageScore.computeFitness(pointSolution), 0.000001);
     }
 
     @Test
@@ -113,7 +113,7 @@ public class AverageScoreTest {
         pointSolution.setAttribute("Mutants", mutants);
 
         AverageScore averageScore = new AverageScore();
-        assertEquals(-0.3333, averageScore.computeFitness(pointSolution), 0.1);
+        assertEquals(-0.3333333333333, averageScore.computeFitness(pointSolution), 0.000001);
     }
 
     @Test
@@ -160,7 +160,7 @@ public class AverageScoreTest {
         pointSolution.setAttribute("Mutants", mutants);
 
         AverageScore averageScore = new AverageScore();
-        assertEquals(-0.8, averageScore.computeFitness(pointSolution), 0.1);
+        assertEquals(-0.73333333333333, averageScore.computeFitness(pointSolution), 0.000001);
     }
 
     @Test
@@ -207,7 +207,7 @@ public class AverageScoreTest {
         pointSolution.setAttribute("Mutants", mutants);
 
         AverageScore averageScore = new AverageScore();
-        assertEquals(-1.0, averageScore.computeFitness(pointSolution), 0.1);
+        assertEquals(-1.0, averageScore.computeFitness(pointSolution), 0.000001);
     }
 
     @Test
@@ -254,7 +254,7 @@ public class AverageScoreTest {
         pointSolution.setAttribute("Mutants", mutants);
 
         AverageScore averageScore = new AverageScore();
-        assertEquals(0.0, averageScore.computeFitness(pointSolution), 0.1);
+        assertEquals(0.0, averageScore.computeFitness(pointSolution), 0.000001);
     }
 
     @Test
@@ -262,7 +262,7 @@ public class AverageScoreTest {
         PointSolution pointSolution = new PointSolution(1);
 
         AverageScore averageScore = new AverageScore();
-        assertEquals(averageScore.getWorstValue(), averageScore.computeFitness(pointSolution), 0.1);
+        assertEquals(averageScore.getWorstValue(), averageScore.computeFitness(pointSolution), 0.000001);
     }
 
     @Test
@@ -312,7 +312,7 @@ public class AverageScoreTest {
         pointSolution.setAttribute("Mutants", mutants);
 
         AverageScore averageScore = new AverageScore();
-        assertEquals(-0.6, averageScore.computeFitness(pointSolution), 0.1);
+        assertEquals(-0.6, averageScore.computeFitness(pointSolution), 0.000001);
     }
 
     @Test
@@ -370,7 +370,57 @@ public class AverageScoreTest {
         pointSolution.setAttribute("Mutants", mutants);
 
         AverageScore averageScore = new AverageScore();
-        assertEquals(-0.5666, averageScore.computeFitness(pointSolution), 0.1);
+        assertEquals(-0.56666666666666, averageScore.computeFitness(pointSolution), 0.000001);
+    }
+
+    @Test
+    public void testCompute9() {
+        Program program = new Program("Program1", new File("Program1"));
+        PointSolution pointSolution = new PointSolution(1);
+
+        TestCase testCase1 = new TestCase("TestCase1");
+        TestCase testCase2 = new TestCase("TestCase2");
+        TestCase testCase3 = new TestCase("TestCase3");
+        TestCase testCase4 = new TestCase("TestCase4");
+        TestCase testCase5 = new TestCase("TestCase5");
+
+        Mutant mutant1 = new Mutant("Mutant1", new File("Mutant1"), program);
+        mutant1.getKillingTestCases().add(testCase1);
+
+        Mutant mutant2 = new Mutant("Mutant2", new File("Mutant2"), program);
+        mutant2.getKillingTestCases().add(testCase2);
+
+        Mutant mutant3 = new Mutant("Mutant3", new File("Mutant3"), program);
+        mutant3.getKillingTestCases().add(testCase3);
+        mutant3.getKillingTestCases().add(testCase1);
+
+        Mutant mutant4 = new Mutant("Mutant4", new File("Mutant4"), program);
+        mutant4.getKillingTestCases().add(testCase1);
+        mutant4.getKillingTestCases().add(testCase4);
+
+        Mutant mutant5 = new Mutant("Mutant5", new File("Mutant5"), program);
+        mutant5.getKillingTestCases().add(testCase4);
+        mutant5.getKillingTestCases().add(testCase5);
+
+        Mutant mutant6 = new Mutant("Mutant6", new File("Mutant6"), program);
+
+        ArrayListMultimap<Program, Mutant> conventionalMutants = ArrayListMultimap.create();
+        conventionalMutants.put(program, mutant1);
+        conventionalMutants.put(program, mutant2);
+        conventionalMutants.put(program, mutant3);
+        conventionalMutants.put(program, mutant4);
+        conventionalMutants.put(program, mutant5);
+        conventionalMutants.put(program, mutant6);
+        pointSolution.setAttribute("ConventionalMutants", conventionalMutants);
+
+        ArrayListMultimap<Program, Collection<Mutant>> mutants = ArrayListMultimap.create();
+        mutants.put(program, Lists.newArrayList(mutant1, mutant3));
+        mutants.put(program, Lists.newArrayList(mutant3));
+        mutants.put(program, Lists.newArrayList(mutant3));
+        pointSolution.setAttribute("Mutants", mutants);
+
+        AverageScore averageScore = new AverageScore();
+        assertEquals(-0.6, averageScore.computeFitness(pointSolution), 0.000001);
     }
 
     @Test

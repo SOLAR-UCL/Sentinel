@@ -14,10 +14,7 @@ import java.lang.reflect.Type;
 import java.nio.charset.Charset;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import org.apache.commons.collections4.list.SetUniqueList;
 import org.apache.logging.log4j.LogManager;
@@ -68,6 +65,26 @@ public class FacadeCache {
 
     public void setCached(Program program, boolean isCached) {
         this.caches.get(program).isCached = isCached;
+        if (isCached) {
+            FacadeCache.this.computeAverages(program);
+        }
+    }
+
+    public void computeAverages(Program program) {
+        CacheHolder cache = getOrCreateCache(program);
+
+        computeAverages(cache.operatorsCPUTime, cache.operatorsAvgCPUTime);
+        computeAverages(cache.operatorsExecutionTime, cache.operatorsAvgExecutionTime);
+        computeAverages(cache.mutantsCPUTime, cache.mutantsAvgCPUTime);
+        computeAverages(cache.mutantsExecutionTime, cache.mutantsAvgExecutionTime);
+    }
+
+    public void computeAverages(HashMap<String, List<Long>> allTimes, HashMap<String, Double> avgTimes) {
+        for (Map.Entry<String, List<Long>> entry : allTimes.entrySet()) {
+            String key = entry.getKey();
+            List<Long> values = entry.getValue();
+            avgTimes.put(key, values.stream().mapToDouble(Long::doubleValue).average().getAsDouble());
+        }
     }
 
     public void clearCache(Program program) {
@@ -122,19 +139,11 @@ public class FacadeCache {
     public List<Mutant> retrieveOperatorExecutionInformation(Program program, Operator operator) {
         CacheHolder cache = getOrCreateCache(program);
 
-        operator.setExecutionTime(cache.operatorsExecutionTime
-                .getOrDefault(operator.toString(), new ArrayList<>())
-                .stream()
-                .mapToDouble(Long::doubleValue)
-                .average()
-                .orElse(operator.getExecutionTime()));
+        operator.setExecutionTime(cache.operatorsAvgExecutionTime
+                .getOrDefault(operator.toString(), 0D));
 
-        operator.setCpuTime(cache.operatorsCPUTime
-                .getOrDefault(operator.toString(), new ArrayList<>())
-                .stream()
-                .mapToDouble(Long::doubleValue)
-                .average()
-                .orElse(operator.getCpuTime()));
+        operator.setCpuTime(cache.operatorsAvgCPUTime
+                .getOrDefault(operator.toString(), 0D));
 
         List<Mutant> resultMutants = new ArrayList<>();
 
@@ -155,25 +164,16 @@ public class FacadeCache {
     public void retrieveMutantExecutionInformation(Program program, Mutant mutantToExecute) {
         CacheHolder cache = getOrCreateCache(program);
 
-        mutantToExecute.setExecutionTime(cache.mutantsExecutionTime
-                .getOrDefault(mutantToExecute.toString(), new ArrayList<>())
-                .stream()
-                .mapToDouble(Long::doubleValue)
-                .average()
-                .orElse(mutantToExecute.getExecutionTime()));
+        mutantToExecute.setExecutionTime(cache.mutantsAvgExecutionTime
+                .getOrDefault(mutantToExecute.toString(), mutantToExecute.getExecutionTime()));
 
-        mutantToExecute.setCpuTime(cache.mutantsCPUTime
-                .getOrDefault(mutantToExecute.toString(), new ArrayList<>())
-                .stream()
-                .mapToDouble(Long::doubleValue)
-                .average()
-                .orElse(mutantToExecute.getCpuTime()));
+        mutantToExecute.setCpuTime(cache.mutantsAvgCPUTime
+                .getOrDefault(mutantToExecute.toString(), mutantToExecute.getExecutionTime()));
 
         List<TestCase> newTestCases = new ArrayList<>();
 
         Mutant cachedMutant = cache.mutants.get(mutantToExecute.toString());
         if (cachedMutant != null) {
-            mutantToExecute.setOperator(new Operator(cachedMutant.getOperator()));
             List<TestCase> cachedTestCases = cachedMutant.getKillingTestCases();
             for (TestCase cachedTestCase : cachedTestCases) {
                 TestCase testCase = new TestCase(cachedTestCase);
@@ -188,16 +188,16 @@ public class FacadeCache {
         return this.caches.computeIfAbsent(program, tempProgram -> new CacheHolder(tempProgram));
     }
 
-    public void writeCache() throws IOException {
+    public boolean writeCache() throws IOException {
         if (this.outputDirectory != null) {
-            this.writeCache(this.outputDirectory + File.separator + ".cache");
+            return this.writeCache(this.outputDirectory + File.separator + ".cache");
         }
+        return false;
     }
 
-    public void writeCache(String outputFolderPath) throws IOException {
+    public boolean writeCache(String outputFolderPath) throws IOException {
         File outputFolder = new File(outputFolderPath);
         Gson gson = new GsonBuilder()
-                //                .setPrettyPrinting()
                 .create();
         for (CacheHolder cache : this.caches.values()) {
             if (cache.isCached) {
@@ -208,6 +208,7 @@ public class FacadeCache {
                 LOGGER.trace("Output file: " + outputFile.getAbsolutePath());
             }
         }
+        return true;
     }
 
     public void loadCache() {
@@ -231,21 +232,31 @@ public class FacadeCache {
         private HashMap<String, Operator> operators;
         private HashMap<String, Mutant> mutants;
 
-        private HashMap<String, List<Long>> operatorsCPUTime;
-        private HashMap<String, List<Long>> operatorsExecutionTime;
-        private HashMap<String, List<Long>> mutantsCPUTime;
-        private HashMap<String, List<Long>> mutantsExecutionTime;
+        private transient HashMap<String, List<Long>> operatorsCPUTime;
+        private transient HashMap<String, List<Long>> operatorsExecutionTime;
+        private transient HashMap<String, List<Long>> mutantsCPUTime;
+        private transient HashMap<String, List<Long>> mutantsExecutionTime;
+
+        private HashMap<String, Double> operatorsAvgCPUTime;
+        private HashMap<String, Double> operatorsAvgExecutionTime;
+        private HashMap<String, Double> mutantsAvgCPUTime;
+        private HashMap<String, Double> mutantsAvgExecutionTime;
 
         public CacheHolder(Program program) {
             this.program = program;
+            this.operators = new HashMap<>();
+            this.mutants = new HashMap<>();
+
             this.operatorsCPUTime = new HashMap<>();
             this.operatorsExecutionTime = new HashMap<>();
             this.mutantsCPUTime = new HashMap<>();
             this.mutantsExecutionTime = new HashMap<>();
-            this.operators = new HashMap<>();
-            this.mutants = new HashMap<>();
-        }
 
+            this.operatorsAvgCPUTime = new HashMap<>();
+            this.operatorsAvgExecutionTime = new HashMap<>();
+            this.mutantsAvgCPUTime = new HashMap<>();
+            this.mutantsAvgExecutionTime = new HashMap<>();
+        }
     }
 
     private static class CacheFileVisitor implements FileVisitor<Path> {
@@ -324,13 +335,13 @@ public class FacadeCache {
                 }
             }
 
-            Type timesType = new TypeToken<HashMap<String, List<Long>>>() {
+            Type timesType = new TypeToken<HashMap<String, Double>>() {
             }.getType();
 
-            cache.operatorsCPUTime = context.deserialize(jsonObject.get("operatorsCPUTime"), timesType);
-            cache.operatorsExecutionTime = context.deserialize(jsonObject.get("operatorsExecutionTime"), timesType);
-            cache.mutantsCPUTime = context.deserialize(jsonObject.get("mutantsCPUTime"), timesType);
-            cache.mutantsExecutionTime = context.deserialize(jsonObject.get("mutantsExecutionTime"), timesType);
+            cache.operatorsAvgCPUTime = context.deserialize(jsonObject.get("operatorsAvgCPUTime"), timesType);
+            cache.operatorsAvgExecutionTime = context.deserialize(jsonObject.get("operatorsAvgExecutionTime"), timesType);
+            cache.mutantsAvgCPUTime = context.deserialize(jsonObject.get("mutantsAvgCPUTime"), timesType);
+            cache.mutantsAvgExecutionTime = context.deserialize(jsonObject.get("mutantsAvgExecutionTime"), timesType);
 
             return cache;
         }

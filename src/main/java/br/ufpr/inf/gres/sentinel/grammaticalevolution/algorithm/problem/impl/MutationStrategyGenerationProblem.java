@@ -164,8 +164,11 @@ public class MutationStrategyGenerationProblem implements VariableLengthIntegerP
                 }
             }
             LOGGER.debug("Computing fitness.");
+            Stopwatch stopwatch = Stopwatch.createStarted();
             notifyObservers(observer -> observer.prepareForFitnessEvaluation());
             notifyObservers(observer -> observer.notifyComputeObjectives());
+            stopwatch.stop();
+            LOGGER.debug("Objective functions computed in " + DurationFormatUtils.formatDurationHMS(stopwatch.elapsed(TimeUnit.MILLISECONDS)));
         } catch (Exception ex) {
             // Invalid strategy. Probably discarded due to maximum wraps.
             LOGGER.debug("Exception! Solution is invalid. Not enough variables. Don't need to worry, though.");
@@ -205,7 +208,7 @@ public class MutationStrategyGenerationProblem implements VariableLengthIntegerP
         Stopwatch stopwatch = Stopwatch.createStarted();
         Strategy strategy = this.strategyMapper.interpret(variablesIterator);
         stopwatch.stop();
-        LOGGER.debug("Strategy created successfully in " + stopwatch.elapsed(TimeUnit.MILLISECONDS) + "ms");
+        LOGGER.debug("Strategy created successfully in " + DurationFormatUtils.formatDurationHMS(stopwatch.elapsed(TimeUnit.MILLISECONDS)));
         LOGGER.trace("Number of iterations for creating the strategy: " + variablesIterator.getCount());
         notifyObservers(observer -> observer.notifyConsumedItems(variablesIterator.getCount()));
         return strategy;
