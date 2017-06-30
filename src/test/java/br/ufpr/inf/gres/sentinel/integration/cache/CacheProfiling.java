@@ -66,8 +66,12 @@ public class CacheProfiling {
 
         VariableLengthSolution<Integer> solution = problem.createSolution();
         solution.clearVariables();
-        solution.addAllVariables(Lists.newArrayList(98, 42, 70, 136, 134, 123, 34, 66, 63, 108, 15, 123, 2, 169, 67, 124, 156, 175, 166, 39, 86, 156, 151, 81, 81, 166, 126, 39, 98, 77, 34, 149, 89, 38, 114, 20, 72, 13, 114, 172, 119, 92, 60, 162, 32, 92));
+        solution.addAllVariables(Lists.newArrayList(93, 72, 127, 152, 87, 91, 108, 82, 22, 176, 71, 66, 45, 69, 139, 108, 178, 134, 145, 98, 0, 7, 68, 87, 9, 151, 177, 108, 101, 20, 11, 30, 94, 171, 142, 131, 5, 17, 26, 71, 162, 171, 172, 138, 175, 51, 173, 24, 45, 35, 6, 12, 53, 160));
 
+        problem.evaluate(solution);
+        problem.evaluate(solution);
+        problem.evaluate(solution);
+        problem.evaluate(solution);
         problem.evaluate(solution);
 
         facade.dettachObserver(observer);

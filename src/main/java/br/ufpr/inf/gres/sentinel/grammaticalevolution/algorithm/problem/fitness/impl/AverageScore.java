@@ -2,9 +2,12 @@ package br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.problem.fitness
 
 import br.ufpr.inf.gres.sentinel.base.mutation.Mutant;
 import br.ufpr.inf.gres.sentinel.base.mutation.Program;
+import br.ufpr.inf.gres.sentinel.base.mutation.TestCase;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.problem.fitness.ObjectiveFunction;
 import com.google.common.collect.Multimap;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Set;
 import org.uma.jmetal.solution.Solution;
 
@@ -29,20 +32,31 @@ public class AverageScore<T> extends ObjectiveFunction<T> {
             double sumScore = 0.0;
             Set<Program> allPrograms = allConventionalMutants.keySet();
             for (Program program : allPrograms) {
-                Collection<Collection<Mutant>> mutants = allMutants.get(program);
                 Collection<Mutant> conventionalMutants = allConventionalMutants.get(program);
-                Double averageScore = mutants.stream()
-                        .mapToLong(mutantsList -> {
-                            return conventionalMutants.stream().filter(conventionalMutant -> conventionalMutant.getKillingTestCases().stream().anyMatch(testCase -> {
-                                return mutantsList.stream().anyMatch(mutant -> mutant.getKillingTestCases().contains(testCase));
-                            })).count();
-                        })
-                        .average()
-                        .orElse(0.0);
+
+                HashMap<TestCase, HashSet<Mutant>> testCaseMap = new HashMap<>();
+                for (Mutant conventionalMutant : conventionalMutants) {
+                    for (TestCase killingTestCase : conventionalMutant.getKillingTestCases()) {
+                        HashSet<Mutant> mutantsKilled = testCaseMap.computeIfAbsent(killingTestCase, temp -> new HashSet<>());
+                        mutantsKilled.add(conventionalMutant);
+                    }
+                }
+
+                Double averageNumberOfKilledMutants = 0D;
+                for (Collection<Mutant> evaluatingMutants : allMutants.get(program)) {
+                    HashSet<Mutant> killedConventionalMutants = new HashSet();
+                    for (Mutant evaluatingMutant : evaluatingMutants) {
+                        for (TestCase evaluatingTestCase : evaluatingMutant.getKillingTestCases()) {
+                            killedConventionalMutants.addAll(testCaseMap.get(evaluatingTestCase));
+                        }
+                    }
+                    averageNumberOfKilledMutants += killedConventionalMutants.size();
+                }
+                averageNumberOfKilledMutants /= allMutants.get(program).size();
 
                 long deadCount = conventionalMutants.stream().filter(Mutant::isDead).count();
 
-                sumScore += averageScore / deadCount;
+                sumScore += averageNumberOfKilledMutants / deadCount;
             }
             return -1 * sumScore / allPrograms.size();
         }
