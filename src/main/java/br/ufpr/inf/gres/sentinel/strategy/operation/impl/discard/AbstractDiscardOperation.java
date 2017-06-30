@@ -6,6 +6,7 @@ import br.ufpr.inf.gres.sentinel.base.solution.Solution;
 import br.ufpr.inf.gres.sentinel.strategy.operation.Operation;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.selection.SelectionOperation;
 import java.util.Collection;
+import java.util.HashSet;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -47,7 +48,7 @@ public abstract class AbstractDiscardOperation<T> extends Operation<Solution, Co
     public Collection<Mutant> doOperation(Solution solution, Program program) {
         checkNotNull(this.selection, "No selection operation!");
         Collection<T> listToDiscard = this.obtainList(solution);
-        listToDiscard.removeAll(this.selection.doOperation(listToDiscard, program));
+        listToDiscard.removeAll(new HashSet<>(this.selection.doOperation(listToDiscard, program)));
         return this.next(solution, program);
     }
 
