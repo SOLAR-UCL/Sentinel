@@ -16,7 +16,6 @@
             <groupId>org.uma.jmetal</groupId>
             <artifactId>jmetal-algorithm</artifactId>
             <version>5.2</version>
-            <classifier>jar-with-dependencies</classifier>
         </dependency>
         <dependency>
             <groupId>com.google.guava</groupId>
