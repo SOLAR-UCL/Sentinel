@@ -172,6 +172,13 @@ public class MutationStrategyGenerationProblem implements VariableLengthIntegerP
         } catch (Exception ex) {
             // Invalid strategy. Probably discarded due to maximum wraps.
             LOGGER.debug("Exception! Solution is invalid. Not enough variables. Don't need to worry, though.");
+            LOGGER.trace("Exception message: " + ex.getMessage());
+            if (ex.getStackTrace().length > 0) {
+                final StackTraceElement firstStack = ex.getStackTrace()[0];
+                if (firstStack != null) {
+                    LOGGER.trace("First stack: " + firstStack.toString());
+                }
+            }
             notifyObservers(observer -> observer.notifyException(ex));
         } finally {
             String objectiveValues = "";

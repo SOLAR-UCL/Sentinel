@@ -5,6 +5,7 @@ import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.problem.fitness.
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.problem.fitness.impl.AverageCPUTime;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.problem.fitness.impl.AverageQuantity;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.problem.fitness.impl.AverageScore;
+import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.problem.observer.impl.UnconstrainedObjectiveFunctionObserver;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.representation.VariableLengthSolution;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.GrammarFiles;
 import br.ufpr.inf.gres.sentinel.integration.IntegrationFacade;
@@ -13,11 +14,10 @@ import br.ufpr.inf.gres.sentinel.integration.IntegrationFacadeTest;
 import br.ufpr.inf.gres.sentinel.integration.pit.PITFacade;
 import com.google.common.collect.Lists;
 import java.io.File;
+import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-
-import static org.junit.Assert.*;
 
 /**
  * @author Giovani Guizzo
@@ -146,30 +146,20 @@ public class MutationStrategyGenerationProblemTest {
                 1,
                 179,
                 10,
-                1,
-                1,
+                10,
+                10,
                 Lists.newArrayList(programUnderTest),
                 Lists.newArrayList(ObjectiveFunction.AVERAGE_CPU_TIME, ObjectiveFunction.AVERAGE_SCORE));
+        problem.dettachAllObservers();
+        problem.attachObserver(new UnconstrainedObjectiveFunctionObserver());
 
         VariableLengthSolution<Integer> solution = problem.createSolution();
         solution.clearVariables();
-        solution.addAllVariables(Lists.newArrayList(82,
-                176,
-                44,
-                65,
-                159,
-                139,
-                157,
-                161,
-                59,
-                108,
-                36,
-                78,
-                44));
+        solution.addAllVariables(Lists.newArrayList(132, 155, 153, 128, 107, 119, 116, 80, 115, 130, 16, 173, 175, 61, 52, 162, 129, 141, 87, 53, 55, 67, 83, 51, 143, 166, 132, 155, 153, 128, 107, 119, 127, 42, 74, 129, 111, 103, 12, 154, 127, 42, 27, 83, 51, 97, 89, 109, 44, 179, 176, 56, 86, 171, 70, 110, 139, 157, 99, 19));
         String runs = "";
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 1; i++) {
             problem.evaluate(solution);
-            runs += solution.getObjective(0) + " " + solution.getObjective(1) + " " + solution.getAttribute(ObjectiveFunction.AVERAGE_QUANTITY) + "\n";
+            runs += solution.getObjective(0) + " " + solution.getObjective(1) + "\n";
         }
         System.out.println("Runs:\n" + runs);
     }

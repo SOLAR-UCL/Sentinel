@@ -47,7 +47,10 @@ public class AverageScore<T> extends ObjectiveFunction<T> {
                     HashSet<Mutant> killedConventionalMutants = new HashSet();
                     for (Mutant evaluatingMutant : evaluatingMutants) {
                         for (TestCase evaluatingTestCase : evaluatingMutant.getKillingTestCases()) {
-                            killedConventionalMutants.addAll(testCaseMap.get(evaluatingTestCase));
+                            HashSet<Mutant> mutantsKilledByTestCase = testCaseMap.get(evaluatingTestCase);
+                            if (mutantsKilledByTestCase != null) {
+                                killedConventionalMutants.addAll(mutantsKilledByTestCase);
+                            }
                         }
                     }
                     averageNumberOfKilledMutants += killedConventionalMutants.size();

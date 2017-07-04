@@ -8,10 +8,9 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Lists;
 import java.io.File;
 import java.util.Collection;
+import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 import org.uma.jmetal.util.point.util.PointSolution;
-
-import static org.junit.Assert.assertEquals;
 
 /**
  *
@@ -421,6 +420,55 @@ public class AverageScoreTest {
 
         AverageScore averageScore = new AverageScore();
         assertEquals(-0.6, averageScore.computeFitness(pointSolution), 0.000001);
+    }
+
+    @Test
+    public void testCompute10() {
+        Program program = new Program("Program1", new File("Program1"));
+        PointSolution pointSolution = new PointSolution(1);
+
+        TestCase testCase1 = new TestCase("TestCase1");
+        TestCase testCase2 = new TestCase("TestCase2");
+        TestCase testCase3 = new TestCase("TestCase3");
+        TestCase testCase4 = new TestCase("TestCase4");
+        TestCase testCase5 = new TestCase("TestCase5");
+        TestCase testCase6 = new TestCase("TestCase6");
+
+        Mutant mutant1 = new Mutant("Mutant1", new File("Mutant1"), program);
+        mutant1.getKillingTestCases().add(testCase1);
+
+        Mutant mutant2 = new Mutant("Mutant2", new File("Mutant2"), program);
+        mutant2.getKillingTestCases().add(testCase2);
+
+        Mutant mutant3 = new Mutant("Mutant3", new File("Mutant3"), program);
+        mutant3.getKillingTestCases().add(testCase3);
+        mutant3.getKillingTestCases().add(testCase1);
+
+        Mutant mutant4 = new Mutant("Mutant4", new File("Mutant4"), program);
+        mutant4.getKillingTestCases().add(testCase1);
+        mutant4.getKillingTestCases().add(testCase4);
+
+        Mutant mutant5 = new Mutant("Mutant5", new File("Mutant5"), program);
+        mutant5.getKillingTestCases().add(testCase4);
+        mutant5.getKillingTestCases().add(testCase5);
+
+        Mutant mutant6 = new Mutant("Mutant6", new File("Mutant6"), program);
+        mutant6.getKillingTestCases().add(testCase6);
+
+        ArrayListMultimap<Program, Mutant> conventionalMutants = ArrayListMultimap.create();
+        conventionalMutants.put(program, mutant1);
+        conventionalMutants.put(program, mutant2);
+        conventionalMutants.put(program, mutant3);
+        conventionalMutants.put(program, mutant4);
+        conventionalMutants.put(program, mutant5);
+        pointSolution.setAttribute("ConventionalMutants", conventionalMutants);
+
+        ArrayListMultimap<Program, Collection<Mutant>> mutants = ArrayListMultimap.create();
+        mutants.put(program, Lists.newArrayList(mutant6));
+        pointSolution.setAttribute("Mutants", mutants);
+
+        AverageScore averageScore = new AverageScore();
+        assertEquals(-0.0, averageScore.computeFitness(pointSolution), 0.000001);
     }
 
     @Test

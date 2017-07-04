@@ -67,8 +67,7 @@ public class SentinelTest {
     @Test
     @Ignore
     public void testSentinelTest() throws Exception {
-        String[] args = new String[]{"test",
-            "--numberOfTestingRuns", "1"};
+        String[] args = new String[]{"test"};
         Sentinel.main(args);
     }
 
