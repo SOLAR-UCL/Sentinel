@@ -8,7 +8,11 @@ import br.ufpr.inf.gres.sentinel.indictaors.IndicatorFactory;
 import br.ufpr.inf.gres.sentinel.main.cli.args.AnalysisArgs;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
+import com.google.common.collect.Lists;
+import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Paint;
+import java.awt.Stroke;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -17,6 +21,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -27,6 +32,7 @@ import org.jfree.chart.StandardChartTheme;
 import org.jfree.chart.axis.CategoryAxis;
 import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.plot.CategoryPlot;
+import org.jfree.chart.plot.DefaultDrawingSupplier;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.renderer.category.BoxAndWhiskerRenderer;
 import org.jfree.data.statistics.DefaultBoxAndWhiskerCategoryDataset;
@@ -43,6 +49,18 @@ import org.uma.jmetal.util.front.imp.ArrayFront;
  */
 public class SentinelAnalysis {
 
+    private static final List<Paint> COLORS = Lists.newArrayList(
+            Color.BLACK,
+            Color.RED,
+            Color.BLUE,
+            Color.GREEN,
+            Color.PINK,
+            Color.ORANGE,
+            Color.GRAY,
+            Color.CYAN,
+            Color.MAGENTA
+    );
+
     /**
      *
      * @param analysisArgs
@@ -52,6 +70,9 @@ public class SentinelAnalysis {
     public static void analyse(AnalysisArgs analysisArgs, String[] args) throws IOException {
         GsonUtil util = new GsonUtil(new StubProblem());
         ListMultimap<String, ResultWrapper> resultsFromJson = util.getResultsFromJsonFiles(analysisArgs.workingDirectory + File.separator + analysisArgs.inputDirectory, analysisArgs.inputFilesGlob);
+        for (Map.Entry<String, ResultWrapper> entry : resultsFromJson.entries()) {
+            entry.getValue().setResult(entry.getValue().getResult().stream().filter(solution -> solution.getObjective(1) * -1 >= analysisArgs.threshold).collect(Collectors.toList()));
+        }
         if (!resultsFromJson.isEmpty()) {
             File outputDirectory = new File(analysisArgs.workingDirectory + File.separator + analysisArgs.outputDirectory);
             outputDirectory.mkdirs();
@@ -90,6 +111,13 @@ public class SentinelAnalysis {
         theme.setPlotBackgroundPaint(Color.WHITE);
         theme.setDomainGridlinePaint(Color.GRAY);
         theme.setRangeGridlinePaint(Color.GRAY);
+        theme.setDrawingSupplier(new DefaultDrawingSupplier(
+                COLORS.toArray(new Paint[COLORS.size()]),
+                new Paint[]{Color.decode("0xFFFF00"),
+                    Color.decode("0x0036CC")},
+                new Stroke[]{new BasicStroke(2.0f)},
+                new Stroke[]{new BasicStroke(0.5f)},
+                DefaultDrawingSupplier.DEFAULT_SHAPE_SEQUENCE));
         return theme;
     }
 

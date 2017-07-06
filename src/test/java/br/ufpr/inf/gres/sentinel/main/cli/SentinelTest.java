@@ -55,12 +55,11 @@ public class SentinelTest {
     @Ignore
     public void testSentinelAnalysis() throws Exception {
         String[] args = new String[]{"analyse",
-            "--plotWidth", "1366",
-            "--plotHeight", "768",
+            "--plotWidth", "800",
+            "--plotHeight", "600",
             "--axisLabels", "Time", "Score",
-            "--inputDirectory", "testing",
-            "--outputDirectory", "testinganalysis",
-            "--printDominatedSolutions"};
+            "--inputDirectory", "testing/wire-2.1.0/",
+            "--outputDirectory", "testinganalysis/wire-2.1.0/"};
         Sentinel.main(args);
     }
 

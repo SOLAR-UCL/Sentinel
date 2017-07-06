@@ -99,4 +99,11 @@ public class AnalysisArgs {
             converter = SeparatorConverter.class)
     public String workingDirectory = System.getProperty("user.dir");
 
+    /**
+     *
+     */
+    @Parameter(names = "--threshold",
+            description = "The threshold for excluding solutions with scores lower than that.")
+    public double threshold = 0.05;
+
 }
