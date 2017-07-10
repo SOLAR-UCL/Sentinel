@@ -15,13 +15,12 @@ import com.google.common.collect.Lists;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import static org.junit.Assert.assertEquals;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.uma.jmetal.operator.impl.selection.BinaryTournamentSelection;
 import org.uma.jmetal.util.comparator.RankingAndCrowdingDistanceComparator;
 import org.uma.jmetal.util.evaluator.impl.SequentialSolutionListEvaluator;
-
-import static org.junit.Assert.assertEquals;
 
 /**
  * @author Giovani Guizzo
@@ -37,30 +36,27 @@ public class GrammaticalEvolutionAlgorithmTest {
                 + File.separator
                 + "src/test/resources/testfiles"));
 
-        Program programUnderTest
-                = new Program("br.ufpr.inf.gres.TriTyp",
-                        new File("src/test/resources/testfiles/TriTyp/src/br/ufpr/inf/gres/TriTyp.java"));
+        Program programUnderTest = new Program("br.ufpr.inf.gres.TriTyp",
+                new File("src/test/resources/testfiles/TriTyp/src/br/ufpr/inf/gres/TriTyp.java"));
 
-        problem
-                = new ProblemStub(GrammarFiles.getDefaultGrammarPath(),
-                        15,
-                        100,
-                        0,
-                        179,
-                        0,
-                        1,
-                        Lists.newArrayList(programUnderTest));
+        problem = new ProblemStub(GrammarFiles.getDefaultGrammarPath(),
+                15,
+                100,
+                0,
+                179,
+                0,
+                1,
+                Lists.newArrayList(programUnderTest));
 
-        algorithm
-                = new GrammaticalEvolutionAlgorithm<>(problem,
-                        100,
-                        50,
-                        new SimpleDuplicateOperator<>(0.1, 100),
-                        new PruneToMinimumOperator<>(0.1, 10),
-                        new SinglePointVariableCrossover<>(1.0, 100),
-                        new SimpleRandomVariableMutation(0.01, 0, 179),
-                        new BinaryTournamentSelection<>(new RankingAndCrowdingDistanceComparator<>()),
-                        new SequentialSolutionListEvaluator<>());
+        algorithm = new GrammaticalEvolutionAlgorithm<>(problem,
+                100,
+                50,
+                new SimpleDuplicateOperator<>(0.1, 100),
+                new PruneToMinimumOperator<>(0.1, 10),
+                new SinglePointVariableCrossover<>(1.0, 100),
+                new SimpleRandomVariableMutation(0.01, 0, 179),
+                new BinaryTournamentSelection<>(new RankingAndCrowdingDistanceComparator<>()),
+                new SequentialSolutionListEvaluator<>());
     }
 
     @Test

@@ -2,6 +2,7 @@ package br.ufpr.inf.gres.sentinel.main.cli;
 
 import br.ufpr.inf.gres.sentinel.base.mutation.Program;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.GrammaticalEvolutionAlgorithm;
+import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.RandomEvolutionaryAlgorithm;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.operators.crossover.impl.SinglePointVariableCrossover;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.operators.duplicate.impl.SimpleDuplicateOperator;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.operators.mutation.impl.SimpleRandomVariableMutation;
@@ -28,6 +29,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.core.config.Configuration;
 import org.apache.logging.log4j.core.config.LoggerConfig;
+import org.uma.jmetal.algorithm.Algorithm;
 import org.uma.jmetal.operator.impl.selection.BinaryTournamentSelection;
 import org.uma.jmetal.util.comparator.RankingAndCrowdingDistanceComparator;
 import org.uma.jmetal.util.evaluator.impl.SequentialSolutionListEvaluator;
@@ -55,25 +57,32 @@ public class SentinelTraining {
         CachedObjectiveFunctionObserver cachedObserver = new CachedObjectiveFunctionObserver();
         IntegrationFacade facade = buildFacade(trainingArgs, cachedObserver);
         MutationStrategyGenerationProblem problem = buildProblem(facade, trainingArgs, cachedObserver);
-        GrammaticalEvolutionAlgorithm<Integer> algorithm = buildAlgorithm(problem, trainingArgs);
+        Algorithm<List<VariableLengthSolution<Integer>>> algorithm = buildAlgorithm(problem, trainingArgs);
         long timeMillis = runAlgorithm(algorithm);
         storeResults(algorithm, timeMillis, trainingArgs);
     }
 
-    private static GrammaticalEvolutionAlgorithm<Integer> buildAlgorithm(MutationStrategyGenerationProblem problem, TrainingArgs trainingArgs) {
-        GrammaticalEvolutionAlgorithm<Integer> algorithm
-                = new GrammaticalEvolutionAlgorithm<>(problem,
-                        trainingArgs.maxEvaluations,
-                        trainingArgs.populationSize,
-                        new SimpleDuplicateOperator<>(trainingArgs.duplicateProbability,
-                                trainingArgs.maxLength),
-                        new PruneToUsedOperator<>(trainingArgs.pruneProbability),
-                        new SinglePointVariableCrossover<>(trainingArgs.crossoverProbability, trainingArgs.maxLength),
-                        new SimpleRandomVariableMutation(trainingArgs.mutationProbability,
-                                trainingArgs.lowerVariableBound,
-                                trainingArgs.upperVariableBound),
-                        new BinaryTournamentSelection<>(new RankingAndCrowdingDistanceComparator<>()),
-                        new SequentialSolutionListEvaluator<>());
+    private static Algorithm<List<VariableLengthSolution<Integer>>> buildAlgorithm(MutationStrategyGenerationProblem problem, TrainingArgs trainingArgs) {
+        Algorithm<List<VariableLengthSolution<Integer>>> algorithm;
+        if (!trainingArgs.random) {
+            algorithm = new GrammaticalEvolutionAlgorithm<>(problem,
+                    trainingArgs.maxEvaluations,
+                    trainingArgs.populationSize,
+                    new SimpleDuplicateOperator<>(trainingArgs.duplicateProbability,
+                            trainingArgs.maxLength),
+                    new PruneToUsedOperator<>(trainingArgs.pruneProbability),
+                    new SinglePointVariableCrossover<>(trainingArgs.crossoverProbability, trainingArgs.maxLength),
+                    new SimpleRandomVariableMutation(trainingArgs.mutationProbability,
+                            trainingArgs.lowerVariableBound,
+                            trainingArgs.upperVariableBound),
+                    new BinaryTournamentSelection<>(new RankingAndCrowdingDistanceComparator<>()),
+                    new SequentialSolutionListEvaluator<>());
+        } else {
+            algorithm = new RandomEvolutionaryAlgorithm(problem,
+                    trainingArgs.maxEvaluations,
+                    trainingArgs.populationSize,
+                    new SequentialSolutionListEvaluator<>());
+        }
         return algorithm;
     }
 
@@ -117,14 +126,14 @@ public class SentinelTraining {
         return problem;
     }
 
-    private static long runAlgorithm(GrammaticalEvolutionAlgorithm<Integer> algorithm) {
+    private static long runAlgorithm(Algorithm<List<VariableLengthSolution<Integer>>> algorithm) {
         long timeMillis = System.currentTimeMillis();
         algorithm.run();
         timeMillis = System.currentTimeMillis() - timeMillis;
         return timeMillis;
     }
 
-    private static void storeResults(GrammaticalEvolutionAlgorithm<Integer> algorithm, long timeMillis, TrainingArgs trainingArgs) throws IOException {
+    private static void storeResults(Algorithm<List<VariableLengthSolution<Integer>>> algorithm, long timeMillis, TrainingArgs trainingArgs) throws IOException {
         List<VariableLengthSolution<Integer>> resultSolutions = algorithm.getResult();
         resultSolutions.sort(Comparator.comparingDouble(o -> o.getObjective(1)));
 

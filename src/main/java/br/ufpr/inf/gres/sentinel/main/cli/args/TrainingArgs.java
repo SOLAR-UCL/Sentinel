@@ -183,4 +183,10 @@ public class TrainingArgs {
             + "All directories are in relative to the inputDirectory argument.",
             variableArity = true)
     public List<String> trainingPrograms = Lists.newArrayList("Triangle;;br.ufpr.inf.gres.TriTyp*;br.ufpr.inf.gres.TriTypTest*;");
+
+    /**
+     *
+     */
+    @Parameter(names = {"--random"}, description = "If Sentinel should run a random Grammatical Evolution algorithm.")
+    public boolean random = false;
 }
