@@ -58,8 +58,9 @@ public class SentinelTest {
             "--plotWidth", "800",
             "--plotHeight", "600",
             "--axisLabels", "Time", "Score",
-            "--inputDirectory", "testing/wire-2.1.0/",
-            "--outputDirectory", "testinganalysis/wire-2.1.0/"};
+            "--inputDirectory", "training/joda-time-2.9.6/",
+            "--outputDirectory", "traininganalysis/joda-time-2.9.6/",
+            "--printIntermediateFiles"};
         Sentinel.main(args);
     }
 

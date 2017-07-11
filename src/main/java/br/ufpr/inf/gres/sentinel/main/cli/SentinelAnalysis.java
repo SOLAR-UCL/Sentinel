@@ -171,7 +171,7 @@ public class SentinelAnalysis {
         final BoxAndWhiskerRenderer renderer = new BoxAndWhiskerRenderer();
         renderer.setFillBox(false);
         renderer.setMeanVisible(false);
-        renderer.setMaximumBarWidth(0.1);
+        renderer.setMaximumBarWidth(0.04);
         renderer.setUseOutlinePaintForWhiskers(true);
         for (int i = 0; i < dataSet.getColumnCount(); i++) {
             renderer.setSeriesPaint(i, Color.BLACK);
