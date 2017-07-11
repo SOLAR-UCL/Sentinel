@@ -26,9 +26,11 @@ import org.pitest.mutationtest.commandline.ParseResult;
 import org.pitest.mutationtest.commandline.PluginFilter;
 import org.pitest.mutationtest.config.PluginServices;
 import org.pitest.mutationtest.config.ReportOptions;
+import org.pitest.mutationtest.config.SentinelPluginServices;
 import org.pitest.mutationtest.config.SettingsFactory;
 import org.pitest.mutationtest.engine.MutationDetails;
 import org.pitest.mutationtest.engine.gregor.mutators.*;
+import org.pitest.util.IsolationUtils;
 
 /**
  *
@@ -173,7 +175,7 @@ public class PITFacade extends IntegrationFacade {
     public void executeMutants(Collection<Mutant> mutantsToExecute, Program program) {
         if (mutantsToExecute != null && !mutantsToExecute.isEmpty()) {
             LOGGER.debug("Preparing to execute " + mutantsToExecute.size() + " mutants for program " + program.getName() + ".");
-            PluginServices plugins = PluginServices.makeForContextLoader();
+            PluginServices plugins = new SentinelPluginServices(IsolationUtils.getContextClassLoader());
 
             ReportOptions reportOptions = this.createDefaultReportOptions(plugins, program);
 
@@ -255,7 +257,7 @@ public class PITFacade extends IntegrationFacade {
         if (operators != null && !operators.isEmpty()) {
             LOGGER.debug("Preparing to execute " + operators.size() + " operators for program " + program.getName() + ".");
             LOGGER.trace("Operators: " + operators.toString());
-            final PluginServices plugins = PluginServices.makeForContextLoader();
+            final PluginServices plugins = new SentinelPluginServices(IsolationUtils.getContextClassLoader());
             ReportOptions reportOptions = this.createDefaultReportOptions(plugins, program);
             reportOptions.setMutators(operators.stream().map(Operator::getName).collect(Collectors.toList()));
             try {

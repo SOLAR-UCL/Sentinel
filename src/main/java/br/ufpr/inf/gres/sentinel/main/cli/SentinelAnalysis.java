@@ -102,8 +102,13 @@ public class SentinelAnalysis {
                 }
                 dataset.add(indicatorValues, "", session);
             }
+            printStatisticalTests(results, outputDirectory, indicatorName);
             printBoxPlot(dataset, indicatorName, new File(outputDirectory + File.separator + indicatorName + ".png"), analysisArgs);
         }
+    }
+
+    private static void printStatisticalTests(ListMultimap<String, Double> results, File outputDirectory, String indicatorName) {
+
     }
 
     private static StandardChartTheme createChartTheme() {

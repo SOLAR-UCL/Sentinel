@@ -52,15 +52,14 @@ public class SentinelTest {
     }
 
     @Test
-    @Ignore
+//    @Ignore
     public void testSentinelAnalysis() throws Exception {
         String[] args = new String[]{"analyse",
             "--plotWidth", "800",
             "--plotHeight", "600",
             "--axisLabels", "Time", "Score",
-            "--inputDirectory", "training/joda-time-2.9.6/",
-            "--outputDirectory", "traininganalysis/joda-time-2.9.6/",
-            "--printIntermediateFiles"};
+            "--inputDirectory", "testing/wire-2.1.2/",
+            "--outputDirectory", "testinganalysis/wire-2.1.2/"};
         Sentinel.main(args);
     }
 
