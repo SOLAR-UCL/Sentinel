@@ -48,7 +48,20 @@ public class SentinelTest {
         result.getParentFile().delete();
 
         File cache = new File("training/.cache/Triangle.json");
-        Assert.assertFalse(result.exists());
+        Assert.assertFalse(cache.exists());
+    }
+
+    @Test
+    public void testSentinelCache() throws Exception {
+        String[] args = new String[]{"cache",
+            "--numberOfRuns", "1",
+            "--verbose"};
+        Sentinel.main(args);
+
+        File cache = new File("training/.cache/Triangle.json");
+        Assert.assertTrue(cache.exists());
+        cache.delete();
+        cache.getParentFile().delete();
     }
 
     @Test

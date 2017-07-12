@@ -10,11 +10,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import static org.junit.Assert.*;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
-
-import static org.junit.Assert.*;
 
 /**
  *
@@ -35,7 +34,7 @@ public class PITFacadeTest {
     @Ignore
     public void testJodaExecution() {
         PITFacade facade = new PITFacade("training");
-        Program programUnderTest = facade.instantiateProgram("Joda-Time;joda/sources;org.joda.time.*;**TestAllPackages;joda/joda-time-2.9.9-jar-with-dependencies.jar;joda/classes;joda/test-classes");
+        Program programUnderTest = facade.instantiateProgram("joda-time-2.8;src/main/java;org.joda.time.*;org.joda.time.TestAll;target/classes;target/test-classes;joda-convert-1.2.jar");
         IntegrationFacade.setIntegrationFacade(facade);
 
         Stopwatch stopwatch = Stopwatch.createStarted();

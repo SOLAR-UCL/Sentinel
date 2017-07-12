@@ -14,6 +14,7 @@ import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadMXBean;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import org.pitest.process.DefaultJavaExecutableLocator;
 
 /**
  * @author Giovani Guizzo
@@ -42,9 +43,11 @@ public abstract class IntegrationFacade {
     protected final ArrayListMultimap<Program, Long> conventionalExecutionTimes = ArrayListMultimap.create();
     protected final ArrayListMultimap<Program, Mutant> conventionalMutants = ArrayListMultimap.create();
     protected final String inputDirectory;
+    protected String javaExecutablePath;
 
     public IntegrationFacade(String inputDirectory) {
         this.inputDirectory = inputDirectory;
+        this.javaExecutablePath = new DefaultJavaExecutableLocator().javaExecutable();
     }
 
     public String getInputDirectory() {
@@ -191,6 +194,14 @@ public abstract class IntegrationFacade {
             this.conventionalExecutionTimes.put(program, stopwatch.elapsed(TimeUnit.NANOSECONDS));
         }
         this.conventionalMutants.putAll(program, allMutants);
+    }
+
+    public String getJavaExecutablePath() {
+        return javaExecutablePath;
+    }
+
+    public void setJavaExecutablePath(String javaExecutablePath) {
+        this.javaExecutablePath = javaExecutablePath;
     }
 
 }

@@ -7,6 +7,7 @@ import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
 import com.google.common.collect.Lists;
 import java.util.List;
+import org.pitest.process.DefaultJavaExecutableLocator;
 
 /**
  * @author Giovani Guizzo
@@ -189,4 +190,10 @@ public class TrainingArgs {
      */
     @Parameter(names = {"--random"}, description = "If Sentinel should run a random Grammatical Evolution algorithm.")
     public boolean random = false;
+
+    /**
+     *
+     */
+    @Parameter(names = {"--jvmPath"}, description = "The JVM path for executing the tests.")
+    public String jvmPath = new DefaultJavaExecutableLocator().javaExecutable();
 }

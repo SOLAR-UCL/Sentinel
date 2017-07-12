@@ -1,9 +1,11 @@
 package br.ufpr.inf.gres.sentinel.main.cli;
 
 import br.ufpr.inf.gres.sentinel.main.cli.args.AnalysisArgs;
+import br.ufpr.inf.gres.sentinel.main.cli.args.CacheArgs;
 import br.ufpr.inf.gres.sentinel.main.cli.args.MainArgs;
 import br.ufpr.inf.gres.sentinel.main.cli.args.TestingArgs;
 import br.ufpr.inf.gres.sentinel.main.cli.args.TrainingArgs;
+import br.ufpr.inf.gres.sentinel.main.cli.converter.SentinelCaching;
 import com.beust.jcommander.JCommander;
 
 /**
@@ -21,6 +23,7 @@ public class Sentinel {
     public static void main(String[] args) throws Exception {
         MainArgs mainArgs = new MainArgs();
         TrainingArgs trainingArgs = new TrainingArgs();
+        CacheArgs cacheArgs = new CacheArgs();
         TestingArgs testingArgs = new TestingArgs();
         AnalysisArgs analysisArgs = new AnalysisArgs();
 
@@ -28,6 +31,7 @@ public class Sentinel {
         commander.addCommand(trainingArgs);
         commander.addCommand(testingArgs);
         commander.addCommand(analysisArgs);
+        commander.addCommand(cacheArgs);
         commander.setProgramName("Sentinel");
 
         try {
@@ -52,6 +56,8 @@ public class Sentinel {
                 Object chosenCommand = command.getObjects().get(0);
                 if (chosenCommand instanceof TrainingArgs) {
                     SentinelTraining.train(trainingArgs, args);
+                } else if (chosenCommand instanceof CacheArgs) {
+                    SentinelCaching.cache(cacheArgs, args);
                 } else if (chosenCommand instanceof TestingArgs) {
                     SentinelTesting.test(testingArgs, args);
                 } else if (chosenCommand instanceof AnalysisArgs) {

@@ -150,6 +150,7 @@ public class PITFacade extends IntegrationFacade {
             "--reportDir", trainingDir,
             //"--threads", "14",
             "--outputFormats", "CSV",
+            "--jvmPath", this.javaExecutablePath,
             "--classPath", Joiner.on(",").join(programClassPath)
         };
 
