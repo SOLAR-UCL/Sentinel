@@ -18,25 +18,29 @@ import java.util.Scanner;
 public class KruskalWallis {
 
     public static HashMap<String, HashMap<String, Boolean>> test(ListMultimap<String, Double> values) throws IOException, InterruptedException {
-        int size = values.values().size() / values.keySet().size();
+        File outputFile = File.createTempFile("output", ".R");
+        outputFile.deleteOnExit();
+        HashMap<String, HashMap<String, Boolean>> result = test(values, outputFile);
+        outputFile.delete();
+        return result;
+    }
 
+    public static HashMap<String, HashMap<String, Boolean>> test(ListMultimap<String, Double> values, File outputFile) throws IOException, InterruptedException {
         StringBuilder scriptBuilder = new StringBuilder();
         scriptBuilder.append("require(pgirmess)\n")
                 .append("ARRAY <- c(");
         Joiner.on(",").appendTo(scriptBuilder, values.values());
         scriptBuilder.append(")\n")
-                .append("categs<-as.factor(rep(c(\"");
-        Joiner.on("\",\"").appendTo(scriptBuilder, values.keySet());
-        scriptBuilder.append("\"),each=").append(size).append("))\n")
+                .append("categs <- as.factor(c(\"");
+        Joiner.on("\",\"").appendTo(scriptBuilder, values.keys());
+        scriptBuilder.append("\"))\n")
                 .append("teste <- kruskal.test(ARRAY,categs)\n")
                 .append("print(teste)\n")
                 .append("pos_teste <- kruskalmc(ARRAY,categs)\n")
                 .append("print(pos_teste)");
 
         File scriptFile = File.createTempFile("script", ".R");
-        File outputFile = File.createTempFile("output", ".R");
         scriptFile.deleteOnExit();
-        outputFile.deleteOnExit();
 
         try (FileWriter scriptWriter = new FileWriter(scriptFile)) {
             scriptWriter.append(scriptBuilder.toString());
@@ -91,7 +95,6 @@ public class KruskalWallis {
         }
 
         scriptFile.delete();
-        outputFile.delete();
 
         return result;
     }

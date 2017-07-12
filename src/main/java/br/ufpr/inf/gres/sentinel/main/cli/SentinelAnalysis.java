@@ -6,6 +6,7 @@ import br.ufpr.inf.gres.sentinel.gson.GsonUtil;
 import br.ufpr.inf.gres.sentinel.gson.ResultWrapper;
 import br.ufpr.inf.gres.sentinel.indictaors.IndicatorFactory;
 import br.ufpr.inf.gres.sentinel.main.cli.args.AnalysisArgs;
+import br.ufpr.inf.gres.sentinel.statistics.KruskalWallis;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
 import com.google.common.collect.Lists;
@@ -67,7 +68,7 @@ public class SentinelAnalysis {
      * @param args
      * @throws IOException
      */
-    public static void analyse(AnalysisArgs analysisArgs, String[] args) throws IOException {
+    public static void analyse(AnalysisArgs analysisArgs, String[] args) throws IOException, InterruptedException {
         GsonUtil util = new GsonUtil(new StubProblem());
         ListMultimap<String, ResultWrapper> resultsFromJson = util.getResultsFromJsonFiles(analysisArgs.workingDirectory + File.separator + analysisArgs.inputDirectory, analysisArgs.inputFilesGlob);
         for (Map.Entry<String, ResultWrapper> entry : resultsFromJson.entries()) {
@@ -84,7 +85,7 @@ public class SentinelAnalysis {
         }
     }
 
-    private static void computeQualityIndicators(ListMultimap<String, ResultWrapper> resultsFromJson, File outputDirectory, AnalysisArgs analysisArgs) throws IOException {
+    private static void computeQualityIndicators(ListMultimap<String, ResultWrapper> resultsFromJson, File outputDirectory, AnalysisArgs analysisArgs) throws IOException, InterruptedException {
         ArrayFront referenceFront = new ArrayFront(getNonDominatedSolutions(resultsFromJson.values()));
         for (String indicatorName : analysisArgs.indicators) {
             ListMultimap<String, Double> results = getIndicatorResults(resultsFromJson, indicatorName, referenceFront);
@@ -107,8 +108,17 @@ public class SentinelAnalysis {
         }
     }
 
-    private static void printStatisticalTests(ListMultimap<String, Double> results, File outputDirectory, String indicatorName) {
-
+    private static void printStatisticalTests(ListMultimap<String, Double> results, File outputDirectory, String indicatorName) throws IOException, InterruptedException {
+        int maxSize = results.asMap().entrySet().stream().mapToInt(entry -> entry.getValue().size()).max().getAsInt();
+        for (String group : results.keySet()) {
+            List<Double> groupValues = results.get(group);
+            if (groupValues.size() == 1) {
+                for (int i = 0; i < maxSize; i++) {
+                    results.put(group, groupValues.get(0));
+                }
+            }
+        }
+        KruskalWallis.test(results, new File(outputDirectory.getAbsolutePath() + File.separator + indicatorName + "_KRUSKAL.txt"));
     }
 
     private static StandardChartTheme createChartTheme() {
