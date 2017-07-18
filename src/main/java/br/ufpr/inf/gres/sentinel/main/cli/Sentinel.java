@@ -5,7 +5,6 @@ import br.ufpr.inf.gres.sentinel.main.cli.args.CacheArgs;
 import br.ufpr.inf.gres.sentinel.main.cli.args.MainArgs;
 import br.ufpr.inf.gres.sentinel.main.cli.args.TestingArgs;
 import br.ufpr.inf.gres.sentinel.main.cli.args.TrainingArgs;
-import br.ufpr.inf.gres.sentinel.main.cli.converter.SentinelCaching;
 import com.beust.jcommander.JCommander;
 
 /**
@@ -44,7 +43,7 @@ public class Sentinel {
 
         if (mainArgs.help) {
             commander.usage();
-        } else if (trainingArgs.help || testingArgs.help || analysisArgs.help) {
+        } else if (trainingArgs.help || testingArgs.help || analysisArgs.help || cacheArgs.help) {
             commander.usage(commander.getParsedCommand());
         } else {
 

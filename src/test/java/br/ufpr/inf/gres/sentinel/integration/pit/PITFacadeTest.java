@@ -26,8 +26,8 @@ public class PITFacadeTest {
 
     @BeforeClass
     public static void setUpClass() {
-        facade = new PITFacade(System.getProperty("user.dir") + File.separator + "training");
-        programUnderTest = facade.instantiateProgram("Triangle;;br.ufpr.inf.gres.TriTyp*;br.ufpr.inf.gres.TriTypTest*;");
+        facade = new PITFacade(System.getProperty("user.dir"));
+        programUnderTest = facade.instantiateProgram("Triangle;src/test/resources;br.ufpr.inf.gres.TriTyp*;br.ufpr.inf.gres.TriTypTest*;;src/test/resources");
     }
 
     @Test
@@ -46,6 +46,20 @@ public class PITFacadeTest {
         System.out.println("Size: " + mutants.size());
         System.out.println("Dead: " + mutants.stream().filter(Mutant::isDead).count());
         System.out.println("Alive: " + mutants.stream().filter(Mutant::isAlive).count());
+    }
+
+    @Test
+    public void testInitializeProgram() {
+        PITFacade facade = new PITFacade(System.getProperty("user.dir"));
+        IntegrationFacade.setIntegrationFacade(facade);
+
+        facade.initializeConventionalStrategy(programUnderTest, 1);
+        int size = facade.generatedMutants.get(programUnderTest).keySet().size();
+        assertEquals(50, size);
+        assertEquals(50, facade.generatedMutants.get(programUnderTest).keySet().stream().filter(Mutant::isDead).count());
+        assertEquals(1, facade.unitToMutants.get(programUnderTest).keySet().size());
+        assertEquals(1, facade.unitToMutants.get(programUnderTest).values().size());
+        assertEquals(50, facade.unitToMutants.get(programUnderTest).values().iterator().next().stream().filter(Mutant::isDead).count());
     }
 
     @Test
@@ -150,29 +164,52 @@ public class PITFacadeTest {
 
     @Test
     public void testInstantiateProgram() {
-        Program program = facade.instantiateProgram("Triangle;;br.ufpr.inf.gres.TriTyp*;br.ufpr.inf.gres.TriTypTest*;br");
+        Program program = facade.instantiateProgram("Triangle;;br.ufpr.inf.gres.TriTyp*;br.ufpr.inf.gres.TriTypTest*;;br");
         assertNotNull(program);
         assertEquals("Triangle", program.getName());
-        assertEquals(System.getProperty("user.dir") + File.separator + "training", program.getSourceFile().getAbsolutePath());
+        assertEquals(System.getProperty("user.dir"), program.getSourceFile().getAbsolutePath());
         assertEquals("br.ufpr.inf.gres.TriTyp*", program.getAttribute("targetClassesGlob"));
         assertEquals("br.ufpr.inf.gres.TriTypTest*", program.getAttribute("targetTestsGlob"));
-        assertArrayEquals(new Object[]{System.getProperty("user.dir") + File.separator + "training" + File.separator + "br"}, ((List) program.getAttribute("classPath")).toArray());
+        assertEquals("", program.getAttribute("excludedClassesGlob"));
+        assertArrayEquals(new Object[]{System.getProperty("user.dir") + File.separator + "br"}, ((List) program.getAttribute("classPath")).toArray());
     }
 
     @Test
     public void testInstantiateProgram2() {
-        Program program = facade.instantiateProgram("Triangle;;br.ufpr.inf.gres.TriTyp*;br.ufpr.inf.gres.TriTypTest*");
+        Program program = facade.instantiateProgram("Triangle;;br.ufpr.inf.gres.TriTyp*;br.ufpr.inf.gres.TriTypTest*;test.**.testagain,exclude.**.TestingClass,test");
         assertNotNull(program);
         assertEquals("Triangle", program.getName());
-        assertEquals(System.getProperty("user.dir") + File.separator + "training", program.getSourceFile().getAbsolutePath());
+        assertEquals(System.getProperty("user.dir"), program.getSourceFile().getAbsolutePath());
         assertEquals("br.ufpr.inf.gres.TriTyp*", program.getAttribute("targetClassesGlob"));
         assertEquals("br.ufpr.inf.gres.TriTypTest*", program.getAttribute("targetTestsGlob"));
+        assertEquals("test.**.testagain,exclude.**.TestingClass,test", program.getAttribute("excludedClassesGlob"));
         assertTrue(((List) program.getAttribute("classPath")).isEmpty());
+    }
+
+    @Test
+    public void testInstantiateProgram5() {
+        Program program = facade.instantiateProgram("Triangle;;br.ufpr.inf.gres.TriTyp*;br.ufpr.inf.gres.TriTypTest*;test.**.testagain,exclude.**.TestingClass,test;src/test/resources");
+        assertNotNull(program);
+        assertEquals("Triangle", program.getName());
+        assertEquals(System.getProperty("user.dir"), program.getSourceFile().getAbsolutePath());
+        assertEquals("br.ufpr.inf.gres.TriTyp*", program.getAttribute("targetClassesGlob"));
+        assertEquals("br.ufpr.inf.gres.TriTypTest*", program.getAttribute("targetTestsGlob"));
+        assertEquals("test.**.testagain,exclude.**.TestingClass,test", program.getAttribute("excludedClassesGlob"));
+        assertArrayEquals(new Object[]{
+            System.getProperty("user.dir") + File.separator + "src" + File.separator + "test" + File.separator + "resources" + File.separator + "testjar.jar",
+            System.getProperty("user.dir") + File.separator + "src" + File.separator + "test" + File.separator + "resources" + File.separator + "testzip.zip",
+            System.getProperty("user.dir") + File.separator + "src" + File.separator + "test" + File.separator + "resources"},
+                ((List) program.getAttribute("classPath")).toArray());
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testInstantiateProgram3() {
         Program program = facade.instantiateProgram("Triangle;;br.ufpr.inf.gres.TriTyp*");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testInstantiateProgram4() {
+        Program program = facade.instantiateProgram("Triangle;;br.ufpr.inf.gres.TriTyp*;test");
     }
 
 }

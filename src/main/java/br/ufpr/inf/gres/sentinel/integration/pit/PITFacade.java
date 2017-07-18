@@ -146,11 +146,11 @@ public class PITFacade extends IntegrationFacade {
         String[] args = new String[]{
             "--targetClasses", (String) programUnderTest.getAttribute("targetClassesGlob"),
             "--targetTests", (String) programUnderTest.getAttribute("targetTestsGlob"),
+            "--excludedClasses", (String) programUnderTest.getAttribute("excludedClassesGlob"),
             "--sourceDirs", programUnderTest.getSourceFile().getAbsolutePath(),
             "--reportDir", trainingDir,
-            //"--threads", "14",
+            //            "--threads", "14",
             "--outputFormats", "CSV",
-            "--jvmPath", this.javaExecutablePath,
             "--classPath", Joiner.on(",").join(programClassPath)
         };
 

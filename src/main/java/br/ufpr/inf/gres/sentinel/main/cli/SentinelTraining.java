@@ -99,7 +99,6 @@ public class SentinelTraining {
             cachedFacade.attachObserver(cachedObserver);
             facade = cachedFacade;
         }
-        facade.setJavaExecutablePath(trainingArgs.jvmPath);
         IntegrationFacade.setIntegrationFacade(facade);
         return facade;
     }

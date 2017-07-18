@@ -3,6 +3,7 @@ package br.ufpr.inf.gres.sentinel.main.cli.args;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.problem.fitness.ObjectiveFunction;
 import br.ufpr.inf.gres.sentinel.integration.IntegrationFacadeFactory;
 import br.ufpr.inf.gres.sentinel.main.cli.converter.SeparatorConverter;
+import br.ufpr.inf.gres.sentinel.main.cli.splitter.NoParameterSplitter;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
 import com.google.common.collect.Lists;
@@ -114,7 +115,8 @@ public class TrainingArgs {
      */
     @Parameter(names = {"--objectiveFunctions", "-of"},
             description = "The objective functions used to evolve the strategies. Available options are: " + ObjectiveFunction.AVERAGE_CPU_TIME + ", " + ObjectiveFunction.AVERAGE_SCORE + ", " + ObjectiveFunction.AVERAGE_QUANTITY + ".",
-            variableArity = true)
+            variableArity = true,
+            splitter = NoParameterSplitter.class)
     public List<String> objectiveFunctions = Lists.newArrayList(ObjectiveFunction.AVERAGE_CPU_TIME, ObjectiveFunction.AVERAGE_SCORE);
 
     /**
@@ -156,7 +158,7 @@ public class TrainingArgs {
     @Parameter(names = {"--inputDirectory", "-id"},
             description = "The directory (relative to the working directory) in which the programs for the training are located.",
             converter = SeparatorConverter.class)
-    public String inputDirectory = "training";
+    public String inputDirectory = ".";
 
     /**
      *
@@ -182,8 +184,10 @@ public class TrainingArgs {
             + "used to add dependencies of the program in the Java classpath. The classpath can have as many items as necessary. The classpath "
             + "must contain the dependencies of the program, the root directory for the compiled classes, and the root directory for the test classes. "
             + "All directories are in relative to the inputDirectory argument.",
-            variableArity = true)
-    public List<String> trainingPrograms = Lists.newArrayList("Triangle;;br.ufpr.inf.gres.TriTyp*;br.ufpr.inf.gres.TriTypTest*;");
+            variableArity = true,
+            splitter = NoParameterSplitter.class,
+            required = true)
+    public List<String> trainingPrograms;
 
     /**
      *

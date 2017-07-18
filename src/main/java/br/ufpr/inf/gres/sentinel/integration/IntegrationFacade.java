@@ -10,11 +10,15 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
 import com.google.common.collect.Multimaps;
 import java.io.File;
+import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadMXBean;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
-import org.pitest.process.DefaultJavaExecutableLocator;
+import java.util.stream.Stream;
 
 /**
  * @author Giovani Guizzo
@@ -43,11 +47,9 @@ public abstract class IntegrationFacade {
     protected final ArrayListMultimap<Program, Long> conventionalExecutionTimes = ArrayListMultimap.create();
     protected final ArrayListMultimap<Program, Mutant> conventionalMutants = ArrayListMultimap.create();
     protected final String inputDirectory;
-    protected String javaExecutablePath;
 
     public IntegrationFacade(String inputDirectory) {
         this.inputDirectory = inputDirectory;
-        this.javaExecutablePath = new DefaultJavaExecutableLocator().javaExecutable();
     }
 
     public String getInputDirectory() {
@@ -149,14 +151,29 @@ public abstract class IntegrationFacade {
         Preconditions.checkArgument(split.hasNext(), errorMessage);
         String targetTestsGlob = split.next();
 
+        Preconditions.checkArgument(split.hasNext(), errorMessage);
+        String excludedClassesGlob = split.next();
+
         List<String> classPath = new ArrayList<>();
         while (split.hasNext()) {
-            classPath.add(this.inputDirectory + File.separator + split.next());
+            Path file = Paths.get(this.inputDirectory + File.separator + split.next());
+            if (Files.isDirectory(file)) {
+                try (Stream<Path> files = Files.walk(file)) {
+                    files.forEach(walkingFile -> {
+                        if (com.google.common.io.Files.getFileExtension(walkingFile.toString()).matches("jar|zip")) {
+                            classPath.add(walkingFile.toString());
+                        }
+                    });
+                } catch (IOException ex) {
+                }
+            }
+            classPath.add(file.toString());
         }
 
         final Program program = new Program(name, this.inputDirectory + File.separator + sourceDir);
         program.putAttribute("targetClassesGlob", targetClassesGlob);
         program.putAttribute("targetTestsGlob", targetTestsGlob);
+        program.putAttribute("excludedClassesGlob", excludedClassesGlob);
         program.putAttribute("classPath", classPath);
         return program;
     }
@@ -194,14 +211,6 @@ public abstract class IntegrationFacade {
             this.conventionalExecutionTimes.put(program, stopwatch.elapsed(TimeUnit.NANOSECONDS));
         }
         this.conventionalMutants.putAll(program, allMutants);
-    }
-
-    public String getJavaExecutablePath() {
-        return javaExecutablePath;
-    }
-
-    public void setJavaExecutablePath(String javaExecutablePath) {
-        this.javaExecutablePath = javaExecutablePath;
     }
 
 }

@@ -20,7 +20,8 @@ public class SentinelTest {
             "--maxEvaluations", "2",
             "--populationSize", "2",
             "--trainingRuns", "1",
-            "--numberOfConventionalRuns", "1"};
+            "--numberOfConventionalRuns", "1",
+            "-tp", "Triangle;src/test/resources;br.ufpr.inf.gres.TriTyp*;br.ufpr.inf.gres.TriTypTest*;;src/test/resources"};
         Sentinel.main(args);
         File result = new File("training/Experiment/result_1.json");
         Assert.assertTrue(result.exists());
@@ -38,7 +39,8 @@ public class SentinelTest {
             "--numberOfConventionalRuns", "1",
             "--cached",
             "--storeCacheInFile", "false",
-            "--verbose"};
+            "--verbose",
+            "-tp", "Triangle;src/test/resources;br.ufpr.inf.gres.TriTyp*;br.ufpr.inf.gres.TriTypTest*;;src/test/resources"};
         Sentinel.main(args);
 
         File result = new File("training/Experiment/result_1.json");
@@ -55,10 +57,11 @@ public class SentinelTest {
     public void testSentinelCache() throws Exception {
         String[] args = new String[]{"cache",
             "--numberOfRuns", "1",
-            "--verbose"};
+            "--verbose",
+            "-tp", "Triangle;src/test/resources;br.ufpr.inf.gres.TriTyp*;br.ufpr.inf.gres.TriTypTest*;;src/test/resources"};
         Sentinel.main(args);
 
-        File cache = new File("training/.cache/Triangle.json");
+        File cache = new File(".cache/Triangle.json");
         Assert.assertTrue(cache.exists());
         cache.delete();
         cache.getParentFile().delete();
@@ -71,8 +74,8 @@ public class SentinelTest {
             "--plotWidth", "800",
             "--plotHeight", "600",
             "--axisLabels", "Time", "Score",
-            "--inputDirectory", "testing/wire-2.1.2/",
-            "--outputDirectory", "testinganalysis/wire-2.1.2/"};
+            "--inputDirectory", "testing/wire-2.2.0/",
+            "--outputDirectory", "testinganalysis/wire-2.2.0/"};
         Sentinel.main(args);
     }
 
@@ -98,6 +101,15 @@ public class SentinelTest {
         Sentinel.main(args);
 
         args = new String[]{"train", "-h"};
+        Sentinel.main(args);
+
+        args = new String[]{"test", "-h"};
+        Sentinel.main(args);
+
+        args = new String[]{"cache", "-h"};
+        Sentinel.main(args);
+
+        args = new String[]{"analyse", "-h"};
         Sentinel.main(args);
     }
 

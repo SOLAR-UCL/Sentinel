@@ -254,14 +254,4 @@ public class CachedFacade extends IntegrationFacade {
         this.cache.clearCache();
     }
 
-    @Override
-    public String getJavaExecutablePath() {
-        return facade.getJavaExecutablePath();
-    }
-
-    @Override
-    public void setJavaExecutablePath(String javaExecutablePath) {
-        facade.setJavaExecutablePath(javaExecutablePath);
-    }
-
 }

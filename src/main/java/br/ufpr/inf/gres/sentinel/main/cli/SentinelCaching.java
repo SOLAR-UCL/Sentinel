@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package br.ufpr.inf.gres.sentinel.main.cli.converter;
+package br.ufpr.inf.gres.sentinel.main.cli;
 
 import br.ufpr.inf.gres.sentinel.base.mutation.Program;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.problem.observer.impl.CachedObjectiveFunctionObserver;
@@ -53,8 +53,6 @@ public class SentinelCaching {
                 + cacheArgs.outputDirectory);
         cachedFacade.attachObserver(new CachedObjectiveFunctionObserver());
         facade = cachedFacade;
-
-        facade.setJavaExecutablePath(cacheArgs.jvmPath);
 
         IntegrationFacade.setIntegrationFacade(facade);
         return facade;

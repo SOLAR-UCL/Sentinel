@@ -20,10 +20,9 @@ import com.google.common.collect.Lists;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
+import static org.junit.Assert.*;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import static org.junit.Assert.*;
 
 /**
  * @author Giovani Guizzo
@@ -82,8 +81,8 @@ public class StrategyMapperTest {
 
     @Test
     public void testCreate3() throws IOException {
-        PITFacade facade = new PITFacade(System.getProperty("user.dir") + File.separator + "training");
-        Program programUnderTest = facade.instantiateProgram("Triangle;;br.ufpr.inf.gres.TriTyp*;br.ufpr.inf.gres.TriTypTest*;");
+        PITFacade facade = new PITFacade(System.getProperty("user.dir"));
+        Program programUnderTest = facade.instantiateProgram("Triangle;src/test/resources;br.ufpr.inf.gres.TriTyp*;br.ufpr.inf.gres.TriTypTest*;;src/test/resources");
         IntegrationFacade.setIntegrationFacade(facade);
 
         StrategyMapper strategyMapper = new StrategyMapper(new File(GrammarFiles.getDefaultGrammarPath()));

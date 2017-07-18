@@ -3,6 +3,7 @@ package br.ufpr.inf.gres.sentinel.main.cli.args;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.problem.fitness.ObjectiveFunction;
 import br.ufpr.inf.gres.sentinel.indictaors.IndicatorFactory;
 import br.ufpr.inf.gres.sentinel.main.cli.converter.SeparatorConverter;
+import br.ufpr.inf.gres.sentinel.main.cli.splitter.NoParameterSplitter;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
 import com.google.common.collect.Lists;
@@ -21,7 +22,8 @@ public class AnalysisArgs {
      */
     @Parameter(names = {"--axisLabels"},
             description = "The label for the axis of the graphs (x, y, z).",
-            variableArity = true)
+            variableArity = true,
+            splitter = NoParameterSplitter.class)
     public List<String> axisLabels = Lists.newArrayList(ObjectiveFunction.AVERAGE_CPU_TIME, ObjectiveFunction.AVERAGE_SCORE);
 
     /**
@@ -34,7 +36,8 @@ public class AnalysisArgs {
      */
     @Parameter(names = "--indicators",
             description = "The indicators used to compute the quality of the results. Available options are: hypervolume, igd.",
-            variableArity = true)
+            variableArity = true,
+            splitter = NoParameterSplitter.class)
     public List<String> indicators = Lists.newArrayList(IndicatorFactory.HYPERVOLUME, IndicatorFactory.IGD);
 
     /**
@@ -43,7 +46,7 @@ public class AnalysisArgs {
     @Parameter(names = {"--inputDirectory", "-id"},
             description = "The directory (relative to the working directory) in which the training was executed. This is the directory in which Sentinel will look for results to compute the analysis.",
             converter = SeparatorConverter.class)
-    public String inputDirectory = "training";
+    public String inputDirectory = "testing";
 
     /**
      *

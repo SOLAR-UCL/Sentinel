@@ -18,10 +18,9 @@ import java.util.Collection;
 import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import static org.junit.Assert.*;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import static org.junit.Assert.*;
 
 /**
  *
@@ -40,9 +39,9 @@ public class CachedFacadeTest {
     @BeforeClass
     public static void setUpClass() {
         LOGGER.debug("Initializing CachedFacadeTest.");
-        String directory = System.getProperty("user.dir") + File.separator + "training";
+        String directory = System.getProperty("user.dir");
         facade = new CachedFacade(new PITFacade(directory), "src" + File.separator + "test" + File.separator + "resources", "src" + File.separator + "test" + File.separator + "resources");
-        programUnderTest = facade.instantiateProgram("Triangle;;br.ufpr.inf.gres.TriTyp*;br.ufpr.inf.gres.TriTypTest*;");
+        programUnderTest = facade.instantiateProgram("Triangle;src/test/resources;br.ufpr.inf.gres.TriTyp*;br.ufpr.inf.gres.TriTypTest*;;src/test/resources");
         LOGGER.debug("Initializing program.");
         facade.initializeConventionalStrategy(programUnderTest, 5);
     }
@@ -235,24 +234,26 @@ public class CachedFacadeTest {
     @Test
     public void testInstantiateProgram() {
         LOGGER.debug("Testing method: testInstantiateProgram");
-        Program program = facade.instantiateProgram("Triangle;;br.ufpr.inf.gres.TriTyp*;br.ufpr.inf.gres.TriTypTest*;br");
+        Program program = facade.instantiateProgram("Triangle;;br.ufpr.inf.gres.TriTyp*;br.ufpr.inf.gres.TriTypTest*;;br");
         assertNotNull(program);
         assertEquals("Triangle", program.getName());
-        assertEquals(System.getProperty("user.dir") + File.separator + "training", program.getSourceFile().getAbsolutePath());
+        assertEquals(System.getProperty("user.dir"), program.getSourceFile().getAbsolutePath());
         assertEquals("br.ufpr.inf.gres.TriTyp*", program.getAttribute("targetClassesGlob"));
         assertEquals("br.ufpr.inf.gres.TriTypTest*", program.getAttribute("targetTestsGlob"));
-        assertArrayEquals(new Object[]{System.getProperty("user.dir") + File.separator + "training" + File.separator + "br"}, ((List) program.getAttribute("classPath")).toArray());
+        assertEquals("", program.getAttribute("excludedClassesGlob"));
+        assertArrayEquals(new Object[]{System.getProperty("user.dir") + File.separator + "br"}, ((List) program.getAttribute("classPath")).toArray());
     }
 
     @Test
     public void testInstantiateProgram2() {
         LOGGER.debug("Testing method: testInstantiateProgram2");
-        Program program = facade.instantiateProgram("Triangle;;br.ufpr.inf.gres.TriTyp*;br.ufpr.inf.gres.TriTypTest*");
+        Program program = facade.instantiateProgram("Triangle;;br.ufpr.inf.gres.TriTyp*;br.ufpr.inf.gres.TriTypTest*;excluded.classes.*");
         assertNotNull(program);
         assertEquals("Triangle", program.getName());
-        assertEquals(System.getProperty("user.dir") + File.separator + "training", program.getSourceFile().getAbsolutePath());
+        assertEquals(System.getProperty("user.dir"), program.getSourceFile().getAbsolutePath());
         assertEquals("br.ufpr.inf.gres.TriTyp*", program.getAttribute("targetClassesGlob"));
         assertEquals("br.ufpr.inf.gres.TriTypTest*", program.getAttribute("targetTestsGlob"));
+        assertEquals("excluded.classes.*", program.getAttribute("excludedClassesGlob"));
         assertTrue(((List) program.getAttribute("classPath")).isEmpty());
     }
 
@@ -260,6 +261,12 @@ public class CachedFacadeTest {
     public void testInstantiateProgram3() {
         LOGGER.debug("Testing method: testInstantiateProgram3");
         Program program = facade.instantiateProgram("Triangle;;br.ufpr.inf.gres.TriTyp*");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testInstantiateProgram4() {
+        LOGGER.debug("Testing method: testInstantiateProgram4");
+        Program program = facade.instantiateProgram("Triangle;;br.ufpr.inf.gres.TriTyp*;test.test");
     }
 
     @Test

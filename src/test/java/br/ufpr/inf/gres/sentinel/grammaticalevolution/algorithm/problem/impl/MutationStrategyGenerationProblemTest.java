@@ -91,7 +91,7 @@ public class MutationStrategyGenerationProblemTest {
     public void evaluate3() throws Exception {
         PITFacade facade = new PITFacade(System.getProperty("user.dir") + File.separator + "training");
 
-        Program programUnderTest = facade.instantiateProgram("Triangle;;br.ufpr.inf.gres.TriTyp*;br.ufpr.inf.gres.TriTypTest*;");
+        Program programUnderTest = facade.instantiateProgram("Triangle;src/test/resources;br.ufpr.inf.gres.TriTyp*;br.ufpr.inf.gres.TriTypTest*;;src/test/resources");
         problem = new MutationStrategyGenerationProblem(GrammarFiles.getDefaultGrammarPath(),
                 15,
                 100,
@@ -138,7 +138,7 @@ public class MutationStrategyGenerationProblemTest {
     @Ignore
     public void evaluate5() throws Exception {
         IntegrationFacade facade = IntegrationFacadeFactory.createIntegrationFacade("PIT", System.getProperty("user.dir") + File.separator + "training");
-        Program programUnderTest = facade.instantiateProgram("Triangle;;br.ufpr.inf.gres.TriTyp*;br.ufpr.inf.gres.TriTypTest*;");
+        Program programUnderTest = facade.instantiateProgram("Triangle;src/test/resources;br.ufpr.inf.gres.TriTyp*;br.ufpr.inf.gres.TriTypTest*;;src/test/resources");
         IntegrationFacade.setIntegrationFacade(facade);
         problem = new MutationStrategyGenerationProblem(GrammarFiles.getGrammarPath(GrammarFiles.DEFAULT_GRAMMAR),
                 10,

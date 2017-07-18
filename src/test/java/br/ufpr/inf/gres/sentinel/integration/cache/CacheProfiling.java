@@ -35,7 +35,7 @@ public class CacheProfiling {
         LOGGER.debug("Initializing CachedFacadeTest.");
         String directory = System.getProperty("user.dir") + File.separator + "training";
         facade = new CachedFacade(new PITFacade(directory), "src" + File.separator + "test" + File.separator + "resources", "src" + File.separator + "test" + File.separator + "resources");
-        programUnderTest = facade.instantiateProgram("Triangle;;br.ufpr.inf.gres.TriTyp*;br.ufpr.inf.gres.TriTypTest*;");
+        programUnderTest = facade.instantiateProgram("Triangle;src/test/resources;br.ufpr.inf.gres.TriTyp*;br.ufpr.inf.gres.TriTypTest*;;src/test/resources");
         LOGGER.debug("Initializing program.");
         facade.initializeConventionalStrategy(programUnderTest, 5);
     }

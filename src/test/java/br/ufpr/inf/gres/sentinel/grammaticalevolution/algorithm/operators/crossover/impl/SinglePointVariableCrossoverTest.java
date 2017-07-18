@@ -40,7 +40,7 @@ public class SinglePointVariableCrossoverTest {
         JMetalRandom.getInstance().setRandomGenerator(new VariableLengthSolutionTest.PseudoRandomGeneratorStub(Iterators.cycle(2)));
         Program programUnderTest
                 = new Program("br.ufpr.inf.gres.TriTyp",
-                        new File("src/test/resources/testfiles/TriTyp/src/br/ufpr/inf/gres/TriTyp.java"));
+                        new File("src/test/resources"));
 
         GrammaticalEvolutionAlgorithmTest.ProblemStub problemStub
                 = new GrammaticalEvolutionAlgorithmTest.ProblemStub(GrammarFiles.getDefaultGrammarPath(),
@@ -69,7 +69,7 @@ public class SinglePointVariableCrossoverTest {
     public void execute2() throws Exception {
         Program programUnderTest
                 = new Program("br.ufpr.inf.gres.TriTyp",
-                        new File("src/test/resources/testfiles/TriTyp/src/br/ufpr/inf/gres/TriTyp.java"));
+                        new File("src/test/resources"));
 
         GrammaticalEvolutionAlgorithmTest.ProblemStub problemStub
                 = new GrammaticalEvolutionAlgorithmTest.ProblemStub(GrammarFiles.getDefaultGrammarPath(),

@@ -2,9 +2,9 @@ package br.ufpr.inf.gres.sentinel.main.cli.args;
 
 import br.ufpr.inf.gres.sentinel.integration.IntegrationFacadeFactory;
 import br.ufpr.inf.gres.sentinel.main.cli.converter.SeparatorConverter;
+import br.ufpr.inf.gres.sentinel.main.cli.splitter.NoParameterSplitter;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
-import com.google.common.collect.Lists;
 import java.util.List;
 import org.pitest.process.DefaultJavaExecutableLocator;
 
@@ -47,7 +47,7 @@ public class CacheArgs {
     @Parameter(names = {"--outputDirectory", "-od"},
             description = "The directory (relative to the working directory) in which the training results will be outputed.",
             converter = SeparatorConverter.class)
-    public String outputDirectory = "training";
+    public String outputDirectory = ".";
 
     /**
      *
@@ -55,7 +55,7 @@ public class CacheArgs {
     @Parameter(names = {"--inputDirectory", "-id"},
             description = "The directory (relative to the working directory) in which the programs for the training are located.",
             converter = SeparatorConverter.class)
-    public String inputDirectory = "training";
+    public String inputDirectory = ".";
 
     /**
      *
@@ -76,8 +76,10 @@ public class CacheArgs {
             + "used to add dependencies of the program in the Java classpath. The classpath can have as many items as necessary. The classpath "
             + "must contain the dependencies of the program, the root directory for the compiled classes, and the root directory for the test classes. "
             + "All directories are in relative to the inputDirectory argument.",
-            variableArity = true)
-    public List<String> trainingPrograms = Lists.newArrayList("Triangle;;br.ufpr.inf.gres.TriTyp*;br.ufpr.inf.gres.TriTypTest*;");
+            variableArity = true,
+            splitter = NoParameterSplitter.class,
+            required = true)
+    public List<String> trainingPrograms;
 
     /**
      *

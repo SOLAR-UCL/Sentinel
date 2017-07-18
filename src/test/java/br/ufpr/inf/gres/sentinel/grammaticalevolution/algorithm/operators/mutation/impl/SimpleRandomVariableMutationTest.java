@@ -9,11 +9,10 @@ import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.GrammarFil
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
 import java.io.File;
+import static org.junit.Assert.assertArrayEquals;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.uma.jmetal.util.pseudorandom.JMetalRandom;
-
-import static org.junit.Assert.assertArrayEquals;
 
 /**
  * @author Giovani Guizzo
@@ -33,7 +32,7 @@ public class SimpleRandomVariableMutationTest {
     public void execute() throws Exception {
         Program programUnderTest
                 = new Program("br.ufpr.inf.gres.TriTyp",
-                        new File("src/test/resources/testfiles/TriTyp/src/br/ufpr/inf/gres/TriTyp.java"));
+                        new File("src/test/resources"));
 
         GrammaticalEvolutionAlgorithmTest.ProblemStub problemStub
                 = new GrammaticalEvolutionAlgorithmTest.ProblemStub(GrammarFiles.getDefaultGrammarPath(),
