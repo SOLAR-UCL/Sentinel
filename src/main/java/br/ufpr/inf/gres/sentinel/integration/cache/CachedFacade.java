@@ -6,7 +6,6 @@ import br.ufpr.inf.gres.sentinel.base.mutation.Program;
 import br.ufpr.inf.gres.sentinel.integration.IntegrationFacade;
 import br.ufpr.inf.gres.sentinel.integration.cache.observer.CacheFacadeObserver;
 import com.google.common.base.Stopwatch;
-import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadMXBean;
 import java.util.*;
@@ -30,17 +29,6 @@ public class CachedFacade extends IntegrationFacade {
     /**
      *
      * @param facade
-     */
-    public CachedFacade(IntegrationFacade facade) {
-        super(facade.getInputDirectory());
-        this.facade = facade;
-        this.cache = new FacadeCache();
-        this.observers = new HashSet<>();
-    }
-
-    /**
-     *
-     * @param facade
      * @param cacheInputDirectory
      * @param cacheOutputDirectory
      */
@@ -53,97 +41,70 @@ public class CachedFacade extends IntegrationFacade {
 
     @Override
     public boolean initializeConventionalStrategy(Program program, int repetitions) {
+        boolean wasCached = true;
         LOGGER.debug("Initializing program " + program.getName() + " for " + repetitions + " repetitions.");
         if (!this.cache.isCached(program)) {
-            LOGGER.debug("Program is not cached. Starting execution.");
-            LOGGER.trace("Starting first execution. It's gonna be discarded.");
-            LinkedHashSet<Mutant> allMutants = this.facade.executeOperators(this.facade.getAllOperators(), program);
-            this.facade.executeMutants(allMutants, program);
-            this.conventionalExecutionCPUTimes.removeAll(program);
-            this.conventionalExecutionTimes.removeAll(program);
-            this.conventionalMutants.removeAll(program);
-            this.cache.clearCache(program);
+            if (this.cache.getNumberOfRuns(program) < repetitions) {
+                LOGGER.debug("Program is not cached. Starting execution.");
+                LOGGER.trace("Starting first execution. It's gonna be discarded.");
+                LinkedHashSet<Mutant> allMutants = this.facade.executeOperators(this.facade.getAllOperators(), program);
+                this.facade.executeMutants(allMutants, program);
+                this.conventionalExecutionCPUTimes.removeAll(program);
+                this.conventionalExecutionTimes.removeAll(program);
+                this.conventionalMutants.removeAll(program);
 
-            LOGGER.trace("Starting actual execution.");
-            this.runConventionalStrategy(program, repetitions);
+                LOGGER.trace("Starting actual execution.");
+                this.runConventionalStrategy(program, repetitions);
+                wasCached = false;
+            }
             this.cache.setCached(program);
+            this.cache.writeCache();
             LOGGER.debug("Program executed and successfully cached.");
-            try {
-                LOGGER.debug("Preparing to write cache file.");
-                boolean written = this.cache.writeCache();
-                if (written) {
-                    LOGGER.debug("Cache file written successfully.");
-                } else {
-                    LOGGER.debug("No cache file was written.");
-                }
-            } catch (IOException ex) {
-                LOGGER.error("Could not write cache file. The exception is: " + ex.getMessage(), ex);
-            }
-            return true;
-        } else {
-            LOGGER.debug("Program is cached. Returning cached values.");
-            if (!this.conventionalMutants.containsKey(program)) {
-                Collection<Mutant> allMutants = new LinkedHashSet<>();
-                for (int i = 0; i < repetitions; i++) {
-                    long cpuTimeSum = 0;
-                    long timeSum = 0;
-
-                    Collection<Operator> operators = this.getAllOperators();
-
-                    allMutants = new LinkedHashSet<>();
-                    for (Operator operator : operators) {
-                        allMutants.addAll(this.cache.retrieveOperatorExecutionInformation(program, operator));
-                        cpuTimeSum += operator.getCpuTime();
-                        timeSum += operator.getExecutionTime();
-                    }
-                    for (Mutant mutant : allMutants) {
-                        this.cache.retrieveMutantExecutionInformation(program, mutant);
-                        cpuTimeSum += mutant.getCpuTime();
-                        timeSum += mutant.getExecutionTime();
-                    }
-                    this.conventionalExecutionCPUTimes.put(program, cpuTimeSum);
-                    this.conventionalExecutionTimes.put(program, timeSum);
-                }
-                this.conventionalMutants.putAll(program, allMutants);
-            }
-            return false;
         }
+        if (!this.conventionalMutants.containsKey(program)) {
+            LOGGER.debug("Program is cached. Returning cached values.");
+            Collection<Mutant> allMutants = new LinkedHashSet<>();
+            for (int i = 0; i < repetitions; i++) {
+                long cpuTimeSum = 0;
+                long timeSum = 0;
+
+                Collection<Operator> operators = this.getAllOperators();
+
+                allMutants = new LinkedHashSet<>();
+                for (Operator operator : operators) {
+                    allMutants.addAll(this.cache.retrieveOperatorExecutionInformation(program, operator));
+                    cpuTimeSum += operator.getCpuTime();
+                    timeSum += operator.getExecutionTime();
+                }
+                for (Mutant mutant : allMutants) {
+                    this.cache.retrieveMutantExecutionInformation(program, mutant);
+                    cpuTimeSum += mutant.getCpuTime();
+                    timeSum += mutant.getExecutionTime();
+                }
+                this.conventionalExecutionCPUTimes.put(program, cpuTimeSum);
+                this.conventionalExecutionTimes.put(program, timeSum);
+            }
+            this.conventionalMutants.putAll(program, allMutants);
+        }
+        return wasCached;
     }
 
     @Override
     protected void runConventionalStrategy(Program program, int repetitions) {
         LinkedHashSet<Mutant> allMutants = new LinkedHashSet<>();
-        for (int i = 0; i < repetitions; i++) {
+        int numberOfRuns = this.cache.getNumberOfRuns(program);
+        LOGGER.trace("Repetitions already finished: " + numberOfRuns + " / " + (((double) numberOfRuns) / (double) repetitions * 100) + "%");
+        for (int i = numberOfRuns; i < repetitions; i++) {
             LOGGER.trace("Executing repetition " + i + ".");
-            long cpuTimeSum = 0;
-            long timeSum = 0;
-
             Collection<Operator> operators = this.getAllOperators();
             allMutants = this.executeOperators(operators, program);
             this.executeMutants(allMutants, program);
 
-            for (Operator operator : operators) {
-                double operatorCpuTime = operator.getCpuTime();
-                double operatorExecutionTime = operator.getExecutionTime();
-
-                cpuTimeSum += operatorCpuTime;
-                timeSum += operatorExecutionTime;
-            }
-
-            for (Mutant mutant : allMutants) {
-                double mutantCpuTime = mutant.getCpuTime();
-                double mutantExecutionTime = mutant.getExecutionTime();
-
-                cpuTimeSum += mutantCpuTime;
-                timeSum += mutantExecutionTime;
-            }
-
-            this.conventionalExecutionCPUTimes.put(program, cpuTimeSum);
-            this.conventionalExecutionTimes.put(program, timeSum);
             LOGGER.trace("Repetition ended. " + (((double) i + 1) / (double) repetitions * 100) + "% complete.");
+            this.cache.notifyRunEnded(program);
+            this.cache.writeCache();
         }
         LOGGER.trace(allMutants.size() + " mutants generated.");
-        this.conventionalMutants.putAll(program, allMutants);
     }
 
     @Override
@@ -252,6 +213,10 @@ public class CachedFacade extends IntegrationFacade {
 
     private void clearCache() {
         this.cache.clearCache();
+    }
+
+    public boolean isCached(Program program) {
+        return this.cache.isCached(program);
     }
 
 }

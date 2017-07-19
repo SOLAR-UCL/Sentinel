@@ -5,13 +5,13 @@ import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.problem.fitness.
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.problem.fitness.impl.AverageCPUTime;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.problem.fitness.impl.AverageQuantity;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.problem.fitness.impl.AverageScore;
-import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.problem.observer.impl.UnconstrainedObjectiveFunctionObserver;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.representation.VariableLengthSolution;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.GrammarFiles;
 import br.ufpr.inf.gres.sentinel.integration.IntegrationFacade;
 import br.ufpr.inf.gres.sentinel.integration.IntegrationFacadeFactory;
 import br.ufpr.inf.gres.sentinel.integration.IntegrationFacadeTest;
 import br.ufpr.inf.gres.sentinel.integration.pit.PITFacade;
+import br.ufpr.inf.gres.sentinel.util.TestPrograms;
 import com.google.common.collect.Lists;
 import java.io.File;
 import static org.junit.Assert.*;
@@ -91,7 +91,7 @@ public class MutationStrategyGenerationProblemTest {
     public void evaluate3() throws Exception {
         PITFacade facade = new PITFacade(System.getProperty("user.dir") + File.separator + "training");
 
-        Program programUnderTest = facade.instantiateProgram("Triangle;src/test/resources;br.ufpr.inf.gres.TriTyp*;br.ufpr.inf.gres.TriTypTest*;;src/test/resources");
+        Program programUnderTest = facade.instantiateProgram(TestPrograms.TRIANGLE);
         problem = new MutationStrategyGenerationProblem(GrammarFiles.getDefaultGrammarPath(),
                 15,
                 100,
@@ -150,8 +150,6 @@ public class MutationStrategyGenerationProblemTest {
                 10,
                 Lists.newArrayList(programUnderTest),
                 Lists.newArrayList(ObjectiveFunction.AVERAGE_CPU_TIME, ObjectiveFunction.AVERAGE_SCORE));
-        problem.dettachAllObservers();
-        problem.attachObserver(new UnconstrainedObjectiveFunctionObserver());
 
         VariableLengthSolution<Integer> solution = problem.createSolution();
         solution.clearVariables();

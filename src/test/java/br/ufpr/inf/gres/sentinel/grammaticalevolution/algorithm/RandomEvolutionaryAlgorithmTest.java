@@ -35,7 +35,7 @@ public class RandomEvolutionaryAlgorithmTest {
                 + "src/test/resources/testfiles"));
 
         Program programUnderTest = new Program("br.ufpr.inf.gres.TriTyp",
-                new File("src/test/resources"));
+                new File("src/test"));
 
         problem = new GrammaticalEvolutionAlgorithmTest.ProblemStub(GrammarFiles.getDefaultGrammarPath(),
                 15,

@@ -1,5 +1,6 @@
 package br.ufpr.inf.gres.sentinel.main.cli;
 
+import br.ufpr.inf.gres.sentinel.util.TestPrograms;
 import java.io.File;
 import org.junit.Assert;
 import org.junit.Ignore;
@@ -21,7 +22,7 @@ public class SentinelTest {
             "--populationSize", "2",
             "--trainingRuns", "1",
             "--numberOfConventionalRuns", "1",
-            "-tp", "Triangle;src/test/resources;br.ufpr.inf.gres.TriTyp*;br.ufpr.inf.gres.TriTypTest*;;src/test/resources"};
+            "-tp", TestPrograms.TRIANGLE};
         Sentinel.main(args);
         File result = new File("training/Experiment/result_1.json");
         Assert.assertTrue(result.exists());
@@ -40,7 +41,7 @@ public class SentinelTest {
             "--cached",
             "--storeCacheInFile", "false",
             "--verbose",
-            "-tp", "Triangle;src/test/resources;br.ufpr.inf.gres.TriTyp*;br.ufpr.inf.gres.TriTypTest*;;src/test/resources"};
+            "-tp", TestPrograms.TRIANGLE};
         Sentinel.main(args);
 
         File result = new File("training/Experiment/result_1.json");
@@ -58,7 +59,7 @@ public class SentinelTest {
         String[] args = new String[]{"cache",
             "--numberOfRuns", "1",
             "--verbose",
-            "-tp", "Triangle;src/test/resources;br.ufpr.inf.gres.TriTyp*;br.ufpr.inf.gres.TriTypTest*;;src/test/resources"};
+            "-tp", TestPrograms.TRIANGLE};
         Sentinel.main(args);
 
         File cache = new File(".cache/Triangle.json");

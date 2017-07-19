@@ -16,6 +16,7 @@ import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.operation.impl.S
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.selection.SelectionOperation;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.type.impl.SequentialSelection;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.sort.impl.operator.OperatorTypeComparator;
+import br.ufpr.inf.gres.sentinel.util.TestPrograms;
 import com.google.common.collect.Lists;
 import java.io.File;
 import java.io.IOException;
@@ -82,7 +83,7 @@ public class StrategyMapperTest {
     @Test
     public void testCreate3() throws IOException {
         PITFacade facade = new PITFacade(System.getProperty("user.dir"));
-        Program programUnderTest = facade.instantiateProgram("Triangle;src/test/resources;br.ufpr.inf.gres.TriTyp*;br.ufpr.inf.gres.TriTypTest*;;src/test/resources");
+        Program programUnderTest = facade.instantiateProgram(TestPrograms.TRIANGLE);
         IntegrationFacade.setIntegrationFacade(facade);
 
         StrategyMapper strategyMapper = new StrategyMapper(new File(GrammarFiles.getDefaultGrammarPath()));

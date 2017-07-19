@@ -1,10 +1,10 @@
 package br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.problem.fitness;
 
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.problem.fitness.impl.AverageCPUTime;
-import org.junit.Test;
-
+import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import org.junit.Test;
 
 /**
  *
@@ -18,9 +18,15 @@ public class ObjectiveFunctionTest {
     @Test
     public void testEquals() {
         AverageCPUTime averageCPUTime = new AverageCPUTime<>();
-        assertFalse(averageCPUTime == null);
+        assertFalse(averageCPUTime.equals(null));
         assertFalse(averageCPUTime.equals(new Object()));
         assertTrue(averageCPUTime.equals(averageCPUTime));
+    }
+
+    @Test
+    public void testHashCode() {
+        AverageCPUTime averageCPUTime = new AverageCPUTime<>();
+        assertEquals((int) averageCPUTime.getName().hashCode(), (int) averageCPUTime.hashCode());
     }
 
 }

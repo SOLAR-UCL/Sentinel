@@ -11,6 +11,7 @@ import br.ufpr.inf.gres.sentinel.integration.IntegrationFacadeFactory;
 import br.ufpr.inf.gres.sentinel.strategy.Strategy;
 import br.ufpr.inf.gres.sentinel.strategy.operation.Operation;
 import br.ufpr.inf.gres.sentinel.strategy.operation.OperationTest;
+import br.ufpr.inf.gres.sentinel.util.TestPrograms;
 import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -44,7 +45,7 @@ public class VariableLengthSolutionGsonSerializerTest {
                 10,
                 5,
                 1,
-                Lists.newArrayList(facade.instantiateProgram("Triangle;src/test/resources;br.ufpr.inf.gres.TriTyp*;br.ufpr.inf.gres.TriTypTest*;;src/test/resources")),
+                Lists.newArrayList(facade.instantiateProgram(TestPrograms.TRIANGLE)),
                 Lists.newArrayList(ObjectiveFunction.AVERAGE_CPU_TIME, ObjectiveFunction.AVERAGE_SCORE));
     }
 

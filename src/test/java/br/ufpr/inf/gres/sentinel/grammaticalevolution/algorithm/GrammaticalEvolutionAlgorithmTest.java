@@ -37,7 +37,7 @@ public class GrammaticalEvolutionAlgorithmTest {
                 + "src/test/resources/testfiles"));
 
         Program programUnderTest = new Program("br.ufpr.inf.gres.TriTyp",
-                new File("src/test/resources"));
+                new File("src/test"));
 
         problem = new ProblemStub(GrammarFiles.getDefaultGrammarPath(),
                 15,

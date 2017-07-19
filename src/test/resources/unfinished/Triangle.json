@@ -1,0 +1,1140 @@
+{
+    "program": {
+        "name": "Triangle",
+        "sourceFile": {
+            "path": "C:\\Users\\Giovani Guizzo\\NetBeansProjects\\Sentinel\\training"
+        },
+        "attributes": {
+            "targetTestsGlob": "br.ufpr.inf.gres.TriTypTest*",
+            "classPath": ["C:\\Users\\Giovani Guizzo\\NetBeansProjects\\Sentinel\\training\\"],
+            "targetClassesGlob": "br.ufpr.inf.gres.TriTyp*"
+        }
+    },
+    "isCached": false,
+    "numberOfRuns": 5,
+    "operators": {
+        "INCREMENTS": {
+            "generatedMutants": [],
+            "name": "INCREMENTS",
+            "type": "Variables",
+            "executionTime": 1.46224258E8,
+            "cpuTime": 1.09375E8
+        },
+        "RETURN_VALS": {
+            "generatedMutants": [{
+                    "equivalent": false,
+                    "killingTestCases": [{
+                            "name": "br.ufpr.inf.gres.TriTypTest.test_221(br.ufpr.inf.gres.TriTypTest)"
+                        }],
+                    "executionTime": 1.092546655E9,
+                    "cpuTime": 1.09375E8,
+                    "name": "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[70], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.ReturnValsMutator]",
+                    "attributes": {}
+                }, {
+                    "equivalent": false,
+                    "killingTestCases": [{
+                            "name": "br.ufpr.inf.gres.TriTypTest.test_247(br.ufpr.inf.gres.TriTypTest)"
+                        }],
+                    "executionTime": 1.183283344E9,
+                    "cpuTime": 1.09375E8,
+                    "name": "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[113], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.ReturnValsMutator]",
+                    "attributes": {}
+                }, {
+                    "equivalent": false,
+                    "killingTestCases": [{
+                            "name": "br.ufpr.inf.gres.TriTypTest.test_143(br.ufpr.inf.gres.TriTypTest)"
+                        }],
+                    "executionTime": 1.042822551E9,
+                    "cpuTime": 7.8125E7,
+                    "name": "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[124], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.ReturnValsMutator]",
+                    "attributes": {}
+                }, {
+                    "equivalent": false,
+                    "killingTestCases": [{
+                            "name": "br.ufpr.inf.gres.TriTypTest.test_216(br.ufpr.inf.gres.TriTypTest)"
+                        }],
+                    "executionTime": 1.112782735E9,
+                    "cpuTime": 1.09375E8,
+                    "name": "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[141], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.ReturnValsMutator]",
+                    "attributes": {}
+                }, {
+                    "equivalent": false,
+                    "killingTestCases": [{
+                            "name": "br.ufpr.inf.gres.TriTypTest.test_214(br.ufpr.inf.gres.TriTypTest)"
+                        }],
+                    "executionTime": 1.298855439E9,
+                    "cpuTime": 1.09375E8,
+                    "name": "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[166], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.ReturnValsMutator]",
+                    "attributes": {}
+                }, {
+                    "equivalent": false,
+                    "killingTestCases": [{
+                            "name": "br.ufpr.inf.gres.TriTypTest.test_136(br.ufpr.inf.gres.TriTypTest)"
+                        }],
+                    "executionTime": 1.156302823E9,
+                    "cpuTime": 7.8125E7,
+                    "name": "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[191], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.ReturnValsMutator]",
+                    "attributes": {}
+                }, {
+                    "equivalent": false,
+                    "killingTestCases": [{
+                            "name": "br.ufpr.inf.gres.TriTypTest.test_94(br.ufpr.inf.gres.TriTypTest)"
+                        }],
+                    "executionTime": 1.203270332E9,
+                    "cpuTime": 1.25E8,
+                    "name": "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[216], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.ReturnValsMutator]",
+                    "attributes": {}
+                }, {
+                    "equivalent": false,
+                    "killingTestCases": [{
+                            "name": "br.ufpr.inf.gres.TriTypTest.test_249(br.ufpr.inf.gres.TriTypTest)"
+                        }],
+                    "executionTime": 1.118430537E9,
+                    "cpuTime": 9.375E7,
+                    "name": "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[227], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.ReturnValsMutator]",
+                    "attributes": {}
+                }],
+            "name": "RETURN_VALS",
+            "type": "Method",
+            "executionTime": 1.79048776E8,
+            "cpuTime": 1.09375E8
+        },
+        "INVERT_NEGS": {
+            "generatedMutants": [],
+            "name": "INVERT_NEGS",
+            "type": "Variables",
+            "executionTime": 1.64898678E8,
+            "cpuTime": 1.5625E8
+        },
+        "CONDITIONALS_BOUNDARY": {
+            "generatedMutants": [{
+                    "equivalent": false,
+                    "killingTestCases": [{
+                            "name": "br.ufpr.inf.gres.TriTypTest.test_255(br.ufpr.inf.gres.TriTypTest)"
+                        }],
+                    "executionTime": 1.190006466E9,
+                    "cpuTime": 1.09375E8,
+                    "name": "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[53], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.ConditionalsBoundaryMutator]",
+                    "attributes": {}
+                }, {
+                    "equivalent": false,
+                    "killingTestCases": [{
+                            "name": "br.ufpr.inf.gres.TriTypTest.test_256(br.ufpr.inf.gres.TriTypTest)"
+                        }],
+                    "executionTime": 2.599227932E9,
+                    "cpuTime": 1.09375E8,
+                    "name": "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[56], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.ConditionalsBoundaryMutator]",
+                    "attributes": {}
+                }, {
+                    "equivalent": false,
+                    "killingTestCases": [{
+                            "name": "br.ufpr.inf.gres.TriTypTest.test_257(br.ufpr.inf.gres.TriTypTest)"
+                        }],
+                    "executionTime": 2.575589433E9,
+                    "cpuTime": 1.09375E8,
+                    "name": "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[59], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.ConditionalsBoundaryMutator]",
+                    "attributes": {}
+                }, {
+                    "equivalent": false,
+                    "killingTestCases": [{
+                            "name": "br.ufpr.inf.gres.TriTypTest.test_162(br.ufpr.inf.gres.TriTypTest)"
+                        }],
+                    "executionTime": 1.169792097E9,
+                    "cpuTime": 1.25E8,
+                    "name": "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[86], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.ConditionalsBoundaryMutator]",
+                    "attributes": {}
+                }, {
+                    "equivalent": false,
+                    "killingTestCases": [{
+                            "name": "br.ufpr.inf.gres.TriTypTest.test_197(br.ufpr.inf.gres.TriTypTest)"
+                        }],
+                    "executionTime": 1.099970077E9,
+                    "cpuTime": 9.375E7,
+                    "name": "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[94], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.ConditionalsBoundaryMutator]",
+                    "attributes": {}
+                }, {
+                    "equivalent": false,
+                    "killingTestCases": [{
+                            "name": "br.ufpr.inf.gres.TriTypTest.test_177(br.ufpr.inf.gres.TriTypTest)"
+                        }],
+                    "executionTime": 1.303513188E9,
+                    "cpuTime": 1.09375E8,
+                    "name": "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[102], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.ConditionalsBoundaryMutator]",
+                    "attributes": {}
+                }, {
+                    "equivalent": false,
+                    "killingTestCases": [{
+                            "name": "br.ufpr.inf.gres.TriTypTest.test_202(br.ufpr.inf.gres.TriTypTest)"
+                        }],
+                    "executionTime": 1.220549677E9,
+                    "cpuTime": 1.09375E8,
+                    "name": "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[131], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.ConditionalsBoundaryMutator]",
+                    "attributes": {}
+                }, {
+                    "equivalent": false,
+                    "killingTestCases": [{
+                            "name": "br.ufpr.inf.gres.TriTypTest.test_88(br.ufpr.inf.gres.TriTypTest)"
+                        }],
+                    "executionTime": 1.416624756E9,
+                    "cpuTime": 1.09375E8,
+                    "name": "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[156], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.ConditionalsBoundaryMutator]",
+                    "attributes": {}
+                }, {
+                    "equivalent": false,
+                    "killingTestCases": [{
+                            "name": "br.ufpr.inf.gres.TriTypTest.test_142(br.ufpr.inf.gres.TriTypTest)"
+                        }],
+                    "executionTime": 1.404868866E9,
+                    "cpuTime": 1.25E8,
+                    "name": "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[181], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.ConditionalsBoundaryMutator]",
+                    "attributes": {}
+                }, {
+                    "equivalent": false,
+                    "killingTestCases": [{
+                            "name": "br.ufpr.inf.gres.TriTypTest.test_202(br.ufpr.inf.gres.TriTypTest)"
+                        }],
+                    "executionTime": 1.139505478E9,
+                    "cpuTime": 1.09375E8,
+                    "name": "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[206], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.ConditionalsBoundaryMutator]",
+                    "attributes": {}
+                }, {
+                    "equivalent": false,
+                    "killingTestCases": [{
+                            "name": "br.ufpr.inf.gres.TriTypTest.test_57(br.ufpr.inf.gres.TriTypTest)"
+                        }],
+                    "executionTime": 1.233397468E9,
+                    "cpuTime": 1.25E8,
+                    "name": "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dsetI, methodDesc\u003d(I)V], indexes\u003d[4], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.ConditionalsBoundaryMutator]",
+                    "attributes": {}
+                }, {
+                    "equivalent": false,
+                    "killingTestCases": [{
+                            "name": "br.ufpr.inf.gres.TriTypTest.test_81(br.ufpr.inf.gres.TriTypTest)"
+                        }],
+                    "executionTime": 1.179331027E9,
+                    "cpuTime": 1.09375E8,
+                    "name": "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dsetJ, methodDesc\u003d(I)V], indexes\u003d[4], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.ConditionalsBoundaryMutator]",
+                    "attributes": {}
+                }, {
+                    "equivalent": false,
+                    "killingTestCases": [{
+                            "name": "br.ufpr.inf.gres.TriTypTest.test_170(br.ufpr.inf.gres.TriTypTest)"
+                        }],
+                    "executionTime": 1.121071073E9,
+                    "cpuTime": 7.8125E7,
+                    "name": "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dsetK, methodDesc\u003d(I)V], indexes\u003d[4], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.ConditionalsBoundaryMutator]",
+                    "attributes": {}
+                }],
+            "name": "CONDITIONALS_BOUNDARY",
+            "type": "Conditionals",
+            "executionTime": 1.24024652E8,
+            "cpuTime": 1.25E8
+        },
+        "MATH": {
+            "generatedMutants": [{
+                    "equivalent": false,
+                    "killingTestCases": [{
+                            "name": "br.ufpr.inf.gres.TriTypTest.test_214(br.ufpr.inf.gres.TriTypTest)"
+                        }],
+                    "executionTime": 1.069848863E9,
+                    "cpuTime": 7.8125E7,
+                    "name": "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[14], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.MathMutator]",
+                    "attributes": {}
+                }, {
+                    "equivalent": false,
+                    "killingTestCases": [{
+                            "name": "br.ufpr.inf.gres.TriTypTest.test_216(br.ufpr.inf.gres.TriTypTest)"
+                        }],
+                    "executionTime": 1.127341408E9,
+                    "cpuTime": 9.375E7,
+                    "name": "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[30], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.MathMutator]",
+                    "attributes": {}
+                }, {
+                    "equivalent": false,
+                    "killingTestCases": [{
+                            "name": "br.ufpr.inf.gres.TriTypTest.test_245(br.ufpr.inf.gres.TriTypTest)"
+                        }],
+                    "executionTime": 1.411513431E9,
+                    "cpuTime": 1.25E8,
+                    "name": "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[46], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.MathMutator]",
+                    "attributes": {}
+                }, {
+                    "equivalent": false,
+                    "killingTestCases": [{
+                            "name": "br.ufpr.inf.gres.TriTypTest.test_143(br.ufpr.inf.gres.TriTypTest)"
+                        }],
+                    "executionTime": 1.372486477E9,
+                    "cpuTime": 1.09375E8,
+                    "name": "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[83], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.MathMutator]",
+                    "attributes": {}
+                }, {
+                    "equivalent": false,
+                    "killingTestCases": [{
+                            "name": "br.ufpr.inf.gres.TriTypTest.test_143(br.ufpr.inf.gres.TriTypTest)"
+                        }],
+                    "executionTime": 1.16104663E9,
+                    "cpuTime": 1.09375E8,
+                    "name": "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[91], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.MathMutator]",
+                    "attributes": {}
+                }, {
+                    "equivalent": false,
+                    "killingTestCases": [{
+                            "name": "br.ufpr.inf.gres.TriTypTest.test_143(br.ufpr.inf.gres.TriTypTest)"
+                        }],
+                    "executionTime": 1.353652971E9,
+                    "cpuTime": 1.09375E8,
+                    "name": "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[99], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.MathMutator]",
+                    "attributes": {}
+                }, {
+                    "equivalent": false,
+                    "killingTestCases": [{
+                            "name": "br.ufpr.inf.gres.TriTypTest.test_214(br.ufpr.inf.gres.TriTypTest)"
+                        }],
+                    "executionTime": 1.329409308E9,
+                    "cpuTime": 1.09375E8,
+                    "name": "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[153], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.MathMutator]",
+                    "attributes": {}
+                }, {
+                    "equivalent": false,
+                    "killingTestCases": [{
+                            "name": "br.ufpr.inf.gres.TriTypTest.test_240(br.ufpr.inf.gres.TriTypTest)"
+                        }],
+                    "executionTime": 1.211416952E9,
+                    "cpuTime": 1.09375E8,
+                    "name": "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[178], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.MathMutator]",
+                    "attributes": {}
+                }, {
+                    "equivalent": false,
+                    "killingTestCases": [{
+                            "name": "br.ufpr.inf.gres.TriTypTest.test_94(br.ufpr.inf.gres.TriTypTest)"
+                        }],
+                    "executionTime": 1.30830476E9,
+                    "cpuTime": 1.40625E8,
+                    "name": "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[203], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.MathMutator]",
+                    "attributes": {}
+                }],
+            "name": "MATH",
+            "type": "Variables",
+            "executionTime": 1.3300579E8,
+            "cpuTime": 1.25E8
+        },
+        "VOID_METHOD_CALLS": {
+            "generatedMutants": [],
+            "name": "VOID_METHOD_CALLS",
+            "type": "Method",
+            "executionTime": 1.60823986E8,
+            "cpuTime": 1.09375E8
+        },
+        "NEGATE_CONDITIONALS": {
+            "generatedMutants": [{
+                    "equivalent": false,
+                    "killingTestCases": [{
+                            "name": "br.ufpr.inf.gres.TriTypTest.test_247(br.ufpr.inf.gres.TriTypTest)"
+                        }],
+                    "executionTime": 1.097131373E9,
+                    "cpuTime": 9.375E7,
+                    "name": "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[7], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator]",
+                    "attributes": {}
+                }, {
+                    "equivalent": false,
+                    "killingTestCases": [{
+                            "name": "br.ufpr.inf.gres.TriTypTest.test_247(br.ufpr.inf.gres.TriTypTest)"
+                        }],
+                    "executionTime": 1.125939622E9,
+                    "cpuTime": 9.375E7,
+                    "name": "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[23], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator]",
+                    "attributes": {}
+                }, {
+                    "equivalent": false,
+                    "killingTestCases": [{
+                            "name": "br.ufpr.inf.gres.TriTypTest.test_162(br.ufpr.inf.gres.TriTypTest)"
+                        }],
+                    "executionTime": 1.147186284E9,
+                    "cpuTime": 9.375E7,
+                    "name": "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[39], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator]",
+                    "attributes": {}
+                }, {
+                    "equivalent": false,
+                    "killingTestCases": [{
+                            "name": "br.ufpr.inf.gres.TriTypTest.test_255(br.ufpr.inf.gres.TriTypTest)"
+                        }],
+                    "executionTime": 1.21938672E9,
+                    "cpuTime": 1.40625E8,
+                    "name": "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[53], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator]",
+                    "attributes": {}
+                }, {
+                    "equivalent": false,
+                    "killingTestCases": [{
+                            "name": "br.ufpr.inf.gres.TriTypTest.test_214(br.ufpr.inf.gres.TriTypTest)"
+                        }],
+                    "executionTime": 1.238078113E9,
+                    "cpuTime": 1.09375E8,
+                    "name": "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[56], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator]",
+                    "attributes": {}
+                }, {
+                    "equivalent": false,
+                    "killingTestCases": [{
+                            "name": "br.ufpr.inf.gres.TriTypTest.test_214(br.ufpr.inf.gres.TriTypTest)"
+                        }],
+                    "executionTime": 1.388914724E9,
+                    "cpuTime": 9.375E7,
+                    "name": "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[59], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator]",
+                    "attributes": {}
+                }, {
+                    "equivalent": false,
+                    "killingTestCases": [{
+                            "name": "br.ufpr.inf.gres.TriTypTest.test_214(br.ufpr.inf.gres.TriTypTest)"
+                        }],
+                    "executionTime": 1.168966264E9,
+                    "cpuTime": 1.09375E8,
+                    "name": "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[76], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator]",
+                    "attributes": {}
+                }, {
+                    "equivalent": false,
+                    "killingTestCases": [{
+                            "name": "br.ufpr.inf.gres.TriTypTest.test_162(br.ufpr.inf.gres.TriTypTest)"
+                        }],
+                    "executionTime": 1.290981202E9,
+                    "cpuTime": 9.375E7,
+                    "name": "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[86], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator]",
+                    "attributes": {}
+                }, {
+                    "equivalent": false,
+                    "killingTestCases": [{
+                            "name": "br.ufpr.inf.gres.TriTypTest.test_247(br.ufpr.inf.gres.TriTypTest)"
+                        }],
+                    "executionTime": 1.138007768E9,
+                    "cpuTime": 1.25E8,
+                    "name": "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[94], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator]",
+                    "attributes": {}
+                }, {
+                    "equivalent": false,
+                    "killingTestCases": [{
+                            "name": "br.ufpr.inf.gres.TriTypTest.test_248(br.ufpr.inf.gres.TriTypTest)"
+                        }],
+                    "executionTime": 1.126926123E9,
+                    "cpuTime": 9.375E7,
+                    "name": "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[102], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator]",
+                    "attributes": {}
+                }, {
+                    "equivalent": false,
+                    "killingTestCases": [{
+                            "name": "br.ufpr.inf.gres.TriTypTest.test_214(br.ufpr.inf.gres.TriTypTest)"
+                        }],
+                    "executionTime": 1.09439728E9,
+                    "cpuTime": 9.375E7,
+                    "name": "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[131], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator]",
+                    "attributes": {}
+                }, {
+                    "equivalent": false,
+                    "killingTestCases": [{
+                            "name": "br.ufpr.inf.gres.TriTypTest.test_214(br.ufpr.inf.gres.TriTypTest)"
+                        }],
+                    "executionTime": 1.125710268E9,
+                    "cpuTime": 9.375E7,
+                    "name": "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[148], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator]",
+                    "attributes": {}
+                }, {
+                    "equivalent": false,
+                    "killingTestCases": [{
+                            "name": "br.ufpr.inf.gres.TriTypTest.test_214(br.ufpr.inf.gres.TriTypTest)"
+                        }],
+                    "executionTime": 1.072045691E9,
+                    "cpuTime": 9.375E7,
+                    "name": "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[156], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator]",
+                    "attributes": {}
+                }, {
+                    "equivalent": false,
+                    "killingTestCases": [{
+                            "name": "br.ufpr.inf.gres.TriTypTest.test_249(br.ufpr.inf.gres.TriTypTest)"
+                        }],
+                    "executionTime": 1.085433511E9,
+                    "cpuTime": 9.375E7,
+                    "name": "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[173], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator]",
+                    "attributes": {}
+                }, {
+                    "equivalent": false,
+                    "killingTestCases": [{
+                            "name": "br.ufpr.inf.gres.TriTypTest.test_238(br.ufpr.inf.gres.TriTypTest)"
+                        }],
+                    "executionTime": 1.159536681E9,
+                    "cpuTime": 9.375E7,
+                    "name": "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[181], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator]",
+                    "attributes": {}
+                }, {
+                    "equivalent": false,
+                    "killingTestCases": [{
+                            "name": "br.ufpr.inf.gres.TriTypTest.test_249(br.ufpr.inf.gres.TriTypTest)"
+                        }],
+                    "executionTime": 1.078804342E9,
+                    "cpuTime": 9.375E7,
+                    "name": "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[198], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator]",
+                    "attributes": {}
+                }, {
+                    "equivalent": false,
+                    "killingTestCases": [{
+                            "name": "br.ufpr.inf.gres.TriTypTest.test_202(br.ufpr.inf.gres.TriTypTest)"
+                        }],
+                    "executionTime": 1.108457373E9,
+                    "cpuTime": 9.375E7,
+                    "name": "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[206], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator]",
+                    "attributes": {}
+                }, {
+                    "equivalent": false,
+                    "killingTestCases": [{
+                            "name": "br.ufpr.inf.gres.TriTypTest.test_57(br.ufpr.inf.gres.TriTypTest)"
+                        }],
+                    "executionTime": 1.277643516E9,
+                    "cpuTime": 9.375E7,
+                    "name": "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dsetI, methodDesc\u003d(I)V], indexes\u003d[4], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator]",
+                    "attributes": {}
+                }, {
+                    "equivalent": false,
+                    "killingTestCases": [{
+                            "name": "br.ufpr.inf.gres.TriTypTest.test_77(br.ufpr.inf.gres.TriTypTest)"
+                        }],
+                    "executionTime": 1.308275942E9,
+                    "cpuTime": 1.40625E8,
+                    "name": "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dsetJ, methodDesc\u003d(I)V], indexes\u003d[4], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator]",
+                    "attributes": {}
+                }, {
+                    "equivalent": false,
+                    "killingTestCases": [{
+                            "name": "br.ufpr.inf.gres.TriTypTest.test_170(br.ufpr.inf.gres.TriTypTest)"
+                        }],
+                    "executionTime": 1.113209074E9,
+                    "cpuTime": 9.375E7,
+                    "name": "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dsetK, methodDesc\u003d(I)V], indexes\u003d[4], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator]",
+                    "attributes": {}
+                }],
+            "name": "NEGATE_CONDITIONALS",
+            "type": "Conditionals",
+            "executionTime": 1.25984625E8,
+            "cpuTime": 1.25E8
+        }
+    },
+    "mutants": {
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[156], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.ConditionalsBoundaryMutator]": {
+            "equivalent": false,
+            "killingTestCases": [{
+                    "name": "br.ufpr.inf.gres.TriTypTest.test_88(br.ufpr.inf.gres.TriTypTest)"
+                }],
+            "executionTime": 1.416624756E9,
+            "cpuTime": 1.09375E8,
+            "name": "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[156], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.ConditionalsBoundaryMutator]",
+            "attributes": {}
+        },
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[166], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.ReturnValsMutator]": {
+            "equivalent": false,
+            "killingTestCases": [{
+                    "name": "br.ufpr.inf.gres.TriTypTest.test_214(br.ufpr.inf.gres.TriTypTest)"
+                }],
+            "executionTime": 1.298855439E9,
+            "cpuTime": 1.09375E8,
+            "name": "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[166], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.ReturnValsMutator]",
+            "attributes": {}
+        },
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[102], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.ConditionalsBoundaryMutator]": {
+            "equivalent": false,
+            "killingTestCases": [{
+                    "name": "br.ufpr.inf.gres.TriTypTest.test_177(br.ufpr.inf.gres.TriTypTest)"
+                }],
+            "executionTime": 1.303513188E9,
+            "cpuTime": 1.09375E8,
+            "name": "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[102], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.ConditionalsBoundaryMutator]",
+            "attributes": {}
+        },
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[216], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.ReturnValsMutator]": {
+            "equivalent": false,
+            "killingTestCases": [{
+                    "name": "br.ufpr.inf.gres.TriTypTest.test_94(br.ufpr.inf.gres.TriTypTest)"
+                }],
+            "executionTime": 1.203270332E9,
+            "cpuTime": 1.25E8,
+            "name": "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[216], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.ReturnValsMutator]",
+            "attributes": {}
+        },
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[30], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.MathMutator]": {
+            "equivalent": false,
+            "killingTestCases": [{
+                    "name": "br.ufpr.inf.gres.TriTypTest.test_216(br.ufpr.inf.gres.TriTypTest)"
+                }],
+            "executionTime": 1.127341408E9,
+            "cpuTime": 9.375E7,
+            "name": "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[30], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.MathMutator]",
+            "attributes": {}
+        },
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[7], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator]": {
+            "equivalent": false,
+            "killingTestCases": [{
+                    "name": "br.ufpr.inf.gres.TriTypTest.test_247(br.ufpr.inf.gres.TriTypTest)"
+                }],
+            "executionTime": 1.097131373E9,
+            "cpuTime": 9.375E7,
+            "name": "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[7], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator]",
+            "attributes": {}
+        },
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[91], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.MathMutator]": {
+            "equivalent": false,
+            "killingTestCases": [{
+                    "name": "br.ufpr.inf.gres.TriTypTest.test_143(br.ufpr.inf.gres.TriTypTest)"
+                }],
+            "executionTime": 1.16104663E9,
+            "cpuTime": 1.09375E8,
+            "name": "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[91], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.MathMutator]",
+            "attributes": {}
+        },
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[59], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.ConditionalsBoundaryMutator]": {
+            "equivalent": false,
+            "killingTestCases": [{
+                    "name": "br.ufpr.inf.gres.TriTypTest.test_257(br.ufpr.inf.gres.TriTypTest)"
+                }],
+            "executionTime": 2.575589433E9,
+            "cpuTime": 1.09375E8,
+            "name": "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[59], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.ConditionalsBoundaryMutator]",
+            "attributes": {}
+        },
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[206], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator]": {
+            "equivalent": false,
+            "killingTestCases": [{
+                    "name": "br.ufpr.inf.gres.TriTypTest.test_202(br.ufpr.inf.gres.TriTypTest)"
+                }],
+            "executionTime": 1.108457373E9,
+            "cpuTime": 9.375E7,
+            "name": "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[206], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator]",
+            "attributes": {}
+        },
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[181], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.ConditionalsBoundaryMutator]": {
+            "equivalent": false,
+            "killingTestCases": [{
+                    "name": "br.ufpr.inf.gres.TriTypTest.test_142(br.ufpr.inf.gres.TriTypTest)"
+                }],
+            "executionTime": 1.404868866E9,
+            "cpuTime": 1.25E8,
+            "name": "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[181], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.ConditionalsBoundaryMutator]",
+            "attributes": {}
+        },
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[173], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator]": {
+            "equivalent": false,
+            "killingTestCases": [{
+                    "name": "br.ufpr.inf.gres.TriTypTest.test_249(br.ufpr.inf.gres.TriTypTest)"
+                }],
+            "executionTime": 1.085433511E9,
+            "cpuTime": 9.375E7,
+            "name": "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[173], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator]",
+            "attributes": {}
+        },
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[94], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.ConditionalsBoundaryMutator]": {
+            "equivalent": false,
+            "killingTestCases": [{
+                    "name": "br.ufpr.inf.gres.TriTypTest.test_197(br.ufpr.inf.gres.TriTypTest)"
+                }],
+            "executionTime": 1.099970077E9,
+            "cpuTime": 9.375E7,
+            "name": "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[94], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.ConditionalsBoundaryMutator]",
+            "attributes": {}
+        },
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dsetI, methodDesc\u003d(I)V], indexes\u003d[4], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator]": {
+            "equivalent": false,
+            "killingTestCases": [{
+                    "name": "br.ufpr.inf.gres.TriTypTest.test_57(br.ufpr.inf.gres.TriTypTest)"
+                }],
+            "executionTime": 1.277643516E9,
+            "cpuTime": 9.375E7,
+            "name": "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dsetI, methodDesc\u003d(I)V], indexes\u003d[4], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator]",
+            "attributes": {}
+        },
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[83], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.MathMutator]": {
+            "equivalent": false,
+            "killingTestCases": [{
+                    "name": "br.ufpr.inf.gres.TriTypTest.test_143(br.ufpr.inf.gres.TriTypTest)"
+                }],
+            "executionTime": 1.372486477E9,
+            "cpuTime": 1.09375E8,
+            "name": "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[83], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.MathMutator]",
+            "attributes": {}
+        },
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[56], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.ConditionalsBoundaryMutator]": {
+            "equivalent": false,
+            "killingTestCases": [{
+                    "name": "br.ufpr.inf.gres.TriTypTest.test_256(br.ufpr.inf.gres.TriTypTest)"
+                }],
+            "executionTime": 2.599227932E9,
+            "cpuTime": 1.09375E8,
+            "name": "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[56], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.ConditionalsBoundaryMutator]",
+            "attributes": {}
+        },
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[153], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.MathMutator]": {
+            "equivalent": false,
+            "killingTestCases": [{
+                    "name": "br.ufpr.inf.gres.TriTypTest.test_214(br.ufpr.inf.gres.TriTypTest)"
+                }],
+            "executionTime": 1.329409308E9,
+            "cpuTime": 1.09375E8,
+            "name": "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[153], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.MathMutator]",
+            "attributes": {}
+        },
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dsetK, methodDesc\u003d(I)V], indexes\u003d[4], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.ConditionalsBoundaryMutator]": {
+            "equivalent": false,
+            "killingTestCases": [{
+                    "name": "br.ufpr.inf.gres.TriTypTest.test_170(br.ufpr.inf.gres.TriTypTest)"
+                }],
+            "executionTime": 1.121071073E9,
+            "cpuTime": 7.8125E7,
+            "name": "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dsetK, methodDesc\u003d(I)V], indexes\u003d[4], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.ConditionalsBoundaryMutator]",
+            "attributes": {}
+        },
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[86], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator]": {
+            "equivalent": false,
+            "killingTestCases": [{
+                    "name": "br.ufpr.inf.gres.TriTypTest.test_162(br.ufpr.inf.gres.TriTypTest)"
+                }],
+            "executionTime": 1.290981202E9,
+            "cpuTime": 9.375E7,
+            "name": "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[86], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator]",
+            "attributes": {}
+        },
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[53], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator]": {
+            "equivalent": false,
+            "killingTestCases": [{
+                    "name": "br.ufpr.inf.gres.TriTypTest.test_255(br.ufpr.inf.gres.TriTypTest)"
+                }],
+            "executionTime": 1.21938672E9,
+            "cpuTime": 1.40625E8,
+            "name": "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[53], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator]",
+            "attributes": {}
+        },
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[178], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.MathMutator]": {
+            "equivalent": false,
+            "killingTestCases": [{
+                    "name": "br.ufpr.inf.gres.TriTypTest.test_240(br.ufpr.inf.gres.TriTypTest)"
+                }],
+            "executionTime": 1.211416952E9,
+            "cpuTime": 1.09375E8,
+            "name": "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[178], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.MathMutator]",
+            "attributes": {}
+        },
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[198], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator]": {
+            "equivalent": false,
+            "killingTestCases": [{
+                    "name": "br.ufpr.inf.gres.TriTypTest.test_249(br.ufpr.inf.gres.TriTypTest)"
+                }],
+            "executionTime": 1.078804342E9,
+            "cpuTime": 9.375E7,
+            "name": "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[198], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator]",
+            "attributes": {}
+        },
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[206], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.ConditionalsBoundaryMutator]": {
+            "equivalent": false,
+            "killingTestCases": [{
+                    "name": "br.ufpr.inf.gres.TriTypTest.test_202(br.ufpr.inf.gres.TriTypTest)"
+                }],
+            "executionTime": 1.139505478E9,
+            "cpuTime": 1.09375E8,
+            "name": "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[206], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.ConditionalsBoundaryMutator]",
+            "attributes": {}
+        },
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[39], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator]": {
+            "equivalent": false,
+            "killingTestCases": [{
+                    "name": "br.ufpr.inf.gres.TriTypTest.test_162(br.ufpr.inf.gres.TriTypTest)"
+                }],
+            "executionTime": 1.147186284E9,
+            "cpuTime": 9.375E7,
+            "name": "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[39], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator]",
+            "attributes": {}
+        },
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[59], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator]": {
+            "equivalent": false,
+            "killingTestCases": [{
+                    "name": "br.ufpr.inf.gres.TriTypTest.test_214(br.ufpr.inf.gres.TriTypTest)"
+                }],
+            "executionTime": 1.388914724E9,
+            "cpuTime": 9.375E7,
+            "name": "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[59], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator]",
+            "attributes": {}
+        },
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[131], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator]": {
+            "equivalent": false,
+            "killingTestCases": [{
+                    "name": "br.ufpr.inf.gres.TriTypTest.test_214(br.ufpr.inf.gres.TriTypTest)"
+                }],
+            "executionTime": 1.09439728E9,
+            "cpuTime": 9.375E7,
+            "name": "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[131], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator]",
+            "attributes": {}
+        },
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dsetI, methodDesc\u003d(I)V], indexes\u003d[4], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.ConditionalsBoundaryMutator]": {
+            "equivalent": false,
+            "killingTestCases": [{
+                    "name": "br.ufpr.inf.gres.TriTypTest.test_57(br.ufpr.inf.gres.TriTypTest)"
+                }],
+            "executionTime": 1.233397468E9,
+            "cpuTime": 1.25E8,
+            "name": "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dsetI, methodDesc\u003d(I)V], indexes\u003d[4], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.ConditionalsBoundaryMutator]",
+            "attributes": {}
+        },
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[99], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.MathMutator]": {
+            "equivalent": false,
+            "killingTestCases": [{
+                    "name": "br.ufpr.inf.gres.TriTypTest.test_143(br.ufpr.inf.gres.TriTypTest)"
+                }],
+            "executionTime": 1.353652971E9,
+            "cpuTime": 1.09375E8,
+            "name": "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[99], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.MathMutator]",
+            "attributes": {}
+        },
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[53], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.ConditionalsBoundaryMutator]": {
+            "equivalent": false,
+            "killingTestCases": [{
+                    "name": "br.ufpr.inf.gres.TriTypTest.test_255(br.ufpr.inf.gres.TriTypTest)"
+                }],
+            "executionTime": 1.190006466E9,
+            "cpuTime": 1.09375E8,
+            "name": "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[53], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.ConditionalsBoundaryMutator]",
+            "attributes": {}
+        },
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[203], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.MathMutator]": {
+            "equivalent": false,
+            "killingTestCases": [{
+                    "name": "br.ufpr.inf.gres.TriTypTest.test_94(br.ufpr.inf.gres.TriTypTest)"
+                }],
+            "executionTime": 1.30830476E9,
+            "cpuTime": 1.40625E8,
+            "name": "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[203], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.MathMutator]",
+            "attributes": {}
+        },
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[94], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator]": {
+            "equivalent": false,
+            "killingTestCases": [{
+                    "name": "br.ufpr.inf.gres.TriTypTest.test_247(br.ufpr.inf.gres.TriTypTest)"
+                }],
+            "executionTime": 1.138007768E9,
+            "cpuTime": 1.25E8,
+            "name": "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[94], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator]",
+            "attributes": {}
+        },
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[70], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.ReturnValsMutator]": {
+            "equivalent": false,
+            "killingTestCases": [{
+                    "name": "br.ufpr.inf.gres.TriTypTest.test_221(br.ufpr.inf.gres.TriTypTest)"
+                }],
+            "executionTime": 1.092546655E9,
+            "cpuTime": 1.09375E8,
+            "name": "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[70], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.ReturnValsMutator]",
+            "attributes": {}
+        },
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[227], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.ReturnValsMutator]": {
+            "equivalent": false,
+            "killingTestCases": [{
+                    "name": "br.ufpr.inf.gres.TriTypTest.test_249(br.ufpr.inf.gres.TriTypTest)"
+                }],
+            "executionTime": 1.118430537E9,
+            "cpuTime": 9.375E7,
+            "name": "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[227], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.ReturnValsMutator]",
+            "attributes": {}
+        },
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[156], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator]": {
+            "equivalent": false,
+            "killingTestCases": [{
+                    "name": "br.ufpr.inf.gres.TriTypTest.test_214(br.ufpr.inf.gres.TriTypTest)"
+                }],
+            "executionTime": 1.072045691E9,
+            "cpuTime": 9.375E7,
+            "name": "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[156], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator]",
+            "attributes": {}
+        },
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dsetK, methodDesc\u003d(I)V], indexes\u003d[4], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator]": {
+            "equivalent": false,
+            "killingTestCases": [{
+                    "name": "br.ufpr.inf.gres.TriTypTest.test_170(br.ufpr.inf.gres.TriTypTest)"
+                }],
+            "executionTime": 1.113209074E9,
+            "cpuTime": 9.375E7,
+            "name": "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dsetK, methodDesc\u003d(I)V], indexes\u003d[4], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator]",
+            "attributes": {}
+        },
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[14], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.MathMutator]": {
+            "equivalent": false,
+            "killingTestCases": [{
+                    "name": "br.ufpr.inf.gres.TriTypTest.test_214(br.ufpr.inf.gres.TriTypTest)"
+                }],
+            "executionTime": 1.069848863E9,
+            "cpuTime": 7.8125E7,
+            "name": "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[14], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.MathMutator]",
+            "attributes": {}
+        },
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[141], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.ReturnValsMutator]": {
+            "equivalent": false,
+            "killingTestCases": [{
+                    "name": "br.ufpr.inf.gres.TriTypTest.test_216(br.ufpr.inf.gres.TriTypTest)"
+                }],
+            "executionTime": 1.112782735E9,
+            "cpuTime": 1.09375E8,
+            "name": "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[141], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.ReturnValsMutator]",
+            "attributes": {}
+        },
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[113], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.ReturnValsMutator]": {
+            "equivalent": false,
+            "killingTestCases": [{
+                    "name": "br.ufpr.inf.gres.TriTypTest.test_247(br.ufpr.inf.gres.TriTypTest)"
+                }],
+            "executionTime": 1.183283344E9,
+            "cpuTime": 1.09375E8,
+            "name": "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[113], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.ReturnValsMutator]",
+            "attributes": {}
+        },
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[56], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator]": {
+            "equivalent": false,
+            "killingTestCases": [{
+                    "name": "br.ufpr.inf.gres.TriTypTest.test_214(br.ufpr.inf.gres.TriTypTest)"
+                }],
+            "executionTime": 1.238078113E9,
+            "cpuTime": 1.09375E8,
+            "name": "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[56], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator]",
+            "attributes": {}
+        },
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[102], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator]": {
+            "equivalent": false,
+            "killingTestCases": [{
+                    "name": "br.ufpr.inf.gres.TriTypTest.test_248(br.ufpr.inf.gres.TriTypTest)"
+                }],
+            "executionTime": 1.126926123E9,
+            "cpuTime": 9.375E7,
+            "name": "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[102], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator]",
+            "attributes": {}
+        },
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[76], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator]": {
+            "equivalent": false,
+            "killingTestCases": [{
+                    "name": "br.ufpr.inf.gres.TriTypTest.test_214(br.ufpr.inf.gres.TriTypTest)"
+                }],
+            "executionTime": 1.168966264E9,
+            "cpuTime": 1.09375E8,
+            "name": "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[76], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator]",
+            "attributes": {}
+        },
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[191], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.ReturnValsMutator]": {
+            "equivalent": false,
+            "killingTestCases": [{
+                    "name": "br.ufpr.inf.gres.TriTypTest.test_136(br.ufpr.inf.gres.TriTypTest)"
+                }],
+            "executionTime": 1.156302823E9,
+            "cpuTime": 7.8125E7,
+            "name": "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[191], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.ReturnValsMutator]",
+            "attributes": {}
+        },
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dsetJ, methodDesc\u003d(I)V], indexes\u003d[4], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator]": {
+            "equivalent": false,
+            "killingTestCases": [{
+                    "name": "br.ufpr.inf.gres.TriTypTest.test_77(br.ufpr.inf.gres.TriTypTest)"
+                }],
+            "executionTime": 1.308275942E9,
+            "cpuTime": 1.40625E8,
+            "name": "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dsetJ, methodDesc\u003d(I)V], indexes\u003d[4], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator]",
+            "attributes": {}
+        },
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[23], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator]": {
+            "equivalent": false,
+            "killingTestCases": [{
+                    "name": "br.ufpr.inf.gres.TriTypTest.test_247(br.ufpr.inf.gres.TriTypTest)"
+                }],
+            "executionTime": 1.125939622E9,
+            "cpuTime": 9.375E7,
+            "name": "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[23], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator]",
+            "attributes": {}
+        },
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[124], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.ReturnValsMutator]": {
+            "equivalent": false,
+            "killingTestCases": [{
+                    "name": "br.ufpr.inf.gres.TriTypTest.test_143(br.ufpr.inf.gres.TriTypTest)"
+                }],
+            "executionTime": 1.042822551E9,
+            "cpuTime": 7.8125E7,
+            "name": "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[124], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.ReturnValsMutator]",
+            "attributes": {}
+        },
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[46], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.MathMutator]": {
+            "equivalent": false,
+            "killingTestCases": [{
+                    "name": "br.ufpr.inf.gres.TriTypTest.test_245(br.ufpr.inf.gres.TriTypTest)"
+                }],
+            "executionTime": 1.411513431E9,
+            "cpuTime": 1.25E8,
+            "name": "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[46], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.MathMutator]",
+            "attributes": {}
+        },
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[86], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.ConditionalsBoundaryMutator]": {
+            "equivalent": false,
+            "killingTestCases": [{
+                    "name": "br.ufpr.inf.gres.TriTypTest.test_162(br.ufpr.inf.gres.TriTypTest)"
+                }],
+            "executionTime": 1.169792097E9,
+            "cpuTime": 1.25E8,
+            "name": "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[86], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.ConditionalsBoundaryMutator]",
+            "attributes": {}
+        },
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dsetJ, methodDesc\u003d(I)V], indexes\u003d[4], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.ConditionalsBoundaryMutator]": {
+            "equivalent": false,
+            "killingTestCases": [{
+                    "name": "br.ufpr.inf.gres.TriTypTest.test_81(br.ufpr.inf.gres.TriTypTest)"
+                }],
+            "executionTime": 1.179331027E9,
+            "cpuTime": 1.09375E8,
+            "name": "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dsetJ, methodDesc\u003d(I)V], indexes\u003d[4], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.ConditionalsBoundaryMutator]",
+            "attributes": {}
+        },
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[181], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator]": {
+            "equivalent": false,
+            "killingTestCases": [{
+                    "name": "br.ufpr.inf.gres.TriTypTest.test_238(br.ufpr.inf.gres.TriTypTest)"
+                }],
+            "executionTime": 1.159536681E9,
+            "cpuTime": 9.375E7,
+            "name": "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[181], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator]",
+            "attributes": {}
+        },
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[131], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.ConditionalsBoundaryMutator]": {
+            "equivalent": false,
+            "killingTestCases": [{
+                    "name": "br.ufpr.inf.gres.TriTypTest.test_202(br.ufpr.inf.gres.TriTypTest)"
+                }],
+            "executionTime": 1.220549677E9,
+            "cpuTime": 1.09375E8,
+            "name": "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[131], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.ConditionalsBoundaryMutator]",
+            "attributes": {}
+        },
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[148], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator]": {
+            "equivalent": false,
+            "killingTestCases": [{
+                    "name": "br.ufpr.inf.gres.TriTypTest.test_214(br.ufpr.inf.gres.TriTypTest)"
+                }],
+            "executionTime": 1.125710268E9,
+            "cpuTime": 9.375E7,
+            "name": "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[148], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator]",
+            "attributes": {}
+        }
+    },
+    "operatorsAvgCPUTime": {
+        "INCREMENTS": 1.0E8,
+        "RETURN_VALS": 1.0E8,
+        "INVERT_NEGS": 1.0625E8,
+        "CONDITIONALS_BOUNDARY": 1.125E8,
+        "VOID_METHOD_CALLS": 1.0625E8,
+        "MATH": 1.09375E8,
+        "NEGATE_CONDITIONALS": 1.0625E8
+    },
+    "operatorsAvgExecutionTime": {
+        "INCREMENTS": 1.099025024E8,
+        "RETURN_VALS": 1.114261892E8,
+        "INVERT_NEGS": 1.137342602E8,
+        "CONDITIONALS_BOUNDARY": 1.182266844E8,
+        "VOID_METHOD_CALLS": 1.155946752E8,
+        "MATH": 1.104202676E8,
+        "NEGATE_CONDITIONALS": 1.04978529E8
+    },
+    "mutantsAvgCPUTime": {
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[156], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.ConditionalsBoundaryMutator]": 9.375E7,
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[166], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.ReturnValsMutator]": 8.75E7,
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[216], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.ReturnValsMutator]": 1.0E8,
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[102], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.ConditionalsBoundaryMutator]": 9.375E7,
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[30], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.MathMutator]": 9.375E7,
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[7], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator]": 8.75E7,
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[91], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.MathMutator]": 9.375E7,
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[59], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.ConditionalsBoundaryMutator]": 9.375E7,
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[206], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator]": 9.6875E7,
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[173], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator]": 9.0625E7,
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[181], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.ConditionalsBoundaryMutator]": 9.375E7,
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[94], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.ConditionalsBoundaryMutator]": 1.0E8,
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[83], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.MathMutator]": 9.6875E7,
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dsetI, methodDesc\u003d(I)V], indexes\u003d[4], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator]": 9.0625E7,
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[153], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.MathMutator]": 1.03125E8,
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[56], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.ConditionalsBoundaryMutator]": 9.375E7,
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dsetK, methodDesc\u003d(I)V], indexes\u003d[4], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.ConditionalsBoundaryMutator]": 9.0625E7,
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[86], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator]": 9.375E7,
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[53], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator]": 1.09375E8,
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[178], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.MathMutator]": 1.0E8,
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[198], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator]": 9.6875E7,
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[206], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.ConditionalsBoundaryMutator]": 1.0E8,
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[39], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator]": 9.0625E7,
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[131], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator]": 1.0E8,
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[59], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator]": 8.75E7,
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dsetI, methodDesc\u003d(I)V], indexes\u003d[4], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.ConditionalsBoundaryMutator]": 9.0625E7,
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[99], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.MathMutator]": 9.6875E7,
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[53], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.ConditionalsBoundaryMutator]": 7.8125E7,
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[203], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.MathMutator]": 1.09375E8,
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[94], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator]": 1.03125E8,
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[70], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.ReturnValsMutator]": 1.0625E8,
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[227], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.ReturnValsMutator]": 9.375E7,
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[156], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator]": 9.6875E7,
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[14], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.MathMutator]": 8.4375E7,
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dsetK, methodDesc\u003d(I)V], indexes\u003d[4], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator]": 9.375E7,
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[141], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.ReturnValsMutator]": 9.375E7,
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[113], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.ReturnValsMutator]": 8.75E7,
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[56], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator]": 9.6875E7,
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[102], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator]": 9.0625E7,
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[191], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.ReturnValsMutator]": 9.0625E7,
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[76], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator]": 1.0625E8,
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dsetJ, methodDesc\u003d(I)V], indexes\u003d[4], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator]": 9.6875E7,
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[23], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator]": 8.75E7,
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[124], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.ReturnValsMutator]": 8.75E7,
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[46], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.MathMutator]": 9.6875E7,
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dsetJ, methodDesc\u003d(I)V], indexes\u003d[4], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.ConditionalsBoundaryMutator]": 9.0625E7,
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[86], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.ConditionalsBoundaryMutator]": 9.6875E7,
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[181], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator]": 8.75E7,
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[148], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator]": 9.0625E7,
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[131], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.ConditionalsBoundaryMutator]": 9.6875E7
+    },
+    "mutantsAvgExecutionTime": {
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[156], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.ConditionalsBoundaryMutator]": 1.247070225E9,
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[166], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.ReturnValsMutator]": 1.0986586914E9,
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[216], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.ReturnValsMutator]": 1.0902187668E9,
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[102], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.ConditionalsBoundaryMutator]": 1.2273263284E9,
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[30], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.MathMutator]": 1.1260282066E9,
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[7], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator]": 1.1158121866E9,
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[91], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.MathMutator]": 1.1481460984E9,
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[59], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.ConditionalsBoundaryMutator]": 1.6592434546E9,
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[206], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator]": 1.1174541428E9,
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[173], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator]": 1.083194839E9,
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[181], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.ConditionalsBoundaryMutator]": 1.4602769308E9,
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[94], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.ConditionalsBoundaryMutator]": 1.13374675E9,
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[83], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.MathMutator]": 1.1873376656E9,
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dsetI, methodDesc\u003d(I)V], indexes\u003d[4], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator]": 1.1826163606E9,
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[153], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.MathMutator]": 1.1749089488E9,
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[56], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.ConditionalsBoundaryMutator]": 1.5893596154E9,
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dsetK, methodDesc\u003d(I)V], indexes\u003d[4], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.ConditionalsBoundaryMutator]": 1.1416882534E9,
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[86], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator]": 1.1642600382E9,
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[53], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator]": 1.1453587914E9,
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[178], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.MathMutator]": 1.2280987908E9,
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[198], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator]": 1.1113344476E9,
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[206], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.ConditionalsBoundaryMutator]": 1.1075139802E9,
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[39], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator]": 1.138213989E9,
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[131], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator]": 1.1016250606E9,
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[59], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator]": 1.2604600982E9,
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dsetI, methodDesc\u003d(I)V], indexes\u003d[4], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.ConditionalsBoundaryMutator]": 1.1727879146E9,
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[99], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.MathMutator]": 1.2011892478E9,
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[53], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.ConditionalsBoundaryMutator]": 1.0976622436E9,
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[203], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.MathMutator]": 1.2565254672E9,
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[94], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator]": 1.0935029162E9,
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[70], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.ReturnValsMutator]": 1.1160928596E9,
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[227], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.ReturnValsMutator]": 1.0745841426E9,
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[156], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator]": 1.1049060516E9,
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[14], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.MathMutator]": 1.0610973168E9,
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dsetK, methodDesc\u003d(I)V], indexes\u003d[4], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator]": 1.1340223702E9,
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[141], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.ReturnValsMutator]": 1.07512875E9,
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[113], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.ReturnValsMutator]": 1.088850378E9,
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[56], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator]": 1.1750435614E9,
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[102], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator]": 1.1437137562E9,
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[191], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.ReturnValsMutator]": 1.0858979834E9,
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[76], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator]": 1.1637812756E9,
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dsetJ, methodDesc\u003d(I)V], indexes\u003d[4], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator]": 1.179362845E9,
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[23], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator]": 1.1381472748E9,
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[124], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.ReturnValsMutator]": 1.052098336E9,
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[46], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.MathMutator]": 1.1802883944E9,
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dsetJ, methodDesc\u003d(I)V], indexes\u003d[4], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.ConditionalsBoundaryMutator]": 1.1717129888E9,
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[86], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.ConditionalsBoundaryMutator]": 1.094015628E9,
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[181], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator]": 1.196770328E9,
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[148], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator]": 1.099382204E9,
+        "MutationIdentifier [location\u003dLocation [clazz\u003dbr.ufpr.inf.gres.TriTyp, method\u003dgetTipo, methodDesc\u003d()I], indexes\u003d[131], mutator\u003dorg.pitest.mutationtest.engine.gregor.mutators.ConditionalsBoundaryMutator]": 1.131627058E9
+    }
+}

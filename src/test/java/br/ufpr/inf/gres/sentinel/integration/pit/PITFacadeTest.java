@@ -4,6 +4,7 @@ import br.ufpr.inf.gres.sentinel.base.mutation.Mutant;
 import br.ufpr.inf.gres.sentinel.base.mutation.Operator;
 import br.ufpr.inf.gres.sentinel.base.mutation.Program;
 import br.ufpr.inf.gres.sentinel.integration.IntegrationFacade;
+import br.ufpr.inf.gres.sentinel.util.TestPrograms;
 import com.google.common.base.Stopwatch;
 import java.io.File;
 import java.util.ArrayList;
@@ -27,7 +28,7 @@ public class PITFacadeTest {
     @BeforeClass
     public static void setUpClass() {
         facade = new PITFacade(System.getProperty("user.dir"));
-        programUnderTest = facade.instantiateProgram("Triangle;src/test/resources;br.ufpr.inf.gres.TriTyp*;br.ufpr.inf.gres.TriTypTest*;;src/test/resources");
+        programUnderTest = facade.instantiateProgram(TestPrograms.TRIANGLE);
     }
 
     @Test

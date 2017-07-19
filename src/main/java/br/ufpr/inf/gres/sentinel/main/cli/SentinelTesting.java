@@ -3,7 +3,6 @@ package br.ufpr.inf.gres.sentinel.main.cli;
 import br.ufpr.inf.gres.sentinel.base.mutation.Operator;
 import br.ufpr.inf.gres.sentinel.base.mutation.Program;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.problem.impl.MutationStrategyGenerationProblem;
-import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.problem.observer.impl.UnconstrainedObjectiveFunctionObserver;
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.representation.VariableLengthSolution;
 import br.ufpr.inf.gres.sentinel.gson.GsonUtil;
 import br.ufpr.inf.gres.sentinel.gson.ResultWrapper;
@@ -59,8 +58,6 @@ public class SentinelTesting {
             LOGGER.info("Starting test phase.");
             IntegrationFacade facade = buildFacade(testingArgs);
             MutationStrategyGenerationProblem problem = buildProblem(facade, testingArgs);
-            problem.dettachAllObservers();
-            problem.attachObserver(new UnconstrainedObjectiveFunctionObserver());
 
             String inputDir = testingArgs.workingDirectory + File.separator + testingArgs.inputDirectory;
             LOGGER.debug("Reading result files from " + inputDir);

@@ -11,6 +11,7 @@ import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.selection.GroupS
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.selection.SelectionOperation;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.type.impl.SequentialSelection;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.sort.impl.QuantityInGroupComparator;
+import br.ufpr.inf.gres.sentinel.util.TestPrograms;
 import com.google.common.collect.Lists;
 import java.io.File;
 import java.io.IOException;
@@ -40,7 +41,7 @@ public class GsonUtilTest {
                 10,
                 5,
                 1,
-                Lists.newArrayList(facade.instantiateProgram("Triangle;src/test/resources;br.ufpr.inf.gres.TriTyp*;br.ufpr.inf.gres.TriTypTest*;;src/test/resources")),
+                Lists.newArrayList(facade.instantiateProgram(TestPrograms.TRIANGLE)),
                 Lists.newArrayList(ObjectiveFunction.AVERAGE_CPU_TIME, ObjectiveFunction.AVERAGE_SCORE));
         this.gson = new GsonUtil(problem);
     }

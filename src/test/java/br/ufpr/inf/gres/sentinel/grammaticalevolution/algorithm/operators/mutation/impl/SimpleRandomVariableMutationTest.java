@@ -32,7 +32,7 @@ public class SimpleRandomVariableMutationTest {
     public void execute() throws Exception {
         Program programUnderTest
                 = new Program("br.ufpr.inf.gres.TriTyp",
-                        new File("src/test/resources"));
+                        new File("src/test"));
 
         GrammaticalEvolutionAlgorithmTest.ProblemStub problemStub
                 = new GrammaticalEvolutionAlgorithmTest.ProblemStub(GrammarFiles.getDefaultGrammarPath(),

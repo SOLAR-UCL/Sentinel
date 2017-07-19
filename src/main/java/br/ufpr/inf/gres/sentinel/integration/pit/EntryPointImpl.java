@@ -43,22 +43,6 @@ public class EntryPointImpl {
     private KnownLocationJavaAgentFinder ja;
     private JavaAgent jac;
 
-    /**
-     *
-     */
-    public void close() {
-        if (this.jac != null) {
-            this.jac.close();
-        }
-        if (this.ja != null) {
-            this.ja.close();
-        }
-        if (this.historyWriter != null) {
-            this.historyWriter.close();
-        }
-
-    }
-
     private MutationCoverageImpl createMutationCoverageImpl(ReportOptions data, SettingsFactory settings, Map<String, String> environmentVariables, File baseDir) {
         final ClassPath cp = data.getClassPath();
 

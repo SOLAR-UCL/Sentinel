@@ -64,8 +64,11 @@ public class FacadeCache {
 
     public void setCached(Program program, boolean isCached) {
         this.caches.get(program).isCached = isCached;
-        if (isCached) {
-            FacadeCache.this.computeAverages(program);
+    }
+
+    public void computeAverages() {
+        for (Program program : caches.keySet()) {
+            this.computeAverages(program);
         }
     }
 
@@ -132,7 +135,7 @@ public class FacadeCache {
 
     public void recordMutantKillingTestCases(Program program, Mutant mutantToExecute, Collection<TestCase> killingTestCases) {
         Mutant mutant = getOrCreateCache(program).mutants.get(mutantToExecute.toString());
-        mutant.setKillingTestCases(new LinkedHashSet<>(killingTestCases));
+        mutant.getKillingTestCases().addAll(killingTestCases);
     }
 
     public LinkedHashSet<Mutant> retrieveOperatorExecutionInformation(Program program, Operator operator) {
@@ -187,9 +190,21 @@ public class FacadeCache {
         return this.caches.computeIfAbsent(program, tempProgram -> new CacheHolder(tempProgram));
     }
 
-    public boolean writeCache() throws IOException {
+    public boolean writeCache() {
         if (this.outputDirectory != null) {
-            return this.writeCache(this.outputDirectory + File.separator + ".cache");
+            try {
+                this.computeAverages();
+                LOGGER.debug("Preparing to write cache file.");
+                boolean written = this.writeCache(this.outputDirectory + File.separator + ".cache");
+                if (written) {
+                    LOGGER.debug("Cache file written successfully.");
+                    return true;
+                } else {
+                    LOGGER.debug("No cache file was written.");
+                }
+            } catch (IOException ex) {
+                LOGGER.error("Could not write cache file. The exception is: " + ex.getMessage(), ex);
+            }
         }
         return false;
     }
@@ -199,13 +214,14 @@ public class FacadeCache {
         Gson gson = new GsonBuilder()
                 .create();
         for (CacheHolder cache : this.caches.values()) {
-            if (cache.isCached) {
-                File outputFile = new File(outputFolder.getAbsolutePath() + File.separator + cache.program.getName() + ".json");
-                com.google.common.io.Files.createParentDirs(outputFile);
-                com.google.common.io.Files.write(gson.toJson(cache), outputFile, Charset.defaultCharset());
-                LOGGER.debug("Cache file for program " + cache.program.getName() + " was created seccessfully.");
-                LOGGER.trace("Output file: " + outputFile.getAbsolutePath());
-            }
+            File outputFile = new File(outputFolder.getAbsolutePath() + File.separator + cache.program.getName() + ".json");
+            File tempFile = new File(outputFolder.getAbsolutePath() + File.separator + cache.program.getName() + "_temp.json");
+            com.google.common.io.Files.createParentDirs(outputFile);
+            com.google.common.io.Files.write(gson.toJson(cache), tempFile, Charset.defaultCharset());
+            com.google.common.io.Files.copy(tempFile, outputFile);
+            tempFile.delete();
+            LOGGER.debug("Cache file for program " + cache.program.getName() + " was created seccessfully.");
+            LOGGER.trace("Output file: " + outputFile.getAbsolutePath());
         }
         return true;
     }
@@ -218,15 +234,48 @@ public class FacadeCache {
         if (inputDirectory != null) {
             try {
                 Files.walkFileTree(Paths.get(inputDirectory), new CacheFileVisitor(this));
+                for (Map.Entry<Program, CacheHolder> cacheEntry : caches.entrySet()) {
+                    Program program = cacheEntry.getKey();
+                    CacheHolder cache = cacheEntry.getValue();
+                    if (!cache.isCached) {
+                        for (Map.Entry<String, Operator> operatorEntry : cache.operators.entrySet()) {
+                            String operatorName = operatorEntry.getKey();
+                            Operator operator = operatorEntry.getValue();
+                            for (int i = 0; i < cache.numberOfRuns; i++) {
+                                this.recordOperatorCPUTime(program, operator, Math.round(cache.operatorsAvgCPUTime.get(operatorName)));
+                                this.recordOperatorExecutionTime(program, operator, Math.round(cache.operatorsAvgExecutionTime.get(operatorName)));
+                            }
+                        }
+
+                        for (Map.Entry<String, Mutant> mutantEntry : cache.mutants.entrySet()) {
+                            String mutantName = mutantEntry.getKey();
+                            Mutant mutant = mutantEntry.getValue();
+                            for (int i = 0; i < cache.numberOfRuns; i++) {
+                                this.recordMutantCPUTime(program, mutant, Math.round(cache.mutantsAvgCPUTime.get(mutantName)));
+                                this.recordMutantExecutionTime(program, mutant, Math.round(cache.mutantsAvgExecutionTime.get(mutantName)));
+                            }
+                        }
+                    }
+                }
             } catch (IOException ex) {
             }
         }
+    }
+
+    public void notifyRunEnded(Program program) {
+        CacheHolder cache = getOrCreateCache(program);
+        cache.numberOfRuns++;
+    }
+
+    public int getNumberOfRuns(Program program) {
+        return getOrCreateCache(program).numberOfRuns;
     }
 
     private static class CacheHolder {
 
         private Program program;
         private boolean isCached = false;
+        private int numberOfRuns = 0;
 
         private HashMap<String, Operator> operators;
         private HashMap<String, Mutant> mutants;
@@ -315,6 +364,10 @@ public class FacadeCache {
             CacheHolder cache = new CacheHolder(program);
 
             cache.isCached = jsonObject.get("isCached").getAsBoolean();
+            JsonElement numberOfRuns = jsonObject.get("numberOfRuns");
+            if (numberOfRuns != null) {
+                cache.numberOfRuns = numberOfRuns.getAsInt();
+            }
 
             cache.operators = context.deserialize(jsonObject.get("operators"), new TypeToken<HashMap<String, Operator>>() {
             }.getType());
