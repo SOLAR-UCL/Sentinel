@@ -69,14 +69,15 @@ public class SentinelTest {
     }
 
     @Test
-    @Ignore
+//    @Ignore
     public void testSentinelAnalysis() throws Exception {
         String[] args = new String[]{"analyse",
             "--plotWidth", "800",
             "--plotHeight", "600",
             "--axisLabels", "Time", "Score",
-            "--inputDirectory", "testing/wire-2.2.0/",
-            "--outputDirectory", "testinganalysis/wire-2.2.0/"};
+            "--threshold", "0",
+            "--inputDirectory", "training/commons-collections-3.3",
+            "--outputDirectory", "traininganalysis/commons-collections-3.3"};
         Sentinel.main(args);
     }
 

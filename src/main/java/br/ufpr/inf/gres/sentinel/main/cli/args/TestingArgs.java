@@ -97,7 +97,7 @@ public class TestingArgs {
      *
      */
     @Parameter(names = {"--outputDirectory", "-od"},
-            description = "The directory (relative to the working directory) in which the testing programs are located and where the testing results will be outputed.",
+            description = "The directory (relative to the working directory) where the testing results will be outputed.",
             converter = SeparatorConverter.class)
     public String outputDirectory = "testing";
 
@@ -105,7 +105,7 @@ public class TestingArgs {
      *
      */
     @Parameter(names = {"--inputDirectory", "-id"},
-            description = "The directory (relative to the working directory) in which the training was executed. This is the directory in which Sentinel will look for results to build strategies and execute the testing.",
+            description = "The directory (relative to the working directory) in which the testing programs are located and the training was executed. This is the directory in which Sentinel will look for results to build strategies and execute the testing.",
             converter = SeparatorConverter.class)
     public String inputDirectory = "training";
 

@@ -22,6 +22,7 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.apache.logging.log4j.Level;
@@ -82,29 +83,29 @@ public class SentinelTesting {
         File outputDirectory = new File(testingArgs.workingDirectory + File.separator + testingArgs.outputDirectory);
         outputDirectory.mkdirs();
 
-        LOGGER.info("Starting Sentinel executions. There are " + resultsFromJson.values().stream().mapToInt((resultWrapper) -> resultWrapper.getResult().size()).sum() + " Sentinel startegies to run.");
-        for (ResultWrapper trainingResult : resultsFromJson.values()) {
-            LOGGER.debug("Running " + trainingResult.getSession() + " " + trainingResult.getRunNumber());
-            ResultWrapper testResult = runSentinelSolutions(trainingResult, problem, testingArgs);
-            result.put(testResult.getSession(), testResult);
-            LOGGER.debug("Execution finished in " + DurationFormatUtils.formatDurationHMS(testResult.getExecutionTimeInMillis()));
-        }
-//        Set<String> sessions = resultsFromJson.keySet();
-//        LOGGER.info("Found " + sessions.size() + " sessions: " + sessions.toString());
-//        for (String session : sessions) {
-//            List<VariableLengthSolution<Integer>> solutions = new ArrayList<>();
-//            resultsFromJson.get(session).stream().forEach(tempWrapper -> solutions.addAll(tempWrapper.getResult()));
-//            List<VariableLengthSolution<Integer>> nonDominatedSolutions = SolutionListUtils.getNondominatedSolutions(solutions);
-//
-//            ResultWrapper trainingResult = resultsFromJson.get(session).stream().findFirst().get();
-//            trainingResult.setRunNumber(1);
-//            trainingResult.setResult(nonDominatedSolutions);
+//        LOGGER.info("Starting Sentinel executions. There are " + resultsFromJson.values().stream().mapToInt((resultWrapper) -> resultWrapper.getResult().size()).sum() + " Sentinel startegies to run.");
+//        for (ResultWrapper trainingResult : resultsFromJson.values()) {
 //            LOGGER.debug("Running " + trainingResult.getSession() + " " + trainingResult.getRunNumber());
-//            LOGGER.debug("Running " + nonDominatedSolutions.size() + " strategies.");
 //            ResultWrapper testResult = runSentinelSolutions(trainingResult, problem, testingArgs);
 //            result.put(testResult.getSession(), testResult);
 //            LOGGER.debug("Execution finished in " + DurationFormatUtils.formatDurationHMS(testResult.getExecutionTimeInMillis()));
 //        }
+        Set<String> sessions = resultsFromJson.keySet();
+        LOGGER.info("Found " + sessions.size() + " sessions: " + sessions.toString());
+        for (String session : sessions) {
+            List<VariableLengthSolution<Integer>> solutions = new ArrayList<>();
+            resultsFromJson.get(session).stream().forEach(tempWrapper -> solutions.addAll(tempWrapper.getResult()));
+            List<VariableLengthSolution<Integer>> nonDominatedSolutions = SolutionListUtils.getNondominatedSolutions(solutions);
+
+            ResultWrapper trainingResult = resultsFromJson.get(session).stream().findFirst().get();
+            trainingResult.setRunNumber(1);
+            trainingResult.setResult(nonDominatedSolutions);
+            LOGGER.debug("Running " + trainingResult.getSession() + " " + trainingResult.getRunNumber());
+            LOGGER.debug("Running " + nonDominatedSolutions.size() + " strategies.");
+            ResultWrapper testResult = runSentinelSolutions(trainingResult, problem, testingArgs);
+            result.put(testResult.getSession(), testResult);
+            LOGGER.debug("Execution finished in " + DurationFormatUtils.formatDurationHMS(testResult.getExecutionTimeInMillis()));
+        }
 
         LOGGER.info("Starting Random Mutant Sampling executions.");
         ResultWrapper randomMutantSamplingResults = runRandomMutantSampling(problem, testingArgs);
