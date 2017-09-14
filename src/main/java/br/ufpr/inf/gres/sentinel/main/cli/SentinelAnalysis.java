@@ -7,9 +7,11 @@ import br.ufpr.inf.gres.sentinel.gson.ResultWrapper;
 import br.ufpr.inf.gres.sentinel.indictaors.IndicatorFactory;
 import br.ufpr.inf.gres.sentinel.main.cli.args.AnalysisArgs;
 import br.ufpr.inf.gres.sentinel.statistics.KruskalWallis;
+import br.ufpr.inf.gres.sentinel.statistics.VarghaDelaney;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
 import com.google.common.collect.Lists;
+import com.google.common.math.Stats;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Paint;
@@ -99,6 +101,10 @@ public class SentinelAnalysis {
                         for (Double doubleValue : indicatorValues) {
                             writer.write(String.valueOf(doubleValue) + "\n");
                         }
+                        final Stats stats = Stats.of(indicatorValues);
+                        writer.write("\n");
+                        writer.write("Average: " + stats.mean() + "\n");
+                        writer.write("Std: " + stats.populationStandardDeviation() + "\n");
                     }
                 }
                 dataset.add(indicatorValues, "", session);
@@ -119,6 +125,7 @@ public class SentinelAnalysis {
             }
         }
         KruskalWallis.test(results, new File(outputDirectory.getAbsolutePath() + File.separator + indicatorName + "_KRUSKAL.txt"));
+        VarghaDelaney.test(results, new File(outputDirectory.getAbsolutePath() + File.separator + indicatorName + "_ES.txt"));
     }
 
     private static StandardChartTheme createChartTheme() {
