@@ -75,10 +75,10 @@ public class SentinelTest {
             "--plotWidth", "800",
             "--plotHeight", "600",
             "--axisLabels", "Time", "Score",
-            "--threshold", "0",
+            "--threshold", "0.01",
             "--printIntermediateFiles",
-            "--inputDirectory", "training/jfreechart/jfreechart-1.0.0",
-            "--outputDirectory", "traininganalysis/jfreechart/jfreechart-1.0.0"};
+            "--inputDirectory", "../Sentinel-Results/joda-time-2.9/testing/",
+            "--outputDirectory", "../Sentinel-Results/joda-time-2.9/testingresults/"};
         Sentinel.main(args);
     }
 
