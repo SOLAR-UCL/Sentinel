@@ -98,7 +98,6 @@ public class SentinelTesting {
             List<VariableLengthSolution<Integer>> nonDominatedSolutions = SolutionListUtils.getNondominatedSolutions(solutions);
 
             ResultWrapper trainingResult = resultsFromJson.get(session).stream().findFirst().get();
-            trainingResult.setRunNumber(1);
             trainingResult.setResult(nonDominatedSolutions);
             LOGGER.debug("Running " + trainingResult.getSession() + " " + trainingResult.getRunNumber());
             LOGGER.debug("Running " + nonDominatedSolutions.size() + " strategies.");
@@ -141,7 +140,7 @@ public class SentinelTesting {
                 .setGrammarFile(testingArgs.grammarFilePath)
                 .setSession(trainingResult.getSession())
                 .setObjectiveFunctions(testingArgs.objectiveFunctions)
-                .setRunNumber(trainingResult.getRunNumber());
+                .setRunNumber(testingArgs.runNumber);
         return testingResult;
     }
 
@@ -174,7 +173,7 @@ public class SentinelTesting {
                 .setGrammarFile(testingArgs.grammarFilePath)
                 .setSession("RandomMutantSampling")
                 .setObjectiveFunctions(testingArgs.objectiveFunctions)
-                .setRunNumber(1);
+                .setRunNumber(testingArgs.runNumber);
         return resultWrapper;
     }
 
@@ -206,7 +205,7 @@ public class SentinelTesting {
                 .setGrammarFile(testingArgs.grammarFilePath)
                 .setSession("RandomOperatorSelection")
                 .setObjectiveFunctions(testingArgs.objectiveFunctions)
-                .setRunNumber(1);
+                .setRunNumber(testingArgs.runNumber);
         return resultWrapper;
     }
 
@@ -250,7 +249,7 @@ public class SentinelTesting {
                 .setGrammarFile(testingArgs.grammarFilePath)
                 .setSession("SelectiveMutation")
                 .setObjectiveFunctions(testingArgs.objectiveFunctions)
-                .setRunNumber(1);
+                .setRunNumber(testingArgs.runNumber);
         return resultWrapper;
     }
 

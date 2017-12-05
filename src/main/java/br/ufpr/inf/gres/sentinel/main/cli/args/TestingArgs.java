@@ -115,5 +115,12 @@ public class TestingArgs {
     @Parameter(names = {"--inputFilesGlob"},
             description = "The input files glob for finding strategy input files for the testing. If no input directory is provided, then Sentinel will look for files in the training directory.")
     public String inputFilesGlob = "**.json";
+    
+    /**
+     *
+     */
+    @Parameter(names = "--runNumber",
+            description = "The number of the independent run being executed in a same session.")
+    public int runNumber = 1;
 
 }

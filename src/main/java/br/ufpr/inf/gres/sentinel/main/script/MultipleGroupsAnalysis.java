@@ -23,7 +23,8 @@ import java.util.Scanner;
 public class MultipleGroupsAnalysis {
 
     public static void main(String[] args) throws FileNotFoundException, IOException, InterruptedException {
-        String indicator = "IGD";
+        String indicator = "HYPERVOLUME";
+//        String indicator = "IGD";
 
         HashMap<String, String> dirs = new LinkedHashMap<>();
         dirs.put("commons-collections-3.0", "../Sentinel-Results/commons-collections-3.0/testingresults");
@@ -50,6 +51,7 @@ public class MultipleGroupsAnalysis {
                 results.put("Sentinel", nextDouble);
             }
         }
+        System.out.println("# Sentinel Average: " + results.get("Sentinel").stream().mapToDouble(value -> value).average().getAsDouble());
 
         System.out.println("");
         
@@ -61,6 +63,7 @@ public class MultipleGroupsAnalysis {
                 results.put("RandomMutantSampling", nextDouble);
             }
         }
+        System.out.println("# RandomMutantSampling Average: " + results.get("RandomMutantSampling").stream().mapToDouble(value -> value).average().getAsDouble());
 
         System.out.println("");
         
@@ -72,6 +75,8 @@ public class MultipleGroupsAnalysis {
                 results.put("RandomOperatorSelection", nextDouble);
             }
         }
+        System.out.println("# RandomOperatorSelection Average: " + results.get("RandomOperatorSelection").stream().mapToDouble(value -> value).average().getAsDouble());
+        
         System.out.println("");
         
         for (Map.Entry<String, String> entry : dirs.entrySet()) {
@@ -82,6 +87,7 @@ public class MultipleGroupsAnalysis {
                 results.put("SelectiveMutation", nextDouble);
             }
         }
+        System.out.println("# SelectiveMutation Average: " + results.get("SelectiveMutation").stream().mapToDouble(value -> value).average().getAsDouble());
         
         Friedman.test(results, new File("../Sentinel-Results" + File.separator + indicator + "_FRIEDMAN.txt"));
     }
