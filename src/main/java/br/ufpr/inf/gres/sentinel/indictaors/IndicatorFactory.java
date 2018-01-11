@@ -2,7 +2,6 @@ package br.ufpr.inf.gres.sentinel.indictaors;
 
 import org.uma.jmetal.qualityindicator.impl.GenericIndicator;
 import org.uma.jmetal.qualityindicator.impl.InvertedGenerationalDistance;
-import org.uma.jmetal.qualityindicator.impl.hypervolume.PISAHypervolume;
 import org.uma.jmetal.util.front.Front;
 
 /**
@@ -30,7 +29,9 @@ public class IndicatorFactory {
     public static GenericIndicator createIndicator(String indicatorName, Front referenceFront) {
         switch (indicatorName.toUpperCase()) {
             case HYPERVOLUME:
-                return new PISAHypervolume(referenceFront);
+                HypervolumeCalculator hypervolumeCalculator = new HypervolumeCalculator();
+                hypervolumeCalculator.addParetoFront(referenceFront);
+                return hypervolumeCalculator;
             case IGD:
                 return new InvertedGenerationalDistance(referenceFront);
             default:

@@ -92,7 +92,12 @@ public class SinglePointVariableCrossover<T> implements CrossoverOperator<Variab
     }
 
     @Override
-    public int getNumberOfParents() {
+    public int getNumberOfGeneratedChildren() {
+        return 2;
+    }
+
+    @Override
+    public int getNumberOfRequiredParents() {
         return 2;
     }
 }

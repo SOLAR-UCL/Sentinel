@@ -69,7 +69,7 @@ public class SentinelTest {
     }
 
     @Test
-    @Ignore
+//    @Ignore
     public void testSentinelAnalysis() throws Exception {
         String[] args = new String[]{"analyse",
             "--plotWidth", "800",
@@ -77,8 +77,8 @@ public class SentinelTest {
             "--axisLabels", "Time", "Score",
             "--threshold", "0.01",
             "--printIntermediateFiles",
-            "--inputDirectory", "../Sentinel-Results/joda-time-2.9/testing/",
-            "--outputDirectory", "../Sentinel-Results/joda-time-2.9/testingresults/"};
+            "--inputDirectory", "jfreechart-1.0.0_testing/",
+            "--outputDirectory", "../Sentinel-Results/jfreechart-1.0.0/testingresults/"};
         Sentinel.main(args);
     }
 

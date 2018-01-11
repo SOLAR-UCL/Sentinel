@@ -54,7 +54,7 @@ public class MultipleGroupsAnalysis {
         System.out.println("# Sentinel Average: " + results.get("Sentinel").stream().mapToDouble(value -> value).average().getAsDouble());
 
         System.out.println("");
-        
+
         for (Map.Entry<String, String> entry : dirs.entrySet()) {
             String dir = entry.getValue();
             try (Scanner scanner = new Scanner(new File(dir + "/RandomMutantSampling/" + indicator + ".txt"))) {
@@ -66,7 +66,7 @@ public class MultipleGroupsAnalysis {
         System.out.println("# RandomMutantSampling Average: " + results.get("RandomMutantSampling").stream().mapToDouble(value -> value).average().getAsDouble());
 
         System.out.println("");
-        
+
         for (Map.Entry<String, String> entry : dirs.entrySet()) {
             String dir = entry.getValue();
             try (Scanner scanner = new Scanner(new File(dir + "/RandomOperatorSelection/" + indicator + ".txt"))) {
@@ -76,9 +76,9 @@ public class MultipleGroupsAnalysis {
             }
         }
         System.out.println("# RandomOperatorSelection Average: " + results.get("RandomOperatorSelection").stream().mapToDouble(value -> value).average().getAsDouble());
-        
+
         System.out.println("");
-        
+
         for (Map.Entry<String, String> entry : dirs.entrySet()) {
             String dir = entry.getValue();
             try (Scanner scanner = new Scanner(new File(dir + "/SelectiveMutation/" + indicator + ".txt"))) {
@@ -88,7 +88,7 @@ public class MultipleGroupsAnalysis {
             }
         }
         System.out.println("# SelectiveMutation Average: " + results.get("SelectiveMutation").stream().mapToDouble(value -> value).average().getAsDouble());
-        
+
         Friedman.test(results, new File("../Sentinel-Results" + File.separator + indicator + "_FRIEDMAN.txt"));
     }
 

@@ -21,11 +21,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.jfree.chart.ChartFactory;
@@ -88,7 +84,7 @@ public class SentinelAnalysis {
     }
 
     private static void computeQualityIndicators(ListMultimap<String, ResultWrapper> resultsFromJson, File outputDirectory, AnalysisArgs analysisArgs) throws IOException, InterruptedException {
-        ArrayFront referenceFront = new ArrayFront(getNonDominatedSolutions(resultsFromJson.values()));
+        ArrayFront referenceFront = new ArrayFront(getSolutions(resultsFromJson.values()));
         for (String indicatorName : analysisArgs.indicators) {
             ListMultimap<String, Double> results = getIndicatorResults(resultsFromJson, indicatorName, referenceFront);
             DefaultBoxAndWhiskerCategoryDataset dataset = new DefaultBoxAndWhiskerCategoryDataset();
@@ -156,7 +152,7 @@ public class SentinelAnalysis {
         ArrayListMultimap<String, Double> results = ArrayListMultimap.create();
         for (String session : resultsFromJson.keySet()) {
             for (ResultWrapper resultWrapper : resultsFromJson.get(session)) {
-                Double indicatorResult = indicator.evaluate(resultWrapper.getResult());
+                Double indicatorResult = indicator.evaluate(new ArrayList<>(resultWrapper.getResult()));
                 results.put(session, indicatorResult);
             }
         }

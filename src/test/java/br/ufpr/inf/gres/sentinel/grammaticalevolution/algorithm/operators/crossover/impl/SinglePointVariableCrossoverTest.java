@@ -11,12 +11,13 @@ import com.google.common.collect.Lists;
 import java.io.File;
 import java.util.List;
 import org.junit.AfterClass;
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.uma.jmetal.util.pseudorandom.JMetalRandom;
 import org.uma.jmetal.util.pseudorandom.impl.JavaRandomGenerator;
+
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author Giovani Guizzo
@@ -106,7 +107,12 @@ public class SinglePointVariableCrossoverTest {
 
     @Test
     public void getNumberOfParents() throws Exception {
-        assertEquals(2, operator.getNumberOfParents());
+        assertEquals(2, operator.getNumberOfRequiredParents());
+    }
+
+    @Test
+    public void getNumberOfGeneratedChildren() throws Exception {
+        assertEquals(2, operator.getNumberOfGeneratedChildren());
     }
 
 }
