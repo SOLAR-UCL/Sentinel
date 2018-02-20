@@ -5,16 +5,11 @@
  */
 package br.ufpr.inf.gres.sentinel.main.script;
 
-import br.ufpr.inf.gres.sentinel.statistics.Friedman;
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.ListMultimap;
-import java.io.File;
+import br.ufpr.inf.gres.sentinel.main.cli.Sentinel;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 
 /**
  *
@@ -22,74 +17,32 @@ import java.util.Scanner;
  */
 public class MultipleGroupsAnalysis {
 
-    public static void main(String[] args) throws FileNotFoundException, IOException, InterruptedException {
-        String indicator = "HYPERVOLUME";
-//        String indicator = "IGD";
+    public static void main(String[] args) throws FileNotFoundException, IOException, InterruptedException, Exception {
+        String inputDir = "../systems/testing/";
+        String outputDir = "../systems/analysis/testing/";
 
-        HashMap<String, String> dirs = new LinkedHashMap<>();
-        dirs.put("commons-collections-3.0", "../Sentinel-Results/commons-collections-3.0/testingresults");
-        dirs.put("commons-collections-3.1", "../Sentinel-Results/commons-collections-3.1/testingresults");
-        dirs.put("commons-collections-3.2", "../Sentinel-Results/commons-collections-3.2/testingresults");
-        dirs.put("commons-collections-3.3", "../Sentinel-Results/commons-collections-3.3/testingresults");
-        dirs.put("commons-collections-4.0", "../Sentinel-Results/commons-collections-4.0/testingresults");
-        dirs.put("commons-collections-4.1", "../Sentinel-Results/commons-collections-4.1/testingresults");
-        dirs.put("jfreechart-1.0.0", "../Sentinel-Results/jfreechart-1.0.0/testingresults");
-        dirs.put("joda-time-2.8", "../Sentinel-Results/joda-time-2.8/testingresults");
-        dirs.put("joda-time-2.9", "../Sentinel-Results/joda-time-2.9/testingresults");
-        dirs.put("wire-2.0.0", "../Sentinel-Results/wire-2.0.0/testingresults");
-        dirs.put("wire-2.1.0", "../Sentinel-Results/wire-2.1.0/testingresults");
-        dirs.put("wire-2.2.0", "../Sentinel-Results/wire-2.2.0/testingresults");
+        HashSet<String> systems = new LinkedHashSet<>();
+        systems.add("commons-beanutils-1.8.0");
+        systems.add("commons-codec-1.11");
+        systems.add("commons-collections-3.0");
+        systems.add("commons-lang-3.0");
+        systems.add("commons-validator-1.4.0");
+        systems.add("jfreechart-1.0.0");
+        systems.add("jgrapht-0.9.0");
+        systems.add("joda-time-2.8");
+        systems.add("ognl-3.1");
+        systems.add("wire-2.0.0");
 
-        ListMultimap<String, Double> results = ArrayListMultimap.create();
-        for (Map.Entry<String, String> entry : dirs.entrySet()) {
-            String system = entry.getKey();
-            String dir = entry.getValue();
+        for (String system : systems) {
+            args = new String[]{
+                "analyse",
+                "-id", inputDir + system,
+                "-od", outputDir + system,
+                "--printIntermediateFiles"
+            };
 
-            try (Scanner scanner = new Scanner(new File(dir + "/" + system + "/" + indicator + ".txt"))) {
-                final double nextDouble = scanner.nextDouble();
-                System.out.println(nextDouble);
-                results.put("Sentinel", nextDouble);
-            }
+            Sentinel.main(args);
         }
-        System.out.println("# Sentinel Average: " + results.get("Sentinel").stream().mapToDouble(value -> value).average().getAsDouble());
-
-        System.out.println("");
-
-        for (Map.Entry<String, String> entry : dirs.entrySet()) {
-            String dir = entry.getValue();
-            try (Scanner scanner = new Scanner(new File(dir + "/RandomMutantSampling/" + indicator + ".txt"))) {
-                final double nextDouble = scanner.nextDouble();
-                System.out.println(nextDouble);
-                results.put("RandomMutantSampling", nextDouble);
-            }
-        }
-        System.out.println("# RandomMutantSampling Average: " + results.get("RandomMutantSampling").stream().mapToDouble(value -> value).average().getAsDouble());
-
-        System.out.println("");
-
-        for (Map.Entry<String, String> entry : dirs.entrySet()) {
-            String dir = entry.getValue();
-            try (Scanner scanner = new Scanner(new File(dir + "/RandomOperatorSelection/" + indicator + ".txt"))) {
-                final double nextDouble = scanner.nextDouble();
-                System.out.println(nextDouble);
-                results.put("RandomOperatorSelection", nextDouble);
-            }
-        }
-        System.out.println("# RandomOperatorSelection Average: " + results.get("RandomOperatorSelection").stream().mapToDouble(value -> value).average().getAsDouble());
-
-        System.out.println("");
-
-        for (Map.Entry<String, String> entry : dirs.entrySet()) {
-            String dir = entry.getValue();
-            try (Scanner scanner = new Scanner(new File(dir + "/SelectiveMutation/" + indicator + ".txt"))) {
-                final double nextDouble = scanner.nextDouble();
-                System.out.println(nextDouble);
-                results.put("SelectiveMutation", nextDouble);
-            }
-        }
-        System.out.println("# SelectiveMutation Average: " + results.get("SelectiveMutation").stream().mapToDouble(value -> value).average().getAsDouble());
-
-        Friedman.test(results, new File("../Sentinel-Results" + File.separator + indicator + "_FRIEDMAN.txt"));
     }
 
 }
