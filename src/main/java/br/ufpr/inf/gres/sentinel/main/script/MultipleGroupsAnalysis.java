@@ -5,6 +5,7 @@
  */
 package br.ufpr.inf.gres.sentinel.main.script;
 
+import br.ufpr.inf.gres.sentinel.indictaors.IndicatorFactory;
 import br.ufpr.inf.gres.sentinel.main.cli.Sentinel;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -38,7 +39,8 @@ public class MultipleGroupsAnalysis {
                 "analyse",
                 "-id", inputDir + system,
                 "-od", outputDir + system,
-                "--printIntermediateFiles"
+                "--printIntermediateFiles",
+                "--indicators", IndicatorFactory.IGD
             };
 
             Sentinel.main(args);

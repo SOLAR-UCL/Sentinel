@@ -8,6 +8,7 @@ import br.ufpr.inf.gres.sentinel.indictaors.IndicatorFactory;
 import br.ufpr.inf.gres.sentinel.main.cli.args.AnalysisArgs;
 import br.ufpr.inf.gres.sentinel.statistics.KruskalWallis;
 import br.ufpr.inf.gres.sentinel.statistics.VarghaDelaney;
+import com.google.common.base.Joiner;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
 import com.google.common.collect.Lists;
@@ -21,6 +22,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -48,6 +51,9 @@ import org.uma.jmetal.util.front.imp.ArrayFront;
  */
 public class SentinelAnalysis {
 
+//    public static NumberFormat formatter = new DecimalFormat("0.0000");
+    public static NumberFormat formatter = new DecimalFormat("0.00E0");
+
     private static final List<Paint> COLORS = Lists.newArrayList(
             Color.BLACK,
             Color.RED,
@@ -67,6 +73,7 @@ public class SentinelAnalysis {
      * @throws IOException
      */
     public static void analyse(AnalysisArgs analysisArgs, String[] args) throws IOException, InterruptedException {
+        System.out.println("####### Initializing Analysis for " + analysisArgs.inputDirectory);
         GsonUtil util = new GsonUtil(new StubProblem());
         ListMultimap<String, ResultWrapper> resultsFromJson = util.getResultsFromJsonFiles(analysisArgs.workingDirectory + File.separator + analysisArgs.inputDirectory, analysisArgs.inputFilesGlob);
         for (Map.Entry<String, ResultWrapper> entry : resultsFromJson.entries()) {
@@ -88,6 +95,9 @@ public class SentinelAnalysis {
         for (String indicatorName : analysisArgs.indicators) {
             ListMultimap<String, Double> results = getIndicatorResults(resultsFromJson, indicatorName, referenceFront);
             DefaultBoxAndWhiskerCategoryDataset dataset = new DefaultBoxAndWhiskerCategoryDataset();
+
+            System.out.println("### Initializing " + indicatorName + " Assessment\n");
+            System.out.println(Joiner.on(" & ").join(results.keySet()));
             for (String session : results.keySet()) {
                 List<Double> indicatorValues = results.get(session);
                 if (analysisArgs.printIntermediateFiles) {
@@ -99,12 +109,16 @@ public class SentinelAnalysis {
                         }
                         final Stats stats = Stats.of(indicatorValues);
                         writer.write("\n");
-                        writer.write("Average: " + stats.mean() + "\n");
-                        writer.write("Std: " + stats.populationStandardDeviation() + "\n");
+                        writer.write("Average: " + formatter.format(stats.mean()) + "\n");
+                        writer.write("Std: " + formatter.format(stats.populationStandardDeviation()) + "\n");
+
+                        System.out.print(formatter.format(stats.mean()) + " (" + formatter.format(stats.populationStandardDeviation()) + ") & ");
                     }
                 }
                 dataset.add(indicatorValues, "", session);
             }
+            System.out.println("\b\b\b\n");
+            System.out.println("### Startring Statistical Test Analysis\n");
             printStatisticalTests(results, outputDirectory, indicatorName);
             printBoxPlot(dataset, indicatorName, new File(outputDirectory + File.separator + indicatorName + ".png"), analysisArgs);
         }
@@ -120,8 +134,35 @@ public class SentinelAnalysis {
                 }
             }
         }
-        KruskalWallis.test(results, new File(outputDirectory.getAbsolutePath() + File.separator + indicatorName + "_KRUSKAL.txt"));
-        VarghaDelaney.test(results, new File(outputDirectory.getAbsolutePath() + File.separator + indicatorName + "_ES.txt"));
+
+        System.out.println("## Kruskal-Wallis Comparison");
+        HashMap<String, HashMap<String, Boolean>> kruskalResults = KruskalWallis.test(results, new File(outputDirectory.getAbsolutePath() + File.separator + indicatorName + "_KRUSKAL.txt"));
+        for (String session : kruskalResults.keySet()) {
+            System.out.println("Algorithm: " + session);
+            HashMap<String, Boolean> comparisons = kruskalResults.get(session);
+            System.out.println("\t" + Joiner.on(" & ").join(comparisons.keySet()));
+            System.out.print("\t");
+            for (String comparedTo : comparisons.keySet()) {
+                System.out.print(comparisons.get(comparedTo) + " & ");
+            }
+            System.out.println("\b\b\b\n");
+        }
+        System.out.println();
+
+        System.out.println("## Vargha-Delaney Comparison");
+        HashMap<String, HashMap<String, Double>> effectSizeResults = VarghaDelaney.test(results, new File(outputDirectory.getAbsolutePath() + File.separator + indicatorName + "_ES.txt"));
+        for (String session : effectSizeResults.keySet()) {
+            System.out.println("Algorithm: " + session);
+            HashMap<String, Double> comparisons = effectSizeResults.get(session);
+            System.out.println("\t" + Joiner.on(" & ").join(comparisons.keySet()));
+            System.out.print("\t");
+            for (String comparedTo : comparisons.keySet()) {
+                Double value = comparisons.get(comparedTo);
+                System.out.print(value + " (" + VarghaDelaney.interpretEffectSize(value) + ") & ");
+            }
+            System.out.println("\b\b\b\n");
+        }
+        System.out.println();
     }
 
     private static StandardChartTheme createChartTheme() {
