@@ -19,20 +19,50 @@ import java.util.LinkedHashSet;
 public class MultipleGroupsAnalysis {
 
     public static void main(String[] args) throws FileNotFoundException, IOException, InterruptedException, Exception {
-        String inputDir = "../systems/testing/";
-        String outputDir = "../systems/analysis/testing/";
+        String inputDir = "testing/";
+        String outputDir = "analysis/testing/";
 
         HashSet<String> systems = new LinkedHashSet<>();
         systems.add("commons-beanutils-1.8.0");
+        systems.add("commons-beanutils-1.8.1");
+        systems.add("commons-beanutils-1.8.2");
+        systems.add("commons-beanutils-1.8.3");
         systems.add("commons-codec-1.11");
+        systems.add("commons-codec-1.4");
+        systems.add("commons-codec-1.5");
+        systems.add("commons-codec-1.6");
         systems.add("commons-collections-3.0");
+        systems.add("commons-collections-3.1");
+        systems.add("commons-collections-3.2");
+        systems.add("commons-collections-3.2.1");
         systems.add("commons-lang-3.0");
+        systems.add("commons-lang-3.0.1");
+        systems.add("commons-lang-3.1");
+        systems.add("commons-lang-3.2");
         systems.add("commons-validator-1.4.0");
+        systems.add("commons-validator-1.4.1");
+        systems.add("commons-validator-1.5.0");
+        systems.add("commons-validator-1.5.1");
         systems.add("jfreechart-1.0.0");
+        systems.add("jfreechart-1.0.1");
+        systems.add("jfreechart-1.0.2");
+        systems.add("jfreechart-1.0.3");
         systems.add("jgrapht-0.9.0");
+        systems.add("jgrapht-0.9.1");
+        systems.add("jgrapht-0.9.2");
+        systems.add("jgrapht-1.0.0");
         systems.add("joda-time-2.8");
+        systems.add("joda-time-2.8.1");
+        systems.add("joda-time-2.8.2");
+        systems.add("joda-time-2.9");
         systems.add("ognl-3.1");
+        systems.add("ognl-3.1.1");
+        systems.add("ognl-3.1.2");
+        systems.add("ognl-3.1.3");
         systems.add("wire-2.0.0");
+        systems.add("wire-2.0.1");
+        systems.add("wire-2.0.2");
+        systems.add("wire-2.0.3");
 
         for (String system : systems) {
             args = new String[]{

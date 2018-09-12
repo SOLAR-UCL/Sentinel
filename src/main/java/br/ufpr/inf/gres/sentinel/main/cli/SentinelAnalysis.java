@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -51,8 +52,8 @@ import org.uma.jmetal.util.front.imp.ArrayFront;
  */
 public class SentinelAnalysis {
 
-//    public static NumberFormat formatter = new DecimalFormat("0.0000");
-    public static NumberFormat formatter = new DecimalFormat("0.00E0");
+    public static NumberFormat formatter = new DecimalFormat("#.####", DecimalFormatSymbols.getInstance(Locale.ENGLISH));
+//    public static NumberFormat formatter = new DecimalFormat("0.00E0");
 
     private static final List<Paint> COLORS = Lists.newArrayList(
             Color.BLACK,
@@ -158,7 +159,7 @@ public class SentinelAnalysis {
             System.out.print("\t");
             for (String comparedTo : comparisons.keySet()) {
                 Double value = comparisons.get(comparedTo);
-                System.out.print(value + " (" + VarghaDelaney.interpretEffectSize(value) + ") & ");
+                System.out.print(formatter.format(value) + " (" + VarghaDelaney.interpretEffectSize(value) + ") & ");
             }
             System.out.println("\b\b\b\n");
         }
