@@ -54,6 +54,24 @@ public class FacadeCache {
                 .collect(Collectors.toSet());
     }
 
+    public Collection<Double> getCachedOperatorsCPUTime(Program program) {
+        CacheHolder optional = caches.get(program);
+        if (optional != null) {
+            return optional.operatorsAvgCPUTime.values();
+        } else {
+            return Collections.emptyList();
+        }
+    }
+
+    public Collection<Double> getCachedMutantsCPUTime(Program program) {
+        CacheHolder optional = caches.get(program);
+        if (optional != null) {
+            return optional.mutantsAvgCPUTime.values();
+        } else {
+            return Collections.emptyList();
+        }
+    }
+
     public boolean isCached(Program program) {
         return getOrCreateCache(program).isCached;
     }
