@@ -8,21 +8,27 @@ import br.ufpr.inf.gres.sentinel.gson.ResultWrapper;
 import br.ufpr.inf.gres.sentinel.integration.cache.FacadeCache;
 import com.google.common.collect.ListMultimap;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.core.config.Configuration;
 import org.apache.logging.log4j.core.config.LoggerConfig;
+import org.uma.jmetal.util.SolutionListUtils;
 
 public class TimeRQ3Analysis {
 
@@ -78,15 +84,58 @@ public class TimeRQ3Analysis {
 
         FacadeCache cache = new FacadeCache("./cache", "./cache_temp");
         Set<Program> cachedPrograms = cache.getCachedPrograms();
-
         HashMap<String, Long> trainingTimes = getTrainingTimes(cachedPrograms, cache);
         HashMap<String, Long> conventionalTimes = getConventionalTimes(systems);
-
-        for (String program : trainingTimes.keySet()) {
-            Long trainingTime = trainingTimes.get(program);
+        HashMap<String, HashMap<String, Long>> strategiesTimes = getStrategiesTimes(systems, conventionalTimes);
+        List<String> strategies = new ArrayList<>();
+        strategies.add("Sentinel");
+        strategies.add("RandomMutantSampling");
+        strategies.add("RandomOperatorSelection");
+        strategies.add("SelectiveMutation");
+        
+        System.out.println("Ratio");
+        for (String program : strategiesTimes.keySet()) {
             Long conventionalTime = conventionalTimes.get(program);
+            Long trainingTime = trainingTimes.get(program);
+            System.out.println((double) trainingTime / (double) conventionalTime);
+        }
+        System.out.println("");
 
-            System.out.println(program + ": " + (trainingTime / conventionalTime));
+        System.out.println("Training");
+        for (String program : strategiesTimes.keySet()) {
+            Long trainingTime = trainingTimes.get(program);
+            Date date = new Date(trainingTime);
+            DateFormat formatter = new SimpleDateFormat("HH'h'mm'm'ss's'");
+            formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+            String dateFormatted = formatter.format(date);
+            System.out.println(program + ": " + dateFormatted);
+        }
+        System.out.println("");
+
+        System.out.println("Conventional");
+        for (String program : strategiesTimes.keySet()) {
+            Long conventionalTime = conventionalTimes.get(program);
+            Date date = new Date(conventionalTime);
+            DateFormat formatter = new SimpleDateFormat("HH'h'mm'm'ss's'");
+            formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+            String dateFormatted = formatter.format(date);
+            System.out.println(dateFormatted);
+        }
+        System.out.println("");
+
+        for (String strategy : strategies) {
+            System.out.println("Strategy: " + strategy);
+            for (String program : strategiesTimes.keySet()) {
+                HashMap<String, Long> times = strategiesTimes.get(program);
+
+                Long time = times.get(strategy);
+                Date date = new Date(time);
+                DateFormat formatter = new SimpleDateFormat("HH'h'mm'm'ss's'");
+                formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+                String dateFormatted = formatter.format(date);
+                System.out.println(dateFormatted);
+            }
+            System.out.println("");
         }
 
     }
@@ -105,7 +154,7 @@ public class TimeRQ3Analysis {
             for (Double mutTime : cachedMutantTimes) {
                 time += TimeUnit.NANOSECONDS.toMillis(mutTime.longValue());
             }
-            System.out.println("Time: " + time);
+//            System.out.println("Time: " + time);
             trainingTimes.put(cachedProgram.getName(), time);
         }
         return trainingTimes;
@@ -116,30 +165,102 @@ public class TimeRQ3Analysis {
 
         try {
             GsonUtil util = new GsonUtil(new StubProblem());
-            for (String system : systems) {
-                ListMultimap<String, ResultWrapper> resultsFromJson = util.getResultsFromJsonFiles("./testing/" + system, "**.json");
-                List<Double> times = new ArrayList<>();
-                for (Map.Entry<String, Collection<ResultWrapper>> entry : resultsFromJson.asMap().entrySet()) {
-                    Collection<ResultWrapper> results = entry.getValue();
-                    for (ResultWrapper result : results) {
-                        long executionTimeInMillis = result.getExecutionTimeInMillis();
-                        executionTimeInMillis /= 5;
+            for (Iterator<String> iterator = systems.iterator(); iterator.hasNext();) {
+                String trainingInstance = iterator.next();
+                List<String> versions = new ArrayList<>();
+                versions.add(trainingInstance);
+                for (int i = 1; i <= 3; i++) {
+                    versions.add(iterator.next());
+                }
 
-                        double divideBy = 1;
-                        for (VariableLengthSolution<Integer> solution : result.getResult()) {
-                            double objective = solution.getObjective(0);
-                            divideBy += objective;
+                List<Double> times = new ArrayList<>();
+                for (String version : versions) {
+                    ListMultimap<String, ResultWrapper> resultsFromJson = util.getResultsFromJsonFiles("./testing/" + version, "**.json");
+                    for (Map.Entry<String, Collection<ResultWrapper>> entry : resultsFromJson.asMap().entrySet()) {
+                        Collection<ResultWrapper> results = entry.getValue();
+                        for (ResultWrapper result : results) {
+                            long executionTimeInMillis = result.getExecutionTimeInMillis();
+                            executionTimeInMillis /= 5;
+
+                            double divideBy = 1;
+                            for (VariableLengthSolution<Integer> solution : result.getResult()) {
+                                double objective = solution.getObjective(0);
+                                if (objective < 1.7976931348623157E307) {
+                                    divideBy += objective;
+                                }
+                            }
+                            times.add(executionTimeInMillis / divideBy);
                         }
-                        times.add(executionTimeInMillis / divideBy);
                     }
                 }
                 long average = (long) times.stream().mapToDouble(Double::doubleValue).average().getAsDouble();
-                conventionalTimes.put(system, average);
+                conventionalTimes.put(trainingInstance, average);
             }
         } catch (IOException ex) {
         }
 
         return conventionalTimes;
+    }
+
+    private static HashMap<String, HashMap<String, Long>> getStrategiesTimes(HashSet<String> systems, HashMap<String, Long> conventionalTimes) {
+        HashMap<String, HashMap<String, Long>> strategiesTimes = new LinkedHashMap<>();
+
+        try {
+            GsonUtil util = new GsonUtil(new StubProblem());
+            for (Iterator<String> iterator = systems.iterator(); iterator.hasNext();) {
+                String trainingInstance = iterator.next();
+                List<String> versions = new ArrayList<>();
+                versions.add(trainingInstance);
+                for (int i = 1; i <= 3; i++) {
+                    versions.add(iterator.next());
+                }
+
+                {
+                    List<Double> times = new ArrayList<>();
+                    for (String version : versions) {
+                        ListMultimap<String, ResultWrapper> resultsFromJson = util.getResultsFromJsonFiles("./testing/" + version + "/" + trainingInstance, "**.json");
+                        for (Map.Entry<String, Collection<ResultWrapper>> entry : resultsFromJson.asMap().entrySet()) {
+                            Collection<ResultWrapper> results = entry.getValue();
+                            for (ResultWrapper result : results) {
+                                for (VariableLengthSolution<Integer> solution : SolutionListUtils.getNondominatedSolutions(result.getResult())) {
+                                    double objective = solution.getObjective(0);
+                                    times.add(objective * conventionalTimes.get(trainingInstance));
+                                }
+                            }
+                        }
+                    }
+                    long average = (long) times.stream().mapToDouble(Double::doubleValue).average().getAsDouble();
+                    strategiesTimes.computeIfAbsent(trainingInstance, t -> new LinkedHashMap<>()).put("Sentinel", average);
+                }
+
+                {
+                    List<String> strategies = new ArrayList<>();
+                    strategies.add("RandomMutantSampling");
+                    strategies.add("RandomOperatorSelection");
+                    strategies.add("SelectiveMutation");
+                    for (String strategy : strategies) {
+                        List<Double> times = new ArrayList<>();
+                        for (String version : versions) {
+                            ListMultimap<String, ResultWrapper> resultsFromJson = util.getResultsFromJsonFiles("./testing/" + version + "/" + strategy, "**.json");
+                            for (Map.Entry<String, Collection<ResultWrapper>> entry : resultsFromJson.asMap().entrySet()) {
+                                Collection<ResultWrapper> results = entry.getValue();
+                                for (ResultWrapper result : results) {
+                                    for (VariableLengthSolution<Integer> solution : SolutionListUtils.getNondominatedSolutions(result.getResult())) {
+                                        double objective = solution.getObjective(0);
+                                        times.add(objective * conventionalTimes.get(trainingInstance));
+                                    }
+                                }
+                            }
+                        }
+                        long average = (long) times.stream().mapToDouble(Double::doubleValue).average().getAsDouble();
+                        strategiesTimes.computeIfAbsent(trainingInstance, t -> new LinkedHashMap<>()).put(strategy, average);
+                    }
+                }
+            }
+        } catch (IOException ex) {
+        }
+
+        return strategiesTimes;
     }
 
 }
