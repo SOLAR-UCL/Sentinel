@@ -5,6 +5,8 @@ import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.problem.impl.Stu
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.representation.VariableLengthSolution;
 import br.ufpr.inf.gres.sentinel.gson.GsonUtil;
 import br.ufpr.inf.gres.sentinel.gson.ResultWrapper;
+import br.ufpr.inf.gres.sentinel.indictaors.ScoreIndicator;
+import br.ufpr.inf.gres.sentinel.indictaors.TimeIndicator;
 import br.ufpr.inf.gres.sentinel.integration.cache.FacadeCache;
 import com.google.common.collect.ListMultimap;
 import java.io.IOException;
@@ -23,6 +25,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.LoggerContext;
@@ -45,10 +48,10 @@ public class TimeRQ3Analysis {
         systems.add("commons-beanutils-1.8.1");
         systems.add("commons-beanutils-1.8.2");
         systems.add("commons-beanutils-1.8.3");
-        systems.add("commons-codec-1.11");
         systems.add("commons-codec-1.4");
         systems.add("commons-codec-1.5");
         systems.add("commons-codec-1.6");
+        systems.add("commons-codec-1.11");
         systems.add("commons-collections-3.0");
         systems.add("commons-collections-3.1");
         systems.add("commons-collections-3.2");
@@ -87,12 +90,13 @@ public class TimeRQ3Analysis {
         HashMap<String, Long> trainingTimes = getTrainingTimes(cachedPrograms, cache);
         HashMap<String, Long> conventionalTimes = getConventionalTimes(systems);
         HashMap<String, HashMap<String, Long>> strategiesTimes = getStrategiesTimes(systems, conventionalTimes);
+        HashMap<String, Long> conventionalTrainingTime = getConventionalTrainingTime(systems, conventionalTimes);
         List<String> strategies = new ArrayList<>();
         strategies.add("Sentinel");
         strategies.add("RandomMutantSampling");
         strategies.add("RandomOperatorSelection");
         strategies.add("SelectiveMutation");
-        
+
         System.out.println("Ratio");
         for (String program : strategiesTimes.keySet()) {
             Long conventionalTime = conventionalTimes.get(program);
@@ -105,7 +109,17 @@ public class TimeRQ3Analysis {
         for (String program : strategiesTimes.keySet()) {
             Long trainingTime = trainingTimes.get(program);
             Date date = new Date(trainingTime);
-            DateFormat formatter = new SimpleDateFormat("HH'h'mm'm'ss's'");
+            DateFormat formatter = new SimpleDateFormat("HH:mm:ss");
+            formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+            String dateFormatted = formatter.format(date);
+            System.out.println(program + ": " + dateFormatted);
+        }
+        System.out.println("");
+        System.out.println("Conventional Training");
+        for (String program : conventionalTrainingTime.keySet()) {
+            Long trainingTime = conventionalTrainingTime.get(program);
+            Date date = new Date(trainingTime);
+            DateFormat formatter = new SimpleDateFormat("HH:mm:ss");
             formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
             String dateFormatted = formatter.format(date);
             System.out.println(program + ": " + dateFormatted);
@@ -116,7 +130,7 @@ public class TimeRQ3Analysis {
         for (String program : strategiesTimes.keySet()) {
             Long conventionalTime = conventionalTimes.get(program);
             Date date = new Date(conventionalTime);
-            DateFormat formatter = new SimpleDateFormat("HH'h'mm'm'ss's'");
+            DateFormat formatter = new SimpleDateFormat("HH:mm:ss");
             formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
             String dateFormatted = formatter.format(date);
             System.out.println(dateFormatted);
@@ -130,14 +144,13 @@ public class TimeRQ3Analysis {
 
                 Long time = times.get(strategy);
                 Date date = new Date(time);
-                DateFormat formatter = new SimpleDateFormat("HH'h'mm'm'ss's'");
+                DateFormat formatter = new SimpleDateFormat("HH:mm:ss");
                 formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
                 String dateFormatted = formatter.format(date);
                 System.out.println(dateFormatted);
             }
             System.out.println("");
         }
-
     }
 
     private static HashMap<String, Long> getTrainingTimes(Set<Program> cachedPrograms, FacadeCache cache) {
@@ -255,6 +268,50 @@ public class TimeRQ3Analysis {
                         long average = (long) times.stream().mapToDouble(Double::doubleValue).average().getAsDouble();
                         strategiesTimes.computeIfAbsent(trainingInstance, t -> new LinkedHashMap<>()).put(strategy, average);
                     }
+                }
+            }
+        } catch (IOException ex) {
+        }
+
+        return strategiesTimes;
+    }
+
+    private static HashMap<String, Long> getConventionalTrainingTime(HashSet<String> systems, HashMap<String, Long> conventionalTimes) {
+        HashMap<String, Long> strategiesTimes = new LinkedHashMap<>();
+
+        try {
+            GsonUtil util = new GsonUtil(new StubProblem());
+            for (Iterator<String> iterator = systems.iterator(); iterator.hasNext();) {
+                String trainingInstance = iterator.next();
+                List<String> versions = new ArrayList<>();
+                versions.add(trainingInstance);
+                for (int i = 1; i <= 3; i++) {
+                    versions.add(iterator.next());
+                }
+
+                {
+                    List<String> strategies = new ArrayList<>();
+                    strategies.add("RandomMutantSampling");
+                    strategies.add("RandomOperatorSelection");
+                    strategies.add("SelectiveMutation");
+                    List<Double> times = new ArrayList<>();
+                    for (String strategy : strategies) {
+                        ListMultimap<String, ResultWrapper> resultsFromJson = util.getResultsFromJsonFiles("./testing/" + trainingInstance + "/" + strategy, "**.json");
+                        for (Map.Entry<String, Collection<ResultWrapper>> entry : resultsFromJson.asMap().entrySet()) {
+                            Collection<ResultWrapper> results = entry.getValue();
+                            for (ResultWrapper result : results) {
+                                for (VariableLengthSolution<Integer> solution : SolutionListUtils.getNondominatedSolutions(result.getResult().stream()
+                                        .filter(solution
+                                                -> solution.getObjective(0) > 0.0 && solution.getObjective(0) <= 1.0
+                                        && Math.abs(solution.getObjective(1)) > 0.0 && Math.abs(solution.getObjective(1)) <= 1.0)
+                                        .collect(Collectors.toList()))) {
+                                    double objective = solution.getObjective(0);
+                                    times.add(objective * conventionalTimes.get(trainingInstance));
+                                }
+                            }
+                        }
+                    }
+                    strategiesTimes.put(trainingInstance, (long) times.stream().mapToDouble(value -> value).sum() / 30);
                 }
             }
         } catch (IOException ex) {

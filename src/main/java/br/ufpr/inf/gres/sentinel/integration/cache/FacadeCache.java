@@ -53,6 +53,24 @@ public class FacadeCache {
                 .map(cache -> cache.program)
                 .collect(Collectors.toSet());
     }
+    
+    public Collection<Operator> getOperators(Program program){
+        CacheHolder optional = caches.get(program);
+        if (optional != null) {
+            return optional.operators.values();
+        } else {
+            return Collections.emptyList();
+        }
+    }
+    
+    public Collection<Mutant> getMutants(Program program){
+        CacheHolder optional = caches.get(program);
+        if (optional != null) {
+            return optional.mutants.values();
+        } else {
+            return Collections.emptyList();
+        }
+    }
 
     public Collection<Double> getCachedOperatorsCPUTime(Program program) {
         CacheHolder optional = caches.get(program);

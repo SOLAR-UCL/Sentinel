@@ -22,6 +22,21 @@ public class IndicatorFactory {
 
     /**
      *
+     */
+    public static final String SCORE_TIME_RATIO = "SCORE_TIME_RATIO";
+
+    /**
+     *
+     */
+    public static final String SCORE = "SCORE";
+
+    /**
+     *
+     */
+    public static final String TIME = "TIME";
+
+    /**
+     *
      * @param indicatorName
      * @param referenceFront
      * @return
@@ -34,6 +49,12 @@ public class IndicatorFactory {
                 return hypervolumeCalculator;
             case IGD:
                 return new InvertedGenerationalDistance(referenceFront);
+            case SCORE_TIME_RATIO:
+                return new ScoreTimeRatio();
+            case SCORE:
+                return new ScoreIndicator();
+            case TIME:
+                return new TimeIndicator();
             default:
                 throw new IllegalArgumentException("Unknown or unsuported indicator: " + indicatorName);
         }

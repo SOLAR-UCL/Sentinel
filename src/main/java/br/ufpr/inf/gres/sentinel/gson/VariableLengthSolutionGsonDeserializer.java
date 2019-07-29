@@ -53,6 +53,11 @@ public class VariableLengthSolutionGsonDeserializer implements JsonDeserializer<
             }
         }
 
+        JsonElement name = jsonObject.get("name");
+        if (name != null) {
+            solution.setAttribute("Name", name.getAsString());
+        }
+        
         JsonElement evaluation = jsonObject.get("evaluation");
         if (evaluation != null) {
             solution.setAttribute("Evaluation Found", evaluation.getAsInt());

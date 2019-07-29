@@ -5,6 +5,8 @@ import br.ufpr.inf.gres.sentinel.grammaticalevolution.algorithm.representation.V
 import br.ufpr.inf.gres.sentinel.gson.GsonUtil;
 import br.ufpr.inf.gres.sentinel.gson.ResultWrapper;
 import br.ufpr.inf.gres.sentinel.indictaors.IndicatorFactory;
+import br.ufpr.inf.gres.sentinel.indictaors.ScoreIndicator;
+import br.ufpr.inf.gres.sentinel.indictaors.TimeIndicator;
 import br.ufpr.inf.gres.sentinel.main.cli.args.AnalysisArgs;
 import br.ufpr.inf.gres.sentinel.statistics.KruskalWallis;
 import br.ufpr.inf.gres.sentinel.statistics.VarghaDelaney;
@@ -52,7 +54,7 @@ import org.uma.jmetal.util.front.imp.ArrayFront;
  */
 public class SentinelAnalysis {
 
-    public static NumberFormat formatter = new DecimalFormat("#.####", DecimalFormatSymbols.getInstance(Locale.ENGLISH));
+    public static NumberFormat formatter = new DecimalFormat("#.##", DecimalFormatSymbols.getInstance(Locale.ENGLISH));
 //    public static NumberFormat formatter = new DecimalFormat("0.00E0");
 
     private static final List<Paint> COLORS = Lists.newArrayList(
@@ -296,6 +298,17 @@ public class SentinelAnalysis {
                 result = getNonDominatedSolutions(allResults);
             }
 
+            result = result.stream()
+                    .filter(solution
+                            -> solution.getObjective(0) > 0.0 && solution.getObjective(0) <= 1.0
+                    && Math.abs(solution.getObjective(1)) > 0.0 && Math.abs(solution.getObjective(1)) <= 1.0)
+                    .collect(Collectors.toList());
+            for (VariableLengthSolution<Integer> solution : result) {
+                for (int i = 0; i < solution.getNumberOfObjectives(); i++) {
+                    solution.setObjective(i, Math.abs(solution.getObjective(i)));
+                }
+            }
+
             String outputSession = outputDirectory.getPath() + File.separator + key + File.separator;
             Files.createDirectories(Paths.get(outputSession));
 
@@ -306,6 +319,22 @@ public class SentinelAnalysis {
                     }
                 }
             }
+
+            switch (key) {
+                case "RandomMutantSampling":
+                    key = "RMS";
+                    break;
+                case "RandomOperatorSelection":
+                    key = "ROS";
+                    break;
+                case "SelectiveMutation":
+                    key = "SM";
+                    break;
+                default:
+                    key = "Sentinel Strategies";
+                    break;
+            }
+
             XYSeries sessionSeries = createNonDominatedSeries(key, result);
             allFrontsPlot.addSeries(sessionSeries);
 
