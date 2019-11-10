@@ -9,8 +9,8 @@ import br.ufpr.inf.gres.sentinel.integration.IntegrationFacade;
 import br.ufpr.inf.gres.sentinel.strategy.Strategy;
 import com.google.common.base.Stopwatch;
 import com.google.common.collect.ArrayListMultimap;
+import com.sun.management.OperatingSystemMXBean;
 import java.lang.management.ManagementFactory;
-import java.lang.management.ThreadMXBean;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -22,7 +22,7 @@ import java.util.function.ToDoubleFunction;
  */
 public class ConstrainedObjectiveFunctionObserver implements MutationStrategyGenerationObserver {
 
-    protected ThreadMXBean threadBean;
+    protected OperatingSystemMXBean systemBean;
 
     protected VariableLengthSolution<Integer> solution;
     protected ArrayListMultimap<Program, Collection<Mutant>> allMutants;
@@ -38,7 +38,7 @@ public class ConstrainedObjectiveFunctionObserver implements MutationStrategyGen
     protected Collection<Mutant> mutants;
 
     public ConstrainedObjectiveFunctionObserver() {
-        this.threadBean = ManagementFactory.getThreadMXBean();
+        this.systemBean = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
     }
 
     @Override
@@ -70,7 +70,7 @@ public class ConstrainedObjectiveFunctionObserver implements MutationStrategyGen
     @Override
     public void notifyRunStart(int runNumber) {
         this.stopwatch = Stopwatch.createStarted();
-        this.currentThreadCpuTime = this.threadBean.getCurrentThreadCpuTime();
+        this.currentThreadCpuTime = this.systemBean.getProcessCpuTime();
     }
 
     @Override
@@ -81,7 +81,7 @@ public class ConstrainedObjectiveFunctionObserver implements MutationStrategyGen
     @Override
     public void notifyRunEnd() {
         this.stopwatch.stop();
-        this.currentThreadCpuTime = this.threadBean.getCurrentThreadCpuTime() - this.currentThreadCpuTime;
+        this.currentThreadCpuTime = this.systemBean.getProcessCpuTime() - this.currentThreadCpuTime;
 
         this.nanoTimes.put(program, this.stopwatch.elapsed(TimeUnit.NANOSECONDS));
         this.nanoCPUTimes.put(program, this.currentThreadCpuTime);

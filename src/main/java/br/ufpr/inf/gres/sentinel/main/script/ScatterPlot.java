@@ -98,7 +98,7 @@ public class ScatterPlot {
                     for (VariableLengthSolution<Integer> solution : entry.getValue().getResult()) {
                         String name = solution.getAttribute("Name").toString();
                         String percentage = name.substring(name.indexOf("_") + 1);
-                        String rmsRow = "0." + percentage + " " + solution.getObjective(0) + "\n";
+                        String rmsRow = name + " 0." + percentage + " " + solution.getObjective(0) + " " + solution.getObjective(1) + "\n";
                         rmsWritter.append(rmsRow);
                         allRMSWritter.append(rmsRow);
                     }
@@ -120,19 +120,19 @@ public class ScatterPlot {
                     for (VariableLengthSolution<Integer> solution : result) {
                         String name = solution.getAttribute("Name").toString();
                         String percentage = name.substring(name.indexOf("_") + 1);
-                        String smValue = ((double) cachedOperators.stream().skip(Integer.valueOf(percentage)).mapToDouble(op -> op.getGeneratedMutants().size()).sum() / (double) mutantsSize) + " " + solution.getObjective(0) + "\n";
+                        String smValue = name + " " + ((double) cachedOperators.stream().skip(Integer.valueOf(percentage)).mapToDouble(op -> op.getGeneratedMutants().size()).sum() / (double) mutantsSize) + " " + solution.getObjective(0) + " " + solution.getObjective(1) + "\n";
                         smWritter.append(smValue);
                         allSMWritter.append(smValue);
                     }
                 }
                 smWritter.close();
                 System.out.println("set output 'plots/scatter/" + system + ".png'");
-                System.out.println("plot '" + system + "_RMS.dat' pt 12 title 'Random Mutant Sampling', '" + system + "_SM.dat' pt 1 title 'Selective Mutation', f(x) dt 5 linecolor black title 'Theoretical Fit'");
+                System.out.println("plot '" + system + "_RMS.dat' using 2:3 pt 12 title 'Random Mutant Sampling', '" + system + "_SM.dat' using 2:3 pt 1 title 'Selective Mutation', f(x) dt 5 linecolor black title 'Theoretical Fit'");
             }
             allRMSWritter.close();
             allSMWritter.close();
             System.out.println("set output 'plots/scatter/ALL.png'");
-            System.out.println("plot 'ALL_RMS.dat' pt 12 title 'Random Mutant Sampling', 'ALL_SM.dat' pt 12 title 'Selective Mutation', f(x) dt 5 linecolor black title 'Theoretical Fit'");
+            System.out.println("plot 'ALL_RMS.dat' using 2:3 pt 12 title 'Random Mutant Sampling', 'ALL_SM.dat' using 2:3 pt 12 title 'Selective Mutation', f(x) dt 5 linecolor black title 'Theoretical Fit'");
         } catch (IOException ex) {
             Logger.getLogger(ScatterPlot.class.getName()).log(Level.SEVERE, null, ex);
         }

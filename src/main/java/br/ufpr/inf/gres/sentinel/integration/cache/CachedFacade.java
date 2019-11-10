@@ -6,8 +6,8 @@ import br.ufpr.inf.gres.sentinel.base.mutation.Program;
 import br.ufpr.inf.gres.sentinel.integration.IntegrationFacade;
 import br.ufpr.inf.gres.sentinel.integration.cache.observer.CacheFacadeObserver;
 import com.google.common.base.Stopwatch;
+import com.sun.management.OperatingSystemMXBean;
 import java.lang.management.ManagementFactory;
-import java.lang.management.ThreadMXBean;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
@@ -124,12 +124,12 @@ public class CachedFacade extends IntegrationFacade {
         if (operator != null) {
             if (!cache.isCached(program)) {
                 Stopwatch stopWatch = Stopwatch.createStarted();
-                ThreadMXBean threadBean = ManagementFactory.getThreadMXBean();
-                long cpuTime = threadBean.getCurrentThreadCpuTime();
+                OperatingSystemMXBean systemBean = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
+                long cpuTime = systemBean.getProcessCpuTime();
 
                 LinkedHashSet<Mutant> generatedMutants = this.facade.executeOperator(operator, program);
 
-                cpuTime = threadBean.getCurrentThreadCpuTime() - cpuTime;
+                cpuTime = systemBean.getProcessCpuTime() - cpuTime;
                 stopWatch.stop();
                 long executionTime = stopWatch.elapsed(TimeUnit.NANOSECONDS);
 
@@ -164,12 +164,12 @@ public class CachedFacade extends IntegrationFacade {
         if (mutantToExecute != null) {
             if (!cache.isCached(program)) {
                 Stopwatch stopWatch = Stopwatch.createStarted();
-                ThreadMXBean threadBean = ManagementFactory.getThreadMXBean();
-                long cpuTime = threadBean.getCurrentThreadCpuTime();
+                OperatingSystemMXBean systembean = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
+                long cpuTime = systembean.getProcessCpuTime();
 
                 this.facade.executeMutant(mutantToExecute, program);
 
-                cpuTime = threadBean.getCurrentThreadCpuTime() - cpuTime;
+                cpuTime = systembean.getProcessCpuTime() - cpuTime;
                 stopWatch.stop();
                 long executionTime = stopWatch.elapsed(TimeUnit.NANOSECONDS);
 

@@ -69,7 +69,7 @@ public class SentinelTest {
     }
 
     @Test
-//    @Ignore
+    @Ignore
     public void testSentinelAnalysis() throws Exception {
         String[] args = new String[]{"analyse",
             "--plotWidth", "800",

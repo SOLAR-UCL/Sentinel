@@ -163,6 +163,7 @@ public class PITFacade extends IntegrationFacade {
         reportOptions.setShouldCreateTimestampedReports(false);
         reportOptions.setIncludeLaunchClasspath(true);
         reportOptions.setVerbose(false);
+        reportOptions.addChildJVMArgs(Lists.newArrayList("-Xint"));
 
         return reportOptions;
     }
@@ -206,8 +207,8 @@ public class PITFacade extends IntegrationFacade {
                         field.set(unit, fieldValue);
                     }
                     LOGGER.debug("Starting mutants execution.");
-                    Stopwatch stopwatch = Stopwatch.createStarted();
                     EntryPointImpl entryPoint = this.getOrCreateEntryPoint(program);
+                    Stopwatch stopwatch = Stopwatch.createStarted();
                     Collection<MutationResult> result = entryPoint.executeMutants(null, reportOptions, new SettingsFactory(reportOptions, plugins), new HashMap<>(), new ArrayList<>(unitsToSubmit));
                     stopwatch.stop();
                     LOGGER.debug("Mutants execution finished in " + DurationFormatUtils.formatDurationHMS(stopwatch.elapsed(TimeUnit.MILLISECONDS)));

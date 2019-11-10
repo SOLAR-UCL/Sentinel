@@ -4,6 +4,7 @@ import br.ufpr.inf.gres.sentinel.base.mutation.Mutant;
 import br.ufpr.inf.gres.sentinel.base.mutation.Operator;
 import br.ufpr.inf.gres.sentinel.base.mutation.Program;
 import br.ufpr.inf.gres.sentinel.integration.IntegrationFacade;
+import br.ufpr.inf.gres.sentinel.integration.cache.CachedFacadeTest;
 import br.ufpr.inf.gres.sentinel.util.TestPrograms;
 import com.google.common.base.Stopwatch;
 import java.io.File;
@@ -11,6 +12,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import static org.junit.Assert.*;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
@@ -21,6 +24,8 @@ import org.junit.Test;
  * @author Giovani Guizzo
  */
 public class PITFacadeTest {
+    
+    private static final Logger LOGGER = LogManager.getLogger(PITFacadeTest.class);
 
     private static PITFacade facade;
     private static Program programUnderTest;
@@ -34,6 +39,7 @@ public class PITFacadeTest {
     @Test
     @Ignore
     public void testJodaExecution() {
+        LOGGER.debug("Testing method: testJodaExecution");
         PITFacade facade = new PITFacade("training");
         Program programUnderTest = facade.instantiateProgram("joda-time-2.8;src/main/java;org.joda.time.*;org.joda.time.TestAll;target/classes;target/test-classes;joda-convert-1.2.jar");
         IntegrationFacade.setIntegrationFacade(facade);
@@ -51,6 +57,7 @@ public class PITFacadeTest {
 
     @Test
     public void testInitializeProgram() {
+        LOGGER.debug("Testing method: testInitializeProgram");
         PITFacade facade = new PITFacade(System.getProperty("user.dir"));
         IntegrationFacade.setIntegrationFacade(facade);
 
@@ -65,6 +72,7 @@ public class PITFacadeTest {
 
     @Test
     public void testExecuteMutant() {
+        LOGGER.debug("Testing method: testExecuteMutant");
         IntegrationFacade.setIntegrationFacade(facade);
 
         List<Mutant> mutants = new ArrayList<>(facade.executeOperators(facade.getAllOperators(), programUnderTest));
@@ -84,6 +92,7 @@ public class PITFacadeTest {
 
     @Test
     public void testExecuteMutants() {
+        LOGGER.debug("Testing method: testExecuteMutants");
         IntegrationFacade.setIntegrationFacade(facade);
 
         Collection<Mutant> mutants = facade.executeOperators(facade.getAllOperators(), programUnderTest);
@@ -96,6 +105,7 @@ public class PITFacadeTest {
 
     @Test
     public void testExecuteOperator() {
+        LOGGER.debug("Testing method: testExecuteOperator");
         IntegrationFacade.setIntegrationFacade(facade);
         List<Operator> allOperators = new ArrayList<>(facade.getAllOperators());
 
@@ -109,6 +119,7 @@ public class PITFacadeTest {
 
     @Test
     public void testExecuteOperator2() {
+        LOGGER.debug("Testing method: testExecuteOperator2");
         IntegrationFacade.setIntegrationFacade(facade);
 
         Collection<Mutant> mutants = facade.executeOperator(new ArrayList<>(facade.getAllOperators()).get(6), programUnderTest);
@@ -118,6 +129,7 @@ public class PITFacadeTest {
 
     @Test
     public void testExecuteOperators() {
+        LOGGER.debug("Testing method: testExecuteOperators");
         IntegrationFacade.setIntegrationFacade(facade);
 
         Collection<Mutant> mutants = facade.executeOperators(facade.getAllOperators(), programUnderTest);
@@ -128,6 +140,7 @@ public class PITFacadeTest {
 
     @Test
     public void testExecuteOperators2() {
+        LOGGER.debug("Testing method: testExecuteOperators2");
         IntegrationFacade.setIntegrationFacade(facade);
 
         Collection<Mutant> mutants = facade.executeOperators(new ArrayList<>(), programUnderTest);
@@ -137,6 +150,7 @@ public class PITFacadeTest {
 
     @Test
     public void testExecuteOperators3() {
+        LOGGER.debug("Testing method: testExecuteOperators3");
         IntegrationFacade.setIntegrationFacade(facade);
 
         Collection<Mutant> mutants = facade.executeOperators(facade.getAllOperators(), programUnderTest);
@@ -148,6 +162,7 @@ public class PITFacadeTest {
 
     @Test(expected = Exception.class)
     public void testExecuteOperators4() {
+        LOGGER.debug("Testing method: testExecuteOperators4");
         IntegrationFacade.setIntegrationFacade(facade);
         Program programUnderTest = new Program("unknown.Program", new File("unknown" + File.separator + "Program.java"));
 
@@ -158,6 +173,7 @@ public class PITFacadeTest {
 
     @Test
     public void testGetAllOperators() {
+        LOGGER.debug("Testing method: testGetAllOperators");
         Collection<Operator> allOperators = facade.getAllOperators();
         assertNotNull(allOperators);
         assertEquals(7, allOperators.size());
@@ -165,6 +181,7 @@ public class PITFacadeTest {
 
     @Test
     public void testInstantiateProgram() {
+        LOGGER.debug("Testing method: testInstantiateProgram");
         Program program = facade.instantiateProgram("Triangle;;br.ufpr.inf.gres.TriTyp*;br.ufpr.inf.gres.TriTypTest*;;br");
         assertNotNull(program);
         assertEquals("Triangle", program.getName());
@@ -177,6 +194,7 @@ public class PITFacadeTest {
 
     @Test
     public void testInstantiateProgram2() {
+        LOGGER.debug("Testing method: testInstantiateProgram2");
         Program program = facade.instantiateProgram("Triangle;;br.ufpr.inf.gres.TriTyp*;br.ufpr.inf.gres.TriTypTest*;test.**.testagain,exclude.**.TestingClass,test");
         assertNotNull(program);
         assertEquals("Triangle", program.getName());
@@ -189,6 +207,7 @@ public class PITFacadeTest {
 
     @Test
     public void testInstantiateProgram5() {
+        LOGGER.debug("Testing method: testInstantiateProgram5");
         Program program = facade.instantiateProgram("Triangle;;br.ufpr.inf.gres.TriTyp*;br.ufpr.inf.gres.TriTypTest*;test.**.testagain,exclude.**.TestingClass,test;src/test/resources");
         assertNotNull(program);
         assertEquals("Triangle", program.getName());
@@ -205,11 +224,13 @@ public class PITFacadeTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testInstantiateProgram3() {
+        LOGGER.debug("Testing method: testInstantiateProgram3");
         Program program = facade.instantiateProgram("Triangle;;br.ufpr.inf.gres.TriTyp*");
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testInstantiateProgram4() {
+        LOGGER.debug("Testing method: testInstantiateProgram4");
         Program program = facade.instantiateProgram("Triangle;;br.ufpr.inf.gres.TriTyp*;test");
     }
 

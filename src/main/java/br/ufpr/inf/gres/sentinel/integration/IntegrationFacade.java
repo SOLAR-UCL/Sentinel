@@ -12,7 +12,7 @@ import com.google.common.collect.Multimaps;
 import java.io.File;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
-import java.lang.management.ThreadMXBean;
+import com.sun.management.OperatingSystemMXBean;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -197,17 +197,17 @@ public abstract class IntegrationFacade {
      * @param repetitions
      */
     protected void runConventionalStrategy(Program program, int repetitions) {
-        ThreadMXBean threadBean = ManagementFactory.getThreadMXBean();
+        OperatingSystemMXBean systemBean = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
         LinkedHashSet<Mutant> allMutants = new LinkedHashSet<>();
         for (int i = 0; i < repetitions; i++) {
             Stopwatch stopwatch = Stopwatch.createStarted();
-            long currentThreadCpuTime = threadBean.getCurrentThreadCpuTime();
+            long cpuTime = systemBean.getProcessCpuTime();
             Collection<Operator> operators = this.getAllOperators();
             allMutants = this.executeOperators(operators, program);
             this.executeMutants(allMutants, program);
-            currentThreadCpuTime = threadBean.getCurrentThreadCpuTime() - currentThreadCpuTime;
+            cpuTime = systemBean.getProcessCpuTime() - cpuTime;
             stopwatch.stop();
-            this.conventionalExecutionCPUTimes.put(program, currentThreadCpuTime);
+            this.conventionalExecutionCPUTimes.put(program, cpuTime);
             this.conventionalExecutionTimes.put(program, stopwatch.elapsed(TimeUnit.NANOSECONDS));
         }
         this.conventionalMutants.putAll(program, allMutants);

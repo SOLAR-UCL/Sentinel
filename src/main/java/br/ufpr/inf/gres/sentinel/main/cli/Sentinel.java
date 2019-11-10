@@ -1,6 +1,7 @@
 package br.ufpr.inf.gres.sentinel.main.cli;
 
 import br.ufpr.inf.gres.sentinel.main.cli.args.AnalysisArgs;
+import br.ufpr.inf.gres.sentinel.main.cli.args.BenchmarkArgs;
 import br.ufpr.inf.gres.sentinel.main.cli.args.CacheArgs;
 import br.ufpr.inf.gres.sentinel.main.cli.args.MainArgs;
 import br.ufpr.inf.gres.sentinel.main.cli.args.TestingArgs;
@@ -25,12 +26,14 @@ public class Sentinel {
         CacheArgs cacheArgs = new CacheArgs();
         TestingArgs testingArgs = new TestingArgs();
         AnalysisArgs analysisArgs = new AnalysisArgs();
+        BenchmarkArgs benchmarkArgs = new BenchmarkArgs();
 
         JCommander commander = new JCommander(mainArgs);
         commander.addCommand(trainingArgs);
         commander.addCommand(testingArgs);
         commander.addCommand(analysisArgs);
         commander.addCommand(cacheArgs);
+        commander.addCommand(benchmarkArgs);
         commander.setProgramName("Sentinel");
 
         try {
@@ -43,7 +46,7 @@ public class Sentinel {
 
         if (mainArgs.help) {
             commander.usage();
-        } else if (trainingArgs.help || testingArgs.help || analysisArgs.help || cacheArgs.help) {
+        } else if (trainingArgs.help || testingArgs.help || analysisArgs.help || cacheArgs.help || benchmarkArgs.help) {
             commander.usage(commander.getParsedCommand());
         } else {
 
@@ -61,6 +64,8 @@ public class Sentinel {
                     SentinelTesting.test(testingArgs, args);
                 } else if (chosenCommand instanceof AnalysisArgs) {
                     SentinelAnalysis.analyse(analysisArgs, args);
+                }  else if (chosenCommand instanceof BenchmarkArgs) {
+                    SentinelBenchmarking.benchmark(benchmarkArgs, args);
                 }
             }
         }
