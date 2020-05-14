@@ -83,13 +83,6 @@ public class SentinelTesting {
         File outputDirectory = new File(testingArgs.workingDirectory + File.separator + testingArgs.outputDirectory);
         outputDirectory.mkdirs();
 
-//        LOGGER.info("Starting Sentinel executions. There are " + resultsFromJson.values().stream().mapToInt((resultWrapper) -> resultWrapper.getResult().size()).sum() + " Sentinel startegies to run.");
-//        for (ResultWrapper trainingResult : resultsFromJson.values()) {
-//            LOGGER.debug("Running " + trainingResult.getSession() + " " + trainingResult.getRunNumber());
-//            ResultWrapper testResult = runSentinelSolutions(trainingResult, problem, testingArgs);
-//            result.put(testResult.getSession(), testResult);
-//            LOGGER.debug("Execution finished in " + DurationFormatUtils.formatDurationHMS(testResult.getExecutionTimeInMillis()));
-//        }
         Set<String> sessions = resultsFromJson.keySet();
         LOGGER.info("Found " + sessions.size() + " sessions: " + sessions.toString());
         for (String session : sessions) {

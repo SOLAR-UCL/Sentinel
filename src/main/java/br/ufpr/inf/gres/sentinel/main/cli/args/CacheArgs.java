@@ -70,7 +70,7 @@ public class CacheArgs {
      */
     @Parameter(names = {"--trainingPrograms", "-tp"},
             description = "Training programs for the training phase. Each String represents one training program with the following pattern: "
-            + "<name>;<sourceDir>;<targetClassesGlob>;<targetTestsGlob>;<classpathItems>"
+            + "<name>;<sourceDir>;<targetClassesGlob>;<targetTestsGlob>;<excludedTestClassesGlob>;<classpathItems>"
             + ". name is the program's name (for result purposes), sourceDir represents the source directory for the program, "
             + "targetClassesGlob includes classes to be mutated, targetTestsGlob includes classes to test the software, and classpathItems is "
             + "used to add dependencies of the program in the Java classpath. The classpath can have as many items as necessary. The classpath "

@@ -1,7 +1,0 @@
-#! extends object-oriented_unit.bnf
-
-<tipoExecucaoOperadores> ::= SUPER | "Por Unidade" <quantidade> | "Por Interação" <quantidade>
-
-<agruparOperadores> ::= SUPER | "Por Contexto"
-
-<agruparMutantes> ::= SUPER | "Unidade"

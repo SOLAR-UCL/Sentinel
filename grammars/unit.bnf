@@ -1,5 +1,0 @@
-#! extends default_grammar.bnf
-
-<tipoExecucaoOperadores> ::= SUPER | "Por Sub-Rotina" <quantidade>
-
-<agruparMutantes> ::= SUPER | "Sub-Rotina"
