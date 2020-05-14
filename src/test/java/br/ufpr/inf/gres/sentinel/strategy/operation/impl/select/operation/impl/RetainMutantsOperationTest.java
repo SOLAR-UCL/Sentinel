@@ -10,22 +10,22 @@ import static org.junit.Assert.assertEquals;
 /**
  * @author Giovani Guizzo
  */
-public class SelectMutantsOperationTest {
+public class RetainMutantsOperationTest {
 
-    public SelectMutantsOperationTest() {
+    public RetainMutantsOperationTest() {
     }
 
     @Test
     public void testConstructor() {
         SelectionOperation<Mutant> selectionOperation = new SelectionOperation<>();
-        SelectMutantsOperation operation = new SelectMutantsOperation(selectionOperation);
+        RetainMutantsOperation operation = new RetainMutantsOperation(selectionOperation);
         assertEquals(selectionOperation, operation.getSelection());
     }
 
     @Test
     public void testObtainList() {
         Solution solution = new Solution();
-        SelectMutantsOperation operation = new SelectMutantsOperation();
+        RetainMutantsOperation operation = new RetainMutantsOperation();
         assertEquals(solution.getMutants(), operation.obtainList(solution));
     }
 

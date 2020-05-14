@@ -12,7 +12,7 @@ import br.ufpr.inf.gres.sentinel.strategy.operation.Operation;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.discard.impl.DiscardOperatorsOperation;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.execute.ExecuteOperatorsOperation;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.execute.type.OperatorExecutionType;
-import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.operation.impl.SelectOperatorsOperation;
+import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.operation.impl.RetainOperatorsOperation;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.selection.SelectionOperation;
 import com.google.common.base.Preconditions;
 import java.util.Collection;
@@ -47,12 +47,12 @@ public class OperatorOperationFactory implements Factory<Option> {
         Rule firstRule = rules.next();
         Operation<Solution, Collection<Mutant>> mainOperation;
         switch (firstRule.getName()) {
-            case TerminalRuleType.SELECT_OPERATORS: {
+            case TerminalRuleType.RETAIN_OPERATORS: {
                 Preconditions.checkArgument(rules.hasNext(), "Malformed grammar option: " + node.toString());
                 Rule nextRule = rules.next();
                 SelectionOperation<Operator> selectionOperation = (SelectionOperation<Operator>) FactoryFlyweight.getNonTerminalFactory()
                         .createOperation(nextRule, integerIterator);
-                mainOperation = new SelectOperatorsOperation(selectionOperation);
+                mainOperation = new RetainOperatorsOperation(selectionOperation);
                 break;
             }
             case TerminalRuleType.DISCARD_OPERATORS: {

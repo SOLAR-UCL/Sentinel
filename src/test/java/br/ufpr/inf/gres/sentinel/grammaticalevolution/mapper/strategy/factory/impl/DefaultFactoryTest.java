@@ -8,8 +8,8 @@ import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.No
 import br.ufpr.inf.gres.sentinel.strategy.operation.Operation;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.defaults.NewBranchOperation;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.defaults.StoreMutantsOperation;
-import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.operation.impl.SelectMutantsOperation;
-import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.operation.impl.SelectOperatorsOperation;
+import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.operation.impl.RetainMutantsOperation;
+import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.operation.impl.RetainOperatorsOperation;
 import com.google.common.collect.Lists;
 import java.io.IOException;
 import java.util.Iterator;
@@ -81,7 +81,7 @@ public class DefaultFactoryTest {
         Iterator<Integer> iterator = Lists.newArrayList(0, 0, 0, 0, 0, 1, 0, 3).iterator();
         Operation operation = FactoryFlyweight.getNonTerminalFactory().createOperation(testingRule, iterator);
         assertNotNull(operation);
-        assertTrue(operation instanceof SelectOperatorsOperation);
+        assertTrue(operation instanceof RetainOperatorsOperation);
     }
 
     /**
@@ -92,6 +92,6 @@ public class DefaultFactoryTest {
         Iterator<Integer> iterator = Lists.newArrayList(1, 0, 0, 0, 0, 1, 0, 3).iterator();
         Operation operation = FactoryFlyweight.getNonTerminalFactory().createOperation(testingRule, iterator);
         assertNotNull(operation);
-        assertTrue(operation instanceof SelectMutantsOperation);
+        assertTrue(operation instanceof RetainMutantsOperation);
     }
 }

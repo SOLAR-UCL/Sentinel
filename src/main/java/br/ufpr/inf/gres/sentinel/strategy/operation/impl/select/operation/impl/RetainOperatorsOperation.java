@@ -10,21 +10,21 @@ import java.util.Collection;
 /**
  * @author Giovani Guizzo
  */
-public class SelectOperatorsOperation extends AbstractSelectOperation<Operator> {
+public class RetainOperatorsOperation extends AbstractSelectOperation<Operator> {
 
     /**
      *
      */
-    public SelectOperatorsOperation() {
-        super(TerminalRuleType.SELECT_OPERATORS);
+    public RetainOperatorsOperation() {
+        super(TerminalRuleType.RETAIN_OPERATORS);
     }
 
     /**
      *
      * @param selection
      */
-    public SelectOperatorsOperation(SelectionOperation<Operator> selection) {
-        super(TerminalRuleType.SELECT_OPERATORS, selection);
+    public RetainOperatorsOperation(SelectionOperation<Operator> selection) {
+        super(TerminalRuleType.RETAIN_OPERATORS, selection);
     }
 
     /**

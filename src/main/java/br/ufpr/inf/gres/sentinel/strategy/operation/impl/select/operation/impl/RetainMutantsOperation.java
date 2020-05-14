@@ -10,21 +10,21 @@ import java.util.Collection;
 /**
  * @author Giovani Guizzo
  */
-public class SelectMutantsOperation extends AbstractSelectOperation<Mutant> {
+public class RetainMutantsOperation extends AbstractSelectOperation<Mutant> {
 
     /**
      *
      */
-    public SelectMutantsOperation() {
-        super(TerminalRuleType.SELECT_MUTANTS);
+    public RetainMutantsOperation() {
+        super(TerminalRuleType.RETAIN_MUTANTS);
     }
 
     /**
      *
      * @param selection
      */
-    public SelectMutantsOperation(SelectionOperation<Mutant> selection) {
-        super(TerminalRuleType.SELECT_MUTANTS, selection);
+    public RetainMutantsOperation(SelectionOperation<Mutant> selection) {
+        super(TerminalRuleType.RETAIN_MUTANTS, selection);
     }
 
     /**

@@ -9,7 +9,7 @@ import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.Fa
 import br.ufpr.inf.gres.sentinel.grammaticalevolution.mapper.strategy.factory.TerminalRuleType;
 import br.ufpr.inf.gres.sentinel.strategy.operation.Operation;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.discard.impl.DiscardMutantsOperation;
-import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.operation.impl.SelectMutantsOperation;
+import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.operation.impl.RetainMutantsOperation;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.selection.SelectionOperation;
 import com.google.common.base.Preconditions;
 import java.util.Collection;
@@ -44,12 +44,12 @@ public class MutantOperationFactory implements Factory<Option> {
         Rule firstRule = rules.next();
         Operation<Solution, Collection<Mutant>> mainOperation;
         switch (firstRule.getName()) {
-            case TerminalRuleType.SELECT_MUTANTS: {
+            case TerminalRuleType.RETAIN_MUTANTS: {
                 Preconditions.checkArgument(rules.hasNext(), "Malformed grammar option: " + node.toString());
                 Rule nextRule = rules.next();
                 SelectionOperation<Mutant> selectionOperation = (SelectionOperation<Mutant>) FactoryFlyweight.getNonTerminalFactory()
                         .createOperation(nextRule, integerIterator);
-                mainOperation = new SelectMutantsOperation(selectionOperation);
+                mainOperation = new RetainMutantsOperation(selectionOperation);
                 break;
             }
             case TerminalRuleType.DISCARD_MUTANTS: {

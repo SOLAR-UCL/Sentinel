@@ -18,14 +18,14 @@ public class SelectOperatorsOperationTest {
     @Test
     public void testConstructor() {
         SelectionOperation<Operator> selectionOperation = new SelectionOperation<>();
-        SelectOperatorsOperation operation = new SelectOperatorsOperation(selectionOperation);
+        RetainOperatorsOperation operation = new RetainOperatorsOperation(selectionOperation);
         assertEquals(selectionOperation, operation.getSelection());
     }
 
     @Test
     public void testObtainList() {
         Solution solution = new Solution();
-        SelectOperatorsOperation operation = new SelectOperatorsOperation();
+        RetainOperatorsOperation operation = new RetainOperatorsOperation();
         assertEquals(solution.getOperators(), operation.obtainList(solution));
     }
 

@@ -88,13 +88,22 @@ public class TerminalRuleType {
     /**
      *
      */
-    public static final String SELECT_MUTANTS = "Select Mutants";
+    public static final String RETAIN_MUTANTS = "Retain Mutants";
 
+    /**
+     *
+     */
+    public static final String SELECT_MUTANTS = "Select Mutants";
+    
     /**
      *
      */
     public static final String SELECT_MUTANTS_BY_GROUPS = "Select Mutants by Groups";
     // Operators
+    /**
+     *
+     */
+    public static final String RETAIN_OPERATORS = "Retain Operators";
     /**
      *
      */

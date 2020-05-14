@@ -12,7 +12,7 @@
 
 ## Operações de Operadores
 
-<operatorOperation> ::= "Select Operators" <selectOperators> | "Discard Operators" <selectOperators> | "Execute Operators" <operatorExecutionType> <selectOperators>
+<operatorOperation> ::= "Retain Operators" <selectOperators> | "Discard Operators" <selectOperators> | "Execute Operators" <operatorExecutionType> <selectOperators>
 
 <selectOperators> ::= <operatorSelectionType> <quantity> | <operatorSelectionType> <percentage>
 
@@ -34,7 +34,7 @@
 
 ## Operações de Mutantes
 
-<mutantOperation> ::= "Select Mutants" <selectMutants> | "Discard Mutants" <selectMutants>
+<mutantOperation> ::= "Retain Mutants" <selectMutants> | "Discard Mutants" <selectMutants>
 
 <selectMutants> ::= <mutantSelectionType> <quantity> | <mutantSelectionType> <percentage>
 

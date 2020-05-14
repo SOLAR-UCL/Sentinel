@@ -12,7 +12,7 @@ import br.ufpr.inf.gres.sentinel.strategy.operation.impl.defaults.AddAllOperator
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.defaults.StoreMutantsOperation;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.execute.ExecuteOperatorsOperation;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.execute.type.impl.ConventionalExecution;
-import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.operation.impl.SelectMutantsOperation;
+import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.operation.impl.RetainMutantsOperation;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.selection.SelectionOperation;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.select.type.impl.SequentialSelection;
 import br.ufpr.inf.gres.sentinel.strategy.operation.impl.sort.impl.operator.OperatorTypeComparator;
@@ -51,7 +51,7 @@ public class StrategyMapperTest {
         Strategy strategy
                 = strategyMapper.interpret(Lists.newArrayList(0, 2, 1, 0, 0, 0, 0, 0, 9, 1, 0, 1, 0, 0, 1, 0, 3, 1, 2));
         assertNotNull(strategy);
-        assertEquals("1.All Operators - 2.Execute Operators - 3.Select Mutants - 4.Store Mutants", strategy.toString());
+        assertEquals("1.All Operators - 2.Execute Operators - 3.Retain Mutants - 4.Store Mutants", strategy.toString());
 
         Operation<Solution, Collection<Mutant>> operation = strategy.getFirstOperation();
         assertTrue(operation instanceof AddAllOperatorsOperation);
@@ -66,9 +66,9 @@ public class StrategyMapperTest {
         assertTrue(execute.getSelection().getSorter() instanceof OperatorTypeComparator);
         assertFalse(execute.getSelection().getSorter().isReversed());
 
-        assertTrue(execute.getSuccessor() instanceof SelectMutantsOperation);
+        assertTrue(execute.getSuccessor() instanceof RetainMutantsOperation);
 
-        SelectMutantsOperation mutantsOperation = (SelectMutantsOperation) execute.getSuccessor();
+        RetainMutantsOperation mutantsOperation = (RetainMutantsOperation) execute.getSuccessor();
         assertTrue(mutantsOperation.getSelection() instanceof SelectionOperation);
         assertEquals(0.1D, mutantsOperation.getSelection().getPercentage(), 0.01D);
         assertTrue(mutantsOperation.getSelection().getSelectionType() instanceof SequentialSelection);
@@ -90,7 +90,7 @@ public class StrategyMapperTest {
         Strategy strategy
                 = strategyMapper.interpret(Lists.newArrayList(0, 2, 1, 0, 0, 0, 0, 0, 9, 1, 0, 1, 0, 0, 1, 0, 3, 1, 2));
         assertNotNull(strategy);
-        assertEquals("1.All Operators - 2.Execute Operators - 3.Select Mutants - 4.Store Mutants", strategy.toString());
+        assertEquals("1.All Operators - 2.Execute Operators - 3.Retain Mutants - 4.Store Mutants", strategy.toString());
 
         Operation<Solution, Collection<Mutant>> operation = strategy.getFirstOperation();
         assertTrue(operation instanceof AddAllOperatorsOperation);
@@ -105,9 +105,9 @@ public class StrategyMapperTest {
         assertTrue(execute.getSelection().getSorter() instanceof OperatorTypeComparator);
         assertFalse(execute.getSelection().getSorter().isReversed());
 
-        assertTrue(execute.getSuccessor() instanceof SelectMutantsOperation);
+        assertTrue(execute.getSuccessor() instanceof RetainMutantsOperation);
 
-        SelectMutantsOperation mutantsOperation = (SelectMutantsOperation) execute.getSuccessor();
+        RetainMutantsOperation mutantsOperation = (RetainMutantsOperation) execute.getSuccessor();
         assertTrue(mutantsOperation.getSelection() instanceof SelectionOperation);
         assertEquals(0.1D, mutantsOperation.getSelection().getPercentage(), 0.01D);
         assertTrue(mutantsOperation.getSelection().getSelectionType() instanceof SequentialSelection);
