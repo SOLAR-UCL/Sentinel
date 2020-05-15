@@ -38,6 +38,8 @@ At the end, the default training output directory `training` will contain the re
 
 More information about the research behind Sentinel can be found on its [official webpage](https://sites.google.com/view/sentinel-ucl/sentinel-home).
 
+An experimental package can be downloaded [from this link](https://liveuclac-my.sharepoint.com/:u:/g/personal/ucacggu_ucl_ac_uk/EVqc3zl9kYpJoyBWuBhbr98BXNbJ-5RLm3R9_9NmiSxthw?e=oeDGqa). It contains the assets needed to run the experiments for the testing phase.
+
 ## Bibtex:
 
 TBA
