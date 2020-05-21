@@ -10,25 +10,35 @@ Sentinel uses [PIT](https://pitest.org/) as the mutation framework.
 
 This project uses maven. So, the first step is to compile and test Sentinel with the following command:
 
-> `$ mvn clean install`
+```bash
+mvn clean install
+```
 
 Bear in mind that the testing phase may take a while (up to 10 minutes).
 
 Sentinel can be invoked through its command line class `br.ufpr.inf.gres.sentinel.main.cli.Sentinel`. Try:
 
-> `$ java -cp target/Sentinel-0.3-jar-with-dependencies.jar  br.ufpr.inf.gres.sentinel.main.cli.Sentinel --help`
+```bash
+java -cp target/Sentinel-0.3-jar-with-dependencies.jar  br.ufpr.inf.gres.sentinel.main.cli.Sentinel --help
+```
 
 or directly from the jar:
 
-> `$ java -jar target/Sentinel-0.3-jar-with-dependencies.jar --help`
+```bash
+java -jar target/Sentinel-0.3-jar-with-dependencies.jar --help
+```
 
 The most important and usually the only required argument for training and testing is `-tp`, which defines the training/testing program. This argument is given in the format:
 
-> `"<name>;<sourceDir>;<targetClassesGlob>;<targetTestsGlob>;<excludedTestClassesGlob>;<classpathItems>"`
+```bash
+<name>;<sourceDir>;<targetClassesGlob>;<targetTestsGlob>;<excludedTestClassesGlob>;<classpathItems>
+```
 
 For example, to train Sentinel with the included project `Triangle`, you can run the following command line from the project's main directory:
 
-> `$ java -cp 'target/Sentinel-0.3-jar-with-dependencies.jar' br.ufpr.inf.gres.sentinel.main.cli.Sentinel train -c -tp "Triangle;src/test;br.ufpr.inf.gres.Tri*;br.ufpr.inf.gres.Tri*Test*;org.excluded.tests.*;src/test"`
+```bash
+java -cp 'target/Sentinel-0.3-jar-with-dependencies.jar' br.ufpr.inf.gres.sentinel.main.cli.Sentinel train -c -tp "Triangle;src/test;br.ufpr.inf.gres.Tri*;br.ufpr.inf.gres.Tri*Test*;org.excluded.tests.*;src/test"
+```
 
 Optionally (and also encouraged), the argument `-c` can be provided to improve the performance of Sentinel training with the usage a of a cache mechanism. The first few mutant executions will take longer, but then the training will be done in a matter of seconds. The cache results are stored in `.cache` for future use, thus any subsequent training will use such a file.
 
