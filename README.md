@@ -52,4 +52,13 @@ An experimental package can be downloaded [from this link](https://liveuclac-my.
 
 ## Bibtex:
 
-TBA
+```bibtex
+@Article{Guizzo2020,
+  author =  {Giovani Guizzo and Federica Sarro and Jens Krinke and Silvia Regina Vergilio},
+  title =   {{Sentinel: A Hyper-Heuristic for the Generation of Mutant Reduction Strategies}},
+  journal = {Transactions on Software Engineering},
+  year =    {2020},
+  issn =    {1939-3520},
+  doi =     {10.1109/TSE.2020.3002496}
+}
+```
