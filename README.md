@@ -48,7 +48,7 @@ At the end, the default training output directory `training` will contain the re
 
 The published paper can be found [here](https://ieeexplore.ieee.org/document/9117067) ([preprint](https://bit.ly/Guizzo-TSE-2020)).
 
-More information about the research behind Sentinel can be found on its [official webpage](https://sites.google.com/view/sentinel-ucl/sentinel-home).
+More information about the research behind Sentinel can be found on its [official webpage](https://solar.cs.ucl.ac.uk/os/sentinel).
 
 An experimental package can be downloaded [from this link](https://liveuclac-my.sharepoint.com/:u:/g/personal/ucacggu_ucl_ac_uk/EVqc3zl9kYpJoyBWuBhbr98BXNbJ-5RLm3R9_9NmiSxthw?e=oeDGqa). It contains the assets needed to run the experiments for the testing phase.
 
